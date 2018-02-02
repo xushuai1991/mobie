@@ -18,6 +18,8 @@
                     <input type="password" placeholder="密码">
                 </div>
                 <router-link to='' class='forgetpsw'>忘记密码</router-link>
+                <mt-button type="default" class='btn-login'>登录</mt-button>
+                <router-link to='' class='resign'>立即注册</router-link>
                 <!-- <mt-cell title="快速登录" to=""  ></mt-cell> -->
             </div>
         </transition>
@@ -140,12 +142,35 @@ export default {
     padding-left: .7rem;
     font-size:0.24rem;
 }
+.forgetpsw{
+    font-size: 0.24rem;
+    color:#31B1B0;
+    margin-top: 0.2rem;
+    margin-right: 0.6rem;
+    float: right;
+}
 .quicklogin{
     font-size: 14px;
     text-decoration: none;
     margin-top: 10px;
     display: block;
     color:black;
+}
+.btn-login{
+    width: 4.25rem;
+    margin: 0.5rem auto .75rem auto;
+    height: .8rem;
+    line-height: .8rem;
+    text-align: center;
+    font-size: .3rem;
+    color: #fff;
+    border-radius: .8rem;
+    background: linear-gradient(to bottom,  #0CBBB9 0%,#4AC6DC 100%);
+}
+.resign{
+    font-size: 0.24rem;
+    color:#31B1B0;
+    display: block;
 }
 </style>
 <style>
