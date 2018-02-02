@@ -7,16 +7,16 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      // 带返回头部的页面
-      path: '',
-      component: resolve => require(['../components/common/home.vue'], resolve),
-      children:[
-        {
-          path:'/login',
-          name:'login',
-          component: resolve => require(['../components/view/login/login.vue'], resolve),
-        }
-      ]
+      path:'/login',
+      name:'login',
+      component: resolve => require(['../components/view/login/login.vue'], resolve),
+      // children:[
+      //   {
+      //     path:'/',
+      //     name:'qicklogin',
+      //     component:''
+      //   }
+      // ]
     }
   ]
 })

@@ -2,7 +2,7 @@
     <div class="wrapper">
         <mt-header title="">
             <router-link to="/" slot="left">
-                <mt-button icon="back">返回</mt-button>
+                <mt-button icon="back"></mt-button>
             </router-link>
         </mt-header>
         <transition name="move" mode="out-in">
@@ -11,5 +11,7 @@
     </div>
 </template>  
 <style scoped>
-
+.mint-header{
+    background-color: black;
+}
 </style>
