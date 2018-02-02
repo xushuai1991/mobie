@@ -1,11 +1,15 @@
 <template>
     <div class='contain'>
-        <mt-header title="">
+        <mt-header title="登录">
             <router-link to="/" slot="left">
                 <mt-button icon="back"></mt-button>
             </router-link>
         </mt-header>
         <transition name="move" mode="out-in">
+            <div>
+                <img class='logo' src="static/images/logo.png" alt="">
+            </div>
+            
             <div class='form'>
                 <mt-field v-validatename='{set:setstate,data:username}' class='input' :state='statename'  placeholder="姓名" type='text' v-model="username"></mt-field>
                 <mt-field v-validatephone='{set:setstate,data:phone}' class='input' :state='statephone' placeholder="手机号" type='tel' :attr="{ maxlength: 11 }" v-model="phone"></mt-field>
@@ -75,15 +79,27 @@ export default {
 }
 </script>
 <style scoped>
-/* .contain{
-    margin: 10%;
-} */
+.mint-header{
+    background-color: black;
+}
+.logo{
+    width: 3em;
+}
+.contain{
+    height: 13rem;
+    background: url(/static/images/bgimg.png) no-repeat round;
+}
 .title{
     font-size: 30px;
 }
 .form{
-    margin: 10%;
-    margin-top: 40px;
+    width: 5.4rem;
+    /* margin: 0 auto; */
+    border-radius: .12rem;
+    background-color: rgba(255,255,255,.9);
+    padding-top: .1rem;
+    padding-bottom:1rem;
+    
 }
 .quicklogin{
     font-size: 14px;
