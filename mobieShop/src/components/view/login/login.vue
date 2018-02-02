@@ -1,16 +1,24 @@
 <template>
     <div class='contain'>
-        <div class='title'>登 录</div>
-        <div class='form'>
-            <mt-field v-validatename='{set:setstate,data:username}' class='input' :state='statename'  placeholder="姓名" type='text' v-model="username"></mt-field>
-            <mt-field v-validatephone='{set:setstate,data:phone}' class='input' :state='statephone' placeholder="手机号" type='tel' :attr="{ maxlength: 11 }" v-model="phone"></mt-field>
-            <mt-field class='input' :state='statecatcha' placeholder="验证码" type='text' :attr="{ maxlength: 6 }" v-model="captcha">
-                <img src="" height="45px" width="100px">
-            </mt-field>
-            <mt-button type="primary" size='large' @click.native="login">登录</mt-button>
-            <router-link to='' class='quicklogin'>快速登录</router-link>
-            <!-- <mt-cell title="快速登录" to=""  ></mt-cell> -->
-        </div>
+        <mt-header title="">
+            <router-link to="/" slot="left">
+                <mt-button icon="back"></mt-button>
+            </router-link>
+        </mt-header>
+        <transition name="move" mode="out-in">
+            <div class='form'>
+                <mt-field v-validatename='{set:setstate,data:username}' class='input' :state='statename'  placeholder="姓名" type='text' v-model="username"></mt-field>
+                <mt-field v-validatephone='{set:setstate,data:phone}' class='input' :state='statephone' placeholder="手机号" type='tel' :attr="{ maxlength: 11 }" v-model="phone"></mt-field>
+                <mt-field class='input' :state='statecatcha' placeholder="验证码" type='text' :attr="{ maxlength: 6 }" v-model="captcha">
+                    <img src="" height="45px" width="100px">
+                </mt-field>
+                <mt-button type="primary" size='large' @click.native="login">登录</mt-button>
+                <router-link to='' class='quicklogin'>快速登录</router-link>
+                <!-- <mt-cell title="快速登录" to=""  ></mt-cell> -->
+            </div>
+        </transition>
+        <!-- <div class='title'>登 录</div> -->
+        
     </div>
 </template>
 <script>
@@ -67,13 +75,14 @@ export default {
 }
 </script>
 <style scoped>
-.contain{
+/* .contain{
     margin: 10%;
-}
+} */
 .title{
     font-size: 30px;
 }
 .form{
+    margin: 10%;
     margin-top: 40px;
 }
 .quicklogin{
