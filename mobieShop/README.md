@@ -8,6 +8,7 @@
 # install dependencies
 npm install
 npm install axios
+npm install vue-validator
 
 # serve with hot reload at localhost:8080
 npm run dev
