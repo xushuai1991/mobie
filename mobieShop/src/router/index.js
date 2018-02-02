@@ -6,19 +6,8 @@ Vue.use(Router)
 export default new Router({
   mode: 'history',
   routes: [
-    // {
-    //   path:'/login',
-    //   name:'login',
-    //   component: resolve => require(['../components/view/login/login.vue'], resolve),
-    //   children:[
-    //     {
-    //       path:'/',
-    //       name:'qicklogin',
-    //       component:''
-    //     }
-    //   ]
-    // },
     {
+      // 带返回头部的页面
       path: '',
       component: resolve => require(['../components/common/home.vue'], resolve),
       children:[
