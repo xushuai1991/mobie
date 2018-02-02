@@ -5,19 +5,19 @@
                 <mt-button icon="back"></mt-button>
             </router-link>
         </mt-header>
+        <img class='logo' src="static/images/logo.png" alt="">
         <transition name="move" mode="out-in">
-            <div>
-                <img class='logo' src="static/images/logo.png" alt="">
-            </div>
-            
             <div class='form'>
-                <mt-field v-validatename='{set:setstate,data:username}' class='input' :state='statename'  placeholder="姓名" type='text' v-model="username"></mt-field>
-                <mt-field v-validatephone='{set:setstate,data:phone}' class='input' :state='statephone' placeholder="手机号" type='tel' :attr="{ maxlength: 11 }" v-model="phone"></mt-field>
-                <mt-field class='input' :state='statecatcha' placeholder="验证码" type='text' :attr="{ maxlength: 6 }" v-model="captcha">
-                    <img src="" height="45px" width="100px">
-                </mt-field>
-                <mt-button type="primary" size='large' @click.native="login">登录</mt-button>
-                <router-link to='' class='quicklogin'>快速登录</router-link>
+                <div class="login_word">LOGIN</div>
+                <div class="users">
+                    <img src="static/images/user.png" alt="">
+                    <input type="text" placeholder="用户名/手机号码">
+                </div>
+                <div class="lock">
+                    <img src="static/images/lock.png" alt="">
+                    <input type="password" placeholder="密码">
+                </div>
+                <router-link to='' class='forgetpsw'>忘记密码</router-link>
                 <!-- <mt-cell title="快速登录" to=""  ></mt-cell> -->
             </div>
         </transition>
@@ -45,7 +45,7 @@ export default {
         login(){
             let vaildate=this.statename=='success'&&this.statephone=='success'&&this.statecatcha=='success';
             if(vaildate){
-                alert('验证通过！');
+                alert("验证通过！");
             }
         }
     },
@@ -84,9 +84,12 @@ export default {
 }
 .logo{
     width: 3em;
+    display: block;
+    margin: 0 auto .36rem auto;
+    padding-top: .5rem;
 }
 .contain{
-    height: 13rem;
+    height: 13.4rem;
     background: url(/static/images/bgimg.png) no-repeat round;
 }
 .title{
@@ -94,12 +97,48 @@ export default {
 }
 .form{
     width: 5.4rem;
-    /* margin: 0 auto; */
+    margin: 0 auto;
     border-radius: .12rem;
     background-color: rgba(255,255,255,.9);
     padding-top: .1rem;
     padding-bottom:1rem;
-    
+}
+.login_word{
+    width: 100%;
+    font-size: .4rem;
+    text-align: center;
+    font-weight: bolder;
+    margin-bottom: 0;
+    color: #666666;
+    margin-top: 10%;
+    margin-bottom: 20%;
+}
+.users,.lock{
+    width: 4.25rem;
+    margin: .4rem auto;
+    height: 0.75rem;
+    position: relative;
+}
+.users img{
+    width: .28rem;
+    position: absolute;
+    top: .71rem;
+    left: .22rem;
+}
+.lock img{
+    width: .25rem;
+    position: absolute;
+    top: .65rem;
+    left: .18rem;
+}
+.users input,.lock input{
+    width: 3.55rem;
+    height: 0.75rem;
+    border-radius: .1rem;
+    border: 0.01rem solid #c4c4c4;
+    outline: none;
+    padding-left: .7rem;
+    font-size:0.24rem;
 }
 .quicklogin{
     font-size: 14px;
@@ -111,9 +150,19 @@ export default {
 </style>
 <style>
 .form .input .mint-cell-wrapper{
-    border: 1px solid;
     margin-bottom:20px; 
-    border-radius:10px;
+    border-radius: .1rem;
+    border: 0.01rem solid #c4c4c4;
+    outline: none;
+    padding-left: .7rem;
+    font-size:0.24rem;
+     background-color: white;
+}
+.form .mint-cell{
+    background-color: rgba(255,255,255,0);
+}
+.mint-field{
+    padding:0 0.5rem;
 }
 </style>
 
