@@ -16,7 +16,7 @@
                             </div>
                             <p class="text_wait">收藏 <span class="coller">20</span></p>
                         </li>
-                        <li class="shopCar">
+                        <li class="shopCar" @click='gotshopCar'>
                             <div class="collect">
                                 <i class='icon iconfont icon-gouwuche coloBule'></i>
                             </div>
@@ -74,17 +74,40 @@
                 </li>
             </ul>
         </div>
-        <div class="account_management">账号管理 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
-        <div class="address_management">地址管理 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
+        <div class="account_management" @click='gotAccount'>账号管理 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
+        <div class="address_management" @click='gotAddress'>地址管理 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
          <div class="address_management">二维码 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
-        <div class="coupon">优惠券 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
+        <div class="coupon" @click='gotCoupon'>优惠券 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
         <div class="log_off">退出登录</div>
     </section>
 </template>
 
 <script>
    //import { Toast } from 'mint-ui'
-   
+   export default {
+    prop:['listLoading'],
+    data(){
+        return {
+
+        }
+    },
+    methods:{
+        gotAddress(){
+            this.$router.push('/addressManagnet')
+        },
+        gotAccount(){
+            this.$router.push('/accountMangagement')
+        },
+        gotCoupon(){
+            this.$router.push('/coupon')
+        },
+        gotshopCar(){
+            this.$router.push('/shopCar')
+        }
+    }
+
+}
+
 </script>
 <style  scoped>
 .coloBule{
