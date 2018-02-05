@@ -10,16 +10,21 @@
             <div class='form'>
                 <div class="login_word">LOGIN</div>
                 <div class="users">
-                    <img src="static/images/user.png" alt="">
-                    <input type="text" placeholder="用户名/手机号码">
+                    <!-- <img src="static/images/user.png" alt=""> -->
+                    <input type="text" placeholder="用户名">
                 </div>
-                <div class="lock">
-                    <img src="static/images/lock.png" alt="">
-                    <input type="password" placeholder="密码">
+                <div class="phone">
+                    <!-- <img src="static/images/lock.png" alt=""> -->
+                    <input type="tel" placeholder="手机号码">
+                </div>
+                <div class="verificationcode">
+                    <!-- <img src="static/images/lock.png" alt=""> -->
+                    <input type="text" placeholder="验证码">
+                    <div class='codeimg'></div>
                 </div>
                 <router-link to='' class='forgetpsw'>忘记密码</router-link>
                 <mt-button type="default" class='btn-login'>登录</mt-button>
-                <router-link to='' class='resign'>立即注册</router-link>
+                <router-link to='' class='resign'>快速登录</router-link>
                 <!-- <mt-cell title="快速登录" to=""  ></mt-cell> -->
             </div>
         </transition>
@@ -41,47 +46,47 @@ export default {
         }
     },
     methods:{
-        setstate(name,value){
-            this[name]=value;
-        },
-        login(){
-            let vaildate=this.statename=='success'&&this.statephone=='success'&&this.statecatcha=='success';
-            if(vaildate){
-                alert("验证通过！");
-            }
-        }
+        // setstate(name,value){
+        //     this[name]=value;
+        // },
+        // login(){
+        //     let vaildate=this.statename=='success'&&this.statephone=='success'&&this.statecatcha=='success';
+        //     if(vaildate){
+        //         alert("验证通过！");
+        //     }
+        // }
     },
-    directives:{
-        validatename(el,binding) {
-            let oInput = el.querySelector('input');
-            oInput.onblur = function(value) {
-                if(binding.value.data.trim('')!=''){
-                    binding.value.set('statename','success');
-                }
-                else{
-                    Toast('姓名不能为空');
-                    binding.value.set('statename','error');
-                }
-            };
-        },
-        validatephone(el,binding) {
-            let oInput = el.querySelector('input');
-            oInput.onblur = function(value) {
-                let patt=/^1[3|4|5|7|8][0-9]{9}$/g;
-                if(patt.test(binding.value.data.trim(''))){
-                    binding.value.set('statephone','success');
-                }
-                else{
-                    Toast('请输入正确的号码');
-                    binding.value.set('statephone','error');
-                }
-            };
-        }
-    }
+    // directives:{
+    //     validatename(el,binding) {
+    //         let oInput = el.querySelector('input');
+    //         oInput.onblur = function(value) {
+    //             if(binding.value.data.trim('')!=''){
+    //                 binding.value.set('statename','success');
+    //             }
+    //             else{
+    //                 Toast('姓名不能为空');
+    //                 binding.value.set('statename','error');
+    //             }
+    //         };
+    //     },
+    //     validatephone(el,binding) {
+    //         let oInput = el.querySelector('input');
+    //         oInput.onblur = function(value) {
+    //             let patt=/^1[3|4|5|7|8][0-9]{9}$/g;
+    //             if(patt.test(binding.value.data.trim(''))){
+    //                 binding.value.set('statephone','success');
+    //             }
+    //             else{
+    //                 Toast('请输入正确的号码');
+    //                 binding.value.set('statephone','error');
+    //             }
+    //         };
+    //     }
+    // }
 }
 </script>
 <style scoped>
-.mint-header{
+/* .mint-header{
     background-color: black;
 }
 .logo{
@@ -89,7 +94,7 @@ export default {
     display: block;
     margin: 0 auto .36rem auto;
     padding-top: .5rem;
-}
+} */
 .contain{
     height: 13.4rem;
     background: url(/static/images/bgimg.png) no-repeat round;
@@ -113,9 +118,8 @@ export default {
     margin-bottom: 0;
     color: #666666;
     margin-top: 10%;
-    margin-bottom: 20%;
 }
-.users,.lock{
+.users,.phone,.verificationcode{
     width: 4.25rem;
     margin: .4rem auto;
     height: 0.75rem;
@@ -127,13 +131,13 @@ export default {
     top: .71rem;
     left: .22rem;
 }
-.lock img{
+.phone img{
     width: .25rem;
     position: absolute;
     top: .65rem;
     left: .18rem;
 }
-.users input,.lock input{
+.users input,.phone input,.verificationcode input{
     width: 3.55rem;
     height: 0.75rem;
     border-radius: .1rem;
@@ -141,6 +145,20 @@ export default {
     outline: none;
     padding-left: .7rem;
     font-size:0.24rem;
+}
+.verificationcode input{
+    width: 2rem;
+    float: left;
+    margin-top: .4rem;
+}
+.verificationcode .codeimg{
+    width: 1.4rem;
+    height: 0.6rem;
+    margin-top: .47rem;
+    margin-left: 0.1rem;
+    border: 0.01rem solid #c4c4c4;
+    border-radius: 5%;
+    float: left;
 }
 .forgetpsw{
     font-size: 0.24rem;
@@ -158,7 +176,7 @@ export default {
 }
 .btn-login{
     width: 4.25rem;
-    margin: 0.5rem auto .75rem auto;
+    margin: 0.2rem auto .3rem auto;
     height: .8rem;
     line-height: .8rem;
     text-align: center;
@@ -172,6 +190,7 @@ export default {
     color:#31B1B0;
     display: block;
 }
+
 </style>
 <style>
 .form .input .mint-cell-wrapper{
