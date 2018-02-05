@@ -27,6 +27,12 @@ export default new Router({
           name:'order',
           component: resolve => require(['../components/view/order/order.vue'], resolve),
         },
+        // 确认订单
+        {
+          path:'/ordercertain',
+          name:'ordercertain',
+          component: resolve => require(['../components/view/order/certainorder.vue'], resolve),
+        },
         {
           path:'/userInfo',//个人中心
           name:'userInfo',
