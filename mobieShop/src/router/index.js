@@ -17,10 +17,41 @@ export default new Router({
           component: resolve => require(['../components/view/login/login.vue'], resolve),
         },
         {
-          path:'/userInfo',
+          path:'/userInfo',//个人中心
           name:'userInfo',
           component: resolve => require(['../components/view/userInfo/userInfo.vue'], resolve),
         },
+        {
+          path:'/navBottom',//刚刚底边栏
+          name:'navBottom',
+          component: resolve => require(['../components/view/navBottom/navBottom.vue'], resolve),
+        },
+        {
+          path:'/accountMangagement',//账号管理
+          name:'accountMangagement',
+          component: resolve => require(['../components/view/userInfo/accountMangagement.vue'], resolve),
+        },
+        {
+          path:'/address',//添加地址
+          name:'address',
+          component: resolve => require(['../components/view/userInfo/address.vue'], resolve),
+        },
+        {
+          path:'/addressManagnet',//地址管理
+          name:'addressManagnet',
+          component: resolve => require(['../components/view/userInfo/addressManagnet.vue'], resolve),
+        },
+        {
+          path:'/shopCar',//购物管理
+          name:'shopCar',
+          component: resolve => require(['../components/view/userInfo/shopCar.vue'], resolve),
+        },
+        {
+          path:'/Coupon',//购物管理
+          name:'Coupon',
+          component: resolve => require(['../components/view/Coupon/Coupon.vue'], resolve),
+        },
+        
       ]
     }
   ]
