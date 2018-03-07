@@ -33,6 +33,12 @@ export default new Router({
           name:'ordercertain',
           component: resolve => require(['../components/view/order/certainorder.vue'], resolve),
         },
+        // 消息中心
+        {
+          path:'/msgcenter',
+          name:'msgcenter',
+          component: resolve => require(['../components/view/order/msgcenter.vue'], resolve),
+        },
         {
           path:'/userInfo',//个人中心
           name:'userInfo',
