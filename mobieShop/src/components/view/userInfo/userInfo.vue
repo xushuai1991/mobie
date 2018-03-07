@@ -1,8 +1,8 @@
 <template>
-    <section class='infoBottom'>
+    <section class='infoBottom' style='background-image:url("static/images/background_info.png");background-repeat: no-repeat;background-size:contain;'>
         <div class="account">
             <div class="account_info">
-                <div class="change"><i class='icon iconfont icon-qiehuan'></i></div>
+                <div class="change"><i class='icon iconfont icon-arrow-right-copy icon-qiehuan'></i></div>
                 <div class="portrait">
                     <div class="portrait_img"><img src="static/HMMobilePhone/dsit/img/headPortrait2.png" alt=""></div>
                     <div class="portrait_info">
@@ -35,7 +35,7 @@
         <div class="order">
             <div class="my_order">我的订单
                 <div class="check">查看全部订单</div>
-                <p><a href="###"><img src="static/HMMobilePhone/dsit/img/goahead.png" alt=""></a></p>
+                <p><a href="###"><i class='icon iconfont icon-arrow-right-copy fontSize'></i></a></p>
             </div>
             <ul class="wait_for">
                 <li>
@@ -49,7 +49,7 @@
                     <div class="img_wait">
                     <i class="wait orageColor">2</i>
                     <i class='icon iconfont icon-icondaifahuo fontSize'></i>
-                    </div></i>
+                    </div>
                     <p class="text_wait">待发货</p>
                 </li>
                 <li>
@@ -74,11 +74,71 @@
                 </li>
             </ul>
         </div>
-        <div class="account_management" @click='gotAccount'>账号管理 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
+        <div class='opera_list'>
+            <ul>
+                <li>
+                    <router-link to='addressManagnet'>
+                        <i class='icon iconfont icon-dingwei fontSize operaicon'></i>
+                        <i class='flag on'></i>
+                        <p class='name_opera'>地址</p>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to=''>
+                        <i class='icon iconfont icon-kefu fontSize operaicon'></i>
+                        <i class='flag on'></i>
+                        <p class='name_opera'>客服</p>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to=''>
+                        <i class='icon iconfont icon-youhuijuan fontSize operaicon'></i>
+                        <i class='flag'></i>
+                        <p class='name_opera'>优惠券</p>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to=''>
+                        <i class='icon iconfont icon-lingdang fontSize operaicon'></i>
+                        <i class='flag'></i>
+                        <p class='name_opera'>消息</p>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to=''>
+                        <i class='icon iconfont icon-liwu fontSize operaicon'></i>
+                        <i class='flag'></i>
+                        <p class='name_opera'>活动专区</p>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to=''>
+                        <i class='icon iconfont icon-fapiao fontSize operaicon'></i>
+                        <i class='flag'></i>
+                        <p class='name_opera'>服务报告更新</p>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to=''>
+                        <i class='icon iconfont icon-yaoqing fontSize operaicon'></i>
+                        <i class='flag'></i>
+                        <p class='name_opera'>邀请注册</p>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to=''>
+                        <i class='icon iconfont icon-printer fontSize operaicon'></i>
+                        <i class='flag'></i>
+                        <p class='name_opera'>发票管理</p>
+                    </router-link>
+                </li>
+            </ul>
+        </div>
+        <!-- <div class="account_management" @click='gotAccount'>账号管理 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
         <div class="address_management" @click='gotAddress'>地址管理 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
          <div class="address_management">二维码 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
-        <div class="coupon" @click='gotCoupon'>优惠券 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
-        <div class="log_off">退出登录</div>
+        <div class="coupon" @click='gotCoupon'>优惠券 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div> -->
+        <!-- <div class="log_off">退出登录</div> -->
     </section>
 </template>
 
@@ -90,6 +150,9 @@
         return {
 
         }
+    },
+    created(){
+        this.$root.$emit('header','个人中心')
     },
     methods:{
         gotAddress(){
@@ -117,8 +180,9 @@
 }
 .icon-qiehuan{
     position:absolute;
-    right:5%;
-    color:#f38550;
+    top:12%;
+    right:10%;
+    color:#848484;
     font-size:0.4rem;
 }
     .account{
@@ -128,11 +192,11 @@
 }
 .account_info{
     width: 6.3rem;
-    margin: .36rem  auto;
+    margin: 0rem  auto;
     height: 3.2rem;
     background: white;
     padding-top: .3rem;
-    box-shadow: .05rem .05rem .15rem #31b1b0;
+    box-shadow: .05rem .05rem .15rem #bde9fd;
     position: relative;
 }
 .change img{
@@ -144,7 +208,7 @@
     right: .2rem;
 }
 .infoBottom{
-    margin-bottom:2rem;
+    /* margin-bottom:2rem; */
 }
 .portrait{
     width: 100%;
@@ -228,7 +292,8 @@
 .order{
     width: 100%;
     height: 2.5rem;
-    margin-top: .6rem;
+    margin-top: .3rem;
+    border-bottom: .15rem solid #f4f4f4;
 }
 
 .check{
@@ -260,7 +325,7 @@
     height: .26rem;
     position: absolute;
     right: .48rem;
-    top: .05rem;
+    top: 0rem;
 }
 .my_order p img,.account_management p img,.address_management p img,.coupon p img{
     width: 100%;
@@ -302,7 +367,7 @@
 .log_off{
     width: 5.6rem;
     height: .9rem;
-    margin: .2rem auto 1.2rem auto;
+    margin: .2rem auto 0rem auto;
     border-radius: 1.9rem;
     font-size: .3rem;
     color: white;
@@ -379,5 +444,39 @@
     height: .18rem;
     display: block;
     margin: .15rem .1rem ;
+}
+.opera_list{
+    padding: .2rem 0;
+}
+.opera_list ul{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.opera_list li{
+    width:25%;
+    position: relative;
+}
+.opera_list .name_opera{
+    font-size: .24rem;
+    padding: .2rem 0;
+    color: #2c3e50;
+}
+.opera_list .icon.operaicon{
+    font-size: .5rem;
+    color: #2ba1f2;
+}
+.opera_list .flag{
+    width:.1rem;
+    height:.1rem;
+    top: 20%;
+    left: 60%;
+    display: none;
+    position: absolute;
+    border-radius: 50%;
+    background: #e47524;
+}
+.opera_list .flag.on{
+    display: block;
 }
 </style>

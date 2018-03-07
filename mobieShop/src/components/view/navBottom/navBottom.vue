@@ -5,12 +5,12 @@
     <!-- tabcontainer -->  
       <mt-tab-container class="page-tabbar-container" v-model="selected">  
         <mt-tab-container-item id="首页">  
-         
+          
         </mt-tab-container-item>  
         <mt-tab-container-item id="商品分类">  
           
         </mt-tab-container-item>  
-        <mt-tab-container-item id="消息提醒">  
+        <mt-tab-container-item id="购物车">  
           
         </mt-tab-container-item>  
         <mt-tab-container-item id="个人中心">  
@@ -21,16 +21,20 @@
     <div class='navBar'>
     <mt-tabbar v-model="selected" fixed>  
       <mt-tab-item id="首页">  
-      <i class='icon iconfont icon-shouye'></i>
+        <i class='icon iconfont icon-shouye'></i>
+        <p>首页</p>
       </mt-tab-item>  
       <mt-tab-item id="商品分类">  
-        商品分类
+        <i class='icon iconfont icon-shouye'></i>
+        <p>分类</p>
       </mt-tab-item>  
-      <mt-tab-item id="消息提醒">  
-       消息提醒
+      <mt-tab-item id="购物车">  
+        <i class='icon iconfont icon-gouwuche'></i>
+        <p>购物车</p>
       </mt-tab-item>  
       <mt-tab-item id="个人中心">  
-        个人中心
+        <i class='icon iconfont icon-gouwuche'></i>
+        <p>我的</p>
       </mt-tab-item>  
     </mt-tabbar>  
     </div>
@@ -43,7 +47,7 @@ export default {
   name: 'page-tabbar',  
   data() {  
     return {  
-      selected: '个人中心'  
+      selected: '首页'  
     };  
   },
   components: {
@@ -59,14 +63,23 @@ export default {
   }
   .page-tabbar {  
     overflow: hidden;  
-    height: 100vh;  
+    height: 94vh;  
   }  
   .navBar .mint-tab-item{
-      height:0.6rem;
-      line-height:0.6rem;
+    padding:0;
+      /* height:0.6rem; */
+      /* line-height:0.6rem; */
+  }
+  .navBar .iconfont{
+    font-size: 20px;
   }
   .navBar .mint-tab-item-label{
        line-height:0.6rem;
+  }
+  .navBar .mint-tab-item-label p{
+    font-size: 12px;
+    margin-top: -10px;
+    margin-bottom: -3px;
   }
   .page-wrap {  
     overflow: auto;  
