@@ -45,6 +45,11 @@ export default new Router({
           component: resolve => require(['../components/view/userInfo/userInfo.vue'], resolve),
         },
         {
+          path:'/personalScores',//个人积分管理
+          name:'personalScores',
+          component: resolve => require(['../components/view/userInfo/personalScore.vue'], resolve),
+        },
+        {
           path:'/navBottom',//刚刚底边栏
           name:'navBottom',
           component: resolve => require(['../components/view/navBottom/navBottom.vue'], resolve),

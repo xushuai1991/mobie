@@ -4,10 +4,16 @@
             <div class="account_info">
                 <div class="change"><i class='icon iconfont icon-arrow-right-copy icon-qiehuan'></i></div>
                 <div class="portrait">
-                    <div class="portrait_img"><img src="static/HMMobilePhone/dsit/img/headPortrait2.png" alt=""></div>
+                    <div class="portrait_img">
+                        <img src="static/HMMobilePhone/dsit/img/headPortrait2.png" alt="">
+                        <p class='vip'>至尊会员</p>
+                        <i class='icon iconfont icon--huangguan' style='color:#fdd23e;position:absolute;right:.2rem;top:-.15rem;transform:rotate(25deg);'></i>
+                    </div>
                     <div class="portrait_info">
-                        <p>郭湘君</p>
-                        <p>15035896892</p>
+                        <p style='font-size:.3rem;padding-top:.1rem;'>郭湘君</p>
+                        <p style='color:#e47524;margin-top:.2rem;font-size:.3rem;'><i class='icon iconfont icon-qian' style='font-size:.4rem;'></i>120</p>
+                        <p class='info_other' style='color:#939393'>至2019.1.1 &nbsp;&nbsp;过期积分：300分</p>
+                        
                     </div>
                     <ul class="behavior">
                         <li>
@@ -180,20 +186,20 @@
 }
 .icon-qiehuan{
     position:absolute;
-    top:12%;
-    right:10%;
+    top:17%;
+    right:5%;
     color:#848484;
     font-size:0.4rem;
 }
     .account{
     width: 100%;
-    height: 3.64rem;
+    height: 4.2rem;
     padding: .36rem 0 0 0;
 }
 .account_info{
     width: 6.3rem;
     margin: 0rem  auto;
-    height: 3.2rem;
+    height: 3.8rem;
     background: white;
     padding-top: .3rem;
     box-shadow: .05rem .05rem .15rem #bde9fd;
@@ -212,26 +218,39 @@
 }
 .portrait{
     width: 100%;
-    height: 1.75rem;
+    height: 1.5rem;
     text-align:left;
+    margin-top: .3rem;
 }
 .portrait_img{
-    width: 1.1rem;
-    height: 1.1rem;
+    width: 1.5rem;
+    height: 1.5rem;
     border-radius: 50%;
     background: #C4C4C4;
-    margin-left: .72rem;
-    display: inline-block;
+    margin-left: .3rem;
+    /* display: inline-block; */
     vertical-align: middle;
+    float: left;
+    position: relative;
 }
 .portrait_img img{
     width: 100%;
     height: 100%;
     border-radius: 50%;
 }
+.portrait_img .vip{
+    width:100%;
+    text-align: center;
+    font-size:.1rem;
+    position: absolute;
+    bottom:-.25rem;
+} 
+
 .portrait_info{
-    height: 1.1rem;
+    height: 1.5rem;
     display: inline-block;
+    float: left;
+    margin-left: .3rem;
     font-size: .22rem;
     line-height: .5rem;
     color: #353535!important;
@@ -239,7 +258,7 @@
 .behavior{
     width: 100%;
     height: 1.5rem;
-    margin-top: .3rem;
+    padding-top: .5rem;
     display: flex;
     justify-content: space-around;
 }
@@ -274,19 +293,19 @@
     left: -.04rem;
 }
 .wait_for li:nth-child(1) .fontSize{
-    font-size:0.5rem;
+    font-size:0.6rem;
 }
 .wait_for li:nth-child(2) .fontSize{
-    font-size:0.5rem;
+    font-size:0.6rem;
 }
 .wait_for li:nth-child(3) .fontSize{
-    font-size:0.4rem;
+    font-size:0.45rem;
 }
 .wait_for li:nth-child(4) .fontSize{
-    font-size:0.4rem;
+    font-size:0.45rem;
 }
 .wait_for li:nth-child(5) .fontSize{
-    font-size:0.4rem;
+    font-size:0.5rem;
 }
 /**/
 .order{
@@ -353,14 +372,15 @@
 }
 .wait_for li .orageColor{
     display: inline-block;
-    width: .35rem;
-    height: .35rem;
+    width: .3rem;
+    height: .3rem;
     line-height: .35rem;
     border-radius: 50%;
     background: #e47524;
     position: absolute;
-    top: -.18rem;
-    right: -.2rem;
+    top: -.12rem;
+    right: -.3rem;
+    font-size: .2rem;
     font-style: normal;
     color: white;
 }
