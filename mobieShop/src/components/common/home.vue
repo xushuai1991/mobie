@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <mt-header :title="title">
+        <mt-header fixed  :title="title">
             <router-link to="" slot="left">
                 <mt-button icon="back" @click="goback" ></mt-button>
             </router-link>

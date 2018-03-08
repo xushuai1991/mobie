@@ -10,8 +10,8 @@
                         <i class='icon iconfont icon--huangguan' style='color:#fdd23e;position:absolute;right:.2rem;top:-.15rem;transform:rotate(25deg);'></i>
                     </div>
                     <div class="portrait_info">
-                        <p style='font-size:.3rem;padding-top:.1rem;'>郭湘君</p>
-                        <p style='color:#e47524;margin-top:.2rem;font-size:.3rem;'><i class='icon iconfont icon-qian' style='font-size:.4rem;'></i>120</p>
+                        <p style='font-size:.3rem;padding-top:.1rem;'>姓名</p>
+                        <p style='color:#e47524;margin-top:.2rem;font-size:.25rem;'><i class='icon iconfont icon-qian' style='font-size:.4rem;'></i>120</p>
                         <p class='info_other' style='color:#939393'>至2019.1.1 &nbsp;&nbsp;过期积分：300分</p>
                         
                     </div>
@@ -214,7 +214,7 @@
     right: .2rem;
 }
 .infoBottom{
-    /* margin-bottom:2rem; */
+    margin-top:.8rem;
 }
 .portrait{
     width: 100%;
