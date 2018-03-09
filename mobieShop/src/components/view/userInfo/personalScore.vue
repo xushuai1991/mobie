@@ -464,6 +464,9 @@ export default {
     font-size: .4rem;
     color:#26a2ff
 }
+.level_tabcontainer .container:nth-child(4) header .icon{
+    font-size: .5rem !important;
+}
 .level_tabcontainer header .title{
     font-size: .3rem;
     margin-left: -.2rem;

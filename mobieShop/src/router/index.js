@@ -11,16 +11,7 @@ export default new Router({
       path: '',
       component: resolve => require(['../components/common/home.vue'], resolve),
       children:[
-        {
-          path:'/login',
-          name:'login',
-          component: resolve => require(['../components/view/login/login.vue'], resolve),
-        },
-        {
-          path:'/loginquick',
-          name:'loginquick',
-          component: resolve => require(['../components/view/login/loginquick.vue'], resolve),
-        },
+        
         // 订单列表
         {
           path:'/order',
@@ -81,6 +72,11 @@ export default new Router({
         },
         
       ]
+    },
+    {
+      path:'/login',
+      name:'login',
+      component: resolve => require(['../components/view/login/login.vue'], resolve),
     }
   ]
 })
