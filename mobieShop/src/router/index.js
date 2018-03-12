@@ -10,6 +10,7 @@ export default new Router({
       // 带返回头部的页面
       path: '',
       component: resolve => require(['../components/common/home.vue'], resolve),
+<<<<<<< HEAD
       children: [
         {
           path: '/login',
@@ -21,11 +22,27 @@ export default new Router({
           name: 'loginquick',
           component: resolve => require(['../components/view/login/loginquick.vue'], resolve)
         },
+=======
+      children:[
+        
+>>>>>>> d37f47238f727be263d28469566ce33befb88652
         // 订单列表
         {
           path: '/order',
           name: 'order',
           component: resolve => require(['../components/view/order/order.vue'], resolve)
+        },
+        // 确认订单
+        {
+          path:'/ordercertain',
+          name:'ordercertain',
+          component: resolve => require(['../components/view/order/certainorder.vue'], resolve),
+        },
+        // 消息中心
+        {
+          path:'/msgcenter',
+          name:'msgcenter',
+          component: resolve => require(['../components/view/order/msgcenter.vue'], resolve),
         },
         {
           path: '/userInfo', // 个人中心
@@ -33,9 +50,20 @@ export default new Router({
           component: resolve => require(['../components/view/userInfo/userInfo.vue'], resolve)
         },
         {
+<<<<<<< HEAD
           path: '/navBottom', // 刚刚底边栏
           name: 'navBottom',
           component: resolve => require(['../components/view/navBottom/navBottom.vue'], resolve)
+=======
+          path:'/personalScores',//个人积分管理
+          name:'personalScores',
+          component: resolve => require(['../components/view/userInfo/personalScore.vue'], resolve),
+        },
+        {
+          path:'/navBottom',//刚刚底边栏
+          name:'navBottom',
+          component: resolve => require(['../components/view/navBottom/navBottom.vue'], resolve),
+>>>>>>> d37f47238f727be263d28469566ce33befb88652
         },
         {
           path: '/accountMangagement', // 账号管理
@@ -93,6 +121,11 @@ export default new Router({
           component: resolve => require(['../components/view/shopinfo/shopinfo.vue'], resolve)
         }
       ]
+    },
+    {
+      path:'/login',
+      name:'login',
+      component: resolve => require(['../components/view/login/login.vue'], resolve),
     }
   ]
 })
