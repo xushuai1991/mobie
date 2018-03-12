@@ -10,59 +10,88 @@ export default new Router({
       // 带返回头部的页面
       path: '',
       component: resolve => require(['../components/common/home.vue'], resolve),
-      children:[
+      children: [
         {
-          path:'/login',
-          name:'login',
-          component: resolve => require(['../components/view/login/login.vue'], resolve),
+          path: '/login',
+          name: 'login',
+          component: resolve => require(['../components/view/login/login.vue'], resolve)
         },
         {
-          path:'/loginquick',
-          name:'loginquick',
-          component: resolve => require(['../components/view/login/loginquick.vue'], resolve),
+          path: '/loginquick',
+          name: 'loginquick',
+          component: resolve => require(['../components/view/login/loginquick.vue'], resolve)
         },
         // 订单列表
         {
-          path:'/order',
-          name:'order',
-          component: resolve => require(['../components/view/order/order.vue'], resolve),
+          path: '/order',
+          name: 'order',
+          component: resolve => require(['../components/view/order/order.vue'], resolve)
         },
         {
-          path:'/userInfo',//个人中心
-          name:'userInfo',
-          component: resolve => require(['../components/view/userInfo/userInfo.vue'], resolve),
+          path: '/userInfo', // 个人中心
+          name: 'userInfo',
+          component: resolve => require(['../components/view/userInfo/userInfo.vue'], resolve)
         },
         {
-          path:'/navBottom',//刚刚底边栏
-          name:'navBottom',
-          component: resolve => require(['../components/view/navBottom/navBottom.vue'], resolve),
+          path: '/navBottom', // 刚刚底边栏
+          name: 'navBottom',
+          component: resolve => require(['../components/view/navBottom/navBottom.vue'], resolve)
         },
         {
-          path:'/accountMangagement',//账号管理
-          name:'accountMangagement',
-          component: resolve => require(['../components/view/userInfo/accountMangagement.vue'], resolve),
+          path: '/accountMangagement', // 账号管理
+          name: 'accountMangagement',
+          component: resolve => require(['../components/view/userInfo/accountMangagement.vue'], resolve)
         },
         {
-          path:'/address',//添加地址
-          name:'address',
-          component: resolve => require(['../components/view/userInfo/address.vue'], resolve),
+          path: '/address', // 添加地址
+          name: 'address',
+          component: resolve => require(['../components/view/userInfo/address.vue'], resolve)
         },
         {
-          path:'/addressManagnet',//地址管理
-          name:'addressManagnet',
-          component: resolve => require(['../components/view/userInfo/addressManagnet.vue'], resolve),
+          path: '/addressManagnet', // 地址管理
+          name: 'addressManagnet',
+          component: resolve => require(['../components/view/userInfo/addressManagnet.vue'], resolve)
         },
         {
-          path:'/shopCar',//购物管理
-          name:'shopCar',
-          component: resolve => require(['../components/view/userInfo/shopCar.vue'], resolve),
+          path: '/shopCar', // 购物管理
+          name: 'shopCar',
+          component: resolve => require(['../components/view/userInfo/shopCar.vue'], resolve)
         },
         {
-          path:'/Coupon',//购物管理
-          name:'Coupon',
-          component: resolve => require(['../components/view/Coupon/Coupon.vue'], resolve),
+          path: '/Coupon', // 优惠劵
+          name: 'Coupon',
+          component: resolve => require(['../components/view/Coupon/Coupon.vue'], resolve)
         },
-        
+        {
+          path: '/evaluate', // 评论详情
+          name: 'evaluate',
+          component: resolve => require(['../components/view/evaluate/evaluate.vue'], resolve)
+        },
+        {
+          path: '/confirmationOrder', // 个人中心
+          name: 'confirmationOrder',
+          component: resolve => require(['../components/view/confirmationOrder/confirmationOrder.vue'], resolve)
+        },
+        {
+          path: '/classification', // 分类
+          name: 'classification',
+          component: resolve => require(['../components/view/classification/classification.vue'], resolve)
+        },
+        {
+          path: '/homepage', // 首页
+          name: 'homepage',
+          component: resolve => require(['../components/view/homepage/homepage.vue'], resolve)
+        },
+        {
+          path: '/recommend', // 首页
+          name: 'recommend',
+          component: resolve => require(['../components/view/homepage/recommend/recommend.vue'], resolve)
+        },
+        {
+          path: '/shopinfo', // 消息中心
+          name: 'shopinfo',
+          component: resolve => require(['../components/view/shopinfo/shopinfo.vue'], resolve)
+        }
       ]
     }
   ]
