@@ -6,7 +6,38 @@
                 <ul class="mui-table-view" v-infinite-scroll="loadMore" infinite-scroll-disabled="moreLoading" infinite-scroll-distance="0" infinite-scroll-immediate-check="false">
                 <!--li数据遍历循环部分-->
                 <li class="mui-table-view-cell" v-for="item in list">
-                  111
+                  <div class="cart">
+                        <div class="goods">
+                            <div class="goods_title">
+                                <i class="input_model"><img src="static/HMMobilePhone/dsit/img/tick.png" alt=""></i>
+                                <input type="checkbox" class="check_select" id="sid1">
+                                <div class="check">领券</div>
+                                <p><img src="static/HMMobilePhone/dsit/img/arrow_Green.png" alt=""></p>
+                            </div>
+                            <div class="goodsBox">
+                                <ul class="goods_detail">
+                                    <li class="goods_img">
+                                        <img src="" alt="">
+                                    </li>
+                                    <li class="goods_info">
+                                        <p class="brandDesc">名称</p>
+                                        <p class="goods_identifier strlen" style="width:3rem;"><span>简介</span></p>
+                                        <p class="goods_color">颜色：<span>红色</span></p>
+                                        <p class="goods_size">尺码：<span>尺寸</span></p>
+                                    </li>
+                                    <li class="goods_info_se">
+                                        <p class="goods_price">￥<span>50</span></p>
+                                        <p class="goods_num">x<span>1</span></p>
+                                    </li>
+                                    <li class="delBox">
+                                        <div class="delete_this" data-id='+i.cartId+'>
+                                            <i class='icon iconfont icon-lajitong fontSize'></i>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </li>
                 <!--底部判断是加载图标还是提示“全部加载”-->
                 <li class="more_loading" v-show="!queryLoading">
@@ -45,9 +76,9 @@
                 moreLoading: false,
                 allLoaded: false,
                 totalNum: 0,
-                pageSize:10,
+                pageSize: 2,
                 pageNum: 1,
-                list:50
+                list:10
             }
         },
         computed: {
@@ -75,8 +106,8 @@
                     pageNum: this.pageNum
                 }, this.params)).then((res) => {
                     // if (res.sData && res.sData.list) {
-                         this.list = this.list.concat(res.sData.list);
-                       this.allLoaded = this.debtList.length == this.totalNum;
+                    //     this.list = this.list.concat(res.sData.list);
+                    //     this.allLoaded = this.debtList.length == this.totalNum;
                     // }
                     this.moreLoading = this.allLoaded;
                 });

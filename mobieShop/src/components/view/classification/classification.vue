@@ -1,62 +1,130 @@
 <template>
-    <div class='classification'>
-        <mt-search
-        v-model="value_search"
-        cancel-text="取消"
-        @keyup.enter.native='search'
-        placeholder="搜索">
-        </mt-search>
-        <div class='tab-contain'>
-            <div class='nav-left'>
-                <ul class='classfilist'>
-                    <li>推荐</li>
-                    <li>家电保养</li>
-                    <li>家具保养</li>
-                    <li>空气净化</li>
-                    <li>净水</li>
-                </ul>
-            </div>
-            <mt-button size="small" @click.native.prevent="active = 'tab-container1'">tab 1</mt-button>
-            <mt-button size="small" @click.native.prevent="active = 'tab-container2'">tab 2</mt-button>
-            <mt-button size="small" @click.native.prevent="active = 'tab-container3'">tab 3</mt-button>
-            <mt-tab-container v-model="active">
-                <mt-tab-container-item id="tab-container1">
-                    <mt-cell v-for="n in 10" title="tab-container 1"></mt-cell>
-                </mt-tab-container-item>
-                <mt-tab-container-item id="tab-container2">
-                    <mt-cell v-for="n in 5" title="tab-container 2"></mt-cell>
-                </mt-tab-container-item>
-                <mt-tab-container-item id="tab-container3">
-                    <mt-cell v-for="n in 7" title="tab-container 3"></mt-cell>
-                </mt-tab-container-item>
-            </mt-tab-container>
-        </div>
-    </div>
+  <div class="page-navbar">
+   <div class="page-search">
+    <mt-search autofocus v-model="value" ></mt-search>
+  </div>
+    <mt-navbar class="page-part float with20" v-model="selected">
+      <mt-tab-item id="1">推荐</mt-tab-item>
+      <mt-tab-item id="2">家电保养</mt-tab-item>
+      <mt-tab-item id="3">家居保养</mt-tab-item>
+      <mt-tab-item id="4">空气净化</mt-tab-item>
+      <mt-tab-item id="5">净水</mt-tab-item>
+    </mt-navbar>
+
+   
+
+    <mt-tab-container v-model="selected" class='float with80'>
+      <mt-tab-container-item id="1">
+       <div class='imgBox'>
+       <div class='imgSize'>
+         <img src='./bgs.jpg' />
+       </div>
+          
+          <ul class='ctionUl clearfloat'>
+            <li>
+                <img src='./sofa.jpg'/>
+                <p>商品组件</p>
+            </li>
+            <li>
+                <img src='./sofa.jpg'/>
+                <p>商品组件</p>
+            </li>
+            <li>
+                <img src='./sofa.jpg'/>
+                <p>商品组件</p>
+            </li>
+            <li>
+                <img src='./sofa.jpg'/>
+                <p>商品组件</p>
+            </li>
+            <li>
+                <img src='./sofa.jpg'/>
+                <p>商品组件</p>
+            </li>
+          </ul>
+       </div>
+      </mt-tab-container-item>
+      <mt-tab-container-item id="2">
+        
+      </mt-tab-container-item>
+      <mt-tab-container-item id="3">
+       
+      </mt-tab-container-item>
+      <mt-tab-container-item id="4">
+       
+      </mt-tab-container-item>
+      <mt-tab-container-item id="5">
+       
+      </mt-tab-container-item>
+    </mt-tab-container>
+  </div>
 </template>
+
 <script>
 export default {
-    data(){
-        return{
-            value_search:'',
-            active:'tab-container1'
-        }
-    },
-    methods:{
-        search(){
-            console.log(this.value_search);
-        }
-    }
-}
+  name: 'page-navbar',
+
+  data() {
+    return {
+      selected: '1',
+      value: ''
+    };
+  },
+   computed: {
+  }
+};
 </script>
+<style lang="">
+.page-search{
+    font-size:0.2rem;
+}
+.mint-search{
+    height:100%;
+    margin-bottom:0.2rem;
+}
+   .float{
+       float:left;
+   }
+   .with80{
+       width:80%;
+   }
+   .with20{
+       width:20%;
+   }
+   .mint-navbar .mint-tab-item.is-selected{
+       width:100%;
+   }
+   .mint-navbar{
+       display:block;
+   }
+   .mint-navbar .mint-tab-item.is-selected{
+       border:none;
+       margin-bottom:0;
+   }
+   .mint-searchbar-inner .mintui-search{
+       font-size:0.4rem;
+       padding:0 0.2rem;
+   }
+</style>
 <style scoped>
-    .classification{
-        font-size: .3rem;
+.clearfloat:after{display:block;clear:both;content:"";visibility:hidden;height:0} 
+.clearfloat{zoom:1} 
+.ctionUl{
+    padding-left:6%;
+}
+    .ctionUl li{
+        float:left;
+        font-size:0.2rem;
+        width:30%;
     }
-    .mint-search{
-        height:auto;
+    .ctionUl li img{
+        width:100%;
     }
-    .nav-left{
-        
+    .imgSize{
+        width:90%;
+        padding:0 5%;
+    }
+    .imgSize img{
+        width:100%;
     }
 </style>
-
