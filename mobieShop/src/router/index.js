@@ -40,11 +40,6 @@ export default new Router({
           component: resolve => require(['../components/view/userInfo/personalScore.vue'], resolve),
         },
         {
-          path:'/navBottom',//刚刚底边栏
-          name:'navBottom',
-          component: resolve => require(['../components/view/navBottom/navBottom.vue'], resolve),
-        },
-        {
           path: '/accountMangagement', // 账号管理
           name: 'accountMangagement',
           component: resolve => require(['../components/view/userInfo/accountMangagement.vue'], resolve)
@@ -85,11 +80,6 @@ export default new Router({
           component: resolve => require(['../components/view/classification/classification.vue'], resolve)
         },
         {
-          path: '/homepage', // 首页
-          name: 'homepage',
-          component: resolve => require(['../components/view/homepage/homepage.vue'], resolve)
-        },
-        {
           path: '/recommend', // 首页
           name: 'recommend',
           component: resolve => require(['../components/view/homepage/recommend/recommend.vue'], resolve)
@@ -102,8 +92,18 @@ export default new Router({
       ]
     },
     {
-      path:'/login',
-      name:'login',
+      path: '/homepage', // 首页
+      name: 'homepage',
+      component: resolve => require(['../components/view/homepage/homepage.vue'], resolve)
+    },
+    {
+      path: '/navBottom', //刚刚底边栏
+      name: 'navBottom',
+      component: resolve => require(['../components/view/navBottom/navBottom.vue'], resolve),
+    },
+    {
+      path: '/login',
+      name: 'login',
       component: resolve => require(['../components/view/login/login.vue'], resolve),
     }
   ]

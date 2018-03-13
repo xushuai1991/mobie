@@ -5,10 +5,16 @@
     <!-- tabcontainer -->  
       <mt-tab-container class="page-tabbar-container" v-model="selected">  
         <mt-tab-container-item id="首页">  
-          
+          <div v-if='isTrue'>
+            <!-- isTrue true的话 为模板首页 false为默认首页 -->
+            <templatePages></templatePages>
+          </div>
+          <div v-else>
+            <homepage></homepage>
+          </div>
         </mt-tab-container-item>  
         <mt-tab-container-item id="商品分类">  
-          
+          <!-- <classification></classification> -->
         </mt-tab-container-item>  
         <mt-tab-container-item id="购物车">  
           
@@ -43,15 +49,22 @@
   
 <script>  
 import userInfo from '@/components/view/userInfo/userInfo.vue'
+import homepage from '@/components/view/homepage/homepage.vue'
+import templatePages from '@/components/view/template/templatePages.vue'
+import classification from '@/components/view/classification/classification.vue'
 export default {  
   name: 'page-tabbar',  
   data() {  
     return {  
-      selected: '首页'  
+      selected: '首页',
+      isTrue:true 
     };  
   },
   components: {
-    userInfo
+    userInfo,
+    homepage,
+    templatePages,
+    classification
   },
 };  
 </script>  

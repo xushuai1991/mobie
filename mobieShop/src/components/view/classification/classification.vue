@@ -1,4 +1,4 @@
-<template>
+<template id="classification">
   <div class="page-navbar">
    <div class="page-search">
     <mt-search autofocus v-model="value" ></mt-search>
@@ -75,14 +75,15 @@ export default {
 };
 </script>
 <style lang="">
-.page-search{
+
+ .page-search{
     font-size:0.2rem;
 }
 .mint-search{
     height:100%;
     margin-bottom:0.2rem;
 }
-   .float{
+    .float{
        float:left;
    }
    .with80{
@@ -112,7 +113,7 @@ export default {
 .ctionUl{
     padding-left:6%;
 }
-    .ctionUl li{
+    #classification  .ctionUl li{
         float:left;
         font-size:0.2rem;
         width:30%;
