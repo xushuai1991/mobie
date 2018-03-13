@@ -10,22 +10,7 @@ export default new Router({
       // 带返回头部的页面
       path: '',
       component: resolve => require(['../components/common/home.vue'], resolve),
-<<<<<<< HEAD
       children: [
-        {
-          path: '/login',
-          name: 'login',
-          component: resolve => require(['../components/view/login/login.vue'], resolve)
-        },
-        {
-          path: '/loginquick',
-          name: 'loginquick',
-          component: resolve => require(['../components/view/login/loginquick.vue'], resolve)
-        },
-=======
-      children:[
-        
->>>>>>> d37f47238f727be263d28469566ce33befb88652
         // 订单列表
         {
           path: '/order',
@@ -50,11 +35,6 @@ export default new Router({
           component: resolve => require(['../components/view/userInfo/userInfo.vue'], resolve)
         },
         {
-<<<<<<< HEAD
-          path: '/navBottom', // 刚刚底边栏
-          name: 'navBottom',
-          component: resolve => require(['../components/view/navBottom/navBottom.vue'], resolve)
-=======
           path:'/personalScores',//个人积分管理
           name:'personalScores',
           component: resolve => require(['../components/view/userInfo/personalScore.vue'], resolve),
@@ -63,7 +43,6 @@ export default new Router({
           path:'/navBottom',//刚刚底边栏
           name:'navBottom',
           component: resolve => require(['../components/view/navBottom/navBottom.vue'], resolve),
->>>>>>> d37f47238f727be263d28469566ce33befb88652
         },
         {
           path: '/accountMangagement', // 账号管理
@@ -126,11 +105,6 @@ export default new Router({
       path:'/login',
       name:'login',
       component: resolve => require(['../components/view/login/login.vue'], resolve),
-    },
-    {
-      path:'/classification',//分类
-      name:'classification',
-      component: resolve => require(['../components/view/classification/classification.vue'], resolve),
-    },
+    }
   ]
 })
