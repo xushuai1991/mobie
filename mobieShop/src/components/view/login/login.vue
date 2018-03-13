@@ -109,6 +109,7 @@ export default {
         // 登录
         login(){
             if(this.phonejson.status&&this.pswjson.status&&this.codejson.status){
+                let that=this;
                 this.$http({
                     url: '/api/customer/account/login?mobile='+this.phone+'&&password='+this.psw,
                     method: 'POST',
@@ -120,15 +121,19 @@ export default {
                 .then(res => {
                     console.log(res);
                     var msg = res.data.msg
-                    sessionStorage.setItem('userInfo', JSON.stringify(res.data.info))
                     if (msg !== '登录成功') {
                         Toast(res.data.info);
                         this.cleardata();
                     } else {
-                        Toast({
-                            message: '登录成功正在为你跳转请稍后...',
-                            iconClass: 'icon icon-success'
-                        });
+                        this.$store.commit('login',res.data)
+                        setTimeout(() => {
+                            Toast({
+                                message: '登录成功正在为你跳转请稍后...',
+                                iconClass: 'icon icon-success',
+                                duration: 500
+                            });
+                            this.$router.push('/userinfo');
+                        }, 1000);
                     }
                 })
                 .catch(err => {

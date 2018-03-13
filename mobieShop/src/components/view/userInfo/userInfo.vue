@@ -6,13 +6,16 @@
                 <div class="portrait">
                     <div class="portrait_img">
                         <img src="static/HMMobilePhone/dsit/img/headPortrait2.png" alt="">
-                        <p class='vip'>至尊会员</p>
+                        <p class='vip'>{{viplevel}}</p>
                         <i class='icon iconfont icon--huangguan' style='color:#fdd23e;position:absolute;right:.2rem;top:-.15rem;transform:rotate(25deg);'></i>
                     </div>
                     <div class="portrait_info">
-                        <p style='font-size:.3rem;padding-top:.1rem;'>姓名</p>
-                        <p style='color:#e47524;margin-top:.2rem;font-size:.25rem;'><i class='icon iconfont icon-qian' style='font-size:.4rem;'></i>120</p>
-                        <p class='info_other' style='color:#939393'>至2019.1.1 &nbsp;&nbsp;过期积分：300分</p>
+                        <p style='font-size:.3rem;padding-top:.1rem;'>{{userinfo.nickname==null?'&nbsp;':userinfo.nickname}}</p>
+                        <router-link to='/personalScores'>
+                            <p style='color:#e47524;margin-top:.2rem;font-size:.25rem;'><i class='icon iconfont icon-qian' style='font-size:.4rem;'></i>120</p>
+                        </router-link>
+                        
+                        <p class='info_other' style='color:#939393'>至2019.1.1 &nbsp;&nbsp;过期积分：{{userinfo.consumptionPoints}}分</p>
                         
                     </div>
                     <ul class="behavior">
@@ -22,7 +25,7 @@
                             </div>
                             <p class="text_wait">收藏 <span class="coller">20</span></p>
                         </li>
-                        <li class="shopCar" @click='gotshopCar'>
+                        <li class="shopCar">
                             <div class="collect">
                                 <i class='icon iconfont icon-gouwuche coloBule'></i>
                             </div>
@@ -149,30 +152,60 @@
 </template>
 
 <script>
-   //import { Toast } from 'mint-ui'
+   import { mapState } from 'vuex'
    export default {
     prop:['listLoading'],
     data(){
         return {
-
+            viplevel:'非会员'
         }
     },
     created(){
         this.$root.$emit('header','个人中心')
     },
     methods:{
-        gotAddress(){
-            this.$router.push('/addressManagnet')
-        },
-        gotAccount(){
-            this.$router.push('/accountMangagement')
-        },
-        gotCoupon(){
-            this.$router.push('/coupon')
-        },
-        gotshopCar(){
-            this.$router.push('/shopCar')
+        // 获取个人信息
+        getinfo(){
+            this.$http.post('/api/customer/account/register',
+                {
+                    mobile:that.phone,
+                    password:that.psw,
+                    code:that.code
+                }
+            )
         }
+    },
+    mounted(){
+        console.log(this.userinfo);
+        let that=this;
+        this.$http.post('/api/customer/customerLevelComputing/query',{
+            level:that.userinfo.level
+        })
+        .then(function(response){
+            if(response.data.status==200){
+                that.viplevel=response.data.info.length==0?'非会员':response.data.info[0].levelName
+            }
+            else{
+                console.log(response);
+            }
+        })
+        .catch(function(response){
+            console.log(response);
+        });
+    },
+    computed:{
+        ...mapState({
+            userinfo:function(state){
+                if(JSON.stringify(state.userinfo.userinfo)=='{}'){
+                    let data=JSON.parse(sessionStorage.getItem('userinfo'));
+                    this.$store.commit('login',data)
+                    return data;
+                }
+                else{
+                    return state.userinfo.userinfo
+                }
+            }
+        })
     }
 
 }

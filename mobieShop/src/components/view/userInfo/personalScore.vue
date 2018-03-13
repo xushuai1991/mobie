@@ -4,14 +4,14 @@
           <div class='info_main'>
               <div class='portrait'><img :src="portrait_img" alt=""></div>
               <div class='name_about'>
-                  <p class='name'>{{name}}</p>
-                  <p class='exp'>经验值 {{experience}}</p>
+                  <p class='name'>{{userinfo.nickname==null?'&nbsp;':userinfo.nickname}}</p>
+                  <p class='exp'>经验值 {{userinfo.info.experience}}</p>
               </div>
           </div>
           <div class='info_other'>
               <div class='scores'>
                   <p class='title'>积分</p>
-                  <p class='content'>{{scores}}</p>
+                  <p class='content'>{{userinfo.info.consumptionPoints}}</p>
               </div>
               <div class='level'>
                   <p class='title'>等级</p>
@@ -182,9 +182,9 @@
                                 </thead>
                                 <tbody v-for='(item,index) in list_vipsocre' :key='index'>
                                     <tr>
-                                        <td>{{item.name}}</td>
-                                        <td>{{item.exp}}</td>
-                                        <td>{{item.score}}</td>
+                                        <td>{{item.levelName}}</td>
+                                        <td>{{item.experience}}</td>
+                                        <td>{{item.consumptionPoints}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -198,6 +198,8 @@
 </template>
 <script>
 import { InfiniteScroll } from 'mint-ui';
+import { mapState } from 'vuex'
+import { Toast } from 'mint-ui';
 export default {
     data(){
         return{
@@ -205,7 +207,7 @@ export default {
             name:'名字',
             experience:'300',
             scores:'300',
-            level_name:'钻石会员',
+            level_name:'非会员',
             loading:false,
             type:'积分记录',
             type_score:'全部',
@@ -312,43 +314,68 @@ export default {
                 }
 
             ],
-            list_vipsocre:[
-                {
-                    name:'大众会员',
-                    exp:'0',
-                    score:'0'
-                },
-                {
-                    name:'黄金会员',
-                    exp:'500',
-                    score:'1000'
-                },
-                {
-                    name:'铂金会员',
-                    exp:'2000',
-                    score:'30000'
-                },
-                {
-                    name:'钻石会员',
-                    exp:'8000',
-                    score:'100000'
-                },
-                {
-                    name:'至尊会员',
-                    exp:'20000',
-                    score:'150000'
-                }
-            ]
+            list_vipsocre:[]
         }
     },
     created(){
         this.$root.$emit('header','积分管理');
+        this.getVIPs();
+    },
+    mounted(){
+        let that=this;
+        console.log(this.userinfo);
+        this.$http.post('/api/customer/customerLevelComputing/query',{
+            level:that.userinfo.level
+        })
+        .then(function(response){
+            if(response.data.status==200){
+                that.level_name=response.data.info.length==0?'非会员':response.data.info[0].levelName
+            }
+            else{
+                console.log(response);
+            }
+        })
+        .catch(function(response){
+            console.log(response);
+        });
     },
     methods:{
         loadMore(){
             this.loading = true;
             console.log(111);
+        },
+        // 获取会员计算方式
+        getVIPs(){
+            let that=this;
+            this.$http.post('/api/customer/customerLevelComputing/query',{})
+            .then(function(response){
+                if(response.data.status==200){
+                    that.list_vipsocre=response.data.info;
+                }
+                else{
+                    Toast(response.data.msg);
+                }
+                console.log(response);
+            })
+            .catch(function(response){
+                console.log(response);
+                Toast('会员计算方式查询失败');
+            })
         }
+    },
+    computed:{
+        ...mapState({
+            userinfo:function(state){
+                if(JSON.stringify(state.userinfo.userinfo)=='{}'){
+                    let data=JSON.parse(sessionStorage.getItem('userinfo'));
+                    this.$store.commit('login',data)
+                    return data;
+                }
+                else{
+                    return state.userinfo.userinfo
+                }
+            }
+        })
     }
 }
 </script>

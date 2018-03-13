@@ -77,6 +77,11 @@ export default new Router({
       path:'/login',
       name:'login',
       component: resolve => require(['../components/view/login/login.vue'], resolve),
-    }
+    },
+    {
+      path:'/classification',//分类
+      name:'classification',
+      component: resolve => require(['../components/view/classification/classification.vue'], resolve),
+    },
   ]
 })
