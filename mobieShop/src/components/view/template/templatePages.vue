@@ -7,32 +7,35 @@
             </div>
             <div class='notice'><i data-v-13ee4bcf="" class="icon iconfont icon-tongzhi "></i></div>
         </div>
+            <keep-alive v-for='(item,index) in comlist' :key='index'>
+              <components :templateData='item.componentsData' :is='item.componentsName'  :type='item.componentsName'></components>
+            </keep-alive>
             <!-- 轮播开始 -->
-            <adImage></adImage>
+            <!-- <imageAds></imageAds> -->
             <!-- 轮播结束 -->
 
             <!-- 分类开始 -->
-            <classification></classification>
+            <!-- <classification></classification> -->
             <!-- 分类结束 -->
 
             <!-- 标题开始 -->
-            <title></title>
+            <!-- <titles></titles> -->
             <!-- 标题结束 -->
 
             <!-- 商品开始 -->
-            <commodity></commodity>
+            <!-- <commodity></commodity> -->
             <!-- 商品结束 -->
 
             <!-- 详情图片开始 -->
-            <detailsImage></detailsImage>
+            <!-- <detailsImage></detailsImage> -->
             <!-- 详情图片结束 -->
 
             <!-- 橱窗1开始 -->
-            <window></window>
+            <!-- <window></window> -->
             <!-- 橱窗1结束 -->
 
             <!-- 橱窗2开始 -->
-            <windows></windows>
+            <!-- <window2></window2> -->
             <!-- 橱窗2结束 -->
     </div>
 </template>
@@ -42,13 +45,14 @@
         Swipe,
         SwipeItem
     } from 'mint-ui';
-    import adImage from '@/components/view/template/adImage.vue'
+    import { mapState,mapMutations,mapGetters } from 'vuex'
+    import imageAds from '@/components/view/template/imageAds.vue'
     import classification from '@/components/view/template/classification.vue'
-    import title from '@/components/view/template/title.vue'
+    import titles from '@/components/view/template/titles.vue'
     import commodity from '@/components/view/template/commodity.vue'
     import detailsImage from '@/components/view/template/detailsImage.vue'
     import window from '@/components/view/template/window.vue'
-    import windows from '@/components/view/template/windows.vue'
+    import window2 from '@/components/view/template/window2.vue'
     export default {
         data() {
             return {
@@ -56,14 +60,20 @@
                 value: ''
             };
         },
+        created(){
+            console.log(this.comlist)
+        },
+        computed:mapState({
+            comlist:state => state.templateData.templateDATA
+        }),
         components: {
-            adImage,
+            imageAds,
             classification,
-            title,
+            titles,
             commodity,
             detailsImage,
             window,
-            windows
+            window2
         },
     };
 </script>

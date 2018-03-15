@@ -4,7 +4,7 @@
             <li v-for='(item,index) in imgArr' :key='index'>
                 <div class="imgConet">
                     <div>
-                        <a :href="item.url" style="display: inline-block;width: 100%;">
+                        <a :href="item.url">
                             <img :src='imageUrl+item.imgSrc' class="windowImg">
                         </a>
                     </div>
@@ -48,13 +48,12 @@ export default {
 #templatePage .listUl li{
     float: left;
     font-size: 0.25rem;
-    width: 40%;
+    width: 24.5%;
     margin-left: 7%;
 }
 #templatePage .listUl li img{
-    /* border-radius:0.2rem; */
     width: 100%;
-    height: 2.72rem;
+    height: 1.79rem;
     margin-bottom: 0.2rem;
     margin-top: 0.2rem;
 }
@@ -67,20 +66,20 @@ export default {
 }
 #templatePage .boxesDiv{
     position: absolute;
-    width: 92%;
-    height: 83%;
-    top: 4%;
+    width: 93%;
+    height: 75%;
+    top: 7%;
     left: 0%;
 }
 #templatePage .lineDiv{
     position: absolute;
     width: 80%;
-    height: 73%;
-    top: 12%;
+    height: 67%;
+    top: 15%;
     left: 9%;
 }
 #templatePage .boxesBorShow{
-    border: 7px solid #eeeeee
+    border: 5px solid #eeeeee
     }
 #templatePage .boxesBorHide{
     border: 0px solid #eeeeee

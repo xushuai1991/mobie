@@ -182,6 +182,9 @@
             level:that.userinfo.level
         })
         .then(function(response){
+            if(response.data.info == '尚未登录'){
+                that.$router.push({ path: '/login' })
+            }
             if(response.data.status==200){
                 that.viplevel=response.data.info.length==0?'非会员':response.data.info[0].levelName
             }

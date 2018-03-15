@@ -57,8 +57,62 @@ export default {
   data() {  
     return {  
       selected: '首页',
-      isTrue:true 
+      isTrue:true
     };  
+  },
+  created(){
+   // window.sessionStorage.setItem ("isBrowse",true);
+   // window.sessionStorage.setItem ("templateID",data);
+    let isBrowse = window.sessionStorage.getItem ("isBrowse");
+    if(isBrowse == 'true'){
+      // 浏览状态：根据'ID'和'商城模板类型'查询首页模板数据  。并将默认首页设置消失  isTrue = true
+      this.isTrue = true;
+      let templateId = window.sessionStorage.getItem ("templateID");
+      let that=this;
+      this.$http.post('/api/product/mall/template/queryMap',
+          {
+              'templateID':19,
+              'templateType':1
+          }
+      )
+      .then(function(response){
+        console.log(response)
+         if(response.data.info == "尚未登录"){
+           that.$router.push({ path: '/login' })
+        }
+        let comlists = JSON.parse(response.data.info[0].comlist)
+       // console.log(comlists)
+        that.$store.commit('getTemplateData',comlists)//对应组件的标识
+      })
+      .catch(function(response){
+        console.log(response)
+      })
+    }else{
+      // 非浏览状态：根据'启用中'和'商城模板类型'字段，查询首页模板数据。 启用中：查询启用中那一项 isTrue = true  ,  不启用：设置 isTrue = false
+      let that=this;
+      this.$http.post('/api/product/mall/template/queryMap',
+          {
+             'templateType':1,
+              'isEnabled':true
+          }
+      )
+      .then(function(response){
+        console.log(response)
+        if(response.data.info.length == 0){
+          this.isTrue = false
+        }else{
+           if(response.data.info == "尚未登录"){
+            that.$router.push({ path: '/login' })
+            }
+            let comlists = JSON.parse(response.data.info[0].comlist)
+          //  console.log(comlists)
+            that.$store.commit('getTemplateData',comlists)//对应组件的标识
+        }
+      })
+      .catch(function(response){
+        console.log(response)
+      })
+    }
   },
   components: {
     userInfo,
