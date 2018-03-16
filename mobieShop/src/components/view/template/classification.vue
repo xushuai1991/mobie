@@ -6,7 +6,7 @@
                   <li class="className" v-for='(item,index) in imgArr' :key="index">
                       <div class="classNameTitle">{{ item.classTitle }}</div>
                       <a :href="item.url" class="bannerLink">
-                          <img :src="imageUrl+item.imgSrc">
+                          <img :src="imageUrl+item.imgSrc" @load="imageLoaded">
                       </a>
                   </li>
               </ul>
@@ -34,15 +34,19 @@ export default {
             this.imageUrl = 'http://' + hostName + ':' + port + '/api/sms';
            // console.log(this.imageUrl)
         },
-        mounted:function(){
-          let classNames = document.querySelectorAll('.className');
-          let length = this.imgArr.length;
-          let classNameWidth =  classNames[0].offsetWidth;
-          console.log(classNameWidth)
-          let allWidth = classNameWidth * length;
-          console.log(allWidth)
-          this.classNameContent.width = allWidth + 'px';
-        },
+        methods:{
+            imageLoaded(){
+                let classNames = document.querySelectorAll('.className');
+                let length = this.imgArr.length;
+                //console.log(length)
+                let classNameWidth =  classNames[0].offsetWidth;
+                console.log(classNameWidth)
+                let classNameWidths = classNameWidth + 18
+                let allWidth = classNameWidths * length;
+                console.log(allWidth)
+                this.classNameContent.width = allWidth/50 + 'rem';
+            }
+        }
     };
 </script>
 <style>

@@ -61,17 +61,17 @@ export default {
     };  
   },
   created(){
-   // window.sessionStorage.setItem ("isBrowse",true);
+   // window.sessionStorage.setItem ("isBrowse",true);//后台点击浏览时设置
    // window.sessionStorage.setItem ("templateID",data);
     let isBrowse = window.sessionStorage.getItem ("isBrowse");
     if(isBrowse == 'true'){
       // 浏览状态：根据'ID'和'商城模板类型'查询首页模板数据  。并将默认首页设置消失  isTrue = true
       this.isTrue = true;
-      let templateId = window.sessionStorage.getItem ("templateID");
+      let templateId = sessionStorage.getItem ("templateID");
       let that=this;
       this.$http.post('/api/product/mall/template/queryMap',
           {
-              'templateID':19,
+              'templateID':templateId,
               'templateType':1
           }
       )

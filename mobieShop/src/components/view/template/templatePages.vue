@@ -10,33 +10,6 @@
             <keep-alive v-for='(item,index) in comlist' :key='index'>
               <components :templateData='item.componentsData' :is='item.componentsName'  :type='item.componentsName'></components>
             </keep-alive>
-            <!-- 轮播开始 -->
-            <!-- <imageAds></imageAds> -->
-            <!-- 轮播结束 -->
-
-            <!-- 分类开始 -->
-            <!-- <classification></classification> -->
-            <!-- 分类结束 -->
-
-            <!-- 标题开始 -->
-            <!-- <titles></titles> -->
-            <!-- 标题结束 -->
-
-            <!-- 商品开始 -->
-            <!-- <commodity></commodity> -->
-            <!-- 商品结束 -->
-
-            <!-- 详情图片开始 -->
-            <!-- <detailsImage></detailsImage> -->
-            <!-- 详情图片结束 -->
-
-            <!-- 橱窗1开始 -->
-            <!-- <window></window> -->
-            <!-- 橱窗1结束 -->
-
-            <!-- 橱窗2开始 -->
-            <!-- <window2></window2> -->
-            <!-- 橱窗2结束 -->
     </div>
 </template>
 
