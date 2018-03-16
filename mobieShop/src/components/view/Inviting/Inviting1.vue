@@ -5,7 +5,9 @@
             <li @click="WXScan">微信扫一扫</li>
             <li>邀请好友获5元无门槛优惠券</li>
             <li>邀请码 : <span>025645889</span></li>
-            <li @click="inviteRegular">邀请规则 >></li>
+            <li @click="inviteRegular">
+                <router-link to=''>邀请规则 >></router-link>
+            </li>
         </ul>
         <div class="invite-bottom">
             <p class="bottom-title">分享到</p>

@@ -1,13 +1,22 @@
 <template>
-    <section class='infoBottom'>
+    <section class='infoBottom' style='background-image:url("static/images/background_info.png");background-repeat: no-repeat;background-size:contain;'>
         <div class="account">
             <div class="account_info">
-                <div class="change"><i class='icon iconfont icon-qiehuan'></i></div>
+                <div class="change"><i class='icon iconfont icon-arrow-right-copy icon-qiehuan'></i></div>
                 <div class="portrait">
-                    <div class="portrait_img"><img src="static/HMMobilePhone/dsit/img/headPortrait2.png" alt=""></div>
+                    <div class="portrait_img">
+                        <img src="static/HMMobilePhone/dsit/img/headPortrait2.png" alt="">
+                        <p class='vip'>{{viplevel}}</p>
+                        <i class='icon iconfont icon--huangguan' style='color:#fdd23e;position:absolute;right:.2rem;top:-.15rem;transform:rotate(25deg);'></i>
+                    </div>
                     <div class="portrait_info">
-                        <p>郭湘君</p>
-                        <p>15035896892</p>
+                        <p style='font-size:.3rem;padding-top:.1rem;'>{{userinfo.nickname==null?'&nbsp;':userinfo.nickname}}</p>
+                        <router-link to='/personalScores'>
+                            <p style='color:#e47524;margin-top:.2rem;font-size:.25rem;'><i class='icon iconfont icon-qian' style='font-size:.4rem;'></i>120</p>
+                        </router-link>
+                        
+                        <p class='info_other' style='color:#939393'>至2019.1.1 &nbsp;&nbsp;过期积分：{{userinfo.consumptionPoints}}分</p>
+                        
                     </div>
                     <ul class="behavior">
                         <li>
@@ -16,7 +25,7 @@
                             </div>
                             <p class="text_wait">收藏 <span class="coller">20</span></p>
                         </li>
-                        <li class="shopCar" @click='gotshopCar'>
+                        <li class="shopCar">
                             <div class="collect">
                                 <i class='icon iconfont icon-gouwuche coloBule'></i>
                             </div>
@@ -35,7 +44,7 @@
         <div class="order">
             <div class="my_order">我的订单
                 <div class="check">查看全部订单</div>
-                <p><a href="###"><img src="static/HMMobilePhone/dsit/img/goahead.png" alt=""></a></p>
+                <p><a href="###"><i class='icon iconfont icon-arrow-right-copy fontSize'></i></a></p>
             </div>
             <ul class="wait_for">
                 <li>
@@ -49,7 +58,7 @@
                     <div class="img_wait">
                     <i class="wait orageColor">2</i>
                     <i class='icon iconfont icon-icondaifahuo fontSize'></i>
-                    </div></i>
+                    </div>
                     <p class="text_wait">待发货</p>
                 </li>
                 <li>
@@ -74,36 +83,132 @@
                 </li>
             </ul>
         </div>
-        <div class="account_management" @click='gotAccount'>账号管理 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
+        <div class='opera_list'>
+            <ul>
+                <li>
+                    <router-link to='addressManagnet'>
+                        <i class='icon iconfont icon-dingwei fontSize operaicon'></i>
+                        <i class='flag on'></i>
+                        <p class='name_opera'>地址</p>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to=''>
+                        <i class='icon iconfont icon-kefu fontSize operaicon'></i>
+                        <i class='flag on'></i>
+                        <p class='name_opera'>客服</p>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to=''>
+                        <i class='icon iconfont icon-youhuijuan fontSize operaicon'></i>
+                        <i class='flag'></i>
+                        <p class='name_opera'>优惠券</p>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to=''>
+                        <i class='icon iconfont icon-lingdang fontSize operaicon'></i>
+                        <i class='flag'></i>
+                        <p class='name_opera'>消息</p>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to=''>
+                        <i class='icon iconfont icon-liwu fontSize operaicon'></i>
+                        <i class='flag'></i>
+                        <p class='name_opera'>活动专区</p>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to=''>
+                        <i class='icon iconfont icon-fapiao fontSize operaicon'></i>
+                        <i class='flag'></i>
+                        <p class='name_opera'>服务报告更新</p>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to=''>
+                        <i class='icon iconfont icon-yaoqing fontSize operaicon'></i>
+                        <i class='flag'></i>
+                        <p class='name_opera'>邀请注册</p>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to=''>
+                        <i class='icon iconfont icon-printer fontSize operaicon'></i>
+                        <i class='flag'></i>
+                        <p class='name_opera'>发票管理</p>
+                    </router-link>
+                </li>
+            </ul>
+        </div>
+        <!-- <div class="account_management" @click='gotAccount'>账号管理 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
         <div class="address_management" @click='gotAddress'>地址管理 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
          <div class="address_management">二维码 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
-        <div class="coupon" @click='gotCoupon'>优惠券 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
-        <div class="log_off">退出登录</div>
+        <div class="coupon" @click='gotCoupon'>优惠券 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div> -->
+        <!-- <div class="log_off">退出登录</div> -->
     </section>
 </template>
 
 <script>
-   //import { Toast } from 'mint-ui'
+   import { mapState } from 'vuex'
    export default {
     prop:['listLoading'],
     data(){
         return {
-
+            viplevel:'非会员'
         }
     },
+    created(){
+        this.$root.$emit('header','个人中心')
+    },
     methods:{
-        gotAddress(){
-            this.$router.push('/addressManagnet')
-        },
-        gotAccount(){
-            this.$router.push('/accountMangagement')
-        },
-        gotCoupon(){
-            this.$router.push('/coupon')
-        },
-        gotshopCar(){
-            this.$router.push('/shopCar')
+        // 获取个人信息
+        getinfo(){
+            this.$http.post('/api/customer/account/register',
+                {
+                    mobile:that.phone,
+                    password:that.psw,
+                    code:that.code
+                }
+            )
         }
+    },
+    mounted(){
+        console.log(this.userinfo);
+        let that=this;
+        this.$http.post('/api/customer/customerLevelComputing/query',{
+            level:that.userinfo.level
+        })
+        .then(function(response){
+            if(response.data.info == '尚未登录'){
+                that.$router.push({ path: '/login' })
+            }
+            if(response.data.status==200){
+                that.viplevel=response.data.info.length==0?'非会员':response.data.info[0].levelName
+            }
+            else{
+                console.log(response);
+            }
+        })
+        .catch(function(response){
+            console.log(response);
+        });
+    },
+    computed:{
+        ...mapState({
+            userinfo:function(state){
+                if(JSON.stringify(state.userinfo.userinfo)=='{}'){
+                    let data=JSON.parse(sessionStorage.getItem('userinfo'));
+                    this.$store.commit('login',data)
+                    return data;
+                }
+                else{
+                    return state.userinfo.userinfo
+                }
+            }
+        })
     }
 
 }
@@ -117,22 +222,23 @@
 }
 .icon-qiehuan{
     position:absolute;
+    top:17%;
     right:5%;
-    color:#f38550;
+    color:#848484;
     font-size:0.4rem;
 }
     .account{
     width: 100%;
-    height: 3.64rem;
+    height: 4.2rem;
     padding: .36rem 0 0 0;
 }
 .account_info{
     width: 6.3rem;
-    margin: .36rem  auto;
-    height: 3.2rem;
+    margin: 0rem  auto;
+    height: 3.8rem;
     background: white;
     padding-top: .3rem;
-    box-shadow: .05rem .05rem .15rem #31b1b0;
+    box-shadow: .05rem .05rem .15rem #bde9fd;
     position: relative;
 }
 .change img{
@@ -144,30 +250,43 @@
     right: .2rem;
 }
 .infoBottom{
-    margin-bottom:2rem;
+    margin-top:.8rem;
 }
 .portrait{
     width: 100%;
-    height: 1.75rem;
+    height: 1.5rem;
     text-align:left;
+    margin-top: .3rem;
 }
 .portrait_img{
-    width: 1.1rem;
-    height: 1.1rem;
+    width: 1.5rem;
+    height: 1.5rem;
     border-radius: 50%;
     background: #C4C4C4;
-    margin-left: .72rem;
-    display: inline-block;
+    margin-left: .3rem;
+    /* display: inline-block; */
     vertical-align: middle;
+    float: left;
+    position: relative;
 }
 .portrait_img img{
     width: 100%;
     height: 100%;
     border-radius: 50%;
 }
+.portrait_img .vip{
+    width:100%;
+    text-align: center;
+    font-size:.1rem;
+    position: absolute;
+    bottom:-.25rem;
+} 
+
 .portrait_info{
-    height: 1.1rem;
+    height: 1.5rem;
     display: inline-block;
+    float: left;
+    margin-left: .3rem;
     font-size: .22rem;
     line-height: .5rem;
     color: #353535!important;
@@ -175,7 +294,7 @@
 .behavior{
     width: 100%;
     height: 1.5rem;
-    margin-top: .3rem;
+    padding-top: .5rem;
     display: flex;
     justify-content: space-around;
 }
@@ -210,25 +329,26 @@
     left: -.04rem;
 }
 .wait_for li:nth-child(1) .fontSize{
-    font-size:0.5rem;
+    font-size:0.6rem;
 }
 .wait_for li:nth-child(2) .fontSize{
-    font-size:0.5rem;
+    font-size:0.6rem;
 }
 .wait_for li:nth-child(3) .fontSize{
-    font-size:0.4rem;
+    font-size:0.45rem;
 }
 .wait_for li:nth-child(4) .fontSize{
-    font-size:0.4rem;
+    font-size:0.45rem;
 }
 .wait_for li:nth-child(5) .fontSize{
-    font-size:0.4rem;
+    font-size:0.5rem;
 }
 /**/
 .order{
     width: 100%;
     height: 2.5rem;
-    margin-top: .6rem;
+    margin-top: .3rem;
+    border-bottom: .15rem solid #f4f4f4;
 }
 
 .check{
@@ -260,7 +380,7 @@
     height: .26rem;
     position: absolute;
     right: .48rem;
-    top: .05rem;
+    top: 0rem;
 }
 .my_order p img,.account_management p img,.address_management p img,.coupon p img{
     width: 100%;
@@ -288,21 +408,22 @@
 }
 .wait_for li .orageColor{
     display: inline-block;
-    width: .35rem;
-    height: .35rem;
+    width: .3rem;
+    height: .3rem;
     line-height: .35rem;
     border-radius: 50%;
     background: #e47524;
     position: absolute;
-    top: -.18rem;
-    right: -.2rem;
+    top: -.12rem;
+    right: -.3rem;
+    font-size: .2rem;
     font-style: normal;
     color: white;
 }
 .log_off{
     width: 5.6rem;
     height: .9rem;
-    margin: .2rem auto 1.2rem auto;
+    margin: .2rem auto 0rem auto;
     border-radius: 1.9rem;
     font-size: .3rem;
     color: white;
@@ -379,5 +500,39 @@
     height: .18rem;
     display: block;
     margin: .15rem .1rem ;
+}
+.opera_list{
+    padding: .2rem 0;
+}
+.opera_list ul{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.opera_list li{
+    width:25%;
+    position: relative;
+}
+.opera_list .name_opera{
+    font-size: .24rem;
+    padding: .2rem 0;
+    color: #2c3e50;
+}
+.opera_list .icon.operaicon{
+    font-size: .5rem;
+    color: #2ba1f2;
+}
+.opera_list .flag{
+    width:.1rem;
+    height:.1rem;
+    top: 20%;
+    left: 60%;
+    display: none;
+    position: absolute;
+    border-radius: 50%;
+    background: #e47524;
+}
+.opera_list .flag.on{
+    display: block;
 }
 </style>
