@@ -91,12 +91,22 @@ export default new Router({
                 {
                     path: '/Inviting', // 受邀码
                     name: 'Inviting',
-                    component: resolve => require(['../components/view/Inviting/Inviting1.vue'], resolve),
+                    component: resolve => require(['../components/view/Inviting/Inviting.vue'], resolve),
                 },
                 {
                     path: '/InvitingGift', // 邀请有礼
                     name: 'InvitingGift',
-                    component: resolve => require(['../components/view/Inviting/Inviting2.vue'], resolve),
+                    component: resolve => require(['../components/view/Inviting/InvitingGift.vue'], resolve),
+                },
+                {
+                    path: '/InvitingRegular', // 邀请规则
+                    name: 'InvitingRegular',
+                    component: resolve => require(['../components/view/Inviting/InvitingRegular.vue'], resolve),
+                },
+                {
+                    path: '/InvitingResult', // 邀请结果
+                    name: 'InvitingResult',
+                    component: resolve => require(['../components/view/Inviting/InvitingResult.vue'], resolve),
                 }
             ]
         },

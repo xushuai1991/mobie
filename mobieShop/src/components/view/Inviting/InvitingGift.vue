@@ -1,0 +1,348 @@
+<template>
+    <div id="invite-gift">
+        <ul class="gift-top" :style="{backgroundImage: 'url(' + imgSrc + ')' }">
+            <li class="top-headerImg">
+                <div>
+                    <img src="./invite-gift.png" alt="">
+                </div>
+            </li>
+            <li>接受绿城小伙伴的邀请</li>
+            <li>首单立减5元</li>
+            <li><span>5</span>元</li>
+        </ul>
+        <div class="gift-bottom">
+            <mt-field label="" placeholder="输入手机号接受邀请" type="tel" v-model="formData.phone"></mt-field>
+            <mt-button type="primary" @click.native="handleClick">领取优惠券</mt-button>
+        </div>
+        <div class="register-diag" v-show="isShow">
+            <div class="invite-register">
+                <ul class="form-data">
+                    <li>
+                        <span>验证码</span>
+                        <input type="text" v-model="formData.checkCode" name="checkCode" placeholder="请输入验证码">
+                        <p :disabled="isClcik" id="resend" ref="message" @click="resendMessage">{{message}}</p>
+                    </li>
+                    <li>
+                        <span>注册密码</span>
+                        <input type="password" v-model="formData.password" @blur="checkpsw" name="password" placeholder="请输入注册密码">
+                    </li>
+                    <li>
+                        <span>确认密码</span>
+                        <input type="password" v-model="formData.surePassword" @blur="pswcertain" name="surePassword" placeholder="请确认密码">
+                    </li>
+                    <li>
+                        <mt-button type="primary" @click="registerOk">确认</mt-button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+import {checkClass} from '../../../assets/javascript/checkClass.js'
+import { Toast } from 'mint-ui';
+import { Indicator } from 'mint-ui';
+export default {
+    data () {
+        return {
+            imgSrc:require('./invite-gift.png'),
+            isRight:'',
+            message:60,
+            formData:{
+                checkCode:'',password:'',
+                phone:'',surePassword:''
+            },
+            phonejson:{
+                status:false,
+                msg:''
+            },
+            pswjson:{
+                status:false,
+                msg:''
+            },
+            pswcertainjson:{
+                status:false,
+                msg:''
+            },
+            isClcik:true,
+            isShow:false
+        }
+    },
+    methods:{
+        handleClick(){  //  点击领取发送短信验证码,验证手机号
+            this.checkphone();
+            if(!this.phonejson.status){
+                Toast(this.phonejson.msg)
+                this.cleardata()
+                return
+            }
+            Indicator.open({
+                text: '加载中...',
+                spinnerType: 'triple-bounce'
+            })
+            this.sendMessage()
+        },
+        sendMessage(){
+            let that = this
+            this.$http.post('/api/customer/resource/sendSmsCode?mobile='+that.formData.phone+'&type=1'
+            ).then(function(response){
+                Toast({
+                    message:response.data.msg,
+                    position:'top'
+                })
+                if(response.data.status==200){
+                    Indicator.close()
+                    that.isShow = true
+                    that.countTime()
+                }
+            }).catch(function(response){
+                Toast({
+                    message: '领取失败',
+                    position: 'bottom',
+                    duration:'1000'
+                })
+            })
+        },
+        countTime(){
+            this.message=60;
+            let timer1 = setInterval(() => {
+                this.message--
+                if(this.message == 0){
+                    console.log(111);
+                    clearInterval(timer1);
+                    this.isClick = false
+                    this.message ='重新发送';
+                }else{
+                    this.isClcik = true
+                }
+                
+            }, 50)
+            
+        },
+        resendMessage(){//  重新发送短信验证码
+            this.sendMessage()
+        }, 
+        registerOk(){
+            let that = this
+            this.$http.post('/api/customer/account/register',
+                {
+                    code:that.formData.checkCode,
+                    mobile:that.formData.phone,
+                    password:that.formData.password
+                }
+            ).then(function(response){
+                Toast(response.data.msg);
+                if(response.data.status==200){ 
+                    that.$router.push({path:'/InvitingResult',query:{text:'恭喜你 ! 已成功领取此优惠券'}})
+                }else if(response.data.status==300){
+                    that.$router.push({path:'/InvitingResult',query:{text:'老朋友,您已是会员,领取失败'}})
+                }
+            }).catch(function(response){
+                console.log(err)
+            })
+        },
+        // 清空数据
+        cleardata(){
+            this.formData.password='';
+            this.formData.surePassword='';
+            this.formData.checkCode='';
+            this.phonejson.status=false;
+            this.phonejson.msg='';
+            this.pswjson.status=false;
+            this.pswjson.msg='';
+            this.pswcertainjson.status=false;
+            this.pswcertainjson.msg='';
+        },
+        // 手机号验证
+        checkphone(){
+            let result = checkClass.checkTel(this.formData.phone)
+            this.phonejson.status = result.flag
+            this.phonejson.msg = result.flag ?'':result.error
+        },
+        // 密码验证
+        checkpsw(){
+            let result = checkClass.checkNumAndLetter(this.formData.password);
+            if(this.formData.password == ''){
+                let flag = false
+                this.pswjson.status = result.flag;
+                this.pswjson.msg = result.flag ?'':'密码不能为空';
+            }else{
+                let flag = false
+                this.pswjson.status = result.flag;
+                this.pswjson.msg = result.flag ?'':result.error;
+            }
+            if(!this.pswjson.status){
+                Toast({
+                    message:this.pswjson.msg,
+                    duration:1000
+                })
+                this.cleardata()
+                return
+            }
+        },
+        // 密码确认
+        pswcertain(){
+            if(this.formData.surePassword == '' && this.formData.password == ''){
+                let flag = false
+                this.pswcertainjson.status = flag;
+                this.pswcertainjson.msg = flag ?'':'密码不能为空';
+            }else{
+                let flag = this.formData.password == this.formData.surePassword;
+                this.pswcertainjson.status = flag;
+                this.pswcertainjson.msg = flag ?'':'两次密码不一致';
+            }
+            if(!this.pswcertainjson.status){
+                Toast({
+                    message:this.pswcertainjson.msg,
+                    duration:1000
+                })
+                this.cleardata()
+                return
+            }
+        }
+    }
+}
+</script>
+<style lang="less">
+html,body{
+    height:100%;
+    position: relative;
+    .gift-bottom{
+        .mint-field{
+            justify-content: center;
+            .mint-cell-wrapper{
+                width:80% !important;
+                border:1px solid #eee;
+                text-align: center;
+                .mint-cell-value{
+                    input{
+                        text-align: center;
+                    }
+                    input::-webkit-input-placeholder{
+                        
+                    }
+                }
+            }
+        }
+        .mint-button--normal{
+            width:80%;
+            height:1rem;
+            letter-spacing: 1px;
+            margin-top:0.6rem;
+            .mint-button-text{
+                font-weight: bold;
+            }
+        }
+    }
+}
+</style>
+<style lang="less" scoped>
+#invite-gift{
+    padding-top:0.7rem;
+    .gift-top{
+        padding:0.8rem 0 0.8rem;
+        background-repeat:no-repeat;
+        background-size:100% 100%;
+        background-position:center center;
+        color:#fff;
+        letter-spacing:1px;
+        .top-headerImg{
+            div{
+                width: 2.5rem;
+                height:2.5rem;
+                border-radius:50%;
+                background: #fff;
+                margin:auto;
+                position: relative;
+                img{
+                    display:block;
+                    width: 2rem;
+                    height: 2rem;
+                    border-radius:50%;
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;    
+                    right: 0;   
+                    margin:auto;
+                }
+            }
+        }
+        li:nth-child(2){
+            margin:0.6rem 0 0.3rem;
+            font-size: 0.4rem;
+        }
+        li:nth-child(3){
+            font-size: 0.5rem;
+        }
+        li:nth-child(4){
+            width:80%;
+            font-size: 0.5rem;
+            margin:0.6rem auto 0;
+            text-align:right;
+            span{
+                font-size: 2rem;
+            }
+        }
+    }
+    .gift-bottom{
+        margin-top:0.8rem;
+    }
+    .register-diag{
+        position: absolute;
+        width:100%;
+        height:100%;
+        top: 0;
+        background: rgba(0,0,0,0.5);
+        z-index:5;
+        .invite-register{
+            width:80%;
+            top: 3rem;
+            left: 0;
+            right: 0;
+            margin:auto;
+            position: fixed;
+            background: #fff;
+            border-radius:0.2rem;
+            .form-data{
+                font-size: 0.3rem;
+                padding:0.8rem 0.2rem 0.5rem;
+                li:nth-child(1),li:nth-child(2),li:nth-child(3){
+                    border-bottom:1px solid #eee;
+                    padding:0.3rem 0 0.3rem 0.2rem;
+                    text-align:left;
+                    margin-bottom: 0.5rem;
+                    letter-spacing:0.02rem;
+                    span{
+                        display:inline-block;
+                        width:1.3rem;
+                        opacity: 0.8;
+                    }
+                    input{
+                        width:40%;
+                        margin-left: 0.2rem;
+                        opacity:0.8;
+                        outline:none;
+                    }
+                }
+                li:nth-child(1){
+                    position: relative;
+                    p{
+                        position: absolute;
+                        padding:0.15rem 0.15rem;
+                        font-size: 0.3rem;
+                        letter-spacing:0.01rem;
+                        right:0;
+                        top:0.1rem;
+                        border:1px solid #aaa;
+                        border-radius:0.1rem;
+                    }
+                }
+                li:nth-child(4){
+                    font-size: 0.5rem;
+                }
+            }
+        }
+    }
+}
+</style>

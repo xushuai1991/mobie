@@ -127,15 +127,15 @@
                         <p class='name_opera'>服务报告更新</p>
                     </router-link>
                 </li>
-                <li>
-                    <router-link to=''>
+                <li >
+                    <router-link to='/inviting'>
                         <i class='icon iconfont icon-yaoqing fontSize operaicon'></i>
                         <i class='flag'></i>
                         <p class='name_opera'>邀请注册</p>
                     </router-link>
                 </li>
                 <li>
-                    <router-link to=''>
+                    <router-link to='' >
                         <i class='icon iconfont icon-printer fontSize operaicon'></i>
                         <i class='flag'></i>
                         <p class='name_opera'>发票管理</p>

@@ -1,12 +1,12 @@
 <template>
     <div id="invite-register">
         <ul class="invite-top">
-            <li :style="{backgroundImage: 'url(' + imgSrc + ')' }"></li>
-            <li @click="WXScan">微信扫一扫</li>
+            <li :style="{backgroundImage: 'url(' + wxSrc + ')' }"></li>
+            <li >微信扫一扫</li>
             <li>邀请好友获5元无门槛优惠券</li>
             <li>邀请码 : <span>025645889</span></li>
-            <li @click="inviteRegular">
-                <router-link to=''>邀请规则 >></router-link>
+            <li>
+                <router-link to='/invitingRegular'>邀请规则 >></router-link>
             </li>
         </ul>
         <div class="invite-bottom">
@@ -43,22 +43,32 @@
 <script>
 import { Button } from 'mint-ui';
 import { MessageBox } from 'mint-ui';
-
+import { Indicator } from 'mint-ui';
 export default {
     data () {
         return {
-            imgSrc:require('../../../../static/images/bgimg.png')
+            wxSrc:'http://192.168.199.102/customer/resource/qrCode.png?content=http://localhost:8080/inviting'
+            // wxSrc:'http://192.168.199.102/customer/resource/qrCode.png?content=https://www.baidu.com/?tn=78000241_5_hao_pg'
         }
     },
     created(){
-
+        this.register();
     },
     methods:{
-        WXScan(){
-            console.log("打开微信扫一扫!")
-        },
-        inviteRegular(){
-            console.log("跳转到规则页面了!")
+        
+        register(){
+            Indicator.open({
+                text: '加载中...',
+                spinnerType: 'fading-circle'
+            });
+            let that = this;
+            this.$http.get(
+                'http://192.168.199.102/customer/resource/qrCode.png?content=http://localhost:8080/inviting'
+            ).then(res => {
+                // that.wxSrc = res.data
+                Indicator.close(); 
+                // this.$router.path('/InvitingResult','成功或者失败');
+            }).catch(err => {console.log(err)})
         },
         shareToWX(){ 
             MessageBox.confirm('确定分享到微信吗?').then(action => {
@@ -101,13 +111,13 @@ html,body{
     height:100%;
     background: #409EFF;
     font-size:.24rem;
-    padding-top:.5rem;
+    padding-top:.7rem;
     letter-spacing: 0.01rem;
 }
 .invite-top{
     background: #fff;
-    margin:.0 0.2rem;
-    padding:0.8rem 0 0.6rem;
+    margin:0.7rem 0.2rem;
+    padding:0.7rem 0 0.6rem;
     border-radius:.08rem;
     li:nth-child(1){
         width:3.3rem;
