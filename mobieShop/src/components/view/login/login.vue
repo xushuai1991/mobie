@@ -1,65 +1,83 @@
 <template>
     <div class='contain'>
-        <img class='logo' src="static/images/logo.png" alt="">
+        <div class='imgs'>
+            <img class='logo1' src="static/images/icon1.png" alt="">
+            <img class='logo2' src="static/images/icon2.png" alt="">
+        </div>
+        
         <!-- 登录 -->
         <div class='form login' v-show='loginflag'>
             <div class="phone">
+                <i class='icon iconfont icon-shouji'></i>
                 <input type="tel" placeholder="手机号码" v-model="phone" key='phone_login' @change='checkphone()'>
                 <p class='error'>{{phonejson.msg}}</p>
             </div>
             <div class="psw">
+                <i class='icon iconfont icon-16suo'></i>
                 <input type="password" placeholder="密码" v-model="psw" @change='checkpsw()'>
                 <p class='error'>{{pswjson.msg}}</p>
             </div>
             <div class="verificationcode">
+                <i class='icon iconfont icon-key'></i>
                 <input type="text" class='codeinput' placeholder="验证码" v-model="code" @change='checkcode()'>
                 <p class='error'>{{codejson.msg}}</p>
                 <div id='codeimg' class='codeimg' @click='yzn'>{{codehas}}</div>
             </div>
-            <mt-button type="default" class='btn-login' @click="login">登录</mt-button>
+            
             <p class='opera_quick'>
-                <router-link to='' class='forgetpsw'>忘记密码？</router-link>
+                <mt-button type="default" class='btn-login' @click="login">登录<i class='icon iconfont icon-xiangyoujiantou'></i></mt-button>
                 <router-link to='' class='quicklogin' @click.native='switch_quick'>快速登录</router-link>
             </p>
-            <mt-button type="default" class='btn-resign'  @click.native='switch_resign'>注册</mt-button>
+            <p style='text-align:left;'>
+                <router-link to='' class='forgetpsw'>忘记密码？</router-link>
+            </p>
+            <mt-button type="default" class='btn-resign'  @click.native='switch_resign'>没有账号，立即注册</mt-button>
         </div>
         <!-- 快速登录 -->
         <div class='form loginquick' v-show='loginquickflag'>
             <div class="phone">
+                <i class='icon iconfont icon-shouji'></i>
                 <input type="tel" placeholder="手机号码" v-model="phone" @change='checkphone()'>
                 <p class='error'>{{phonejson.msg}}</p>
             </div>
             <div class="verificationcode">
+                <i class='icon iconfont icon-key'></i>
                 <input type="text" class='codeinput' placeholder="验证码" v-model="code">
                 <p class='error'></p>
                 <router-link to='' style='position:absolute;font-size:.3rem;top:.6rem;right:.2rem;'  @click.native='getcode(2)'>获取验证码</router-link>
             </div>
-            <mt-button type="default" class='btn-login' @click="loginquick">登快速录</mt-button>
+            
             <p class='opera_quick'>
-                <router-link to='' class='forgetpsw' @click.native='switch_login'>密码登录</router-link>
+                <mt-button type="default" class='btn-login' @click="loginquick">快速登录</mt-button>
+                <router-link to='' class='pswlogin' @click.native='switch_login'>密码登录</router-link>
             </p>
         </div>
         <!-- 注册 -->
         <div class='form login' v-show='resignflag'>
             <div class="phone">
+                <i class='icon iconfont icon-shouji'></i>
                 <input type="tel" placeholder="手机号码" v-model="phone" key='phone_login' @change='checkphone()'>
                 <p class='error'>{{phonejson.msg}}</p>
             </div>
             <div class="verificationcode">
+                <i class='icon iconfont icon-key'></i>
                 <input type="text" class='codeinput' placeholder="验证码" v-model="code">
                 <p class='error'></p>
                 <router-link to='' style='position:absolute;font-size:.3rem;top:.6rem;right:.2rem;'  @click.native='getcode(1)'>获取验证码</router-link>
             </div>
             <div class="psw">
+                <i class='icon iconfont icon-16suo'></i>
                 <input type="password" placeholder="密码" v-model="psw" @change='checkpsw()'>
                 <p class='error'>{{pswjson.msg}}</p>
             </div>
             <div class="psw">
+                <i class='icon iconfont icon-16suo'></i>
                 <input type="password" placeholder="确认密码" v-model="pswtwice" @change='pswcertain()'>
                 <p class='error'>{{pswcertainjson.msg}}</p>
             </div>
-            <mt-button type="default" class='btn-login' @click="resign">注册</mt-button>
+            
             <div class='agreement'>
+                <mt-button type="default" class='btn-login' @click="resign">注册<i class='icon iconfont icon-xiangyoujiantou'></i></mt-button>
                 <mt-checklist
                     v-model="agreement"
                     :options="['用户协议书']">
@@ -296,14 +314,41 @@ export default {
 }
 </script>
 <style scoped>
+.imgs{
+    width:100%;
+    height:4.5rem;
+    position:relative;
+}
+.logo1{
+    width:2rem;
+    position:absolute;
+    left:1rem;
+    top:1.5rem
+}
+.logo2{
+    width:4rem;
+    position:absolute;
+    right:0.3rem;
+    top:.5rem;
+}
 .contain{
     height: 13.4rem;
     /* background: url(/static/images/bgimg.png) no-repeat round; */
 }
 .form{
     background-color: rgba(255,255,255,.9);
-    padding:1rem; 
+    padding:.2rem 1rem; 
     position: relative;
+}
+.form .icon{
+    color:rgb(39, 162, 242);
+    font-size:.45rem;
+    position: absolute;
+    top:.53rem;
+}
+.form input{
+    text-indent: .7rem;
+    /* padding-left: .7rem; */
 }
 .phone,.psw,.verificationcode{
     margin-top: -.3rem;
@@ -338,15 +383,26 @@ export default {
 .opera_quick{
     font-size: 0.3rem;
     margin-top: .2rem;
+    height:.8rem;
 }
 .forgetpsw{
-    float: right;
+    font-size: .3rem;
+    line-height: .8rem;
+    color: rgb(39, 162, 242);
+    
+}
+.pswlogin{
+    font-size: .3rem;
+    line-height: .8rem;
+    float: left;
 }
 .quicklogin{
     float: left;
+    line-height: .8rem;
 }
 .btn-login{
-    width: 100%;
+    width: 40%;
+    border-radius: 1rem !important;
     margin: 0rem  auto;
     height: .8rem;
     line-height: .8rem;
@@ -355,10 +411,16 @@ export default {
     color: #fff;
     border-radius: 5px;
     background:rgb(39, 162, 242);
+    float: right;
+}
+.btn-login .icon{
+    color:#fff;
+    position: absolute;
+    top:0;
 }
 .btn-resign{
     width:100%;
-    height: 1rem;
+    height: 1.5rem;
     background-color: #fff;
     left: 0;
     font-size: 0.3rem;
@@ -389,10 +451,14 @@ export default {
     border:1px solid rgb(39, 162, 242);
     margin-right: .2rem;
 }
+
 </style>
 <style>
 .mint-cell{
     display: inline;
+}
+.agreement .mint-cell-wrapper{
+    width:fit-content;
 }
 </style>
 
