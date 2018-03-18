@@ -121,6 +121,16 @@ export default new Router({
             component: resolve => require(['../components/view/navBottom/navBottom.vue'], resolve),
         },
         {
+            path: '/eventTemplate', // 活动模板
+            name: 'eventTemplate',
+            component: resolve => require(['../components/view/eventTemplate/templatePages.vue'], resolve),
+        },
+        {
+            path: '/detailTemplate', // 详情模板
+            name: 'detailTemplate',
+            component: resolve => require(['../components/view/detailTemplate/templatePages.vue'], resolve),
+        },
+        {
             path: '/login',
             name: 'login',
             component: resolve => require(['../components/view/login/login.vue'], resolve),

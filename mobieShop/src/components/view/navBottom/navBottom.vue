@@ -57,21 +57,29 @@ export default {
   data() {  
     return {  
       selected: '首页',
-      isTrue:true
+      isTrue:true,
+      templateUrl:''
     };  
   },
   created(){
-   // window.sessionStorage.setItem ("isBrowse",true);//后台点击浏览时设置
-   // window.sessionStorage.setItem ("templateID",data);
-    let isBrowse = window.sessionStorage.getItem ("isBrowse");
-    if(isBrowse == 'true'){
+    alert(sessionStorage.getItem("isBrowses"))
+    console.log(sessionStorage.getItem("isBrowses"));
+    console.log(sessionStorage.getItem("templateUrl"));
+  },
+  mounted(){
+    let isBrowse = sessionStorage.getItem("isBrowses");
+    console.log(isBrowse)
+    console.log(sessionStorage.getItem("templateUrl"))
+    if(isBrowse == true){
+      this.templateUrl = sessionStorage.getItem("templateUrl");
+      let id = this.getUrlParms("id")
       // 浏览状态：根据'ID'和'商城模板类型'查询首页模板数据  。并将默认首页设置消失  isTrue = true
       this.isTrue = true;
-      let templateId = sessionStorage.getItem ("templateID");
+      // let templateId = sessionStorage.getItem ("templateID");
       let that=this;
       this.$http.post('/api/product/mall/template/queryMap',
           {
-              'templateID':templateId,
+              'templateID':id,
               'templateType':1
           }
       )
@@ -87,7 +95,7 @@ export default {
       .catch(function(response){
         console.log(response)
       })
-    }else{
+    }else if(isBrowse == null){
       // 非浏览状态：根据'启用中'和'商城模板类型'字段，查询首页模板数据。 启用中：查询启用中那一项 isTrue = true  ,  不启用：设置 isTrue = false
       let that=this;
       this.$http.post('/api/product/mall/template/queryMap',

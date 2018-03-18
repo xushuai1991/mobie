@@ -40,11 +40,11 @@ export default {
                 let length = this.imgArr.length;
                 //console.log(length)
                 let classNameWidth =  classNames[0].offsetWidth;
-                console.log(classNameWidth)
+                //console.log(classNameWidth)
                 let classNameWidths = classNameWidth + 18
                 let allWidth = classNameWidths * length;
-                console.log(allWidth)
-                this.classNameContent.width = allWidth/50 + 'rem';
+               // console.log(allWidth)
+                this.classNameContent.width = allWidth/50 + 2 + 'rem';
             }
         }
     };
