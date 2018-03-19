@@ -77,7 +77,7 @@ export default {
         //从后台取要浏览的ID
         this.$http.post('/api/product/mall/template/getString'
         ).then(function(response){
-          console.log(response)
+          //console.log(response)
           id = response.data.msg
           that.$http.post('/api/product/mall/template/queryMap',
             {
@@ -86,10 +86,10 @@ export default {
             }
         )
         .then(function(response){
-          console.log(response)
-          if(response.data.info == "尚未登录"){
-            that.$router.push({ path: '/login' })
-          }
+          //console.log(response)
+          // if(response.data.info == "尚未登录"){
+          //   that.$router.push({ path: '/login' })
+          // }
           let comlists = JSON.parse(response.data.info[0].comlist)
         // console.log(comlists)
           that.$store.commit('getTemplateData',comlists)//对应组件的标识
