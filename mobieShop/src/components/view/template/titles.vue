@@ -20,7 +20,7 @@ export default {
         },
         props:['templateData'],
         created:function(){
-          console.log(this.templateData)
+          //console.log(this.templateData)
           this.titlesDate = this.templateData;
          // console.log(this.titlesDate)
         },

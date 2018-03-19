@@ -49,7 +49,7 @@ export default {
         },
         props:['templateData'],
         created() {
-            console.log(this.templateData)
+           // console.log(this.templateData)
             if(this.templateData.bigImg == 24){
                 this.commodityBigImg.width = '100%'
                 this.commodityBigImg.margin == '0% 0% 0% 0%'

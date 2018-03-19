@@ -27,7 +27,7 @@ export default {
         },
         props:['templateData'],
         created() {
-            console.log(this.templateData)
+            //console.log(this.templateData)
             this.imgArr = this.templateData.ImgArr;
             let hostName = location.hostname;
             let port = location.port;
