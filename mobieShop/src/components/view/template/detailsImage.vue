@@ -4,7 +4,7 @@
             <li v-for='(item,index) in imgArr' :key='index'>
                 <div class="imgConet" style="font-size: 0;">
                     <a :href="item.url" style="display: inline-block;width: 100%;">
-                        <img :src='imageUrl+item.imgSrc' class="windowImg">
+                        <img :src='item.imgSrc == imageUrl?imageUrl+item.imgSrc:imageUrl+item.img' class="windowImg">
                     </a>
                 </div>
                  

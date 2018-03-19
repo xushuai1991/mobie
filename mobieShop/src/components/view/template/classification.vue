@@ -6,7 +6,7 @@
                   <li class="className" v-for='(item,index) in imgArr' :key="index">
                       <div class="classNameTitle">{{ item.classTitle }}</div>
                       <a :href="item.url" class="bannerLink">
-                          <img :src="imageUrl+item.imgSrc" @load="imageLoaded">
+                          <img :src="item.imgSrc == imageUrl?imageUrl+item.imgSrc:imageUrl+item.img" @load="imageLoaded">
                       </a>
                   </li>
               </ul>
