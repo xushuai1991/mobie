@@ -126,7 +126,7 @@
                     </router-link>
                 </li>
                 <li>
-                    <router-link to='/inviting'>
+                    <router-link :to="'/inviting?id='+userinfo.info.id">
                         <i class='icon iconfont icon-yaoqing fontSize operaicon'></i>
                         <i class='flag'></i>
                         <p class='name_opera'>邀请注册</p>
