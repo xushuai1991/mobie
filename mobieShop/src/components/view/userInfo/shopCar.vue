@@ -1,52 +1,55 @@
 <template>
     <div>
         <section>
+            <mt-header fixed :title="title">
+                <router-link to="" slot="left">
+                    <mt-button icon="back" @click="goback"></mt-button>
+                </router-link>
+            </mt-header>
             <div class="wrap2">
                 <div class="goods_list">
-                <ul class="mui-table-view" v-infinite-scroll="loadMore" infinite-scroll-disabled="moreLoading" infinite-scroll-distance="0" infinite-scroll-immediate-check="false">
-                <!--li数据遍历循环部分-->
-                <li class="mui-table-view-cell" v-for="item in list">
-                  <div class="cart">
-                        <div class="goods">
-                            <div class="goods_title">
-                                <i class="input_model"><img src="static/HMMobilePhone/dsit/img/tick.png" alt=""></i>
-                                <input type="checkbox" class="check_select" id="sid1">
-                                <div class="check">领券</div>
-                                <p><img src="static/HMMobilePhone/dsit/img/arrow_Green.png" alt=""></p>
+                    <ul class="mui-table-view" v-infinite-scroll="loadMore" infinite-scroll-disabled="moreLoading" infinite-scroll-distance="0" infinite-scroll-immediate-check="false">
+                        <!--li数据遍历循环部分-->
+                        <li class="mui-table-view-cell" v-for="item in list">
+                            <div class="cart">
+                                <div class="goods">
+                                    <div class="goods_title">
+                                        <i class="input_model"><img src="static/HMMobilePhone/dsit/img/tick.png" alt=""></i>
+                                        <input type="checkbox" class="check_select" id="sid1">
+                                        <div class="check">领券</div>
+                                        <p><img src="static/HMMobilePhone/dsit/img/arrow_Green.png" alt=""></p>
+                                    </div>
+                                    <div class="goodsBox">
+                                        <ul class="goods_detail">
+                                            <li class="goods_img">
+                                                <img src="" alt="">
+                                            </li>
+                                            <li class="goods_info">
+                                                <p class="brandDesc">名称</p>
+                                                <p class="goods_identifier strlen" style="width:3rem;"><span>简介</span></p>
+                                                <p class="goods_color">颜色：<span>红色</span></p>
+                                                <p class="goods_size">尺码：<span>尺寸</span></p>
+                                            </li>
+                                            <li class="goods_info_se">
+                                                <p class="goods_price">￥<span>50</span></p>
+                                                <p class="goods_num">x<span>1</span></p>
+                                            </li>
+                                            <li class="delBox">
+                                                <div class="delete_this" data-id='+i.cartId+'>
+                                                    <i class='icon iconfont icon-lajitong fontSize'></i>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="goodsBox">
-                                <ul class="goods_detail">
-                                    <li class="goods_img">
-                                        <img src="" alt="">
-                                    </li>
-                                    <li class="goods_info">
-                                        <p class="brandDesc">名称</p>
-                                        <p class="goods_identifier strlen" style="width:3rem;"><span>简介</span></p>
-                                        <p class="goods_color">颜色：<span>红色</span></p>
-                                        <p class="goods_size">尺码：<span>尺寸</span></p>
-                                    </li>
-                                    <li class="goods_info_se">
-                                        <p class="goods_price">￥<span>50</span></p>
-                                        <p class="goods_num">x<span>1</span></p>
-                                    </li>
-                                    <li class="delBox">
-                                        <div class="delete_this" data-id='+i.cartId+'>
-                                            <i class='icon iconfont icon-lajitong fontSize'></i>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                <!--底部判断是加载图标还是提示“全部加载”-->
-                <li class="more_loading" v-show="!queryLoading">
-                <mt-spinner type="snake" color="#00ccff" :size="20" v-show="moreLoading&&!allLoaded"></mt-spinner>
-                <span v-show="allLoaded">已全部加载</span>
-                </li>
-                </ul>
-
-                    
+                        </li>
+                        <!--底部判断是加载图标还是提示“全部加载”-->
+                        <li class="more_loading" v-show="!queryLoading">
+                            <mt-spinner type="snake" color="#00ccff" :size="20" v-show="moreLoading&&!allLoaded"></mt-spinner>
+                            <span v-show="allLoaded">已全部加载</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </section>
@@ -78,7 +81,7 @@
                 totalNum: 0,
                 pageSize: 2,
                 pageNum: 1,
-                list:10
+                list: 10
             }
         },
         computed: {
@@ -111,12 +114,18 @@
                     // }
                     this.moreLoading = this.allLoaded;
                 });
+            },
+            goback() {
+                this.$router.go(-1);
             }
         },
     }
 </script>
 
 <style lang="" scoped>
+    .wrap2{
+        margin-top: 0.8rem;
+    }
     body {
         background: #E9E9E9;
     }

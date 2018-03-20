@@ -79,7 +79,7 @@ export default {
     margin-top: .8rem;
 }
 .mint-tab-container{
-    margin-top: 1rem;
+    /* margin-top: 1rem; */
 }
 .mint-tab-item-label{
     font-size: 0.3rem;
@@ -89,7 +89,7 @@ export default {
     color: #31B1B0;
 }
 .mint-tab-container-item{
-    background-color: #e9e9e9 !important;
+    /* background-color: #e9e9e9 !important; */
 }
 .page-infinite-loading{
     /* display: block; */
