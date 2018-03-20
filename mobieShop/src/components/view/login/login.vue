@@ -150,7 +150,7 @@ export default {
                                 iconClass: 'icon icon-success',
                                 duration: 500
                             });
-                            this.$router.push('/userinfo');
+                            this.$router.push('/navBottom');
                         }, 1000);
                     }
                 })
