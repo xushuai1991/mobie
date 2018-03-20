@@ -49,8 +49,8 @@ export default {
     data () {
         return {
             totalSrc:'',
-            wxSrc:'http://192.168.199.102/customer/resource/qrCode.png?content=http://',
-            address:'192.168.199.179:8080',
+            wxSrc:'http://101.89.175.155:8777/customer/resource/qrCode.png?content=http://',
+            address:'101.89.175.155:81',
             shareUrl:'/invitingGift',
             paramData:''
         }
@@ -62,11 +62,12 @@ export default {
     methods:{
         shareUrlFn(){
             let curHref = window.location.href
-            this.paramData = this.getQueryString('id') // 获取url中的参数
+            this.paramData = this.getQueryString('recommendedCustomerId') // 获取url中的参数
             if(curHref.indexOf('&') === -1){
-                this.totalSrc = this.wxSrc + this.address + this.shareUrl + '?' + this.paramData;
+                this.totalSrc = this.wxSrc + this.address + this.shareUrl + '?recommendedCustomerId=' + this.paramData;
+                console.log(this.totalSrc)
             }else{
-                this.totalSrc = this.wxSrc + this.address + this.shareUrl + '?' + this.paramData;
+                return
             }
         },
         share(){
@@ -204,7 +205,7 @@ export default {
             var ftit = '绿城';
             var flink = '';
             var lk = 'http://'+window.location.host+'/static/images/logo.png';
-            console.log(lk)
+            // console.log(lk)
             //获取网页中内容的第一张图片
             flink = document.getElementById('sharePic').getAttribute('src')
             //如果是上传的图片则进行绝对路径拼接

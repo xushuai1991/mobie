@@ -1,5 +1,5 @@
 <template>
-    <div id="invite-gift">
+    <div id="invite-gift" @click="hideDiag($event)">
         <ul class="gift-top" :style="{backgroundImage: 'url(' + imgSrc + ')' }">
             <li class="top-headerImg">
                 <div>
@@ -15,7 +15,7 @@
             <mt-button type="primary" @click.native="handleClick">领取优惠券</mt-button>
         </div>
         <div class="register-diag" v-show="isShow">
-            <div class="invite-register">
+            <div class="invite-register" id="myPanel">
                 <ul class="form-data">
                     <li>
                         <span>验证码</span>
@@ -24,7 +24,7 @@
                     </li>
                     <li>
                         <span>注册密码</span>
-                        <input type="password" v-model="formData.password" @blur="checkpsw" name="password" placeholder="请输入注册密码">
+                        <input type="password" v-model="formData.password" @blur="checkpsw" name="password" placeholder="字母开头,且只能输入6-12位">
                     </li>
                     <li>
                         <span>确认密码</span>
@@ -48,6 +48,15 @@ export default {
             imgSrc:require('./invite-gift.png'),
             isRight:'',
             message:60,
+            paramData:'',
+            type:'',
+            dataInfo:[
+                {id:0,data:'recommendedTeamId',des:'推荐来源渠道（团队）id'},
+                {id:1,data:'recommendedCustomerId',des:'推荐来源客户id'},
+                {id:2,data:'recommendedAdminId',des:'推荐来源后台用户id'},
+                {id:3,data:'recommendedDepartmentId',des:'推荐来源部门id'},
+                {id:4,data:'recommendedSourceId',des:'推荐来源种类'},
+            ],
             formData:{
                 checkCode:'',password:'',
                 phone:'',surePassword:''
@@ -68,7 +77,21 @@ export default {
             isShow:false
         }
     },
+    created(){
+        this.shareUrlFn()
+    },
     methods:{
+        shareUrlFn(){
+            let data = ''
+            this.dataInfo.forEach((e,i) => {
+                data = this.getQueryString(e.data)
+                if(data != null){
+                    this.paramData = data
+                    this.type = e.data
+                }
+            })
+            // console.log(this.paramData,this.type)
+        },
         handleClick(){  //  点击领取发送短信验证码,验证手机号
             this.checkphone();
             if(!this.phonejson.status){
@@ -97,7 +120,7 @@ export default {
                 }
             }).catch(function(response){
                 Toast({
-                    message: '领取失败',
+                    message: '发送失败',
                     position: 'bottom',
                     duration:'1000'
                 })
@@ -108,7 +131,6 @@ export default {
             let timer1 = setInterval(() => {
                 this.message--
                 if(this.message == 0){
-                    console.log(111);
                     clearInterval(timer1);
                     this.isClick = false
                     this.message ='重新发送';
@@ -116,7 +138,7 @@ export default {
                     this.isClcik = true
                 }
                 
-            }, 50)
+            }, 1000)
             
         },
         resendMessage(){//  重新发送短信验证码
@@ -124,12 +146,15 @@ export default {
         }, 
         registerOk(){
             let that = this
-            this.$http.post('/api/customer/account/register',
-                {
-                    code:that.formData.checkCode,
-                    mobile:that.formData.phone,
-                    password:that.formData.password
+            let data = {
+                code:that.formData.checkCode,
+                mobile:that.formData.phone,
+                password:that.formData.password,
                 }
+            data[this.type] = this.paramData
+            console.log(data)
+            this.$http.post('/api/customer/account/register',
+                data
             ).then(function(response){
                 Toast(response.data.msg);
                 if(response.data.status==200){ 
@@ -176,7 +201,7 @@ export default {
                     message:this.pswjson.msg,
                     duration:1000
                 })
-                this.cleardata()
+                // this.cleardata()
                 return
             }
         },
@@ -196,9 +221,27 @@ export default {
                     message:this.pswcertainjson.msg,
                     duration:1000
                 })
-                this.cleardata()
+                // this.cleardata()
                 return
             }
+        },
+        hideDiag(event){//  隐藏弹出层
+            let sp = document.getElementById("myPanel")
+            console.log(sp)
+            if(sp){
+                console.log(sp.contains(event.target))
+                if(!sp.contains(event.target)){ //这句是说如果我们点击到了id为myPanel以外的区域
+                    this.isShow = false
+                }
+            }
+        },
+        getQueryString(name) {  
+            var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');  
+            var r = window.location.search.substr(1).match(reg);  
+            if (r != null) {  
+                return unescape(r[2]);  
+            }  
+            return null;  
         }
     }
 }
@@ -319,7 +362,7 @@ html,body{
                         opacity: 0.8;
                     }
                     input{
-                        width:40%;
+                        width:70%;
                         margin-left: 0.2rem;
                         opacity:0.8;
                         outline:none;

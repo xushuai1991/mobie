@@ -12,9 +12,9 @@
                     <div class="portrait_info">
                         <p style='font-size:.3rem;padding-top:.1rem;'>{{userinfo.nickname==null?'&nbsp;':userinfo.nickname}}</p>
                         <router-link to='/personalScores'>
-                            <p style='color:#e47524;margin-top:.2rem;font-size:.25rem;'><i class='icon iconfont icon-qian' style='font-size:.4rem;'></i>120</p>
+                            <p style='color:#e47524;margin-top:.2rem;font-size:.25rem;'><i class='icon iconfont icon-qian' style='font-size:.4rem;'></i>&nbsp;{{point}}</p>
                         </router-link>
-                        <p class='info_other' style='color:#939393'>至2019.1.1 &nbsp;&nbsp;过期积分：{{userinfo.consumptionPoints}}分</p>
+                        <p class='info_other' style='color:#939393'>至2019.1.1 &nbsp;&nbsp;过期积分：{{expiredPoints}}分</p>
                     </div>
                     <ul class="behavior">
                         <li>
@@ -126,7 +126,7 @@
                     </router-link>
                 </li>
                 <li>
-                    <router-link :to="'/inviting?id='+userinfo.info.id">
+                    <router-link :to="'/inviting?recommendedCustomerId='+userinfo.info.id">
                         <i class='icon iconfont icon-yaoqing fontSize operaicon'></i>
                         <i class='flag'></i>
                         <p class='name_opera'>邀请注册</p>
@@ -151,6 +151,7 @@
 </template>
 
 <script>
+    import { Toast } from 'mint-ui';
     import buttomNav from '@/components/common/buttomNav.vue'
     import {
         mapState
@@ -159,13 +160,34 @@
         prop: ['listLoading'],
         data() {
             return {
-                viplevel: '非会员'
+                viplevel: '非会员',
+                point:0,
+                expiredPoints:0,
+                memberId:''
             }
         },
         created() {
             this.$root.$emit('header', '个人中心')
+            this.integral()
         },
         methods: {
+            integral(){
+                let that = this
+                this.$http.post(
+                    '/api/customer/consumption/points/find?pageSize=1',
+
+                ).then(res => { 
+                    if(res.data.status == 200){
+                        console.log(res)
+                        that.point = res.data.info.list[0].effectivePoints
+                        that.expiredPoints = res.data.info.list[0].expiredPoints
+                    }else{
+                        Toast(res.data.msg);
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
             // 获取个人信息
             getinfo() {
                 this.$http.post('/api/customer/account/register', {
