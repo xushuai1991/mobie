@@ -4,23 +4,23 @@
         <mt-swipe>
             <mt-swipe-item class="slide1">
                 <router-link to="/mine">
-                    <img src="../sofa.jpg" />
+                    <img src="./recommendImage/yidong.jpg" />
                 </router-link>
             </mt-swipe-item>
             <mt-swipe-item class="slide2">
                 <router-link to="/product">
-                    <img src="../sofa.jpg" />
+                    <img src="./recommendImage/yidong2.jpg" />
                 </router-link>
             </mt-swipe-item>
             <mt-swipe-item class="slide3">
                 <router-link to="/detailPage">
-                    <img src="../sofa.jpg" />
+                    <img src="./recommendImage/yidong3.jpg" />
                 </router-link>
             </mt-swipe-item>
         </mt-swipe>
     </div>
     <div>
-        <img src='./sfBg.jpg' style="height:3.28rem; width:100%;">
+        <img src='./recommendImage/yidong2.jpg' style="height:3.28rem; width:100%;">
     </div>
     <div class='private'>
         <p>私人订制&nbsp;<i class='icon iconfont icon-youjiantou'></i></p>
@@ -28,51 +28,51 @@
     <div>
         <ul class='clear listUl'>
             <li>
-                 <img src='./sfBg.jpg'>
+                 <img src='./recommendImage/1.jpg'>
                 <p>专属你的服务</p>
                 <p>RMB<strong>200</strong></p>
             </li>
             <li>
-                 <img src='./sfBg.jpg'>
+                 <img src='./recommendImage/2.jpg'>
                 <p>专属你的服务</p>
                 <p>RMB<strong>200</strong></p>
             </li>
             <li>
-                 <img src='./sfBg.jpg'>
+                 <img src='./recommendImage/window1-1.jpg'>
                 <p>专属你的服务</p>
                 <p>RMB<strong>200</strong></p>
             </li>
             <li>
-                 <img src='./sfBg.jpg'>
+                 <img src='./recommendImage/window1-2.jpg'>
                 <p>专属你的服务</p>
                 <p>RMB<strong>200</strong></p>
             </li>
             <li>
-                <img src='./sfBg.jpg'>
+                <img src='./recommendImage/window1-3.jpg'>
                 <p>专属你的服务</p>
                 <p>RMB<strong>200</strong></p>
             </li>
             <li>
-                 <img src='./sfBg.jpg'>
+                 <img src='./recommendImage/window1-4.jpg'>
                 <p>专属你的服务</p>
                 <p>RMB<strong>200</strong></p>
             </li>
         </ul>
     </div>
      <div>
-        <img src='./sfBg.jpg' style="height:3.28rem; width:100%;">
+        <img src='./recommendImage/yidong.jpg' style="height:3.28rem; width:100%;">
         <ul class='imgPic clearfloat'>
             <li>
                 <p>积分兑换</p>
-                <img src='./sfBg.jpg' />
+                <img src='./recommendImage/window1-4.jpg' />
             </li>
             <li>
                 <p>邀请返利</p>
-                <img src='./sfBg.jpg'/>
+                <img src='./recommendImage/window1-3.jpg'/>
             </li>
             <li>
                 <p>邀请返利</p>
-                <img src='./sfBg.jpg'/>
+                <img src='./recommendImage/window1-2.jpg'/>
             </li>
         </ul>
     </div>
@@ -83,7 +83,7 @@
                 <p>家电保养 </p>
                 <p><span>RMB</span> 200</p>
                 <div class="imgBox">
-                    <img src='./sfBg.jpg'/>
+                    <img src='./recommendImage/1.jpg'/>
                 </div>
                 
             </li>
@@ -91,7 +91,7 @@
                 <p>家电保养 </p>
                 <p><span>RMB</span> 200</p>
                 <div class="imgBox">
-                    <img src='./sfBg.jpg'/>
+                    <img src='./recommendImage/2.jpg'/>
                 </div>
                 
             </li>
@@ -99,7 +99,7 @@
                 <p>家电保养 </p>
                 <p><span>RMB</span> 200</p>
                 <div class="imgBox">
-                    <img src='./sfBg.jpg'/>
+                    <img src='./recommendImage/window1-1.jpg'/>
                 </div>
                 
             </li>
@@ -107,7 +107,7 @@
                 <p>家电保养 </p>
                 <p><span>RMB</span> 200</p>
                 <div class="imgBox">
-                    <img src='./sfBg.jpg'/>
+                    <img src='./recommendImage/window1-2.jpg'/>
                 </div>
                 
             </li>
@@ -118,7 +118,7 @@
         <ul >
             <li>
                 <div class='leftImg'>
-                    <img src='./sfBg.jpg'/>
+                    <img src='./recommendImage/window1-4.jpg'/>
                 </div>
                 <div class="shopText">
                     <h3>空气净化空调加湿器</h3>
@@ -136,7 +136,7 @@
             </li>
             <li>
                 <div class='leftImg'>
-                    <img src='./sfBg.jpg'/>
+                    <img src='./recommendImage/window1-3.jpg'/>
                 </div>
                 <div class="shopText">
                     <h3>空气净化空调加湿器</h3>
@@ -154,7 +154,7 @@
             </li>
             <li>
                 <div class='leftImg'>
-                    <img src='./sfBg.jpg'/>
+                    <img src='./recommendImage/window1-2.jpg'/>
                 </div>
                 <div class="shopText">
                     <h3>空气净化空调加湿器</h3>
@@ -172,7 +172,7 @@
             </li>
             <li>
                 <div class='leftImg'>
-                    <img src='./sfBg.jpg'/>
+                    <img src='./recommendImage/window1-1.jpg'/>
                 </div>
                 <div class="shopText">
                     <h3>空气净化空调加湿器</h3>
@@ -190,7 +190,7 @@
             </li>
             <li>
                 <div class='leftImg'>
-                    <img src='./sfBg.jpg'/>
+                    <img src='./recommendImage/1.jpg'/>
                 </div>
                 <div class="shopText">
                     <h3>空气净化空调加湿器</h3>
@@ -214,15 +214,15 @@
         </div>
         <ul class="clearfloat">
             <li>
-                <div class='divImg'><img src='./sfBg.jpg'/></div>
+                <div class='divImg'><img src='./recommendImage/yidong.jpg'/></div>
                 <p>RME <span>200</span></p>
             </li>
              <li>
-                <div class='divImg'><img src='./sfBg.jpg'/></div>
+                <div class='divImg'><img src='./recommendImage/yidong2.jpg'/></div>
                 <p>RME <span>200</span></p>
             </li>
              <li>
-                <div class='divImg'><img src='./sfBg.jpg'/></div>
+                <div class='divImg'><img src='./recommendImage/yidong3.jpg'/></div>
                 <p>RME <span>200</span></p>
             </li>
         </ul>
@@ -232,18 +232,18 @@
         <div class="shopLeft">
             <h3>福利社</h3>
             <p>Welfare agency</p>
-            <img src='./sfBg.jpg'/>
+            <img src='./recommendImage/yidong.jpg'/>
         </div>
         <div class="shopRight">
             <div class="imgBox">
                 <h3>福利社</h3>
                 <p>Welfare agency</p>
-                <img src='./sfBg.jpg'/>
+                <img src='./recommendImage/yidong2.jpg'/>
             </div>
             <div class="imgBox">
                 <h3>福利社</h3>
                 <p>Welfare agency</p>
-                <img src='./sfBg.jpg'/>
+                <img src='./recommendImage/yidong3.jpg'/>
             </div>
         </div>
     </div>
@@ -252,32 +252,32 @@
         <div class="scroBox">
             <ul class='clearfloat'>
                 <li>
-                    <img src='./sfBg.jpg'/>
+                    <img src='./recommendImage/window1-1.jpg'/>
                     <div><span class="infoText">把这个片干净的地方带给你</span>  <span class="reB">RMB<strong>200</strong></span></div>
                     <P>精致服务</P>
                 </li>
                 <li>
-                    <img src='./sfBg.jpg'/>
+                    <img src='./recommendImage/window1-2.jpg'/>
                     <div><span class="infoText">把这个片干净的地方带给你</span>  <span class="reB">RMB<strong>200</strong></span></div>
                     <P>精致服务</P>
                 </li>
                 <li>
-                    <img src='./sfBg.jpg'/>
+                    <img src='./recommendImage/window1-3.jpg'/>
                     <div><span class="infoText">把这个片干净的地方带给你</span>  <span class="reB">RMB<strong>200</strong></span></div>
                     <P>精致服务</P>
                 </li>
                 <li>
-                    <img src='./sfBg.jpg'/>
+                    <img src='./recommendImage/window1-4.jpg'/>
                     <div><span class="infoText">把这个片干净的地方带给你</span>  <span class="reB">RMB<strong>200</strong></span></div>
                     <P>精致服务</P>
                 </li>
                 <li>
-                    <img src='./sfBg.jpg'/>
+                    <img src='./recommendImage/1.jpg'/>
                     <div><span class="infoText">把这个片干净的地方带给你</span>  <span class="reB">RMB<strong>200</strong></span></div>
                     <P>精致服务</P>
                 </li>
                 <li>
-                    <img src='./sfBg.jpg'/>
+                    <img src='./recommendImage/2.jpg'/>
                     <div><span class="infoText">把这个片干净的地方带给你</span>  <span class="reB">RMB<strong>200</strong></span></div>
                     <P>精致服务</P>
                 </li>
@@ -289,7 +289,7 @@
         <ul>
             <li>
                 <div class="imgBox">
-                    <img src='./sfBg.jpg'/>
+                    <img src='./recommendImage/window1-1.jpg'/>
                 </div>
                 <p>
                     家居保养沙发
@@ -300,7 +300,7 @@
             </li>
             <li>
                 <div class="imgBox">
-                    <img src='./sfBg.jpg'/>
+                    <img src='./recommendImage/window1-2.jpg'/>
                 </div>
                 <p>
                     家居保养沙发
@@ -311,7 +311,7 @@
             </li>
             <li>
                 <div class="imgBox">
-                    <img src='./sfBg.jpg'/>
+                    <img src='./recommendImage/window1-3.jpg'/>
                 </div>
                 <p>
                     家居保养沙发
@@ -322,7 +322,7 @@
             </li>
             <li>
                 <div class="imgBox">
-                    <img src='./sfBg.jpg'/>
+                    <img src='./recommendImage/window1-4.jpg'/>
                 </div>
                 <p>
                     家居保养沙发

@@ -44,7 +44,7 @@ export default {
     data () {
         return {
             bgSrc:require('./invite-regular.png'),
-            logoSrc:require('./invite-regular.png')
+            logoSrc:require('@/assets/logo.png')
         }
     },
     methods:{
