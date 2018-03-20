@@ -145,6 +145,8 @@ export default {
                         // this.cleardata();
                     } else {
                         this.$store.commit('login',res.data)
+                        // let userinfo = res.data
+                        // sessionStorage.setItem('userinfo', JSON.stringify(data));
                         setTimeout(() => {
                             Toast({
                                 message: '登录成功正在为你跳转请稍后...',

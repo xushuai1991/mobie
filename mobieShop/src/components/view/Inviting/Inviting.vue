@@ -62,12 +62,12 @@ export default {
     methods:{
         shareUrlFn(){
             let curHref = window.location.href
-            this.paramData = this.getQueryString('id') // 获取url中的参数
+            this.paramData = this.getQueryString('recommendedCustomerId') // 获取url中的参数
             if(curHref.indexOf('&') === -1){
-                this.totalSrc = this.wxSrc + this.address + this.shareUrl + '?id=' + this.paramData;
+                this.totalSrc = this.wxSrc + this.address + this.shareUrl + '?recommendedCustomerId=' + this.paramData;
                 console.log(this.totalSrc)
             }else{
-                this.totalSrc = this.wxSrc + this.address + this.shareUrl + '?' + this.paramData;
+                return
             }
         },
         share(){

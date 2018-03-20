@@ -1,5 +1,5 @@
 <template>
-    <div id="invite-gift">
+    <div id="invite-gift" @click="hideDiag($event)">
         <ul class="gift-top" :style="{backgroundImage: 'url(' + imgSrc + ')' }">
             <li class="top-headerImg">
                 <div>
@@ -15,7 +15,7 @@
             <mt-button type="primary" @click.native="handleClick">领取优惠券</mt-button>
         </div>
         <div class="register-diag" v-show="isShow">
-            <div class="invite-register">
+            <div class="invite-register" id="myPanel">
                 <ul class="form-data">
                     <li>
                         <span>验证码</span>
@@ -201,7 +201,7 @@ export default {
                     message:this.pswjson.msg,
                     duration:1000
                 })
-                this.cleardata()
+                // this.cleardata()
                 return
             }
         },
@@ -221,8 +221,18 @@ export default {
                     message:this.pswcertainjson.msg,
                     duration:1000
                 })
-                this.cleardata()
+                // this.cleardata()
                 return
+            }
+        },
+        hideDiag(event){//  隐藏弹出层
+            let sp = document.getElementById("myPanel")
+            console.log(sp)
+            if(sp){
+                console.log(sp.contains(event.target))
+                if(!sp.contains(event.target)){ //这句是说如果我们点击到了id为myPanel以外的区域
+                    this.isShow = false
+                }
             }
         },
         getQueryString(name) {  
