@@ -14,9 +14,7 @@
                         <router-link to='/personalScores'>
                             <p style='color:#e47524;margin-top:.2rem;font-size:.25rem;'><i class='icon iconfont icon-qian' style='font-size:.4rem;'></i>120</p>
                         </router-link>
-                        
                         <p class='info_other' style='color:#939393'>至2019.1.1 &nbsp;&nbsp;过期积分：{{userinfo.consumptionPoints}}分</p>
-                        
                     </div>
                     <ul class="behavior">
                         <li>
@@ -33,7 +31,7 @@
                         </li>
                         <li class="markFooter">
                             <div class="collect">
-                               <i class='icon iconfont icon-zuji coloBule'></i>
+                                <i class='icon iconfont icon-zuji coloBule'></i>
                             </div>
                             <p class="text_wait">足迹</p>
                         </li>
@@ -50,34 +48,34 @@
                 <li>
                     <div class="img_wait">
                         <i class="pay orageColor">2</i>
-                     <i class='icon iconfont icon-daifukuan fontSize'></i>
+                        <i class='icon iconfont icon-daifukuan fontSize'></i>
                     </div>
                     <p class="text_wait">代付款</p>
                 </li>
                 <li>
                     <div class="img_wait">
-                    <i class="wait orageColor">2</i>
-                    <i class='icon iconfont icon-icondaifahuo fontSize'></i>
+                        <i class="wait orageColor">2</i>
+                        <i class='icon iconfont icon-icondaifahuo fontSize'></i>
                     </div>
                     <p class="text_wait">待发货</p>
                 </li>
                 <li>
                     <div class="img_wait ">
-                    <i class="receive orageColor">2</i>
-                    <i class='icon iconfont icon-ziyuan fontSize'></i>
+                        <i class="receive orageColor">2</i>
+                        <i class='icon iconfont icon-ziyuan fontSize'></i>
                     </div>
                     <p class="text_wait">待收货</p>
                 </li>
                 <li>
                     <div class="img_wait ">
-                    <i class="evaluate orageColor">2</i>
-                    <i class='icon iconfont icon-daipingjia fontSize'></i>
+                        <i class="evaluate orageColor">2</i>
+                        <i class='icon iconfont icon-daipingjia fontSize'></i>
                     </div>
                     <p class="text_wait">待评价</p>
                 </li>
                 <li>
                     <div class="img_wait ">
-                    <i class='icon iconfont icon-shouhou fontSize'></i>
+                        <i class='icon iconfont icon-shouhou fontSize'></i>
                     </div>
                     <p class="text_wait">售后</p>
                 </li>
@@ -127,7 +125,7 @@
                         <p class='name_opera'>服务报告更新</p>
                     </router-link>
                 </li>
-                <li >
+                <li>
                     <router-link to='/inviting'>
                         <i class='icon iconfont icon-yaoqing fontSize operaicon'></i>
                         <i class='flag'></i>
@@ -135,7 +133,7 @@
                     </router-link>
                 </li>
                 <li>
-                    <router-link to='' >
+                    <router-link to=''>
                         <i class='icon iconfont icon-printer fontSize operaicon'></i>
                         <i class='flag'></i>
                         <p class='name_opera'>发票管理</p>
@@ -143,396 +141,404 @@
                 </li>
             </ul>
         </div>
+        <buttomNav></buttomNav>
         <!-- <div class="account_management" @click='gotAccount'>账号管理 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
-        <div class="address_management" @click='gotAddress'>地址管理 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
-         <div class="address_management">二维码 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
-        <div class="coupon" @click='gotCoupon'>优惠券 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div> -->
+            <div class="address_management" @click='gotAddress'>地址管理 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
+             <div class="address_management">二维码 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
+            <div class="coupon" @click='gotCoupon'>优惠券 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div> -->
         <!-- <div class="log_off">退出登录</div> -->
     </section>
 </template>
 
 <script>
-   import { mapState } from 'vuex'
-   export default {
-    prop:['listLoading'],
-    data(){
-        return {
-            viplevel:'非会员'
+    import buttomNav from '@/components/common/buttomNav.vue'
+    import {
+        mapState
+    } from 'vuex'
+    export default {
+        prop: ['listLoading'],
+        data() {
+            return {
+                viplevel: '非会员'
+            }
+        },
+        created() {
+            this.$root.$emit('header', '个人中心')
+        },
+        methods: {
+            // 获取个人信息
+            getinfo() {
+                this.$http.post('/api/customer/account/register', {
+                    mobile: that.phone,
+                    password: that.psw,
+                    code: that.code
+                })
+            }
+        },
+        mounted() {
+            console.log(this.userinfo);
+            let that = this;
+            this.$http.post('/api/customer/customerLevelComputing/query', {
+                    level: that.userinfo.level
+                })
+                .then(function(response) {
+                    if (response.data.info == '尚未登录') {
+                        that.$router.push({
+                            path: '/login'
+                        })
+                    }
+                    if (response.data.status == 200) {
+                        that.viplevel = response.data.info.length == 0 ? '非会员' : response.data.info[0].levelName
+                    } else {
+                        console.log(response);
+                    }
+                })
+                .catch(function(response) {
+                    console.log(response);
+                });
+        },
+        components: {
+            buttomNav
+        },
+        computed: {
+            ...mapState({
+                userinfo: function(state) {
+                    if (JSON.stringify(state.userinfo.userinfo) == '{}') {
+                        let data = JSON.parse(sessionStorage.getItem('userinfo'));
+                        this.$store.commit('login', data)
+                        return data;
+                    } else {
+                        return state.userinfo.userinfo
+                    }
+                }
+            })
         }
-    },
-    created(){
-        this.$root.$emit('header','个人中心')
-    },
-    methods:{
-        // 获取个人信息
-        getinfo(){
-            this.$http.post('/api/customer/account/register',
-                {
-                    mobile:that.phone,
-                    password:that.psw,
-                    code:that.code
-                }
-            )
-        }
-    },
-    mounted(){
-        console.log(this.userinfo);
-        let that=this;
-        this.$http.post('/api/customer/customerLevelComputing/query',{
-            level:that.userinfo.level
-        })
-        .then(function(response){
-            if(response.data.info == '尚未登录'){
-                that.$router.push({ path: '/login' })
-            }
-            if(response.data.status==200){
-                that.viplevel=response.data.info.length==0?'非会员':response.data.info[0].levelName
-            }
-            else{
-                console.log(response);
-            }
-        })
-        .catch(function(response){
-            console.log(response);
-        });
-    },
-    computed:{
-        ...mapState({
-            userinfo:function(state){
-                if(JSON.stringify(state.userinfo.userinfo)=='{}'){
-                    let data=JSON.parse(sessionStorage.getItem('userinfo'));
-                    this.$store.commit('login',data)
-                    return data;
-                }
-                else{
-                    return state.userinfo.userinfo
-                }
-            }
-        })
     }
-
-}
-
 </script>
-<style  scoped>
-.coloBule{
-    color:#31b1b0;
-    font-weight:700;
-    font-size:0.4rem;
-}
-.icon-qiehuan{
-    position:absolute;
-    top:17%;
-    right:5%;
-    color:#848484;
-    font-size:0.4rem;
-}
-    .account{
-    width: 100%;
-    height: 4.2rem;
-    padding: .36rem 0 0 0;
-}
-.account_info{
-    width: 6.3rem;
-    margin: 0rem  auto;
-    height: 3.8rem;
-    background: white;
-    padding-top: .3rem;
-    box-shadow: .05rem .05rem .15rem #bde9fd;
-    position: relative;
-}
-.change img{
-    display: inline-block;
-    width: .38rem;
-    height: .29rem;
-    position: absolute;
-    top: .2rem;
-    right: .2rem;
-}
-.infoBottom{
-    margin-top:.8rem;
-}
-.portrait{
-    width: 100%;
-    height: 1.5rem;
-    text-align:left;
-    margin-top: .3rem;
-}
-.portrait_img{
-    width: 1.5rem;
-    height: 1.5rem;
-    border-radius: 50%;
-    background: #C4C4C4;
-    margin-left: .3rem;
-    /* display: inline-block; */
-    vertical-align: middle;
-    float: left;
-    position: relative;
-}
-.portrait_img img{
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-}
-.portrait_img .vip{
-    width:100%;
-    text-align: center;
-    font-size:.1rem;
-    position: absolute;
-    bottom:-.25rem;
-} 
-
-.portrait_info{
-    height: 1.5rem;
-    display: inline-block;
-    float: left;
-    margin-left: .3rem;
-    font-size: .22rem;
-    line-height: .5rem;
-    color: #353535!important;
-}
-.behavior{
-    width: 100%;
-    height: 1.5rem;
-    padding-top: .5rem;
-    display: flex;
-    justify-content: space-around;
-}
-.behavior li{
-    width: 30%;
-    font-size: .24rem;
-    text-align: center;
-}
-.collect{
-    width: .3rem;
-    height: .3rem;
-    margin: 0.3rem auto;
-    position: relative;
-}
-.collect img{
-    width: 100%;
-    height: 100%;
-
-}
-.img_shadow1{
-    width: .3rem;
-    height: .3rem;
-}
-.img_shadow1 img{
-    opacity: .3;
-}
-.img_shadow2{
-    width: .3rem;
-    height: .3rem;
-    position: absolute;
-    top: -0.04rem;
-    left: -.04rem;
-}
-.wait_for li:nth-child(1) .fontSize{
-    font-size:0.6rem;
-}
-.wait_for li:nth-child(2) .fontSize{
-    font-size:0.6rem;
-}
-.wait_for li:nth-child(3) .fontSize{
-    font-size:0.45rem;
-}
-.wait_for li:nth-child(4) .fontSize{
-    font-size:0.45rem;
-}
-.wait_for li:nth-child(5) .fontSize{
-    font-size:0.5rem;
-}
-/**/
-.order{
-    width: 100%;
-    height: 2.5rem;
-    margin-top: .3rem;
-    border-bottom: .15rem solid #f4f4f4;
-}
-
-.check{
-    float: right;
-    margin-right: .75rem;
-}
-.my_order:after{
-    content:"";
-    display:block;
-    height:0;
-    clear:both;
-    visibility:hidden;
-}
-.account_management{
-    margin-top: .1rem;
-}
-.my_order,.account_management,.address_management,.coupon{
-    width: 100%;
-    height: 1rem;
-    line-height: 1rem;
-    border-bottom: .01rem solid #dcdcdc;
-    font-size: .26rem;
-    padding-left: .24rem;
-    position: relative;
-    text-align:left;
-}
-.my_order p,.account_management p,.address_management p,.coupon p{
-    width: .15rem;
-    height: .26rem;
-    position: absolute;
-    right: .48rem;
-    top: 0rem;
-}
-.my_order p img,.account_management p img,.address_management p img,.coupon p img{
-    width: 100%;
-    height: 100%;
-}
-.wait_for{
-    display: flex;
-    justify-content: space-around;
-}
-.wait_for li{
-    width: 1.2rem;
-    height: 1.5rem;
-    text-align: center;
-    font-size: .24rem;
-}
-.img_wait{
-    width: .4rem;
-    height: .4rem;
-    margin: .3rem auto ;
-    position: relative;
-}
-.img_wait img{
-    width: 100%;
-    height: 100%;
-}
-.wait_for li .orageColor{
-    display: inline-block;
-    width: .3rem;
-    height: .3rem;
-    line-height: .35rem;
-    border-radius: 50%;
-    background: #e47524;
-    position: absolute;
-    top: -.12rem;
-    right: -.3rem;
-    font-size: .2rem;
-    font-style: normal;
-    color: white;
-}
-.log_off{
-    width: 5.6rem;
-    height: .9rem;
-    margin: .2rem auto 0rem auto;
-    border-radius: 1.9rem;
-    font-size: .3rem;
-    color: white;
-    text-align: center;
-    line-height: .9rem;
-    background: linear-gradient(to bottom,  #0CBBB9 0%,#4AC6DC 100%);
-}
-
-.shade{
-    display: none;
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: black;
-    z-index:499;
-    -moz-opacity: 0.5;
-    opacity:.3;
-    filter: alpha(opacity=80);
-}
-.side_menu{
-    position: fixed;
-    top: 0;
-    left: -3.33rem;
-    width: 3.33rem;
-    height: 100%;
-    padding: 0;
-    background-color: white;
-    _position:absolute;
-    z-index:500;
-    transform: translate3d(0,0,0);
-}
-.menu_speed{
-    transform: translate3d(100%,0,0);
-    transition: transform 0.6s;
-}
-
-.brand_change{
-    font-size: .3rem;
-    width: 100%;
-    height: .8rem;
-    line-height: .8rem;
-    text-align: center;
-    border-bottom: .03rem solid #00ADAB;
-}
-.brand li{
-    width: 100%;
-    height: 1rem;
-    line-height: 1rem;
-    position: relative;
-    border-bottom: .01rem solid #dcdcdc;
-    font-size: .24rem;
-    text-indent: 1rem;
-}
-.check_select,.input_model{
-    width: .45rem;
-    height: .45rem;
-    border-radius: 50%;
-    position: absolute;
-    top: .24rem;
-    left: .24rem;
-    border: .01rem solid #bfbfbf;
-}
-.check_select{
-    opacity: 0;
-}
-.bg_color{
-    background: #31B1B0;
-    border: .01rem solid #31B1B0;
-}
-.input_model img{
-    width: .26rem;
-    height: .18rem;
-    display: block;
-    margin: .15rem .1rem ;
-}
-.opera_list{
-    padding: .2rem 0;
-}
-.opera_list ul{
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-.opera_list li{
-    width:25%;
-    position: relative;
-}
-.opera_list .name_opera{
-    font-size: .24rem;
-    padding: .2rem 0;
-    color: #2c3e50;
-}
-.opera_list .icon.operaicon{
-    font-size: .5rem;
-    color: #2ba1f2;
-}
-.opera_list .flag{
-    width:.1rem;
-    height:.1rem;
-    top: 20%;
-    left: 60%;
-    display: none;
-    position: absolute;
-    border-radius: 50%;
-    background: #e47524;
-}
-.opera_list .flag.on{
-    display: block;
-}
+<style scoped>
+    .coloBule {
+        color: #31b1b0;
+        font-weight: 700;
+        font-size: 0.4rem;
+    }
+    .icon-qiehuan {
+        position: absolute;
+        top: 17%;
+        right: 5%;
+        color: #848484;
+        font-size: 0.4rem;
+    }
+    .account {
+        width: 100%;
+        height: 4.2rem;
+        padding: .36rem 0 0 0;
+    }
+    .account_info {
+        width: 6.3rem;
+        margin: 0rem auto;
+        height: 3.8rem;
+        background: white;
+        padding-top: .3rem;
+        box-shadow: .05rem .05rem .15rem #bde9fd;
+        position: relative;
+    }
+    .change img {
+        display: inline-block;
+        width: .38rem;
+        height: .29rem;
+        position: absolute;
+        top: .2rem;
+        right: .2rem;
+    }
+    .infoBottom {
+        margin-top: .8rem;
+    }
+    .portrait {
+        width: 100%;
+        height: 1.5rem;
+        text-align: left;
+        margin-top: .3rem;
+    }
+    .portrait_img {
+        width: 1.5rem;
+        height: 1.5rem;
+        border-radius: 50%;
+        background: #C4C4C4;
+        margin-left: .3rem;
+        /* display: inline-block; */
+        vertical-align: middle;
+        float: left;
+        position: relative;
+    }
+    .portrait_img img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+    }
+    .portrait_img .vip {
+        width: 100%;
+        text-align: center;
+        font-size: .1rem;
+        position: absolute;
+        bottom: -.25rem;
+    }
+    .portrait_info {
+        height: 1.5rem;
+        display: inline-block;
+        float: left;
+        margin-left: .3rem;
+        font-size: .22rem;
+        line-height: .5rem;
+        color: #353535!important;
+    }
+    .behavior {
+        width: 100%;
+        height: 1.5rem;
+        padding-top: .5rem;
+        display: flex;
+        justify-content: space-around;
+    }
+    .behavior li {
+        width: 30%;
+        font-size: .24rem;
+        text-align: center;
+    }
+    .collect {
+        width: .3rem;
+        height: .3rem;
+        margin: 0.3rem auto;
+        position: relative;
+    }
+    .collect img {
+        width: 100%;
+        height: 100%;
+    }
+    .img_shadow1 {
+        width: .3rem;
+        height: .3rem;
+    }
+    .img_shadow1 img {
+        opacity: .3;
+    }
+    .img_shadow2 {
+        width: .3rem;
+        height: .3rem;
+        position: absolute;
+        top: -0.04rem;
+        left: -.04rem;
+    }
+    .wait_for li:nth-child(1) .fontSize {
+        font-size: 0.6rem;
+    }
+    .wait_for li:nth-child(2) .fontSize {
+        font-size: 0.6rem;
+    }
+    .wait_for li:nth-child(3) .fontSize {
+        font-size: 0.45rem;
+    }
+    .wait_for li:nth-child(4) .fontSize {
+        font-size: 0.45rem;
+    }
+    .wait_for li:nth-child(5) .fontSize {
+        font-size: 0.5rem;
+    }
+    /**/
+    .order {
+        width: 100%;
+        height: 2.5rem;
+        margin-top: .3rem;
+        border-bottom: .15rem solid #f4f4f4;
+    }
+    .check {
+        float: right;
+        margin-right: .75rem;
+    }
+    .my_order:after {
+        content: "";
+        display: block;
+        height: 0;
+        clear: both;
+        visibility: hidden;
+    }
+    .account_management {
+        margin-top: .1rem;
+    }
+    .my_order,
+    .account_management,
+    .address_management,
+    .coupon {
+        width: 100%;
+        height: 1rem;
+        line-height: 1rem;
+        border-bottom: .01rem solid #dcdcdc;
+        font-size: .26rem;
+        padding-left: .24rem;
+        position: relative;
+        text-align: left;
+    }
+    .my_order p,
+    .account_management p,
+    .address_management p,
+    .coupon p {
+        width: .15rem;
+        height: .26rem;
+        position: absolute;
+        right: .48rem;
+        top: 0rem;
+    }
+    .my_order p img,
+    .account_management p img,
+    .address_management p img,
+    .coupon p img {
+        width: 100%;
+        height: 100%;
+    }
+    .wait_for {
+        display: flex;
+        justify-content: space-around;
+    }
+    .wait_for li {
+        width: 1.2rem;
+        height: 1.5rem;
+        text-align: center;
+        font-size: .24rem;
+    }
+    .img_wait {
+        width: .4rem;
+        height: .4rem;
+        margin: .3rem auto;
+        position: relative;
+    }
+    .img_wait img {
+        width: 100%;
+        height: 100%;
+    }
+    .wait_for li .orageColor {
+        display: inline-block;
+        width: .3rem;
+        height: .3rem;
+        line-height: .35rem;
+        border-radius: 50%;
+        background: #e47524;
+        position: absolute;
+        top: -.12rem;
+        right: -.3rem;
+        font-size: .2rem;
+        font-style: normal;
+        color: white;
+    }
+    .log_off {
+        width: 5.6rem;
+        height: .9rem;
+        margin: .2rem auto 0rem auto;
+        border-radius: 1.9rem;
+        font-size: .3rem;
+        color: white;
+        text-align: center;
+        line-height: .9rem;
+        background: linear-gradient(to bottom, #0CBBB9 0%, #4AC6DC 100%);
+    }
+    .shade {
+        display: none;
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: black;
+        z-index: 499;
+        -moz-opacity: 0.5;
+        opacity: .3;
+        filter: alpha(opacity=80);
+    }
+    .side_menu {
+        position: fixed;
+        top: 0;
+        left: -3.33rem;
+        width: 3.33rem;
+        height: 100%;
+        padding: 0;
+        background-color: white;
+        _position: absolute;
+        z-index: 500;
+        transform: translate3d(0, 0, 0);
+    }
+    .menu_speed {
+        transform: translate3d(100%, 0, 0);
+        transition: transform 0.6s;
+    }
+    .brand_change {
+        font-size: .3rem;
+        width: 100%;
+        height: .8rem;
+        line-height: .8rem;
+        text-align: center;
+        border-bottom: .03rem solid #00ADAB;
+    }
+    .brand li {
+        width: 100%;
+        height: 1rem;
+        line-height: 1rem;
+        position: relative;
+        border-bottom: .01rem solid #dcdcdc;
+        font-size: .24rem;
+        text-indent: 1rem;
+    }
+    .check_select,
+    .input_model {
+        width: .45rem;
+        height: .45rem;
+        border-radius: 50%;
+        position: absolute;
+        top: .24rem;
+        left: .24rem;
+        border: .01rem solid #bfbfbf;
+    }
+    .check_select {
+        opacity: 0;
+    }
+    .bg_color {
+        background: #31B1B0;
+        border: .01rem solid #31B1B0;
+    }
+    .input_model img {
+        width: .26rem;
+        height: .18rem;
+        display: block;
+        margin: .15rem .1rem;
+    }
+    .opera_list {
+        padding: .2rem 0;
+    }
+    .opera_list ul {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .opera_list li {
+        width: 25%;
+        position: relative;
+    }
+    .opera_list .name_opera {
+        font-size: .24rem;
+        padding: .2rem 0;
+        color: #2c3e50;
+    }
+    .opera_list .icon.operaicon {
+        font-size: .5rem;
+        color: #2ba1f2;
+    }
+    .opera_list .flag {
+        width: .1rem;
+        height: .1rem;
+        top: 20%;
+        left: 60%;
+        display: none;
+        position: absolute;
+        border-radius: 50%;
+        background: #e47524;
+    }
+    .opera_list .flag.on {
+        display: block;
+    }
 </style>

@@ -13,46 +13,18 @@
             <homepage></homepage>
           </div>
         </mt-tab-container-item>  
-        <mt-tab-container-item id="商品分类">  
-          <classification></classification>
-        </mt-tab-container-item>  
-        <mt-tab-container-item id="购物车">  
-          <shopCar></shopCar>
-        </mt-tab-container-item>  
-        <mt-tab-container-item id="个人中心">  
-            <userInfo></userInfo>
-        </mt-tab-container-item>  
+      
       </mt-tab-container>  
     </div>  
-    <div class='navBar'>
-    <mt-tabbar v-model="selected" fixed>  
-      <mt-tab-item id="首页">  
-        <i class='icon iconfont icon-shouye'></i>
-        <p>首页</p>
-      </mt-tab-item>  
-      <mt-tab-item id="商品分类">  
-        <i class='icon iconfont icon-shouye'></i>
-        <p>分类</p>
-      </mt-tab-item>  
-      <mt-tab-item id="购物车">  
-        <i class='icon iconfont icon-gouwuche'></i>
-        <p>购物车</p>
-      </mt-tab-item>  
-      <mt-tab-item id="个人中心">  
-        <i class='icon iconfont icon-gouwuche'></i>
-        <p>我的</p>
-      </mt-tab-item>  
-    </mt-tabbar>  
-    </div>
+    <buttomNav></buttomNav>
   </div>  
 </template>  
   
 <script>  
-import userInfo from '@/components/view/userInfo/userInfo.vue'
+import buttomNav from '@/components/common/buttomNav.vue'
 import homepage from '@/components/view/homepage/homepage.vue'
 import templatePages from '@/components/view/template/templatePages.vue'
-import classification from '@/components/view/classification/classification.vue'
-import shopCar from '@/components/view/userInfo/shopCar.vue'
+
 export default {  
   name: 'page-tabbar',  
   data() {  
@@ -128,12 +100,11 @@ export default {
       })
     }
   },
+
   components: {
-    userInfo,
     homepage,
     templatePages,
-    classification,
-    shopCar
+    buttomNav
   },
 };  
 </script>  
@@ -150,22 +121,7 @@ export default {
     overflow: hidden;  
     height: 94vh;  
   }  
-  .navBar .mint-tab-item{
-    padding:0;
-      /* height:0.6rem; */
-      /* line-height:0.6rem; */
-  }
-  .navBar .iconfont{
-    font-size: 20px;
-  }
-  .navBar .mint-tab-item-label{
-       line-height:0.6rem;
-  }
-  .navBar .mint-tab-item-label p{
-    font-size: 12px;
-    margin-top: -10px;
-    margin-bottom: -3px;
-  }
+
   .page-wrap {  
     overflow: auto;  
     height: 100%;  

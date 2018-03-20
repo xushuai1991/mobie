@@ -111,6 +111,11 @@ export default new Router({
         path: '/InvitingResult', // 邀请结果
         name: 'InvitingResult',
         component: resolve => require(['../components/view/Inviting/InvitingResult.vue'], resolve)
+      },
+      {
+        path: '/buttomNav', // 底部导航栏
+        name: 'InvitingResult',
+        component: resolve => require(['../components/common/buttomNav.vue'], resolve)
       }
     ]
   },
