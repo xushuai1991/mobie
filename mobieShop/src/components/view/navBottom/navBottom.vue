@@ -14,10 +14,10 @@
           </div>
         </mt-tab-container-item>  
         <mt-tab-container-item id="商品分类">  
-          <!-- <classification></classification> -->
+          <classification></classification>
         </mt-tab-container-item>  
         <mt-tab-container-item id="购物车">  
-          
+          <shopCar></shopCar>
         </mt-tab-container-item>  
         <mt-tab-container-item id="个人中心">  
             <userInfo></userInfo>
@@ -52,6 +52,7 @@ import userInfo from '@/components/view/userInfo/userInfo.vue'
 import homepage from '@/components/view/homepage/homepage.vue'
 import templatePages from '@/components/view/template/templatePages.vue'
 import classification from '@/components/view/classification/classification.vue'
+import shopCar from '@/components/view/userInfo/shopCar.vue'
 export default {  
   name: 'page-tabbar',  
   data() {  
@@ -131,12 +132,16 @@ export default {
     userInfo,
     homepage,
     templatePages,
-    classification
+    classification,
+    shopCar
   },
 };  
 </script>  
   
-<style>  
+<style> 
+ li{
+   list-style: none;
+ } 
   .disblock{
     display: block;
     margin-bottom:0.2rem;
