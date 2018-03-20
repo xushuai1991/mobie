@@ -41,7 +41,7 @@
     </div>
 </template>
 <script>
-import wx from 'weixin-js-sdk';
+// import wx from 'weixin-js-sdk';
 import { Button } from 'mint-ui';
 import { MessageBox } from 'mint-ui';
 import { Indicator } from 'mint-ui';
@@ -50,6 +50,7 @@ export default {
         return {
             totalSrc:'',
             wxSrc:'http://192.168.199.102/customer/resource/qrCode.png?content=http://',
+            address:'192.168.199.179:8080',
             shareUrl:'/invitingGift',
             paramData:''
         }
@@ -61,10 +62,11 @@ export default {
     methods:{
         shareUrlFn(){
             let curHref = window.location.href
-            if(curHref.indexOf('&') == -1){
-                this.totalSrc = this.wxSrc + '192.168.199.179:8080' + this.shareUrl + this.paramData;
+            this.paramData = this.getQueryString('id') // 获取url中的参数
+            if(curHref.indexOf('&') === -1){
+                this.totalSrc = this.wxSrc + this.address + this.shareUrl + '?' + this.paramData;
             }else{
-                this.totalSrc = this.wxSrc + '192.168.199.179:8080' + this.shareUrl + '&' + this.paramData;
+                this.totalSrc = this.wxSrc + this.address + this.shareUrl + '?' + this.paramData;
             }
         },
         share(){
