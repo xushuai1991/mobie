@@ -77,7 +77,7 @@
             </div>
             
             <div class='agreement'>
-                <mt-button type="default" class='btn-login' @click="resign">注册<i class='icon iconfont icon-xiangyoujiantou'></i></mt-button>
+                <mt-button type="default" class='btn-login' @click.native="resign" style='z-index:99;'>注册<i class='icon iconfont icon-xiangyoujiantou'></i></mt-button>
                 <mt-checklist
                     v-model="agreement"
                     :options="['用户协议书']">
