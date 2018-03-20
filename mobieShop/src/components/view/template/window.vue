@@ -5,7 +5,7 @@
                 <div class="imgConet">
                     <div>
                         <a :href="item.url" style="display: inline-block;width: 100%;">
-                            <img :src='imageUrl+item.imgSrc' class="windowImg">
+                            <img :src='item.imgSrc == imageUrl?imageUrl+item.imgSrc:imageUrl+item.img' class="windowImg">
                         </a>
                     </div>
                     <div class="boxesDiv" v-bind:class="item.boxesDivStyle"></div>
@@ -26,7 +26,7 @@ export default {
         },
         props:['templateData'],
         created(){
-            console.log(this.templateData)
+            //console.log(this.templateData)
             this.imgArr = this.templateData.ImgArr;
             let hostName = location.hostname;
             let port = location.port;

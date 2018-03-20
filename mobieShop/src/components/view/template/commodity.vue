@@ -3,17 +3,17 @@
     <ul class='clear listUl'>
             <li v-bind:style="commodityBigImg">
                 <a :href="templateData.productImgURL1" style="display: inline-block;width: 100%;">
-                    <img :src='templateData.productImgSrc1' v-bind:style="commodityImg1">
+                    <img :src='imageUrl+templateData.productImgSrc1' v-bind:style="commodityImg1">
                 </a>
             </li>
             <li v-bind:style="commoditySmallImg">
                 <a :href="templateData.productImgURL2" style="display: inline-block;width: 100%;">
-                    <img :src='templateData.productImgSrc1' v-bind:style="commodityImg2">
+                    <img :src='imageUrl+templateData.productImgSrc2' v-bind:style="commodityImg2">
                 </a>
             </li>
             <li v-bind:style="commodityBigsImg">
                 <a :href="templateData.productImgURL3" style="display: inline-block;width: 100%;">
-                    <img :src='templateData.productImgSrc1' v-bind:style="commodityImg3">
+                    <img :src='imageUrl+templateData.productImgSrc3' v-bind:style="commodityImg3">
                 </a>
             </li>
         </ul>
@@ -49,7 +49,7 @@ export default {
         },
         props:['templateData'],
         created() {
-            console.log(this.templateData)
+           // console.log(this.templateData)
             if(this.templateData.bigImg == 24){
                 this.commodityBigImg.width = '100%'
                 this.commodityBigImg.margin == '0% 0% 0% 0%'

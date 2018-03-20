@@ -6,7 +6,7 @@
                   <li class="className" v-for='(item,index) in imgArr' :key="index">
                       <div class="classNameTitle">{{ item.classTitle }}</div>
                       <a :href="item.url" class="bannerLink">
-                          <img :src="imageUrl+item.imgSrc" @load="imageLoaded">
+                          <img :src="item.imgSrc == imageUrl?imageUrl+item.imgSrc:imageUrl+item.img" @load="imageLoaded">
                       </a>
                   </li>
               </ul>
@@ -27,7 +27,7 @@ export default {
         },
         props:['templateData'],
         created() {
-            console.log(this.templateData)
+            //console.log(this.templateData)
             this.imgArr = this.templateData.ImgArr;
             let hostName = location.hostname;
             let port = location.port;
@@ -40,11 +40,11 @@ export default {
                 let length = this.imgArr.length;
                 //console.log(length)
                 let classNameWidth =  classNames[0].offsetWidth;
-                console.log(classNameWidth)
+                //console.log(classNameWidth)
                 let classNameWidths = classNameWidth + 18
                 let allWidth = classNameWidths * length;
-                console.log(allWidth)
-                this.classNameContent.width = allWidth/50 + 'rem';
+               // console.log(allWidth)
+                this.classNameContent.width = allWidth/50 + 2 + 'rem';
             }
         }
     };

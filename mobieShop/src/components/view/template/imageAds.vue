@@ -3,7 +3,7 @@
         <mt-swipe :auto="4000">
             <mt-swipe-item v-for='(item,index) in imgArr' :key='index'>
                 <a :href="item.url" class="bannerLink">
-                    <img :src="imageUrl+item.imgSrc" class="bannerImg">
+                    <img :src="item.imgSrc == imageUrl?imageUrl+item.imgSrc:imageUrl+item.img" class="bannerImg">
                 </a>
             </mt-swipe-item>
         </mt-swipe>
@@ -38,6 +38,7 @@
  .bannerLink{
      width:100%;
      height: 100%;
+     display: inline-block;
  }
  .bannerImg{
       width:100%;
