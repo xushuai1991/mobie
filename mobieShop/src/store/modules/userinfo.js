@@ -18,7 +18,6 @@ const actions = {
         // console.log(parm);
         axios.post('/api/customer/account/login?mobile=' + parm.mobile + '&&password=' + parm.password, {})
             .then(function(response) {
-                console.log(response)
                 commit({
                     type: 'login',
                     data: response.data

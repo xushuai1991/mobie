@@ -130,7 +130,7 @@ export default {
             if(this.phonejson.status&&this.pswjson.status&&this.codejson.status){
                 let that=this;
                 this.$http({
-                    url: '/api/customer/account/login?mobile='+this.phone+'&&password='+this.psw,
+                    url: '/api/customer/account/login?mobile='+this.phone+'&password='+this.psw,
                     method: 'POST',
                     // 设置请求头
                     headers: {
@@ -142,7 +142,7 @@ export default {
                     var msg = res.data.msg
                     if (msg !== '登录成功') {
                         Toast(res.data.info);
-                        this.cleardata();
+                        // this.cleardata();
                     } else {
                         this.$store.commit('login',res.data)
                         setTimeout(() => {
@@ -156,6 +156,7 @@ export default {
                     }
                 })
                 .catch(err => {
+                    console.log("错误")
                     console.log(err)
                 })
             }
