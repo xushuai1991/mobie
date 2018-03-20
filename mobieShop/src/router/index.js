@@ -113,7 +113,7 @@ export default new Router({
             path: '/', // 刚刚底边栏
             name: 'mindex',
             component: resolve => require(['../components/view/navBottom/navBottom.vue'], resolve),
-        }
+        },
         {
             path: '/homepage', // 首页
             name: 'homepage',
