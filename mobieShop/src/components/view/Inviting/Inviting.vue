@@ -41,7 +41,7 @@
     </div>
 </template>
 <script>
-import wx from 'weixin-js-sdk';
+// import wx from 'weixin-js-sdk';
 import { Button } from 'mint-ui';
 import { MessageBox } from 'mint-ui';
 import { Indicator } from 'mint-ui';
