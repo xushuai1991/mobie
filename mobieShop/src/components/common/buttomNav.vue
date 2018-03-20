@@ -28,18 +28,26 @@
     }
     .navBar ul{
         overflow: hidden;
+        border-top:1px solid #ddd;
     }
     .navBar .carBox li i{
-        font-size:0.4rem;
+        font-size:0.35rem;
         line-height:0.6rem;
     }
     .navBar .carBox li {
-        line-height:0.4rem;
-        font-size:0.3rem;
+        line-height:0.2rem;
+        font-size:0.25rem;
         float: left;
         width: 25%;
-        height: 1rem;
-        background: #ddd;
+        height: 0.9rem;
+        background: #fff;
+    }
+    .navBar .carBox li:after{
+        content:'';
+        position:relative;
+        border-right:1px solid #ddd;
+        top:-0.4rem;
+        right:-1rem;
     }
     .navBar li {
         font-size: 20px;
