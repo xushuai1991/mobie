@@ -109,7 +109,11 @@ export default new Router({
                     component: resolve => require(['../components/view/Inviting/InvitingResult.vue'], resolve),
                 }
             ]
-        },
+        },{
+            path: '/', // 刚刚底边栏
+            name: 'mindex',
+            component: resolve => require(['../components/view/navBottom/navBottom.vue'], resolve),
+        }
         {
             path: '/homepage', // 首页
             name: 'homepage',
