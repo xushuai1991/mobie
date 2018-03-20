@@ -2,22 +2,23 @@
     <div class='navBar'>
         <ul class='carBox'>
             <li @click="goPage('/navBottom')">
-                <i class='icon iconfont icon-shouye'></i>
+                <i class='icon iconfont icon-solid-home'></i>
                 <p>首页</p>
             </li>
             <li @click="goPage('/classification')">
-                <i class='icon iconfont icon-shouye'></i>
+                <i class='icon iconfont icon-leimupinleifenleileibie2'></i>
                 <p>分类</p>
             </li>
             <li @click="goPage('/shopCar')">
-                <i class='icon iconfont icon-gouwuche'></i>
+                <i class='icon iconfont icon-gouwuche1'></i>
                 <p>购物车</p>
             </li>
             <li @click="goPage('/userInfo')">
-                <i class='icon iconfont icon-gouwuche'></i>
+                <i class='icon iconfont icon-wode'></i>
                 <p>我的</p>
             </li>
         </ul>
+        
     </div>
 </template>
 <style scoped>
@@ -33,6 +34,7 @@
     .navBar .carBox li i{
         font-size:0.35rem;
         line-height:0.6rem;
+        color:#cdcdcd;
     }
     .navBar .carBox li {
         line-height:0.2rem;
@@ -57,6 +59,7 @@
         font-size: 12px;
         margin-top: -10px;
         margin-bottom: -3px;
+        color:#6c6c6c;
     }
 </style>
 <script>
