@@ -29,7 +29,7 @@
                 <router-link to='' class='quicklogin' @click.native='switch_quick'>快速登录</router-link>
             </p>
             <p style='text-align:left;'>
-                <router-link to='' class='forgetpsw'>忘记密码？</router-link>
+                <!-- <router-link to='' class='forgetpsw'>忘记密码？</router-link> -->
             </p>
             <mt-button type="default" class='btn-resign'  @click.native='switch_resign'>没有账号，立即注册</mt-button>
         </div>
@@ -44,7 +44,7 @@
                 <i class='icon iconfont icon-key'></i>
                 <input type="text" class='codeinput' placeholder="验证码" v-model="code">
                 <p class='error'></p>
-                <router-link to='' style='position:absolute;font-size:.3rem;top:.6rem;right:.2rem;'  @click.native='getcode(2)'>获取验证码</router-link>
+                <router-link to='' style='position:absolute;font-size:.3rem;top:.6rem;right:.2rem;'  @click.native='getcode(2)'>{{second}}</router-link>
             </div>
             
             <p class='opera_quick'>
@@ -63,7 +63,7 @@
                 <i class='icon iconfont icon-key'></i>
                 <input type="text" class='codeinput' placeholder="验证码" v-model="code">
                 <p class='error'></p>
-                <router-link to='' style='position:absolute;font-size:.3rem;top:.6rem;right:.2rem;'  @click.native='getcode(1)'>获取验证码</router-link>
+                <router-link to='' style='position:absolute;font-size:.3rem;top:.6rem;right:.2rem;'  @click.native='getcode(1)'>{{second}}</router-link>
             </div>
             <div class="psw">
                 <i class='icon iconfont icon-16suo'></i>
@@ -117,7 +117,8 @@ export default {
             },
             loginflag:true,
             loginquickflag:false,
-            resignflag:false
+            resignflag:false,
+            second:'获取验证码'
         }
     },
     mounted(){
@@ -177,6 +178,15 @@ export default {
                         Toast(response.data.msg);
                         if(response.data.status==200){
                             this.cleardata();
+                            this.$store.commit('login',res.data)
+                            setTimeout(() => {
+                                Toast({
+                                    message: '登录成功正在为你跳转请稍后...',
+                                    iconClass: 'icon icon-success',
+                                    duration: 500
+                                });
+                                this.$router.push('/navBottom');
+                            }, 1000);
                         }
                     })
                     .catch(function(response){
@@ -225,20 +235,37 @@ export default {
         },
         // 获取验证码
         getcode(type){
-            if(this.phonejson.status){
-                let that=this;
-                this.$http.post('/api/customer/resource/sendSmsCode?mobile='+that.phone+'&type='+type)
-                .then(function(response){
-                    Toast(response.data.msg);
-                })
-                .catch(function(response){
-                    Toast('验证码获取失败');
-                });
+            if(this.second=='获取验证码'){
+                if(this.phonejson.status){
+                    let that=this;
+                    this.$http.post('/api/customer/resource/sendSmsCode?mobile='+that.phone+'&type='+type)
+                    .then(function(response){
+                        Toast(response.data.msg);
+                        that.second=60;
+                        that.countDown();
+                    })
+                    .catch(function(response){
+                        Toast('验证码获取失败');
+                    });
+                }
+                else{
+                    Toast('请输入正确的手机号');
+                    this.checkphone();
+                }
             }
-            else{
-                Toast('请输入正确的手机号');
-                this.checkphone();
-            }
+            
+        },
+        // 倒计时
+        countDown(){
+            let time=setInterval(()=>{
+                if(this.second==0){
+                    clearInterval(time);
+                    this.second='获取验证码';
+                }
+                else{
+                    this.second=this.second-1;
+                }
+            },1000);
         },
         switch_quick(){
             this.loginflag=false;
