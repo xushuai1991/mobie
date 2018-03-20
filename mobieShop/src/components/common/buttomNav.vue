@@ -24,19 +24,27 @@
     .navBar {
         position: fixed;
         bottom: 0;
+        width:100%;
+    }
+    .navBar ul{
+        overflow: hidden;
+    }
+    .navBar .carBox li i{
+        font-size:0.4rem;
+        line-height:0.6rem;
     }
     .navBar .carBox li {
+        line-height:0.4rem;
+        font-size:0.3rem;
         float: left;
         width: 25%;
         height: 1rem;
         background: #ddd;
     }
-    .navBar .iconfont {
+    .navBar li {
         font-size: 20px;
     }
-    .navBar .mint-tab-item-label {
-        line-height: 0.6rem;
-    }
+
     .navBar .mint-tab-item-label p {
         font-size: 12px;
         margin-top: -10px;

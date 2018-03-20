@@ -85,7 +85,7 @@ export default {
       .then(function(response){
        // console.log(response)
         if(response.data.info.length == 0){
-          this.isTrue = false
+          that.isTrue = false
         }else{
            if(response.data.info == "尚未登录"){
             that.$router.push({ path: '/login' })
