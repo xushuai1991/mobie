@@ -10,7 +10,7 @@
                 <div class="goods_list">
                     <ul class="mui-table-view" v-infinite-scroll="loadMore" infinite-scroll-disabled="moreLoading" infinite-scroll-distance="0" infinite-scroll-immediate-check="false">
                         <!--li数据遍历循环部分-->
-                        <li class="mui-table-view-cell" v-for="item in list">
+                        <li class="mui-table-view-cell" v-for="(item,index) in list" :key="index">
                             <div class="cart">
                                 <div class="goods">
                                     <div class="goods_title">
@@ -21,8 +21,8 @@
                                     </div>
                                     <div class="goodsBox">
                                         <ul class="goods_detail">
-                                            <li class="goods_img">
-                                                <img src="" alt="">
+                                            <li class="goods_img" style="padding-left: 0.6rem;padding-top: 0.3rem;">
+                                                <img :src="item.img">
                                             </li>
                                             <li class="goods_info">
                                                 <p class="brandDesc">名称</p>
@@ -81,7 +81,26 @@
                 totalNum: 0,
                 pageSize: 2,
                 pageNum: 1,
-                list: 10
+                list: [
+                    {
+                        'img':require('./../homepage/recommend/recommendImage/1.jpg')
+                    },
+                    {
+                        'img':require('./../homepage/recommend/recommendImage/2.jpg')
+                    },
+                    {
+                        'img':require('./../homepage/recommend/recommendImage/window1-1.jpg')
+                    },
+                    {
+                        'img':require('./../homepage/recommend/recommendImage/window1-2.jpg')
+                    },
+                    {
+                        'img':require('./../homepage/recommend/recommendImage/window1-3.jpg')
+                    },
+                    {
+                        'img':require('./../homepage/recommend/recommendImage/window1-4.jpg')
+                    }
+                    ]
             }
         },
         computed: {
