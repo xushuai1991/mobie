@@ -167,6 +167,7 @@ export default {
         },
         // 快速登录
         loginquick(){
+            let that = this
             if(this.phonejson.status){
                 if(this.code==''){
                     Toast('请输入验证码');
@@ -176,16 +177,17 @@ export default {
                     this.$http.post('/api/customer/account/quickLogin?mobile='+that.phone+'&code='+that.code)
                     .then(function(response){
                         Toast(response.data.msg);
-                        if(response.data.status==200){
-                            this.cleardata();
-                            this.$store.commit('login',res.data)
+                        console.log(response.data.status)
+                        if(response.data.status == 200){
+                            // this.cleardata();
+                            // this.$store.commit('login',res.data)
                             setTimeout(() => {
                                 Toast({
                                     message: '登录成功正在为你跳转请稍后...',
                                     iconClass: 'icon icon-success',
                                     duration: 500
                                 });
-                                this.$router.push('/navBottom');
+                                that.$router.push('/navBottom');
                             }, 1000);
                         }
                     })
