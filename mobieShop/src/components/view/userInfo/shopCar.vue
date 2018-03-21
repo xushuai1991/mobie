@@ -1,11 +1,6 @@
 <template>
     <div>
         <section>
-            <mt-header fixed :title="title">
-                <router-link to="" slot="left">
-                    <mt-button icon="back" @click="goback"></mt-button>
-                </router-link>
-            </mt-header>
             <div class="wrap2">
                 <div class="goods_list">
                     <ul class="mui-table-view" v-infinite-scroll="loadMore" infinite-scroll-disabled="moreLoading" infinite-scroll-distance="0" infinite-scroll-immediate-check="false">

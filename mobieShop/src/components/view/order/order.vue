@@ -1,10 +1,6 @@
 <template>
     <div class='contain'>
-        <mt-header title="我的订单" fixed >
-            <router-link to="/" slot="left">
-                <mt-button icon="back"></mt-button>
-            </router-link>
-        </mt-header>
+  
         <mt-navbar v-model="selected" fixed>
             <mt-tab-item id="1">全部</mt-tab-item>
             <mt-tab-item id="2">待付款</mt-tab-item>

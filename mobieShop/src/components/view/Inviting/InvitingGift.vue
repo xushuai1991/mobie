@@ -12,7 +12,7 @@
         </ul>
         <div class="gift-bottom">
             <mt-field label="" placeholder="输入手机号接受邀请" type="tel" v-model="formData.phone"></mt-field>
-            <mt-button type="primary" @click.native="handleClick">领取优惠券</mt-button>
+            <mt-button type="primary" @click.native="handleClick"style='margin-bottom:0.5rem;'>领取优惠券</mt-button>
         </div>
         <div class="register-diag" v-show="isShow">
             <div class="invite-register" id="myPanel">
@@ -283,7 +283,7 @@ html,body{
 #invite-gift{
     padding-top:0.7rem;
     .gift-top{
-        padding:0.8rem 0 0.8rem;
+        padding:0 0 0.8rem;
         background-repeat:no-repeat;
         background-size:100% 100%;
         background-position:center center;

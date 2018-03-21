@@ -1,10 +1,6 @@
 <template>
     <div class='contain'>
-        <mt-header title="消息中心" fixed >
-            <router-link to="/" slot="left">
-                <mt-button icon="back"></mt-button>
-            </router-link>
-        </mt-header>
+
         <ul class='list-msg'>
             <li>
                 <img class='icon-list' src="static/images/activicon.png" alt="">

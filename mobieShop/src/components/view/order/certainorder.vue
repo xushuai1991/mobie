@@ -1,10 +1,6 @@
 <template>
     <div class='contain'>
-        <mt-header title="确认订单" fixed >
-            <router-link to="/" slot="left">
-                <mt-button icon="back"></mt-button>
-            </router-link>
-        </mt-header>
+
         <div class='msg-customer'>
             <img class='avatar' src="static/images/bgimg.png" alt="">
             <div class='msgs'>
