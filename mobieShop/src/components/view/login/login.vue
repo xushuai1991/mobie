@@ -181,7 +181,9 @@ export default {
                     .then(function(response){
                         Toast(response.data.msg);
                         console.log(response.data.status)
+                        console.log(response.data.info)
                         if(response.data.status == 200){
+                            that.$store.commit('login',response.data.info)
                             // this.cleardata();
                             // this.$store.commit('login',res.data)
                             setTimeout(() => {
@@ -193,9 +195,10 @@ export default {
                                 that.$router.push('/navBottom');
                             }, 1000);
                         }
+                       
                     })
                     .catch(function(response){
-                        Toast('登录失败');
+                         Toast('登录失败');
                     });
                 }
             }
