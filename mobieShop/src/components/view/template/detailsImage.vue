@@ -27,7 +27,7 @@ export default {
             this.imgArr = this.templateData.ImgArr;
             let hostName = location.hostname;
             let port = location.port;
-            this.imageUrl = 'http://101.89.175.155/api/sms';
+            this.imageUrl = 'http://101.89.175.155/api';
             this.imageUrls = 'http://' + hostName + ':' + port;
            // console.log(this.imageUrl)
         },
