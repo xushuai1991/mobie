@@ -364,7 +364,9 @@ export default {
     top:.5rem;
 }
 .contain{
-    height: 13.4rem;
+    /* height:fit-content; */
+    height:13.4rem;
+    /* max-height: 13.4rem; */
     /* background: url(/static/images/bgimg.png) no-repeat round; */
 }
 .form{
@@ -456,8 +458,8 @@ export default {
     background-color: #fff;
     left: 0;
     font-size: 0.3rem;
-    position: fixed;
-    bottom: 0;
+    position: absolute;
+    top: 7.4rem;
     display: block;
 }
 .error{
