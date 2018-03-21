@@ -86,7 +86,7 @@ export default {
         },
         methods:{
             removeDian(str){
-                alert(str)
+                //alert(str)
                 return str.replace(/(^)\./,'$1')
             }
         }
