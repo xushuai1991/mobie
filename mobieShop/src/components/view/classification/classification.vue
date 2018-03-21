@@ -1,7 +1,7 @@
 <template >
     <div class="page-navbar" id="classification">
         <div class="page-search">
-            <mt-search autofocus v-model="value"></mt-search>
+            <mt-search  v-model="value"></mt-search>
         </div>
         <mt-navbar class="page-part float with20" v-model="selected">
             <mt-tab-item id="1">推荐</mt-tab-item>

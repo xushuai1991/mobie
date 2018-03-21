@@ -3,7 +3,7 @@
         <div class="searchTop clear">
             <div class='code'><i data-v-13ee4bcf="" class="icon iconfont icon-erweima "></i></div>
             <div class="page-search">
-                <mt-search autofocus v-model="value"></mt-search>
+                <mt-search  v-model="value"></mt-search>
             </div>
             <div class='notice'><i data-v-13ee4bcf="" class="icon iconfont icon-tongzhi "></i></div>
         </div>
