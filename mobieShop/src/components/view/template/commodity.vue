@@ -3,17 +3,17 @@
     <ul class='clear listUl'>
             <li v-bind:style="commodityBigImg">
                 <a :href="templateData.productImgURL1" style="display: inline-block;width: 100%;">
-                    <img :src='imageUrl+templateData.productImgSrc1' v-bind:style="commodityImg1">
+                    <img :src='templateData.productImgSrc1 == "/static/img/window1-1.7c51e07.jpg"?imageUrls+templateData.productImgSrc1:imageUrl+templateData.productImgSrc1' v-bind:style="commodityImg1">
                 </a>
             </li>
             <li v-bind:style="commoditySmallImg">
                 <a :href="templateData.productImgURL2" style="display: inline-block;width: 100%;">
-                    <img :src='imageUrl+templateData.productImgSrc2' v-bind:style="commodityImg2">
+                    <img :src='templateData.productImgSrc2 == "/static/img/window1-2.8aa779d.jpg"?imageUrls+templateData.productImgSrc2:imageUrl+templateData.productImgSrc2' v-bind:style="commodityImg2">
                 </a>
             </li>
             <li v-bind:style="commodityBigsImg">
                 <a :href="templateData.productImgURL3" style="display: inline-block;width: 100%;">
-                    <img :src='imageUrl+templateData.productImgSrc3' v-bind:style="commodityImg3">
+                   <img :src='templateData.productImgSrc3 == "/static/img/window1-3.f446519.jpg"?imageUrls+templateData.productImgSrc3:imageUrl+templateData.productImgSrc3' v-bind:style="commodityImg3">
                 </a>
             </li>
         </ul>
@@ -24,6 +24,7 @@ export default {
         data() {
             return {
                 imageUrl:'',
+                imageUrls:'',
                 commodityBigImg:{
                     width:'',
                     margin:''
@@ -79,9 +80,16 @@ export default {
             }
             let hostName = location.hostname;
             let port = location.port;
-            this.imageUrl = 'http://' + hostName + ':' + port + '/api/sms';
+            this.imageUrl = 'http://101.89.175.155/api/sms';
+            this.imageUrls = 'http://' + hostName + ':' + port;
            // console.log(this.imageUrl)
         },
+        methods:{
+            removeDian(str){
+                //alert(str)
+                return str.replace(/(^)\./,'$1')
+            }
+        }
     };
 </script>
 <style>

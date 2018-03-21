@@ -6,7 +6,7 @@
                   <li class="className" v-for='(item,index) in imgArr' :key="index">
                       <div class="classNameTitle">{{ item.classTitle }}</div>
                       <a :href="item.url" class="bannerLink">
-                          <img :src="item.imgSrc == imageUrl?imageUrl+item.imgSrc:imageUrl+item.img" @load="imageLoaded">
+                          <img :src="item.imgSrc !== ''?imageUrl+item.imgSrc:imageUrls+removeDian(item.img)" @load="imageLoaded">
                       </a>
                   </li>
               </ul>
@@ -23,6 +23,7 @@ export default {
                 classNameContent:{
                     width:''
                 },
+                imageUrls:''
             };
         },
         props:['templateData'],
@@ -31,7 +32,8 @@ export default {
             this.imgArr = this.templateData.ImgArr;
             let hostName = location.hostname;
             let port = location.port;
-            this.imageUrl = 'http://' + hostName + ':' + port + '/api/sms';
+            this.imageUrl = 'http://101.89.175.155/api/sms';
+            this.imageUrls = 'http://' + hostName + ':' + port;
            // console.log(this.imageUrl)
         },
         methods:{
@@ -45,6 +47,10 @@ export default {
                 let allWidth = classNameWidths * length;
                // console.log(allWidth)
                 this.classNameContent.width = allWidth/50 + 2 + 'rem';
+            },
+            removeDian(str){
+                //alert(str)
+                return str.replace(/(^)\./,'$1')
             }
         }
     };

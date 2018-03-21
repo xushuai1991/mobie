@@ -4,7 +4,7 @@
             <li v-for='(item,index) in imgArr' :key='index'>
                 <div class="imgConet" style="font-size: 0;">
                     <a :href="item.url" style="display: inline-block;width: 100%;">
-                        <img :src='item.imgSrc == imageUrl?imageUrl+item.imgSrc:imageUrl+item.img' class="windowImg">
+                        <img :src='item.imgSrc !== ""?imageUrl+item.imgSrc:imageUrls+removeDian(item.img)' class="windowImg">
                     </a>
                 </div>
                  
@@ -17,7 +17,8 @@ export default {
         data() {
             return {
                 imgArr:'',
-                imageUrl:''
+                imageUrl:'',
+                imageUrls:''
             };
         },
         props:['templateData'],
@@ -26,8 +27,15 @@ export default {
             this.imgArr = this.templateData.ImgArr;
             let hostName = location.hostname;
             let port = location.port;
-            this.imageUrl = 'http://' + hostName + ':' + port + '/api/sms';
+            this.imageUrl = 'http://101.89.175.155/api/sms';
+            this.imageUrls = 'http://' + hostName + ':' + port;
            // console.log(this.imageUrl)
+        },
+        methods:{
+            removeDian(str){
+                //alert(str)
+                return str.replace(/(^)\./,'$1')
+            }
         }
     };
 </script>

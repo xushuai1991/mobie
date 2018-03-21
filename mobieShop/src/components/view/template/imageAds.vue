@@ -3,7 +3,7 @@
         <mt-swipe :auto="4000">
             <mt-swipe-item v-for='(item,index) in imgArr' :key='index'>
                 <a :href="item.url" class="bannerLink">
-                    <img :src="item.imgSrc == imageUrl?imageUrl+item.imgSrc:imageUrl+item.img" class="bannerImg">
+                    <img :src="item.imgSrc !== ''?imageUrl+item.imgSrc:imageUrls+removeDian(item.img)" class="bannerImg">
                 </a>
             </mt-swipe-item>
         </mt-swipe>
@@ -14,7 +14,8 @@
         data() {
             return {
                 imgArr:'',
-                imageUrl:''
+                imageUrl:'',
+                imageUrls:''
             };
         },
         props:['templateData'],
@@ -23,8 +24,15 @@
             this.imgArr = this.templateData.ImgArr;
             let hostName = location.hostname;
             let port = location.port;
-            this.imageUrl = 'http://' + hostName + ':' + port + '/api/sms';
+            this.imageUrl = 'http://101.89.175.155/api/sms';
+            this.imageUrls = 'http://' + hostName + ':' + port;
            // console.log(this.imageUrl)
+        },
+        methods:{
+            removeDian(str){
+                //alert(str)
+                return str.replace(/(^)\./,'$1')
+            }
         }
     };
 </script>
