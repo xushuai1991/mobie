@@ -130,7 +130,7 @@ export default {
             if(this.phonejson.status&&this.pswjson.status&&this.codejson.status){
                 let that=this;
                 this.$http({
-                    url: '/api/customer/account/login?mobile='+this.phone+'&&password='+this.psw,
+                    url: '/api/customer/account/login?mobile='+this.phone+'&password='+this.psw,
                     method: 'POST',
                     // 设置请求头
                     headers: {
@@ -142,9 +142,11 @@ export default {
                     var msg = res.data.msg
                     if (msg !== '登录成功') {
                         Toast(res.data.info);
-                        this.cleardata();
+                        // this.cleardata();
                     } else {
                         this.$store.commit('login',res.data)
+                        // let userinfo = res.data
+                        // sessionStorage.setItem('userinfo', JSON.stringify(data));
                         setTimeout(() => {
                             Toast({
                                 message: '登录成功正在为你跳转请稍后...',
@@ -156,6 +158,7 @@ export default {
                     }
                 })
                 .catch(err => {
+                    console.log("错误")
                     console.log(err)
                 })
             }
@@ -361,7 +364,9 @@ export default {
     top:.5rem;
 }
 .contain{
-    height: 13.4rem;
+    /* height:fit-content; */
+    height:13.4rem;
+    /* max-height: 13.4rem; */
     /* background: url(/static/images/bgimg.png) no-repeat round; */
 }
 .form{
@@ -453,8 +458,8 @@ export default {
     background-color: #fff;
     left: 0;
     font-size: 0.3rem;
-    position: fixed;
-    bottom: 0;
+    position: absolute;
+    top: 7.4rem;
     display: block;
 }
 .error{
