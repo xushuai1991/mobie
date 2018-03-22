@@ -274,7 +274,7 @@
     }
     .infoBottom {
         margin-top: .8rem;
-        padding-bottom:0.5rem;
+        padding-bottom:1rem;
     }
     .portrait {
         width: 100%;
