@@ -25,7 +25,7 @@
                     <p>QQ</p> 
                 </li>
                 <li>
-                    <div class="imgDiv imgDiv3" @click='shareTo("qq")'>
+                    <div class="imgDiv imgDiv3" @click='shareTo("")'>
                         <p class="icon iconfont icon-friends"></p>
                     </div>
                     <p>朋友圈</p> 
@@ -214,15 +214,11 @@ export default {
             }
             //qq空间接口的传参
             if(stype=='qzone'){
-                window.open('http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url='+document.location.href+'?sharesource=qzone&title='+ftit+'&pics='+lk);
-            }
-            //新浪微博接口的传参
-            if(stype=='sina'){
-                window.open('http://service.weibo.com/share/share.php?url='+document.location.href+'?sharesource=weibo&title='+ftit+'&pic='+lk+'&appkey=2706825840');
+                window.open('http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url='+document.location.href+'?sharesource=qzone&title='+ftit+'&pics='+this.totalSrc+'&desc=绿城');
             }
             //qq好友接口的传参
             if(stype == 'qq'){
-                window.open('http://connect.qq.com/widget/shareqq/index.html?url='+document.location.href+'?sharesource=qzone&title='+ftit+'&pics='+lk+'&desc=php自学网，一个web开发交流的网站');
+                window.open('http://connect.qq.com/widget/shareqq/index.html?url='+document.location.href+'?sharesource=qzone&title='+ftit+'&pics='+this.totalSrc+'&desc=绿城');
             }
             //生成二维码给微信扫描分享
             if(stype == 'wechat'){
