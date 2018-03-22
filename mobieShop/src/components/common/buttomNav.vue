@@ -26,6 +26,7 @@
         position: fixed;
         bottom: 0;
         width:100%;
+        overflow:hidden;
     }
     .navBar ul{
         overflow: hidden;

@@ -1,7 +1,7 @@
 
 <template>  
   <div class="page-tabbar">  
-    <div class="page-wrap">  
+    <div class="page-wrap" style='-webkit-overflow-scrolling : touch;'>  
     <!-- tabcontainer -->  
       <mt-tab-container class="page-tabbar-container" v-model="selected">  
         <mt-tab-container-item id="首页">  
