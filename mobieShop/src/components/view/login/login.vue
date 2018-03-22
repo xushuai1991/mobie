@@ -144,7 +144,7 @@ export default {
                         Toast(res.data.info);
                         // this.cleardata();
                     } else {
-                        this.$store.commit('login',res.data)
+                        this.$store.commit('login',res.data.info)
                         // let userinfo = res.data
                         // sessionStorage.setItem('userinfo', JSON.stringify(data));
                         setTimeout(() => {
