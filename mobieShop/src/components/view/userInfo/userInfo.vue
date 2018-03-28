@@ -1,153 +1,160 @@
 <template>
-    <section class='infoBottom' style='background-image:url("static/images/background_info.png");background-repeat: no-repeat;background-size:contain;'>
-        <div class="account">
-            <div class="account_info">
-                <div class="change"><i class='icon iconfont icon-arrow-right-copy icon-qiehuan'></i></div>
-                <div class="portrait">
-                    <div class="portrait_img">
-                        <img src="static/HMMobilePhone/dsit/img/headPortrait2.png" alt="">
-                        <p class='vip'>{{viplevel}}</p>
-                        <i class='icon iconfont icon--huangguan' style='color:#fdd23e;position:absolute;right:.2rem;top:-.15rem;transform:rotate(25deg);'></i>
+    <div class="wrapper">
+        <mt-header fixed  title="个人中心">
+            <!-- <router-link to="" slot="left">
+                <mt-button icon="back" @click="goback" ></mt-button>
+            </router-link> -->
+        </mt-header>
+        <section class='infoBottom' style='background-image:url("static/images/background_info.png");background-repeat: no-repeat;background-size:contain;'>
+            <div class="account">
+                <div class="account_info">
+                    <div class="change"><i class='icon iconfont icon-arrow-right-copy icon-qiehuan'></i></div>
+                    <div class="portrait">
+                        <div class="portrait_img">
+                            <img src="static/HMMobilePhone/dsit/img/headPortrait2.png" alt="">
+                            <p class='vip'>{{viplevel}}</p>
+                            <i class='icon iconfont icon--huangguan' style='color:#fdd23e;position:absolute;right:.2rem;top:-.15rem;transform:rotate(25deg);'></i>
+                        </div>
+                        <div class="portrait_info">
+                            <p style='font-size:.3rem;padding-top:.1rem;'>{{userinfo.nickname==null?'&nbsp;':userinfo.nickname}}</p>
+                            <router-link to='/personalScores'>
+                                <p style='color:#e47524;margin-top:.2rem;font-size:.25rem;'><i class='icon iconfont icon-qian' style='font-size:.4rem;'></i>&nbsp;{{point}}</p>
+                            </router-link>
+                            <p class='info_other' style='color:#939393'>至2019.1.1 &nbsp;&nbsp;过期积分：{{expiredPoints}}分</p>
+                        </div>
+                        <ul class="behavior">
+                            <li>
+                                <div class="collect">
+                                    <i class='icon iconfont icon-xingxing coloBule'></i>
+                                </div>
+                                <p class="text_wait">收藏 <span class="coller">20</span></p>
+                            </li>
+                            <li class="shopCar">
+                                <div class="collect">
+                                    <i class='icon iconfont icon-gouwuche coloBule'></i>
+                                </div>
+                                <p class="text_wait">购物车 <span class="carNum">5</span></p>
+                            </li>
+                            <li class="markFooter">
+                                <div class="collect">
+                                    <i class='icon iconfont icon-zuji coloBule'></i>
+                                </div>
+                                <p class="text_wait">足迹</p>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="portrait_info">
-                        <p style='font-size:.3rem;padding-top:.1rem;'>{{userinfo.nickname==null?'&nbsp;':userinfo.nickname}}</p>
-                        <router-link to='/personalScores'>
-                            <p style='color:#e47524;margin-top:.2rem;font-size:.25rem;'><i class='icon iconfont icon-qian' style='font-size:.4rem;'></i>&nbsp;{{point}}</p>
-                        </router-link>
-                        <p class='info_other' style='color:#939393'>至2019.1.1 &nbsp;&nbsp;过期积分：{{expiredPoints}}分</p>
-                    </div>
-                    <ul class="behavior">
-                        <li>
-                            <div class="collect">
-                                <i class='icon iconfont icon-xingxing coloBule'></i>
-                            </div>
-                            <p class="text_wait">收藏 <span class="coller">20</span></p>
-                        </li>
-                        <li class="shopCar">
-                            <div class="collect">
-                                <i class='icon iconfont icon-gouwuche coloBule'></i>
-                            </div>
-                            <p class="text_wait">购物车 <span class="carNum">5</span></p>
-                        </li>
-                        <li class="markFooter">
-                            <div class="collect">
-                                <i class='icon iconfont icon-zuji coloBule'></i>
-                            </div>
-                            <p class="text_wait">足迹</p>
-                        </li>
-                    </ul>
                 </div>
             </div>
-        </div>
-        <div class="order">
-            <div class="my_order">我的订单
-                <div class="check">查看全部订单</div>
-                <p><a href="###"><i class='icon iconfont icon-arrow-right-copy fontSize'></i></a></p>
+            <div class="order">
+                <div class="my_order">我的订单
+                    <div class="check">查看全部订单</div>
+                    <p><a href="###"><i class='icon iconfont icon-arrow-right-copy fontSize'></i></a></p>
+                </div>
+                <ul class="wait_for">
+                    <li>
+                        <div class="img_wait">
+                            <i class="pay orageColor">2</i>
+                            <i class='icon iconfont icon-daifukuan fontSize'></i>
+                        </div>
+                        <p class="text_wait">代付款</p>
+                    </li>
+                    <li>
+                        <div class="img_wait">
+                            <i class="wait orageColor">2</i>
+                            <i class='icon iconfont icon-icondaifahuo fontSize'></i>
+                        </div>
+                        <p class="text_wait">待发货</p>
+                    </li>
+                    <li>
+                        <div class="img_wait ">
+                            <i class="receive orageColor">2</i>
+                            <i class='icon iconfont icon-ziyuan fontSize'></i>
+                        </div>
+                        <p class="text_wait">待收货</p>
+                    </li>
+                    <li>
+                        <div class="img_wait ">
+                            <i class="evaluate orageColor">2</i>
+                            <i class='icon iconfont icon-daipingjia fontSize'></i>
+                        </div>
+                        <p class="text_wait">待评价</p>
+                    </li>
+                    <li>
+                        <div class="img_wait ">
+                            <i class='icon iconfont icon-shouhou fontSize'></i>
+                        </div>
+                        <p class="text_wait">售后</p>
+                    </li>
+                </ul>
             </div>
-            <ul class="wait_for">
-                <li>
-                    <div class="img_wait">
-                        <i class="pay orageColor">2</i>
-                        <i class='icon iconfont icon-daifukuan fontSize'></i>
-                    </div>
-                    <p class="text_wait">代付款</p>
-                </li>
-                <li>
-                    <div class="img_wait">
-                        <i class="wait orageColor">2</i>
-                        <i class='icon iconfont icon-icondaifahuo fontSize'></i>
-                    </div>
-                    <p class="text_wait">待发货</p>
-                </li>
-                <li>
-                    <div class="img_wait ">
-                        <i class="receive orageColor">2</i>
-                        <i class='icon iconfont icon-ziyuan fontSize'></i>
-                    </div>
-                    <p class="text_wait">待收货</p>
-                </li>
-                <li>
-                    <div class="img_wait ">
-                        <i class="evaluate orageColor">2</i>
-                        <i class='icon iconfont icon-daipingjia fontSize'></i>
-                    </div>
-                    <p class="text_wait">待评价</p>
-                </li>
-                <li>
-                    <div class="img_wait ">
-                        <i class='icon iconfont icon-shouhou fontSize'></i>
-                    </div>
-                    <p class="text_wait">售后</p>
-                </li>
-            </ul>
-        </div>
-        <div class='opera_list'>
-            <ul>
-                <li>
-                    <router-link to='addressManagnet'>
-                        <i class='icon iconfont icon-dingwei fontSize operaicon'></i>
-                        <i class='flag on'></i>
-                        <p class='name_opera'>地址</p>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link to=''>
-                        <i class='icon iconfont icon-kefu fontSize operaicon'></i>
-                        <i class='flag on'></i>
-                        <p class='name_opera'>客服</p>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link to=''>
-                        <i class='icon iconfont icon-youhuijuan fontSize operaicon'></i>
-                        <i class='flag'></i>
-                        <p class='name_opera'>优惠券</p>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link to=''>
-                        <i class='icon iconfont icon-lingdang fontSize operaicon'></i>
-                        <i class='flag'></i>
-                        <p class='name_opera'>消息</p>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link to=''>
-                        <i class='icon iconfont icon-liwu fontSize operaicon'></i>
-                        <i class='flag'></i>
-                        <p class='name_opera'>活动专区</p>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link to=''>
-                        <i class='icon iconfont icon-fapiao fontSize operaicon'></i>
-                        <i class='flag'></i>
-                        <p class='name_opera'>服务报告更新</p>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link :to="'/inviting?recommendedCustomerId='+userinfo.id">
-                        <i class='icon iconfont icon-yaoqing fontSize operaicon'></i>
-                        <i class='flag'></i>
-                        <p class='name_opera'>邀请注册</p>
-                    </router-link>
-                </li>
-                <li>
-                    <router-link to=''>
-                        <i class='icon iconfont icon-printer fontSize operaicon'></i>
-                        <i class='flag'></i>
-                        <p class='name_opera'>发票管理</p>
-                    </router-link>
-                </li>
-            </ul>
-        </div>
-        <buttomNav></buttomNav>
-        <!-- <div class="account_management" @click='gotAccount'>账号管理 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
-            <div class="address_management" @click='gotAddress'>地址管理 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
-             <div class="address_management">二维码 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
-            <div class="coupon" @click='gotCoupon'>优惠券 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div> -->
-        <!-- <div class="log_off">退出登录</div> -->
-    </section>
+            <div class='opera_list'>
+                <ul>
+                    <li>
+                        <router-link to='addressManagnet'>
+                            <i class='icon iconfont icon-dingwei fontSize operaicon'></i>
+                            <i class='flag on'></i>
+                            <p class='name_opera'>地址</p>
+                        </router-link>
+                    </li>
+                    <li>
+                        <router-link to=''>
+                            <i class='icon iconfont icon-kefu fontSize operaicon'></i>
+                            <i class='flag on'></i>
+                            <p class='name_opera'>客服</p>
+                        </router-link>
+                    </li>
+                    <li>
+                        <router-link to=''>
+                            <i class='icon iconfont icon-youhuijuan fontSize operaicon'></i>
+                            <i class='flag'></i>
+                            <p class='name_opera'>优惠券</p>
+                        </router-link>
+                    </li>
+                    <li>
+                        <router-link to=''>
+                            <i class='icon iconfont icon-lingdang fontSize operaicon'></i>
+                            <i class='flag'></i>
+                            <p class='name_opera'>消息</p>
+                        </router-link>
+                    </li>
+                    <li>
+                        <router-link to=''>
+                            <i class='icon iconfont icon-liwu fontSize operaicon'></i>
+                            <i class='flag'></i>
+                            <p class='name_opera'>活动专区</p>
+                        </router-link>
+                    </li>
+                    <li>
+                        <router-link to=''>
+                            <i class='icon iconfont icon-fapiao fontSize operaicon'></i>
+                            <i class='flag'></i>
+                            <p class='name_opera'>服务报告更新</p>
+                        </router-link>
+                    </li>
+                    <li>
+                        <router-link :to="'/inviting?recommendedCustomerId='+userinfo.id">
+                            <i class='icon iconfont icon-yaoqing fontSize operaicon'></i>
+                            <i class='flag'></i>
+                            <p class='name_opera'>邀请注册</p>
+                        </router-link>
+                    </li>
+                    <li>
+                        <router-link to=''>
+                            <i class='icon iconfont icon-printer fontSize operaicon'></i>
+                            <i class='flag'></i>
+                            <p class='name_opera'>发票管理</p>
+                        </router-link>
+                    </li>
+                </ul>
+            </div>
+            <!-- <buttomNav></buttomNav> -->
+            <!-- <div class="account_management" @click='gotAccount'>账号管理 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
+                <div class="address_management" @click='gotAddress'>地址管理 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
+                <div class="address_management">二维码 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div>
+                <div class="coupon" @click='gotCoupon'>优惠券 <p><i class='icon iconfont icon-arrow-right-copy fontSize'></i></p></div> -->
+            <!-- <div class="log_off">退出登录</div> -->
+        </section>
+    </div>
 </template>
 
 <script>
@@ -167,7 +174,7 @@
             }
         },
         created() {
-            this.$root.$emit('header', '个人中心')
+            // this.$root.$emit('header', '个人中心')
             this.integral()
         },
         methods: {
@@ -195,6 +202,9 @@
                     password: that.psw,
                     code: that.code
                 })
+            },
+            goback(){
+                this.$router.go(-1);
             }
         },
         mounted() {
@@ -225,6 +235,8 @@
         computed: {
             ...mapState({
                 userinfo: function(state) {
+                    // console.log(state.userinfo);
+                    // console.log(JSON.stringify(state.userinfo.userinfo));
                     if (JSON.stringify(state.userinfo.userinfo) == '{}') {
                         let data = JSON.parse(sessionStorage.getItem('userinfo'));
                         this.$store.commit('login', data)
@@ -238,6 +250,9 @@
     }
 </script>
 <style scoped>
+    .mint-header{
+        background-color: black;
+    }
     .coloBule {
         color: #31b1b0;
         font-weight: 700;

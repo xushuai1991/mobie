@@ -25,6 +25,12 @@ export default new Router({
                     name: 'ordercertain',
                     component: resolve => require(['../components/view/order/certainorder.vue'], resolve)
                 },
+                //开票申请
+                {
+                    path: '/invoice',
+                    name: 'invoice',
+                    component: resolve => require(['../components/view/order/invoice.vue'], resolve)
+                },
                 // 消息中心
                 {
                     path: '/msgcenter',
@@ -119,7 +125,12 @@ export default new Router({
             ]
         },
         {
-            path: '/homepage', // 首页
+            path: '/index', // 首页
+            name: 'index',
+            component: resolve => require(['../components/view/index/index.vue'], resolve)
+        },
+        {
+            path: '/homepage', // 主页
             name: 'homepage',
             component: resolve => require(['../components/view/homepage/homepage.vue'], resolve)
         },
