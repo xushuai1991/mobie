@@ -173,26 +173,25 @@ export default {
 }
 </script>
 <style> 
- li{
+ /* li{
    list-style: none;
- } 
-  .disblock{
-    display: block;
-    margin-bottom:0.2rem;
+ }  */
+  .page-tabbar {
+    overflow: hidden;
+    height: 100vh;
   }
-  .page-tabbar {  
-    overflow: hidden;  
-    height: 94vh;  
-  }  
 
-  .page-wrap {  
-    overflow: auto;  
-    height: 100%;  
-    padding-bottom: 100px;  
-  }  
+  .page-wrap {
+    overflow: auto;
+    height: 92%;
+    padding-bottom: 47.5px;
+  }
   /* .tabbar-xs .mint-tab-item{
       padding:.3rem 0;
   } */
+  .tabbar-xs{
+      position: fixed;
+  }
   .tabbar-xs .iconfont{
       display: block;
       padding-bottom: .1rem;
