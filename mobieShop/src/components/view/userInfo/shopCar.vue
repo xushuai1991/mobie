@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class='Cmycar'>
         <section>
             <div class="wrap2">
                 <div class="goods_list">
@@ -11,31 +11,39 @@
                                     <div class="goods_title type-pay">
                                         <input type="checkbox" class='CinputBox' v-model="item.shopselected" @click="checkShop(index)" /><span>{{item.shopname}}</span>
                                         <div class="checks" @click='showServer(item.shopname)'>领券</div>
-                                        <p><img src="static/HMMobilePhone/dsit/img/arrow_Green.png" alt=""></p>
+                                        <p></p>
                                     </div>
                                     <div class="goodsBox" v-for="(items,indexs) in item.listgoods" :key="indexs">
+                                    <mt-cell-swipe :right="[  
+                                                        {  
+                                                            content: '删除',  
+                                                            style: { background: '#ff7900', color: '#fff'},  
+                                                            handler: () => deleteSection(index,indexs)  
+                                                        }  
+                                                    ]">
                                         <ul class="goods_detail" style='overflow: hidden; margin-top:0.2rem;'>
                                             <li class="goods_img" style="margin-left:0px;">
                                                 <img :src="items.img">
                                             </li>
                                             <li class="goods_info">
                                                 <p class="brandDesc">{{items.name}}</p>
-                                                <p class="goods_identifier strlen" style="width:3rem;"><span>简介</span></p>
+                                                <p class="goods_identifier strlen" style="width:3rem;"><span>水电费收到发生的防守打法收到发生的防守打法斯蒂芬斯蒂芬是收到放斯蒂芬斯蒂芬松放松发顺丰</span></p>
                                                 <p class="goods_color">颜色：<span>红色</span></p>
                                                 <p class="goods_size">尺码：<span>尺寸</span></p>
                                             </li>
                                             <li class="goods_info_se">
                                                 <p class="goods_price">￥<span>{{items.price}}</span></p>
                                                 <div class='cgqNumBox'>
-                                                    <button type="button" @click="reduce(index,indexs)">-</button>
+                                                    <input type="button" @click="reduce(index,indexs)" value='－'>
                                                     <input type="number" disabled :value="items.count" />
-                                                    <button type="button" @click="add(index,indexs)">+</button>
+                                                    <input type="button" @click="add(index,indexs)" value='＋'>
                                                 </div>
                                             </li>
-                                            <span class="mui_shopcar_del" @click="remove(index,indexs)">
+                                           <!-- <span class="mui_shopcar_del" @click="remove(index,indexs)">
                                                         <i class='icon iconfont icon-lajitong'></i>
-                                                    </span>
+                                                    </span>!-->
                                         </ul>
+                                         </mt-cell-swipe>
                                     </div>
                                 </div>
                             </div>
@@ -55,7 +63,7 @@
                     <input type="checkbox" v-model="selectAll" style='position: relative; top: 0.02rem;'> 全选 (<span class="shopNum">{{nums}}</span>)
                 </li>
                 <li class="all_price">
-                    合计: <span>￥<i class="price_all" >{{total|currency }}</i></span>
+                    合计: <span>￥<i class="price_all" >{{total.toFixed(1)}}</i></span>
                 </li>
                 <li class="pay">
                     <p @click='Submit'>结算</p>
@@ -123,7 +131,7 @@
                                 name: '奶片',
                                 price: 1.3,
                                 count: 2,
-                                selected: false,
+                                 selected: false,
                                 'img': require('./../homepage/recommend/recommendImage/1.jpg')
                             },
                             {
@@ -131,7 +139,7 @@
                                 name: '小辣椒',
                                 price: 100,
                                 count: 1,
-                                selected: false,
+                                 selected: false,
                                 'img': require('./../homepage/recommend/recommendImage/1.jpg')
                             },
                             {
@@ -139,7 +147,7 @@
                                 name: '小辣椒22222',
                                 price: 100,
                                 count: 1,
-                                selected: false,
+                                 selected: false,
                                 'img': require('./../homepage/recommend/recommendImage/1.jpg')
                             }
                         ]
@@ -151,7 +159,7 @@
                         listgoods: [{
                                 id: 201,
                                 name: '三星',
-                                price: 4000,
+                                price: 400000,
                                 count: 2,
                                 selected: false,
                                 'img': require('./../homepage/recommend/recommendImage/1.jpg')
@@ -161,7 +169,7 @@
                                 name: '华为1',
                                 price: 100,
                                 count: 1,
-                                selected: false,
+                                 selected: false,
                                 'img': require('./../homepage/recommend/recommendImage/1.jpg')
                             },
                             {
@@ -169,7 +177,7 @@
                                 name: '华为2',
                                 price: 100,
                                 count: 1,
-                                selected: false,
+                                 selected: false,
                                 'img': require('./../homepage/recommend/recommendImage/1.jpg')
                             },
                             {
@@ -177,7 +185,7 @@
                                 name: '华为3',
                                 price: 100,
                                 count: 1,
-                                selected: false,
+                                 selected: false,
                                 'img': require('./../homepage/recommend/recommendImage/1.jpg')
                             }
                         ]
@@ -264,10 +272,13 @@
                 if (self.shopselected != true) {
                     self.listgoods.forEach(function(list, index) {
                         list.selected = true;
+                        console.log(list)
                     })
+                    
                 } else {
                     self.listgoods.forEach(function(list) {
                         list.selected = false;
+                        console.log(list)
                     })
                 }
             },
@@ -286,7 +297,7 @@
                 }
                 self.count--;
             },
-            remove(parentID, ID) { //parentID是商家id,ID是商品id
+            deleteSection(parentID, ID) { //parentID是商家id,ID是商品id
                 this.unbind(parentID, ID)
             },
             unbind(parentID, ID) {
@@ -348,19 +359,44 @@
     }
 </script>
 
+    <style>
+    input[type=button]{
+	-webkit-appearance:none;
+	outline:none
+}
+    .Cmycar .mint-cell-value{
+            width:100%;
+        }
+    .Cmycar .mint-cell-wrapper{
+            padding-left: 0;
+        }
+   .Cmycar .mint-cell-swipe-button{
+            font-size:0.3rem;
+            line-height:3rem;
+        }
+
+</style>
 <style lang="less" scoped>
+    .cgqNumBox input[type=button]{
+        font-size:0.3rem;
+        background:#ddd;
+       vertical-align: middle;
+       line-height:0rem;
+    }
     .shopBox {
         margin-bottom: 0.4rem;
         font-size: 0.2rem;
+        
         button {
             position: absolute;
             right: 0;
             top: 0.2rem;
             border: none;
-            padding: 0.1rem;
+            padding: 0.15rem;
             background: linear-gradient(to bottom, #0CBBB9 0%, #4AC6DC 100%);
             color: #fff;
             margin-right: 0.2rem;
+            font-size:0.25rem;
             border-radius: 5px;
         }
     }
@@ -387,17 +423,17 @@
         padding-left: 0.2rem;
     }
     .shopFont p {
-        font-size: 0.18rem;
+        font-size: 0.2rem;
         line-height: 0.4rem;
         text-align: left;
     }
     .shopFont p:nth-child(1) {
-        font-size: 0.2rem;
+        font-size: 0.25rem;
         color: #0CBBB9;
     }
     .shopFont p:nth-child(3) {
-        font-size: 0.16rem;
-        color: #ddd;
+        font-size: 0.2rem;
+        color: #b8bbbf;
     }
     .shopBoxS {
         font-size: 0.35rem;
@@ -547,8 +583,10 @@
     }
     .goods_detail li {
         height: 2.7rem;
-        margin-left: -1.1rem;
+        margin-left:0rem;
+        text-align: left;
     }
+    
     .goods_detail .goods_img img {
         height: 100%;
         min-width: 3rem;
@@ -571,6 +609,7 @@
     .goods_price {
         color: #f38650;
         font-size: .26rem;
+        line-height:1.1rem;
     }
     .footer {
         width: 100%;
@@ -591,7 +630,7 @@
     }
     .all_price span {
         color: #f38650;
-        font-size: .40rem;
+        font-size: .3rem;
     }
     .price_all {
         font-style: normal;
@@ -738,6 +777,11 @@
         font-size: .24rem;
     }
     .cgqNumBox {
+        width: 3rem;
+    position: absolute;
+    line-height:2rem;
+    right: -.5rem;
+    text-align:center;
         button {
             width: 0.5rem;
             height: 0.5rem;
@@ -747,6 +791,24 @@
             height: 0.5rem;
             text-align: center;
         }
+    }
+     .strlen {
+        margin-bottom: 0.2rem;
+        font-size: 0.2rem;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        line-height: 0.3rem;
+    }
+    .goods_color,
+    .goods_size {
+        font-size: 0.2rem;
+        color: #707070;
+    }
+     .brandDesc {
+        font-size: 0.3rem;
+        font-weight: 700;
     }
 </style>
 
