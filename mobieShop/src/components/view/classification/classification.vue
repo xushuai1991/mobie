@@ -49,7 +49,7 @@
             <mt-tab-container-item id="5">
             </mt-tab-container-item>
         </mt-tab-container>
-        <buttomNav></buttomNav>
+        <!-- <buttomNav></buttomNav> -->
     </div>
 </template>
 
