@@ -121,6 +121,16 @@ export default new Router({
                     path: '/buttomNav', // 底部导航栏
                     name: 'InvitingResult',
                     component: resolve => require(['../components/common/buttomNav.vue'], resolve)
+                },
+                {
+                    path: '/myCollection', // 收藏列表
+                    name: 'myCollection',
+                    component: resolve => require(['../components/view/userInfo/myCollection.vue'], resolve)
+                },
+                {
+                    path: '/applyRefund', // 申请退款
+                    name: 'applyRefund',
+                    component: resolve => require(['../components/view/order/applyrefund.vue'], resolve)
                 }
             ]
         },

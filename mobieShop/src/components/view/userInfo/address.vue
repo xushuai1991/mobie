@@ -9,7 +9,7 @@
         <div class="edit edit_addr">
             <p class="addr_new">省市区：</p>
             <p class="address_now"></p>
-            <div class="location_addr"><img src="static/HMMobilePhone/dsit/img/position.png" alt=""><span id="position">定位</span></div>
+            <div class="location_addr" @click='locationaddr'><img src="static/HMMobilePhone/dsit/img/position.png" alt=""><span id="position">定位</span></div>
         </div>
         <div class="edit">
             详细地址：<input type="text" class="input_edit input3">
@@ -20,8 +20,60 @@
     </section>
 </template>
 <script>
-    
+import { Toast } from 'mint-ui';
+export default {
+    data(){
+        return{
+            position:'',
+            address:''
+        }
+    },
+    created(){
+        this.$root.$emit('header','添加地址');
+    },
+    methods:{
+        getLocation(){
+            if(navigator.geolocation){
+                navigator.geolocation.getCurrentPosition((position)=>{
+                    let lat=position.coords.latitude;//经度
+                    let lag=position.coords.longitude;//纬度
+                    this.position={lat,lag};
+                    // let local={lat:lat,lag:lag};
+                    // return local;
+                    // alert(lat);
+                },(err)=>{
+                    console.log(err);
+                    switch(err.code) { 
+                        case err.PERMISSION_DENIED: 
+                            Toast("定位失败,用户拒绝请求地理定位"); 
+                            break; 
+                        case err.POSITION_UNAVAILABLE: 
+                            Toast("定位失败,位置信息是不可用"); 
+                            break; 
+                        case err.TIMEOUT: 
+                            Toast("定位失败,请求获取用户位置超时"); 
+                            break; 
+                        case err.UNKNOWN_ERROR: 
+                            Toast("定位失败,定位系统失效"); 
+                            break; 
+                    } 
+                    // Toast(err);
+                    // return;
+                });
+            }
+            else{
+                Toast('请开启定位功能');
+                // return;
+            }
+        },
+        locationaddr(){
+            this.getLocation();
+            // console.log(local.lat);
+        }
+    }
+}
 </script>
+
 <style lang="" scoped>
     body{
     font-size: .12rem;

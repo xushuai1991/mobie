@@ -27,8 +27,16 @@
 </section>
 </template>
 <script>
-    
+export default {
+    data(){
+        return{}
+    },
+    created(){
+        this.$root.$emit('header','地址管理');
+    }
+}
 </script>
+
 <style lang="" scoped>
 .addressManage{
     text-align:left;
