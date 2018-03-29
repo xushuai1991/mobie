@@ -5,13 +5,13 @@
               <div class='portrait'><img :src="portrait_img" alt=""></div>
               <div class='name_about'>
                   <p class='name'>{{userinfo.nickname==null?'&nbsp;':userinfo.nickname}}</p>
-                  <p class='exp'>经验值 {{userinfo.info.experience}}</p>
+                  <p class='exp'>经验值 {{userinfo.experience}}</p>
               </div>
           </div>
           <div class='info_other'>
               <div class='scores'>
                   <p class='title'>积分</p>
-                  <p class='content'>{{userinfo.info.consumptionPoints}}</p>
+                  <p class='content'>{{userinfo.consumptionPoints}}</p>
               </div>
               <div class='level'>
                   <p class='title'>等级</p>

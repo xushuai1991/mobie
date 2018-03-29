@@ -49,7 +49,7 @@
             <mt-tab-container-item id="5">
             </mt-tab-container-item>
         </mt-tab-container>
-        <buttomNav></buttomNav>
+        <!-- <buttomNav></buttomNav> -->
     </div>
 </template>
 
@@ -70,12 +70,22 @@ import buttomNav from '@/components/common/buttomNav.vue'
     };
 </script>
 <style lang="">
+   #classification .mint-tab-item{
+        float:left;
+        width:100%;
+    }
     .page-search {
         font-size: 0.2rem;
     }
-    .mint-search {
-        height: 100%;
+    #classification .mint-search {
+        height:auto;
         margin-bottom: 0.2rem;
+    }
+    #classification .mint-navbar{
+        display: block;
+    }
+    #classification .mint-navbar{
+        margin-top:0;
     }
     .float {
         float: left;

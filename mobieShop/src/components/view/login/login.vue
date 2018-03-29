@@ -153,7 +153,7 @@ export default {
                                 iconClass: 'icon icon-success',
                                 duration: 500
                             });
-                            this.$router.push('/navBottom');
+                            this.$router.push('/index');
                         }, 1000);
                     }
                 })
@@ -192,7 +192,7 @@ export default {
                                     iconClass: 'icon icon-success',
                                     duration: 500
                                 });
-                                that.$router.push('/navBottom');
+                                that.$router.push('/index');
                             }, 1000);
                         }
                        
