@@ -24,7 +24,7 @@
             </div>
             <div class='operation'>
                 <button class='prime follow'>追单</button>
-                <button class='apply'>申请退款</button>
+                <button class='apply' @click='application'>申请退款</button>
             </div>
         </div>
     </div>
@@ -36,7 +36,13 @@ export default {
         return{
 
         }  
+    },
+    methods:{
+        application(){
+            this.$router.push({path:''})
+        }
     }
+
 }
 </script>
 <style scoped>

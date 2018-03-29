@@ -32,6 +32,11 @@ export default new Router({
         name: 'msgcenter',
         component: resolve => require(['../components/view/order/msgcenter.vue'], resolve)
       },
+      { //退款页面
+        path: '/application',
+        name: 'application',
+        component: resolve => require(['../components/view/order/application.vue'], resolve)
+      },
       {
         path: '/userInfo', // 个人中心
         name: 'userInfo',

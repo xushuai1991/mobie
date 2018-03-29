@@ -1,6 +1,5 @@
 <template>
     <div class='contain'>
-  
         <mt-navbar v-model="selected" fixed>
             <mt-tab-item id="1">全部</mt-tab-item>
             <mt-tab-item id="2">待付款</mt-tab-item>
@@ -71,6 +70,9 @@ export default {
 }
 </script>
 <style>
+.contain {
+     margin-top: 1.5rem;
+}
 .mint-navbar{
     margin-top: .8rem;
 }

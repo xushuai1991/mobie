@@ -1,6 +1,5 @@
 <template>
     <div class='contain'>
-
         <div class='msg-customer'>
             <img class='avatar' src="static/images/bgimg.png" alt="">
             <div class='msgs'>
@@ -82,6 +81,7 @@ export default {
 
 <style scoped>
 .contain{
+    margin-top:0.8rem;
     font-size: .28rem;
     text-align: left;
     background-color: #e9e9e9;
