@@ -205,6 +205,7 @@ export default {
 
 <style scoped>
 .contain{
+    margin-top:0.8rem;
     font-size: .28rem;
     text-align: left;
     background-color: #e9e9e9;

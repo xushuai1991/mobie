@@ -10,8 +10,8 @@
         </div>
     </div>
         <ul class='clearfloat Ulstar'>
-            <li :class="{li1:1,bg1:index%2}" v-for="(value,index) in list">
-                <div v-for="(item,index1) in value.classs.zh" class="stu_div" :id="index">
+            <li :class="{li1:1,bg1:index%2}" v-for="(value,index) in list" :key="index">
+                <div v-for="(item,index1) in value.classs.zh" class="stu_div" :id="index" :key="index1">
                     <span class="stu_title">{{item.title}}</span>
                     <span class="stu_bgstar" :id="index1">
                     <span class="stu_bgstar1" :title="value.classs.title1"></span>
