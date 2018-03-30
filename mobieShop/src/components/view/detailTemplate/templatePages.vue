@@ -14,6 +14,57 @@
                         <components :templateData='item.componentsData' :is='item.componentsName'  :type='item.componentsName'></components>
                         </keep-alive>
                         <productDetail></productDetail>
+                        <div id="zbd-preferences" class="clear" style="font-size:0.25rem;text-align:left;padding:0.3rem 0.1rem 0.3rem 0.3rem;border-top:0.12rem solid #efefef;">
+                            <p style="float:left;">已选<span style="margin-left: 0.1rem;">唯润俏枝头18头</span></p>
+                            <p style="float: right;margin-right: 0.1rem;" @click="showServer">其他规格&ensp;></p>
+                        </div>  
+                        <div id="zbd-productDescription" class="clear" style="font-size:0.25rem;text-align:left;padding:0.3rem 0.1rem 0.3rem 0.3rem;border-top:0.12rem solid #efefef;">
+                            <p>包邮<span>上海市满60.00元包邮</span></p>
+                            <p>产地<span>唐山市</span></p>
+                            <div>
+                                <span><i></i>全面质检</span>
+                                <span><i></i>资深买手</span>
+                                <span><i></i>原产地直采</span>
+                                <span><i></i>...</span>
+                            </div>
+                        </div>
+                        <div id="zbd-Tips" class="clear" style="font-size:0.25rem;text-align:left;padding:0.3rem 0.1rem 0.3rem 0.3rem;border-top:0.12rem solid #efefef;border-bottom:0.12rem solid #efefef;">
+                            <p><span>温馨提示</span><i></i></p>
+                            <p><span>温馨提示：</span>1.该商品为原产地（厂家）发货，每日1...</p>
+                        </div>
+                        <keep-alive v-for='(item,index) in comlist' :key='index'>
+                        <components :templateData='item.componentsData' :is='item.componentsName'  :type='item.componentsName'></components>
+                        </keep-alive>
+                        <div id="zbd-customerReviews" class="clear" style="font-size:0.25rem;text-align:left;padding:0.3rem 0.1rem 0.3rem 0.3rem;border-top:0.12rem solid #efefef;">
+                            <p>顾客评价</p>
+                            <div class="commentHeaderInfo clear">
+                                <span class="commentNickname" >用户昵称</span>
+                                <span class="commentStar">
+                                    <img v-for="(item,index) in 3" :key="index" style="width: 0.3rem;height: 0.3rem;" src="./../evaluate/star.png">
+                                    <img v-for="(item,index) in 2" :key="index" style="width: 0.3rem;height: 0.3rem;" src="./../evaluate/star1.png">
+                                </span>
+                                <span class="userCommentTime">2016-7-7</span>
+                            </div>
+                            <div class="commentContent">
+                                <p class="userCommentContent">我只想说，特别的好！！！！！！！！！说点什么好呢，凑足十个字！</p>
+                                <ul class="clear userCommentImg">
+                                    <li v-for="(item,index) in 2" :key="index">
+                                        <img src="./test.jpg">
+                                    </li>
+                                </ul>
+                                <div class="merchantReply">
+                                    <span class="merchantReplyTitle">商家回复：</span>
+                                    <span class="merchantReplyTime">2016-7-4</span>
+                                    <p class="merchantReplyContent">谢谢光顾！欢迎下次再来！谢谢光顾！欢迎下次再来！谢谢光顾！欢迎下次再来！</p>
+                                </div>
+                                <div>
+                                    <p>查看全部<span>48</span>条评论<i>></i></p>
+                                </div>
+                            </div>
+                        </div>
+                        <mt-popup v-model="popupVisible" position="bottom" style='width:100%;'>
+                            <div class='closeBtn' @click="btnClose">关闭</div>
+                        </mt-popup>
                 </div>
             </transition>
              <transition
@@ -113,7 +164,8 @@
                 productDetailBacks:{
                     productDetailBack1:false,
                     productDetailBack2:true
-                }
+                },
+                popupVisible:false
             };
         },
         created(){
@@ -153,7 +205,6 @@
                 let id = this.getURLparms("id");
                 console.log(id)
                 //console.log(this.comlist)
-              // let templateId = sessionStorage.getItem ("eventTemplateID");
                 let that=this;
                 this.$http.post('/api/product/mall/template/queryMap',
                     {
@@ -204,6 +255,12 @@
                     this.productDetailBack.productDetailBack2 = true
                     this.productDetailBacks.productDetailBack1 = true
                     this.productDetailBacks.productDetailBack2 = false
+                },
+                btnClose() {
+                    this.popupVisible = false;
+                },
+                showServer(name) {
+                    this.popupVisible = true;
                 }
         },
         components: {
@@ -404,7 +461,7 @@
         line-height:0;
     }
     .detailBottom li:nth-child(1),.detailBottom li:nth-child(2),.detailBottom li:nth-child(3){
-        width:12%;
+        width:1rem;
         border-top:1px solid #ddd;
         background-color:#fff;
          border-bottom:1px solid #ffffff;
@@ -419,7 +476,7 @@
             right: -0.42rem;
     }
     .detailBottom li:nth-child(4),.detailBottom li:nth-child(5){
-        width:31.199%;
+        width:2.2rem;
         border:1px solid #6ab4ff;
     }
     .detailBottom li:nth-child(4) p,.detailBottom li:nth-child(5) p{
