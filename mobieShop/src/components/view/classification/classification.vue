@@ -69,47 +69,50 @@ import buttomNav from '@/components/common/buttomNav.vue'
         },
     };
 </script>
-<style lang="">
-   #classification .mint-tab-item{
-        float:left;
-        width:100%;
+<style lang="less">
+    #classification{
+        .mint-tab-item{
+            float:left;
+            width:100%;
+        }
+        .page-search {
+            font-size: 0.2rem;
+        }
+        .mint-search {
+            height:auto;
+            margin-bottom: 0.2rem;
+        }
+        .mint-navbar{
+            display: block;
+        }
+        .mint-navbar{
+            margin-top:0;
+        }
+        .float {
+            float: left;
+        }
+        .with80 {
+            width: 80%;
+        }
+        .with20 {
+            width: 20%;
+        }
+        .mint-navbar .mint-tab-item.is-selected {
+            width: 100%;
+        }
+        .mint-navbar {
+            display: block;
+        }
+        .mint-navbar .mint-tab-item.is-selected {
+            border: none;
+            margin-bottom: 0;
+        }
+        .mint-searchbar-inner .mintui-search {
+            font-size: 0.4rem;
+            padding: 0 0.2rem;
+        }
     }
-    .page-search {
-        font-size: 0.2rem;
-    }
-    #classification .mint-search {
-        height:auto;
-        margin-bottom: 0.2rem;
-    }
-    #classification .mint-navbar{
-        display: block;
-    }
-    #classification .mint-navbar{
-        margin-top:0;
-    }
-    .float {
-        float: left;
-    }
-    .with80 {
-        width: 80%;
-    }
-    .with20 {
-        width: 20%;
-    }
-    .mint-navbar .mint-tab-item.is-selected {
-        width: 100%;
-    }
-    .mint-navbar {
-        display: block;
-    }
-    .mint-navbar .mint-tab-item.is-selected {
-        border: none;
-        margin-bottom: 0;
-    }
-    .mint-searchbar-inner .mintui-search {
-        font-size: 0.4rem;
-        padding: 0 0.2rem;
-    }
+    
 </style>
 <style scoped>
     .clearfloat:after {

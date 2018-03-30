@@ -43,7 +43,7 @@ export default {
 </script>
 <style scoped>
 .pendpay{
-    margin-top: 0.3rem;
+    margin-top: 0.2rem;
     background-color: #fff;
     overflow: hidden;
 }
@@ -51,7 +51,7 @@ export default {
     font-size: 0.26rem;
     padding: 0.3rem 0.2rem;
     overflow: hidden;
-    border-bottom: 1px solid #cdcdcd;
+    border-bottom: 1px solid #e9e9e9;
 }
 .title .tip{
     float: left;
@@ -63,15 +63,15 @@ export default {
 }
 .detail{
     padding: .2rem 0;
-    border-bottom: 1px solid #cdcdcd;
+    border-bottom: 1px solid #e9e9e9;
     overflow: hidden;
 }
 .img-goods{
     width: 2.2rem;
     height: 2rem;
     border-radius: 5%;
-    box-shadow: 0 0 0.1rem #cdcdcd;
-    border:1px solid #cdcdcd;
+    box-shadow: 0 0 0.1rem #e9e9e9;
+    border:1px solid #e9e9e9;
     margin-left:.2rem;
     float: left;
 }
@@ -115,7 +115,7 @@ export default {
     font-size: .35rem;
     padding: .2rem;
     text-align: right;
-    border-bottom: 1px solid #cdcdcd;
+    border-bottom: 1px solid #e9e9e9;
 }
 .price-total .total{
     font-size: .5rem;

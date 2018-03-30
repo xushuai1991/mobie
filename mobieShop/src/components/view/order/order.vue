@@ -1,15 +1,16 @@
 <template>
-    <div class='contain'>
+    <div class='contain order-xs'>
         <mt-navbar v-model="selected" fixed>
-            <mt-tab-item id="1">全部</mt-tab-item>
-            <mt-tab-item id="2">待付款</mt-tab-item>
-            <mt-tab-item id="3">待服务</mt-tab-item>
-            <mt-tab-item id="4">服务中</mt-tab-item>
-            <mt-tab-item id="5">待评价</mt-tab-item>
+            <mt-tab-item id="all">全部</mt-tab-item>
+            <mt-tab-item id="willpay">待付款</mt-tab-item>
+            <mt-tab-item id="willservice">待服务</mt-tab-item>
+            <mt-tab-item id="inservice">服务中</mt-tab-item>
+            <mt-tab-item id="willevaluate">待评价</mt-tab-item>
         </mt-navbar>
         <mt-tab-container v-model="selected">
-            <mt-tab-container-item id="1">
-                <ul v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
+            <!-- 全部 -->
+            <mt-tab-container-item id="all">
+                <ul v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10" class='orderlist'>
                     <li v-for="item in list1" :key="item">
                         <pendpay></pendpay>
                     </li>
@@ -19,8 +20,21 @@
                     加载中...
                 </p>
             </mt-tab-container-item>
-            <mt-tab-container-item id="2">
-                <ul v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
+            <!-- 待付款 -->
+            <mt-tab-container-item id="willpay">
+                <ul v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10" class='orderlist'>
+                    <li v-for="item in list2" :key="item">
+                        <pendpay></pendpay>
+                    </li>
+                </ul>
+                <p v-show="loading" class="page-infinite-loading">
+                    <mt-spinner type="fading-circle"></mt-spinner>
+                    加载中...
+                </p>
+            </mt-tab-container-item>
+            <!-- 待服务 -->
+            <mt-tab-container-item id="willservice">
+                <ul v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10" class='orderlist'>
                     <li v-for="item in list2" :key="item">
                         <inservice></inservice>
                     </li>
@@ -30,10 +44,30 @@
                     加载中...
                 </p>
             </mt-tab-container-item>
-            <mt-tab-container-item id="3">
-                <mt-cell v-for="n in 6" :key="n" :title="'content ' + n" />
+            <!-- 服务中 -->
+            <mt-tab-container-item id="inservice">
+                <ul v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10" class='orderlist'>
+                    <li v-for="item in list2" :key="item">
+                        <willservice></willservice>
+                    </li>
+                </ul>
+                <p v-show="loading" class="page-infinite-loading">
+                    <mt-spinner type="fading-circle"></mt-spinner>
+                    加载中...
+                </p>
             </mt-tab-container-item>
-            
+            <!-- 待评价 -->
+            <mt-tab-container-item id="willevaluate">
+                <ul v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10" class='orderlist'>
+                    <li v-for="item in list2" :key="item">
+                        <willevaluate></willevaluate>
+                    </li>
+                </ul>
+                <p v-show="loading" class="page-infinite-loading">
+                    <mt-spinner type="fading-circle"></mt-spinner>
+                    加载中...
+                </p>
+            </mt-tab-container-item>
         </mt-tab-container>
     </div>
 </template>
@@ -46,7 +80,7 @@ export default {
     components:{pendpay,inservice,willevaluate,willservice},
     data() {
         return {
-            selected: '1',
+            selected: 'all',
             list1:[1,2,3,4],
             list2:[1,2,3,4],
             list3:[1,2,3,4],
@@ -54,6 +88,10 @@ export default {
             list5:[1,2,3,4],
             loading:false
         };
+    },
+    created(){
+        this.$root.$emit('header','我的订单');
+        this.selected=this.$route.params.type==undefined?'all':this.$route.params.type;
     },
     methods:{
         loadMore() {
@@ -66,42 +104,50 @@ export default {
                 this.loading = false;
             }, 2500);
         }
-    }
+    },
 }
 </script>
-<style>
-.contain {
-     margin-top: 1.5rem;
+<style lang="less" scoped>
+.order-xs{
+    .orderlist{
+        background: #f5f5f5;
+    }
 }
-.mint-navbar{
-    margin-top: .8rem;
+</style>
+<style  lang="less" >
+.order-xs{
+    margin-top: 1.5rem;
+    .mint-navbar{
+        margin-top: .8rem;
+    }
+    .mint-tab-container{
+        /* margin-top: 1rem; */
+    }
+    .mint-tab-item-label{
+        font-size: 0.3rem;
+    }
+    .mint-navbar .mint-tab-item.is-selected{
+        border-bottom: 3px solid #31B1B0;
+        color: #31B1B0;
+    }
+    .mint-tab-container-item{
+        /* background-color: #e9e9e9 !important; */
+    }
+    .page-infinite-loading{
+        /* display: block; */
+        font-size: .3rem;
+        text-align: center;
+        padding: .1rem;
+    }
+    .page-infinite-loading div {
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 5px;
+        padding-top: .1rem;
+    }
 }
-.mint-tab-container{
-    /* margin-top: 1rem; */
-}
-.mint-tab-item-label{
-    font-size: 0.3rem;
-}
-.mint-navbar .mint-tab-item.is-selected{
-    border-bottom: 3px solid #31B1B0;
-    color: #31B1B0;
-}
-.mint-tab-container-item{
-    /* background-color: #e9e9e9 !important; */
-}
-.page-infinite-loading{
-    /* display: block; */
-    font-size: .3rem;
-    text-align: center;
-    padding: .1rem;
-}
-.page-infinite-loading div {
-    width: 20px;
-    height: 20px;
-    display: inline-block;
-    vertical-align: middle;
-    margin-right: 5px;
-    padding-top: .1rem;
-}
+
 
 </style>

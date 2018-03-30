@@ -48,17 +48,17 @@
             <div class="order">
                 <div class="my_order">我的订单
                     <div class="check">查看全部订单</div>
-                    <p><a href="###"><i class='icon iconfont icon-arrow-right-copy fontSize'></i></a></p>
+                    <p ><i class='icon iconfont icon-arrow-right-copy fontSize' @click="myorder('all')"></i></p>
                 </div>
                 <ul class="wait_for">
-                    <li>
+                    <li @click="myorder('willpay')">
                         <div class="img_wait">
                             <i class="pay orageColor">2</i>
                             <i class='icon iconfont icon-daifukuan fontSize'></i>
                         </div>
                         <p class="text_wait">代付款</p>
                     </li>
-                    <li>
+                    <li @click="myorder('willpay')">
                         <div class="img_wait">
                             <i class="wait orageColor">2</i>
                             <i class='icon iconfont icon-icondaifahuo fontSize'></i>
@@ -159,7 +159,7 @@
 
 <script>
     import { Toast } from 'mint-ui';
-    import buttomNav from '@/components/common/buttomNav.vue'
+    // import buttomNav from '@/components/common/buttomNav.vue'
     import {
         mapState
     } from 'vuex'
@@ -182,7 +182,6 @@
                 let that = this
                 this.$http.post(
                     '/api/customer/consumption/points/find?pageSize=1',
-
                 ).then(res => { 
                     if(res.data.status == 200){
                         console.log(res)
@@ -203,8 +202,11 @@
                     code: that.code
                 })
             },
-            goback(){
-                this.$router.go(-1);
+            // goback(){
+            //     this.$router.go(-1);
+            // },
+            myorder(type){
+                this.$router.push({name:'order',params:{type:type}});
             }
         },
         mounted() {
@@ -230,7 +232,7 @@
                 });
         },
         components: {
-            buttomNav
+            // buttomNav
         },
         computed: {
             ...mapState({
