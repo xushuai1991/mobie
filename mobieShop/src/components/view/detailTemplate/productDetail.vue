@@ -1,5 +1,5 @@
 <template>
-    <div id="zbd-productParameters">
+    <div id="zbd-productParameters" class="clear">
         <div class="productDetail">
             <div class="productsTitle">
                 <p>净润家</p>
@@ -31,17 +31,19 @@
     export default {
         data() {
             return {
+                
             };
         },
         created(){
         },
         methods:{
+            
         }
     };
 </script>
 <style>
 #zbd-productParameters{
-    font-size: 0.2rem;width: 100%;overflow: hidden;text-align: left;padding: 0.5rem 0.1rem 0.5rem 0.3rem;border-top: 0.12rem solid #efefef;
+    font-size: 0.2rem;width: 100%;text-align: left;padding: 0.5rem 0.1rem 0.5rem 0.3rem;border-top: 0.12rem solid #efefef;
 }
 #zbd-productParameters .productDetail{float: left;width: 74%;}
 #zbd-productParameters .productsTitle{padding-bottom: 0.2rem;font-size:0.3rem;}
