@@ -79,8 +79,8 @@ export default {
             overflow: hidden;
             float: left;
             img{
-                width:2.2rem;
-                height:2rem;
+                width:2.12rem;
+                height:1.9rem;
                 margin:0 .2rem;
                 box-shadow: 0 0 0.1rem #cdcdcd;
                 border:1px solid #cdcdcd;
@@ -93,10 +93,10 @@ export default {
                 text-align: left;
                 .name{
                     font-size:.3rem;
-                    padding:.3rem 0 .2rem 0;
+                    padding:.2rem 0;
                 }
                 .subname,.color,.size{
-                    font-size:.2rem;
+                    font-size:.25rem;
                     color: #787878
                 }
                 .color{
