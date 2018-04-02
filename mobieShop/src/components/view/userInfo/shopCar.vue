@@ -1,9 +1,12 @@
 <template>
     <div class='Cmycar'>
+        <mt-header fixed  title="购物车">
+        </mt-header>
         <section>
             <div class="wrap2">
                 <div class="goods_list">
                     <ul class="mui-table-view" infinite-scroll-immediate-check="false">
+                        
                         <!--li数据遍历循环部分-->
                         <li class="mui-table-view-cell" v-for="(item,index) in list" :key="index">
                             <div class="cart">
@@ -14,35 +17,32 @@
                                         <p></p>
                                     </div>
                                     <div class="goodsBox" v-for="(items,indexs) in item.listgoods" :key="indexs">
-                                    <mt-cell-swipe :right="[  
-                                                        {  
-                                                            content: '删除',  
-                                                            style: { background: '#ff7900', color: '#fff'},  
-                                                            handler: () => deleteSection(index,indexs)  
-                                                        }  
-                                                    ]">
-                                        <ul class="goods_detail" style='overflow: hidden; margin-top:0.2rem;'>
-                                            <li class="goods_img" style="margin-left:0px;">
-                                                <img :src="items.img">
-                                            </li>
-                                            <li class="goods_info">
-                                                <p class="brandDesc">{{items.name}}</p>
-                                                <p class="goods_identifier strlen" style="width:3rem;"><span>水电费收到发生的防守打法收到发生的防守打法斯蒂芬斯蒂芬是收到放斯蒂芬斯蒂芬松放松发顺丰</span></p>
-                                                <p class="goods_color">颜色：<span>红色</span></p>
-                                                <p class="goods_size">尺码：<span>尺寸</span></p>
-                                            </li>
-                                            <li class="goods_info_se">
-                                                <p class="goods_price">￥<span>{{items.price}}</span></p>
-                                                <div class='cgqNumBox'>
-                                                    <input type="button" @click="reduce(index,indexs)" value='－'>
-                                                    <input type="number" disabled :value="items.count" />
-                                                    <input type="button" @click="add(index,indexs)" value='＋'>
-                                                </div>
-                                            </li>
-                                           <!-- <span class="mui_shopcar_del" @click="remove(index,indexs)">
-                                                        <i class='icon iconfont icon-lajitong'></i>
-                                                    </span>!-->
-                                        </ul>
+                                        <mt-cell-swipe :right="[  
+                                                            {  
+                                                                content: '删除',  
+                                                                style: { background: '#ff7900', color: '#fff'},  
+                                                                handler: () => deleteSection(index,indexs)  
+                                                            }  
+                                                        ]">
+                                            <ul class="goods_detail" style='overflow: hidden; margin-top:0.2rem;'>
+                                                <li class="goods_img" style="margin-left:0px;">
+                                                    <img :src="items.img">
+                                                </li>
+                                                <li class="goods_info">
+                                                    <p class="brandDesc">{{items.name}}</p>
+                                                    <p class="goods_identifier strlen" style="width:3rem;"><span>水电费收到发生的防守打法收到发生的防守打法斯蒂芬斯蒂芬是收到放斯蒂芬斯蒂芬松放松发顺丰</span></p>
+                                                    <p class="goods_color">颜色：<span>红色</span></p>
+                                                    <p class="goods_size">尺码：<span>尺寸</span></p>
+                                                </li>
+                                                <li class="goods_info_se">
+                                                    <p class="goods_price">￥<span>{{items.price}}</span></p>
+                                                    <div class='cgqNumBox'>
+                                                        <input type="button" @click="reduce(index,indexs)" value='－'>
+                                                        <input type="number" disabled :value="items.count" />
+                                                        <input type="button" @click="add(index,indexs)" value='＋'>
+                                                    </div>
+                                                </li>
+                                            </ul>
                                          </mt-cell-swipe>
                                     </div>
                                 </div>
@@ -70,7 +70,6 @@
                 </li>
             </ul>
         </footer>
-        
         <mt-popup v-model="popupVisible" position="bottom" style='width:100%;'>
             <div class='shopBoxS'>{{ShopName}}</div>
             <p class='shopBxo'>领取优惠劵</p>
@@ -102,9 +101,7 @@
     </div>
 </template>
 <script>
-    import {
-        MessageBox
-    } from 'mint-ui';
+    import {MessageBox} from 'mint-ui';
     export default {
         data() {
             return {
@@ -319,9 +316,6 @@
                 }).catch(err => {
                     if (err == 'cancel') {}
                 });
-            },
-            goback() {
-                this.$router.go(-1);
             },
             Submit() {
                 var TotalPrice = this.OrderTotal.toFixed(1); //存放要支付的总价
@@ -619,8 +613,8 @@
         flex-wrap: nowrap;
         justify-content: space-around;
         font-size: .26rem;
-        position: fixed;
-        bottom: 0;
+        // position: fixed;
+        // bottom: .9rem;
         z-index: 11;
         text-align: center;
         background: white;

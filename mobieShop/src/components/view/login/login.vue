@@ -90,6 +90,7 @@
 <script>
 import {checkClass} from '../../../assets/javascript/checkClass.js'
 import { Toast } from 'mint-ui'
+import { Indicator } from 'mint-ui';
 export default {
     data(){
         return {
@@ -129,6 +130,7 @@ export default {
         login(){
             if(this.phonejson.status&&this.pswjson.status&&this.codejson.status){
                 let that=this;
+                Indicator.open();
                 this.$http({
                     url: '/api/customer/account/login?mobile='+this.phone+'&password='+this.psw,
                     method: 'POST',
@@ -140,6 +142,7 @@ export default {
                 .then(res => {
                     console.log(res);
                     var msg = res.data.msg
+                    Indicator.close();
                     if (msg !== '登录成功') {
                         Toast(res.data.info);
                         // this.cleardata();
@@ -158,8 +161,8 @@ export default {
                     }
                 })
                 .catch(err => {
-                    console.log("错误")
-                    console.log(err)
+                    console.log(err);
+                    Indicator.close();
                 })
             }
             else{
@@ -177,11 +180,13 @@ export default {
                 }
                 else{
                     let that=this;
+                    Indicator.open();
                     this.$http.post('/api/customer/account/quickLogin?mobile='+that.phone+'&code='+that.code)
                     .then(function(response){
                         Toast(response.data.msg);
                         console.log(response.data.status)
                         console.log(response.data.info)
+                        Indicator.close();
                         if(response.data.status == 200){
                             that.$store.commit('login',response.data.info)
                             // this.cleardata();
@@ -199,6 +204,7 @@ export default {
                     })
                     .catch(function(response){
                          Toast('登录失败');
+                         Indicator.close();
                     });
                 }
             }
