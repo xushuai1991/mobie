@@ -9,7 +9,7 @@
                             <div class="cart">
                                 <div class="goods">
                                     <div class="goods_title type-pay">
-                                        <input type="checkbox" class='CinputBox' v-model="item.shopselected" @click="checkShop(index)" /><span>{{item.shopname}}</span>
+                                        <input type="checkbox" class='CinputBox' v-model="item.shopselected" @change="checkShop(index)" /><span>{{item.shopname}}</span>
                                         <div class="checks" @click='showServer(item.shopname)'>领券</div>
                                         <p></p>
                                     </div>
@@ -269,7 +269,7 @@
             //无限加载函数
             checkShop(pID) { //商品的全选和反宣
                 var self = this.list[pID];
-                if (self.shopselected != true) {
+                if (self.shopselected == true) {
                     self.listgoods.forEach(function(list, index) {
                         list.selected = true;
                         console.log(list)
@@ -359,10 +359,10 @@
     }
 </script>
 
-    <style>
+<style>
     input[type=button]{
-	-webkit-appearance:none;
-	outline:none
+    -webkit-appearance:none;
+    outline:none
 }
     .Cmycar .mint-cell-value{
             width:100%;

@@ -19,6 +19,5 @@ export default {
   color: #2c3e50;
   margin: 0;
   padding-top: 0;
-  overflow-x: hidden;
 }
 </style>

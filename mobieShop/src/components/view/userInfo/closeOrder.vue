@@ -1,5 +1,5 @@
 <template>
-    <div class='Cmyoder'>
+    <div class='CmyOveroder'>
         <!--<ul v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
                         <li v-for="item in list">{{ item }}</li>
                     </ul>!-->
@@ -16,13 +16,13 @@
                                         
                                     </div>
                                     <div class="goodsBox" v-for="(items,indexs) in item.listgoods" :key="indexs">
-                                        <mt-cell-swipe :right="[  
+                                        <!--<mt-cell-swipe :right="[  
                                                         {  
                                                             content: '删除',  
                                                             style: { background: '#ff7900', color: '#fff'},  
                                                             handler: () => deleteSection(index,indexs)  
                                                         }  
-                                                    ]">
+                                                    ]">!-->
                                                     <ul class="goods_detail" style=' margin-top:0.2rem;'>
                                                 <li class="goods_img" style="margin-left:0px;">
                                                     <img :src="items.img">
@@ -38,12 +38,19 @@
                                                     <div class='cgqNumBox'>
                                                         数量:<input type="number" disabled :value="items.count" style='background:#fff;margint-top:0.2rem;' />
                                                     </div>
+                                                    <!--<div  class='tuikuan'>退款</div>!-->
                                                     <!--<span class="mui_shopcar_del" @click="remove(index,indexs)">
                                                             <i class='icon iconfont icon-lajitong'></i>
                                                         </span>!-->
                                                 </li>
                                             </ul>
-                                        </mt-cell-swipe>
+                                        <!--</mt-cell-swipe>!-->
+                                    </div>
+                                    <div class='orderFooter'>
+                                        <p>全国包邮 合计:<span>$299</span></p>
+                                        <p><input type='button' value='删除订单'> </p>
+                                    </div>
+                                    <div>
                                     </div>
                                 </div>
                             </div>
@@ -193,22 +200,61 @@
     }
 </script>
 <style>
-    .Cmyoder .mint-cell-value{
+    .CmyOveroder .mint-cell-value{
             width:100%;
         }
-    .Cmyoder .mint-cell-wrapper{
+    .CmyOveroder .mint-cell-wrapper{
             padding-left: 0;
         }
-   .Cmyoder .mint-cell-swipe-button{
+   .CmyOveroder .mint-cell-swipe-button{
             font-size:0.3rem;
             line-height:3rem;
         }
-        .mint-cell-wrapper{
+    .CmyOveroder  .mint-cell-wrapper{
             border-bottom:none;
             padding-bottom:0.2rem;
         }
 </style>
 <style scoped lang='less'>
+    input[type=button]{
+	-webkit-appearance:none;
+	outline:none
+}
+.orderFooter{
+    text-align:right;
+    margin-top:0.2rem;
+    font-size:0.3rem;
+    line-height:1rem;
+    border-top:1px solid #ddd;
+}
+.orderFooter p{
+    padding-right:0.2rem;
+}
+.orderFooter p:nth-child(2){
+    border-top:1px solid #ddd;
+}
+.orderFooter input{
+    background:#0cbbb9;
+    color:#fff;
+    padding:0.08rem 0.15rem;
+    border-radius:0.1rem;
+}
+.orderFooter input:nth-child(1){
+    background:#fff;
+    color:#888;
+    border:1px solid #ddd;
+    padding:0.08rem 0.15rem;
+    border-radius:0.1rem;
+}
+.CmyOveroder .tuikuan{
+        position: absolute;
+    bottom: 0.1rem;
+    border: 1px solid #ddd;
+    height: 0rem;
+    padding: 0.2rem;
+    line-height: 0;
+    border-radius:0.1rem;
+}
     .brandDesc {
         font-size: 0.3rem;
         font-weight: 700;
@@ -216,7 +262,8 @@
     .goods {
         width: 100%;
         background: white;
-        margin-bottom: .12rem;
+      
+      border-bottom:0.15rem solid #ddd;
         overflow: hidden;
         position: relative;
     }
@@ -225,7 +272,7 @@
         /*margin-left: -1.1rem;*/
     }
     .wrap2 {
-        margin-top: 0.8rem;
+        margin-top:0.1rem;
         .CinputBox {
             position: absolute;
             left: 0.4rem;
@@ -251,7 +298,7 @@
     .goods {
         width: 100%;
         background: white;
-        margin-bottom: .12rem;
+       
         overflow: hidden;
         position: relative;
     }
