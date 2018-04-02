@@ -1,0 +1,409 @@
+<template>
+    <div class='applyrefund-xs'>
+        <ul class='goods-xs'>
+            <li v-for="(item,index) in goodslist" :key="index">
+                <div class='goods'>
+                    <div class='left'>
+                        <img src="" alt="">
+                        <div class='infor'>
+                            <p class='name'>{{item.name}}</p>
+                            <P class='subname'>{{item.subame}}</P>
+                            <p class='color'>颜色：{{item.color}}</p>
+                            <p class='size'>尺码：{{item.size}}</p>
+                        </div>
+                    </div>
+                    <div class='right'>
+                        <p class='price'>￥{{item.price_uint}}</p>
+                        <p class='num'>x{{item.nums}}</p>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <div class='operation' v-show='showopera'>
+            <div class='refund' @click='refundmoney'>
+                <div class='icon-left'>
+                    <i class='icon iconfont icon-tuikuan'></i>
+                </div>
+                <div class='tips'>
+                    <p class='type'>仅退款</p>
+                    <p class='desc'>未收到货，或卖家协商同意前提下</p>
+                </div>
+                <div class='icon-right'>
+                    <i class='icon iconfont icon-arrow-right-copy'></i>
+                </div>
+            </div>
+            <div class='refund' @click='refundall'>
+                <div class='icon-left'>
+                    <i class='icon iconfont icon-tuikuan1'></i>
+                </div>
+                <div class='tips'>
+                    <p class='type'>退款退货</p>
+                    <p class='desc'>已收到货，需要退换已收到的货物</p>
+                </div>
+                <div class='icon-right'>
+                    <i class='icon iconfont icon-arrow-right-copy'></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class='refundoperation' v-if="!showopera">
+            <div class='selectarea' v-if='showstatus'>
+                <span class='main'>货物状态</span>
+                <span class='select' @click='selectstatus'>{{status}}<i class='icon iconfont icon-arrow-right-copy'></i></span>
+            </div>
+            <div class='selectarea'>
+                <span class='main'>退款原因</span>
+                <span class='select' @click='selectreason'>{{reasonrefund}}<i class='icon iconfont icon-arrow-right-copy'></i></span>
+            </div>
+            <div class='refundabout'>
+                <p class='moneys-refund'>退款金额：<span style='color:#f38650;font-size:.4rem;'>￥{{moneyrefund}}</span></p>
+                <p class='moneys-extra'>最多￥{{moneyrefundmost}}，含发货邮费￥{{postage}}</p>
+                <div class='explain'>
+                    <label for="explain">退款说明：</label>
+                    <input type="text" id="explain" placeholder="选填">
+                </div>
+            </div>
+            <div class='uploadimg'>
+                <p>上传凭证</p>
+                <ul class='imgs'>
+                    <li class='upload'>
+                        <i class='icon iconfont icon-xiangji'></i>
+                        <div class='tip'>
+                            <p>上传凭证</p>
+                            <p>（最多3张）</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class='submit'>
+                <button>提交</button>            
+            </div>
+        </div>
+        <!-- 货物状态弹窗 -->
+        <mt-popup v-model="popupVisible" position="bottom" class="popup">
+            <mt-radio
+            title="货物状态"
+            v-model="status"
+            align='right'
+            :options="goodsstatus">
+            </mt-radio>
+        </mt-popup>
+        <!-- 退款原因弹窗 -->
+        <mt-popup v-model="popupVisible2" popup-transition="popup-fade" class="popup" style='width:80%;padding:.2rem 0;'>
+            <mt-radio
+            v-model="reasonrefund"
+            align='right'
+            :options="refundreason">
+            </mt-radio>
+        </mt-popup>
+    </div>
+</template>
+<script>
+export default {
+    data(){
+        return{
+            goodslist:[
+                {
+                    imgurl:'',
+                    name:'FASHION',
+                    subame:'这里是副标题',
+                    color:'这里是颜色',
+                    size:'这里是尺码',
+                    price_uint:'200',
+                    nums:'2'
+                },
+                {
+                    imgurl:'',
+                    name:'FASHION',
+                    subame:'这里是副标题',
+                    color:'这里是颜色',
+                    size:'这里是尺码',
+                    price_uint:'200',
+                    nums:'2'
+                }
+            ],
+            status:'请选择',
+            reasonrefund:'请选择',
+            popupVisible:false,
+            popupVisible2:false,
+            goodsstatus:['已收货','未收货'],
+            refundreason:['拍错了信息填写错误','不想买了','未收到货','和商家协商一致','收到商品破损','其他'],
+            showopera:true,
+            showstatus:true,
+            postage:0.5
+        }
+    },
+    computed:{
+        moneyrefund(){
+            let money=0;
+            this.goodslist.forEach(item=>{
+                money+=item.price_uint*item.nums
+            });
+            return money;
+        },
+        moneyrefundmost(){
+            return this.moneyrefund+this.postage;
+        }
+    },
+    created(){
+        this.$root.$emit('header','申请退款');
+    },
+    methods:{
+        refundmoney(){
+            this.showopera=false;
+            this.showstatus=true
+            // this.showrefundmoney=true;
+        },
+        refundall(){
+            this.showopera=false;
+            this.showstatus=false
+        },
+        // 选择货物状态
+        selectstatus(){
+            this.popupVisible=true;
+        },
+        // 选择退款原因
+        selectreason(){
+            this.popupVisible2=true;
+        }
+    }
+}
+</script>
+<style lang="less" scoped>
+.applyrefund-xs{
+    margin-top:.8rem;
+    background-color: #f5f5f5;
+    .goods-xs li{
+        margin-bottom: .2rem;
+        background-color: #fff;
+    }
+    .goods{
+        padding: .2rem 0;
+        overflow: hidden;
+        position: relative;
+        .left{
+            width: fit-content;
+            overflow: hidden;
+            float: left;
+            img{
+                width:2.12rem;
+                height:1.9rem;
+                margin:0 .2rem;
+                box-shadow: 0 0 0.1rem #cdcdcd;
+                border:1px solid #cdcdcd;
+                display: block;
+                float: left;
+            }
+            .infor{
+                width:fit-content;
+                float: left;
+                text-align: left;
+                .name{
+                    font-size:.3rem;
+                    padding:.2rem 0 .2rem 0;
+                }
+                .subname,.color,.size{
+                    font-size:.25rem;
+                    color: #787878
+                }
+                .color{
+                    padding: .35rem 0 .15rem 0
+                }
+            }
+        }
+        .right{
+            width: fit-content;
+            float: right;
+            .price{
+                font-size: .3rem;
+                color: #f38650;
+                position: absolute;
+                top:.5rem;
+                right:.2rem;
+            }
+            .num{
+                font-size:.35rem;
+                position: absolute;
+                bottom: .3rem;
+                right:.2rem;
+            }
+        }
+    }
+    .selectarea{
+        height:1rem;
+        background-color: #fff;
+        text-align: left;
+        padding:0 .2rem;
+        border-bottom: 1px solid #e9e9e9;
+        position: relative;
+        .main{
+            font-size: .3rem;
+            position: absolute;
+            top:.4rem;
+        }
+        .select{
+            font-size: .28rem;
+            position: absolute;
+            right:0;
+            top:.2rem;
+            color:#787878;
+            i{
+                font-size: .5rem;
+                position: relative;
+                top:.08rem;
+                
+            }
+        }
+        
+    }
+    .operation{
+        background-color: #fff;
+        .refund{
+            overflow: hidden;
+            position: relative;
+            padding: .3rem .2rem;
+            border-bottom: 1px solid #e9e9e9;
+        }
+        // .refund:nth-child(1){
+        //     border-bottom: 1px solid #e9e9e9;
+        // }
+        .icon-left,.icon-right{
+            width:fit-content;
+        }
+        .icon-left{
+            float: left;
+            i{
+                font-size: .4rem;
+                color: #0dbbb9;
+                top:.22rem;
+                position: absolute;
+            }
+        }
+        .refund:nth-child(1) .icon-left i{
+            font-size: .45rem;
+        }
+        .icon-right{
+            float: right;
+            i{
+                font-size: .5rem;
+                color:#787878;
+                top:.4rem;
+                right:.2rem;
+                position: absolute;
+            }
+        }
+        .tips{
+            width: 4rem;
+            padding-left: .6rem;
+            float: left;
+            text-align: left;
+            .type{
+                font-size: .3rem;
+                padding-bottom: .2rem;
+            }
+            .desc{
+                font-size: .2rem;
+                color: #787878;
+            }
+        }
+    }
+    .refundabout{
+        font-size: .3rem;
+        text-align: left;
+        background-color: #fff;
+        margin-top: .2rem;
+        // padding:0 .2rem;
+        p{
+            padding:.3rem .2rem;
+        }
+        .moneys-extra{
+            font-size: .25rem;
+            color: #787878;
+            background-color: #f5f5f5;
+        }
+        .explain{
+            padding: .3rem .2rem;
+            #explain{
+                width: 5.5rem;
+                height:.5rem;
+                outline: none;
+                // border:none;
+            }
+        }
+    }
+    .uploadimg{
+        font-size: .3rem;
+        background-color: #fff;
+        margin-top:.2rem;
+        padding: .3rem .2rem;
+        text-align: left;
+        overflow: hidden;
+        .imgs{
+            margin-top: .2rem;
+            li{
+                width: 1.58rem;
+                height:1.58rem;
+                float: left;
+                position: relative;
+                img{
+                    width:1.58rem;
+                    height:1.58rem;
+                }
+            }
+            li+li{
+                margin-left: .2rem;
+            }
+            .upload{
+                border:1px dotted;
+                .icon{
+                    font-size: .6rem;
+                    color:#dbdbdb;
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    top:.2rem;
+                    text-align: center
+                }
+                .tip{
+                    margin-top: .8rem;
+                    color:#787878;
+                }
+                p{
+                    font-size: .25rem;
+                    text-align: center;
+                }
+            }
+        }
+    }
+    .submit{
+        background-color: #fff;
+        padding-bottom: .3rem;
+        button{
+            width:80%;
+            height:1rem;  
+            font-size: .3rem;
+            color: #fff;
+            background: linear-gradient(180deg,#11bcbc, #46c5d9);
+            border:none;
+            border-radius: 30px; 
+            outline: none;
+        }
+    }
+}
+</style>
+<style lang="less">
+.applyrefund-xs{
+    .popup{
+        width:100%;
+        .mint-cell{
+            text-align: left;
+        }
+        .mint-radiolist-title{
+            font-size:.3rem;
+        }
+        .mint-cell{
+            text-align: left;
+        }
+    }
+}
+</style>

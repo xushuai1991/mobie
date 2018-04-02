@@ -37,4 +37,11 @@ export default {
 .mint-header{
     background-color: black;
 }
+
 </style>
+<style lang="less">
+.mint-header-title{
+    font-size: .35rem !important;
+}
+</style>
+

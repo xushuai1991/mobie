@@ -87,7 +87,7 @@ export default {
     .contain{
         font-size: .28rem;
         text-align: left;
-        background-color: #e9e9e9;
+        background-color: #f5f5f5;
         margin-top:40px;
         .area{
             padding:.4rem .2rem;
