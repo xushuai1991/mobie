@@ -53,14 +53,15 @@ export default new Router({
                     component: resolve => require(['../components/view/userInfo/accountMangagement.vue'], resolve)
                 },
                 {
-                    path: '/address', // 添加地址
-                    name: 'address',
-                    component: resolve => require(['../components/view/userInfo/address.vue'], resolve)
-                },
+                    path: '/addEdit', // 添加地址
+                    name: 'addEdit',
+                    component: resolve => require(['../components/view/addEdit/addEdit.vue'], resolve)
+              },
+                
                 {
-                    path: '/addressManagnet', // 地址管理
-                    name: 'addressManagnet',
-                    component: resolve => require(['../components/view/userInfo/addressManagnet.vue'], resolve)
+                    path: '/addManagement', // 地址管理
+                    name: 'addManagement',
+                    component: resolve => require(['../components/view/addEdit/addManagement.vue'], resolve)
                 },
                 {
                     path: '/shopCar', // 购物管理
