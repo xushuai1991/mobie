@@ -155,6 +155,15 @@ export default {
         }
         }
     },
+    watch:{
+        selected(value){
+            switch(value){
+                case '分类':{
+                    this.$root.$emit('loadclassify');
+                }
+            }
+        }
+    },
     methods:{
         getURLparms(name){
             let reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");

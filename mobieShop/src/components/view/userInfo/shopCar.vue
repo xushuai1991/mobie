@@ -1,9 +1,12 @@
 <template>
     <div class='Cmycar'>
+        <mt-header fixed  title="购物车">
+        </mt-header>
         <section>
             <div class="wrap2">
                 <div class="goods_list">
                     <ul class="mui-table-view" infinite-scroll-immediate-check="false">
+                        
                         <!--li数据遍历循环部分-->
                         <li class="mui-table-view-cell" v-for="(item,index) in list" :key="index">
                             <div class="cart">
@@ -96,9 +99,7 @@
     </div>
 </template>
 <script>
-    import {
-        MessageBox
-    } from 'mint-ui';
+    import {MessageBox} from 'mint-ui';
     export default {
         data() {
             return {
@@ -315,9 +316,6 @@
                 }).catch(err => {
                     if (err == 'cancel') {}
                 });
-            },
-            goback() {
-                this.$router.go(-1);
             },
             Submit() {
                 var TotalPrice = this.OrderTotal.toFixed(1); //存放要支付的总价
@@ -693,8 +691,8 @@
         flex-wrap: nowrap;
         justify-content: space-around;
         font-size: .26rem;
-        position: fixed;
-        bottom: 0;
+        // position: fixed;
+        // bottom: .9rem;
         z-index: 11;
         text-align: center;
         background: white;

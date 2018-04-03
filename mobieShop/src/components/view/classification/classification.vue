@@ -4,49 +4,18 @@
             <mt-search  v-model="value"></mt-search>
         </div>
         <mt-navbar class="page-part float with20" v-model="selected">
-            <mt-tab-item id="1">推荐</mt-tab-item>
-            <mt-tab-item id="2">家电保养</mt-tab-item>
-            <mt-tab-item id="3">家居保养</mt-tab-item>
-            <mt-tab-item id="4">空气净化</mt-tab-item>
-            <mt-tab-item id="5">净水</mt-tab-item>
+            <mt-tab-item v-for='(item,index) in classifylist' :key='index' :id="index" :classifyid='item.id'>{{item.name}}</mt-tab-item>
         </mt-navbar>
         <mt-tab-container v-model="selected" class='float with80'>
-            <mt-tab-container-item id="1">
-                <div class='imgBox'>
-                    <div class='imgSize'>
-                        <img src='./bgs.jpg' />
-                    </div>
-                    <ul class='ctionUl clearfloat'>
-                        <li>
+            <mt-tab-container-item v-for='(commodity,index) in commoditylist' :key='index'  :id="index">
+                <ul class='ctionUl clearfloat'>
+                    <li v-for='(item,index1) in commodity' :key='index1'>
+                        <a :href="item.url">
                             <img src='./sofa.jpg' />
-                            <p>商品组件</p>
-                        </li>
-                        <li>
-                            <img src='./sofa.jpg' />
-                            <p>商品组件</p>
-                        </li>
-                        <li>
-                            <img src='./sofa.jpg' />
-                            <p>商品组件</p>
-                        </li>
-                        <li>
-                            <img src='./sofa.jpg' />
-                            <p>商品组件</p>
-                        </li>
-                        <li>
-                            <img src='./sofa.jpg' />
-                            <p>商品组件</p>
-                        </li>
-                    </ul>
-                </div>
-            </mt-tab-container-item>
-            <mt-tab-container-item id="2">
-            </mt-tab-container-item>
-            <mt-tab-container-item id="3">
-            </mt-tab-container-item>
-            <mt-tab-container-item id="4">
-            </mt-tab-container-item>
-            <mt-tab-container-item id="5">
+                            <p>{{item.name}}</p>
+                        </a>
+                    </li>
+                </ul>
             </mt-tab-container-item>
         </mt-tab-container>
         <!-- <buttomNav></buttomNav> -->
@@ -54,19 +23,133 @@
 </template>
 
 <script>
-import buttomNav from '@/components/common/buttomNav.vue'
+// import buttomNav from '@/components/common/buttomNav.vue'
+import { Toast } from 'mint-ui'; 
+import { Indicator } from 'mint-ui';
     export default {
         name: 'page-navbar',
         data() {
             return {
-                selected: '1',
-                value: ''
+                selected: 0,
+                value: '',
+                classifylist:[],
+                commoditylist:[],
+                imglist:[]
             };
         },
         computed: {},
-        components: {
-            buttomNav
+        created(){
+            this.$root.$on('loadclassify',()=>{
+                // 首次加载商品分类函数
+                if(this.classifylist.length==0){
+                    this.getImgall().then(completed=>{
+                        if(completed){
+                            this.getClassify();
+                        }
+                    });
+                }
+
+            });
+            
         },
+        watch:{
+            selected(index){
+                let dom=document.querySelector('.mint-navbar').querySelectorAll('a')[index];
+                // 当前商品分类id
+                let classifyid=dom.getAttribute('classifyid');
+                // 首次加载当前分类商品
+                if(this.commoditylist[index]==undefined){
+                    this.getCommoditylist(classifyid,1,index,true);
+                }
+            }
+        },
+        methods:{
+            // 获取商品分类
+            getClassify(){
+                let that=this;
+                this.$http.post('/api/product/commodity/category/query?pageSize=50',{})
+                .then(res=>{
+                    if(res.data.status==200){
+                        res.data.info.list.forEach((item,index)=>{
+                            that.classifylist.push({'id':item.id,'name':item.name});
+                        });
+                        if(that.classifylist.length>0){
+                            that.getCommoditylist(that.classifylist[0].id,1,0,true);
+                        }
+                    }
+                    else{
+                        console.log(res.data.msg);
+                    }
+                    console.log(res);
+                })
+                .catch(err=>{
+                    console.log(err);
+                    Toast('数据获取失败');
+                });
+            },
+            // 获取商品列表
+            getCommoditylist(classifyid,pagenum,index,loading){
+                // 首次加载当前分类商品数据
+                if(loading){
+                    Indicator.open();
+                }
+                let that=this;
+                this.$http.post('/api/product/commodity/info/query?page='+pagenum,
+                {
+                    isOnSale:true,
+                    categoryId:classifyid
+                })
+                .then(res=>{
+                    console.log(res);
+                    if(res.data.status==200){
+                        let list=[];
+                        res.data.info.list.forEach(commodity=>{
+                            let json={
+                                id:commodity.id,
+                                imgurl:'',
+                                name:commodity.name,
+                                url:'/commodity?id='+commodity.id
+                            };
+                            for(item of this.imglist){
+                                if(item.commodityId==commodity.id){
+                                    json.imgurl=item.url;
+                                    break;
+                                }
+                            }
+                            list.push(json);
+                        });
+                        this.$set(this.commoditylist,index,list);
+                        // this.commoditylist[index]=list;
+                    }
+                    else{
+                        console.log(res);
+                    }
+                    Indicator.close();
+                })
+                .catch(err=>{
+                    Indicator.close();
+                    console.log(err);
+                });
+            },
+            // 获取所有商品图片
+            getImgall(){
+                return new Promise((resolve,reject)=>{
+                    let that=this;
+                    this.$http.post('/api/product/commodity/image/queryMap',{})
+                    .then(res=>{
+                        if(res.data.status==200){
+                            this.imglist=res.data.info;
+                        }
+                        resolve(true);
+                    })
+                    .catch(err=>{
+                        console.log(err);
+                        resolve(true);
+                    });
+                });
+                
+            }
+        }
     };
 </script>
 <style lang="less">
