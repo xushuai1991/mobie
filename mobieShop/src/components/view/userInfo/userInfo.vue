@@ -235,19 +235,23 @@
             // buttomNav
         },
         computed: {
-            ...mapState({
-                userinfo: function(state) {
-                    // console.log(state.userinfo);
-                    // console.log(JSON.stringify(state.userinfo.userinfo));
-                    if (JSON.stringify(state.userinfo.userinfo) == '{}') {
-                        let data = JSON.parse(sessionStorage.getItem('userinfo'));
-                        this.$store.commit('login', data)
-                        return data;
-                    } else {
-                        return state.userinfo.userinfo
-                    }
-                }
-            })
+            userinfo(){
+                let data = JSON.parse(sessionStorage.getItem('userinfo'));
+                return data;
+            }
+            // ...mapState({
+            //     userinfo: function(state) {
+            //         // console.log(state.userinfo);
+            //         // console.log(JSON.stringify(state.userinfo.userinfo));
+            //         if (JSON.stringify(state.userinfo.userinfo) == '{}') {
+            //             let data = JSON.parse(sessionStorage.getItem('userinfo'));
+            //             this.$store.commit('login', data)
+            //             return data;
+            //         } else {
+            //             return state.userinfo.userinfo
+            //         }
+            //     }
+            // })
         }
     }
 </script>

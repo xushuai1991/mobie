@@ -1,69 +1,128 @@
 <template >
     <div class="page-navbar" id="classification">
         <div class="page-search">
-            <mt-search  v-model="value"></mt-search>
+            <mt-search  v-model="value_search" :show='true'></mt-search>
         </div>
-        <mt-navbar class="page-part float with20" v-model="selected">
-            <mt-tab-item v-for='(item,index) in classifylist' :key='index' :id="index" :classifyid='item.id'>{{item.name}}</mt-tab-item>
-        </mt-navbar>
-        <mt-tab-container v-model="selected" class='float with80'>
-            <mt-tab-container-item v-for='(commodity,index) in commoditylist' :key='index'  :id="index">
-                <ul class='ctionUl clearfloat'>
-                    <li v-for='(item,index1) in commodity' :key='index1'>
-                        <a :href="item.url">
-                            <img src='./sofa.jpg' />
-                            <p>{{item.name}}</p>
-                        </a>
-                    </li>
+        <div class='nav-bar'>
+            <ul class='list'>
+                <li class='active' @click='changestatus($event,"classify")'>
+                    <span>{{classifyname}}</span>
+                    <i class='icon iconfont icon-sanjiaoxing-up'></i>
+                </li>
+                <li @click='changestatus($event,"price")'>
+                    <span>价格</span>    
+                    <i class='icon iconfont icon-jiantouarrow503'></i>
+                </li>
+                <li @click='changestatus($event,"sale")'>
+                    <span>销量</span>    
+                    <i class='icon iconfont icon-jiantouarrow503'></i>
+                </li>
+                <li @click='changestatus($event,"")'>
+                    <span>人气</span>    
+                    <i class='icon iconfont icon-jiantouarrow503'></i>
+                </li>
+            </ul>
+            <div class='showmask' @click='hidemask($event)'>
+                <ul class='classify'>
+                    <li v-for='(item,index) in classifylist' :key='index' class='classify-li' @click='changeclassify(item)'>{{item.name}}</li>
                 </ul>
-            </mt-tab-container-item>
-        </mt-tab-container>
-        <!-- <buttomNav></buttomNav> -->
+            </div>
+        </div>
+        <mt-loadmore :bottom-method="loadMore"  :bottom-all-loaded="loading" ref="loadmore" :autoFill='false'>
+            <div class='commoditylist'>
+                <div class='commodity' v-for='(item,index) in commoditylist' :key='index' >
+                    <a :href="item.url">
+                        <img :src="item.imgurl" alt="图片丢失">
+                        <p class='name'>{{item.name}}</p>
+                        <p class='other'>
+                            <span class='price'>￥100</span>
+                            <span class='nums'>10人已付款</span>
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </mt-loadmore>
     </div>
 </template>
 
 <script>
-// import buttomNav from '@/components/common/buttomNav.vue'
 import { Toast } from 'mint-ui'; 
 import { Indicator } from 'mint-ui';
     export default {
         name: 'page-navbar',
         data() {
             return {
-                selected: 0,
-                value: '',
-                classifylist:[],
+                value_search:'',
+                classifyname:'全部',
+                maxpagenum:0,
+                classifyid:null,
+                classifylist:[
+                    {
+                        id:'',
+                        name:'全部'
+                    }
+                ],
                 commoditylist:[],
-                imglist:[]
+                imglist:[],
+                loading:false,
+                pagenum:[],
+                wrapperHeight:[],
             };
         },
-        computed: {},
         created(){
             this.$root.$on('loadclassify',()=>{
                 // 首次加载商品分类函数
-                if(this.classifylist.length==0){
+                if(this.classifylist.length==1){
                     this.getImgall().then(completed=>{
                         if(completed){
                             this.getClassify();
                         }
                     });
                 }
-
             });
             
         },
-        watch:{
-            selected(index){
-                let dom=document.querySelector('.mint-navbar').querySelectorAll('a')[index];
-                // 当前商品分类id
-                let classifyid=dom.getAttribute('classifyid');
-                // 首次加载当前分类商品
-                if(this.commoditylist[index]==undefined){
-                    this.getCommoditylist(classifyid,1,index,true);
-                }
-            }
-        },
         methods:{
+            changestatus(event,type,data){
+                let dom=document.querySelector('.nav-bar').querySelector('.active');
+                dom.removeAttribute('class');
+                event.currentTarget.setAttribute('class','active');
+                let dom2=document.querySelector('.list').querySelectorAll('.icon-jiantouarrow503');
+                dom2.forEach(item=>{
+                    item.setAttribute('class','icon iconfont icon-jiantouarrow503');
+                })
+                switch(type){
+                    case 'classify':{
+                        document.querySelector('.showmask').style.display='block';
+                        event.currentTarget.querySelector('i').setAttribute('class','icon iconfont icon-sanjiaoxing-up on');
+                        break;
+                    }
+                    case 'price':{
+                        document.querySelector('.showmask').style.display='none';
+                        event.currentTarget.querySelector('i').setAttribute('class','icon iconfont icon-jiantouarrow503 on');
+                        break;
+                    }
+                    case 'sale':{
+                        document.querySelector('.showmask').style.display='none';
+                        event.currentTarget.querySelector('i').setAttribute('class','icon iconfont icon-jiantouarrow503 on');
+                        break;
+                    }
+                }
+            },
+            changeclassify(data){
+                document.querySelector('.showmask').style.display='none';
+                document.querySelector('.list').querySelector('.icon').setAttribute('class','icon iconfont icon-sanjiaoxing-up');
+                this.classifyname=data.name;
+                this.classifyid=data.id;
+                this.getCommoditylist(1,true);
+            },
+            hidemask(event){
+                let domclassname=event.target.getAttribute('class');
+                if(domclassname!='classify-li'&&domclassname!='classify'){
+                    document.querySelector('.showmask').style.display='none';
+                    document.querySelector('.list').querySelector('.icon').setAttribute('class','icon iconfont icon-sanjiaoxing-up');
+                }
+            },
             // 获取商品分类
             getClassify(){
                 let that=this;
@@ -73,8 +132,9 @@ import { Indicator } from 'mint-ui';
                         res.data.info.list.forEach((item,index)=>{
                             that.classifylist.push({'id':item.id,'name':item.name});
                         });
-                        if(that.classifylist.length>0){
-                            that.getCommoditylist(that.classifylist[0].id,1,0,true);
+                        if(that.classifylist.length>1){
+                            that.pagenum=1;
+                            that.getCommoditylist(1,true);
                         }
                     }
                     else{
@@ -88,21 +148,24 @@ import { Indicator } from 'mint-ui';
                 });
             },
             // 获取商品列表
-            getCommoditylist(classifyid,pagenum,index,loading){
+            getCommoditylist(pagenum,loading){
                 // 首次加载当前分类商品数据
                 if(loading){
                     Indicator.open();
                 }
                 let that=this;
-                this.$http.post('/api/product/commodity/info/query?page='+pagenum,
+                this.$http.post('/api/product/commodity/info/query?pageSize=10&page='+pagenum,
                 {
                     isOnSale:true,
-                    categoryId:classifyid
+                    categoryId:this.classifyid
                 })
                 .then(res=>{
                     console.log(res);
+                    that.maxpagenum=res.data.info.pages;
+                    if(pagenum==1){
+                        that.commoditylist=[];
+                    }
                     if(res.data.status==200){
-                        let list=[];
                         res.data.info.list.forEach(commodity=>{
                             let json={
                                 id:commodity.id,
@@ -110,15 +173,17 @@ import { Indicator } from 'mint-ui';
                                 name:commodity.name,
                                 url:'/commodity?id='+commodity.id
                             };
-                            for(item of this.imglist){
+                            for(let item of that.imglist){
                                 if(item.commodityId==commodity.id){
-                                    json.imgurl=item.url;
+                                    json.imgurl='http://'+window.location.host+'/api'+item.url;
                                     break;
                                 }
                             }
-                            list.push(json);
+                            // if(that.commoditylist[index])
+                            that.commoditylist.push(json);
+                            // list.push(json);
                         });
-                        this.$set(this.commoditylist,index,list);
+                        // that.$set(that.commoditylist,index,list);
                         // this.commoditylist[index]=list;
                     }
                     else{
@@ -148,6 +213,24 @@ import { Indicator } from 'mint-ui';
                     });
                 });
                 
+            },
+            loadMore(index) {
+                console.log(this.pagenum,this.maxpagenum);
+                if(this.pagenum<this.maxpagenum){
+                    this.pagenum+=1;
+                    this.getCommoditylist(this.pagenum,false);
+                    setTimeout(() => {
+                        this.$refs.loadmore.onBottomLoaded();
+                    }, 1000);
+                }
+                else{
+                    setTimeout(() => {
+                        this.$refs.loadmore.onBottomLoaded();
+                        Toast('数据已加载完');
+                    }, 1000);
+                }
+                
+                
             }
         }
     };
@@ -157,74 +240,152 @@ import { Indicator } from 'mint-ui';
         .mint-tab-item{
             float:left;
             width:100%;
+            // position: fixed;
         }
         .page-search {
+            width:100%;
+            z-index: 99;
             font-size: 0.2rem;
+            position: fixed;
+            top:0;
+        }
+        .mint-searchbar{
+            background-color:#fff;
+        }
+        .mint-searchbar-inner{
+            border:1px solid #787878;
+            border-radius:15px;
         }
         .mint-search {
             height:auto;
             margin-bottom: 0.2rem;
-        }
-        .mint-navbar{
-            display: block;
-        }
-        .mint-navbar{
-            margin-top:0;
-        }
-        .float {
-            float: left;
-        }
-        .with80 {
-            width: 80%;
-        }
-        .with20 {
-            width: 20%;
-        }
-        .mint-navbar .mint-tab-item.is-selected {
-            width: 100%;
-        }
-        .mint-navbar {
-            display: block;
-        }
-        .mint-navbar .mint-tab-item.is-selected {
-            border: none;
-            margin-bottom: 0;
+            font-size: .3rem;
         }
         .mint-searchbar-inner .mintui-search {
             font-size: 0.4rem;
             padding: 0 0.2rem;
+            // color:#0dbbb9;
+        }
+        .mint-searchbar-cancel{
+            color:#787878;
+        }
+        .mint-loadmore-bottom{
+            font-size: .3rem;
         }
     }
     
 </style>
-<style scoped>
-    .clearfloat:after {
-        display: block;
-        clear: both;
-        content: "";
-        visibility: hidden;
-        height: 0
+<style lang='less' scoped>
+.nav-bar{
+    margin-top:1rem;
+    font-size:.3rem;
+    padding-bottom:.1rem;
+    border-bottom:1px solid #e9e9e9;
+    box-shadow:0 1px 5px #e9e9e9;
+    position: fixed;
+    width:100%;
+    top:0;
+    z-index:99;
+    background-color:#fff;
+    .list{
+        display:flex;
+        justify-content: flex-start;
+        padding-top:.2rem;
+        // border:1px solid;
+        color:#787878;
+        li{
+            display: block;
+            width:20%;
+            height:fit-content;
+            position: relative;
+            i{
+                position: absolute;
+            }
+            i.on{
+                transform:rotate(180deg);
+            }
+        }
+        li.active{
+            color:#0dbbb9;
+        }
+        li.active::after{
+            content:'';
+            width:50%;
+            height:2px;
+            background-color:#0dbbb9;
+            display: block;
+            margin:0 auto;
+            margin-top:.1rem;
+        }  
     }
-    .clearfloat {
-        zoom: 1
+    .showmask{
+        width:100%;
+        height:100%;
+        position: fixed;
+        background:transparent;
+        background-color:rgba(0, 0, 0, 0.5);
+        display: none;
+        .classify{
+            padding:.2rem 0 .1rem 0;
+            background-color:#fff;
+            li{
+                width:100%;
+                text-align:left;
+                padding:.1rem .4rem;
+                color:#787878;
+            }
+        }
     }
-    .ctionUl {
-        padding-left: 6%;
-    }
-    #classification .ctionUl li {
+    
+}
+.commoditylist{
+    min-height:75vh;
+    overflow: hidden;
+    // display:flex;
+    // justify-content: space-between;
+    // flex-wrap:wrap ;
+    padding:.2rem;
+    background-color:#f5f5f5;
+    margin-top:1.76rem;
+    .commodity{
+        width:49%;
+        height:min-content;
+        background-color:#fff;
+        margin-bottom:.1rem;
+        margin-left:.07rem;
         float: left;
-        font-size: 0.2rem;
-        width: 30%;
+        img{
+            display: block;
+            width:100%;
+            height:3rem;
+            margin:0 auto;
+            font-size:.3rem;
+        }
+        .name{
+            font-size:.3rem;
+            text-align:left;
+            padding:.1rem;
+            color:#555;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .other{
+            font-size:.2rem;
+            overflow: hidden;
+            padding:0 .1rem .1rem .1rem;
+            .price{
+                float: left;
+                color:red;
+            }
+            .nums{
+                float: right;
+            }
+        }
+        
     }
-    .ctionUl li img {
-        width: 100%;
-    }
-    .imgSize {
-        width: 90%;
-        padding: 0 5%;
-    }
-    .imgSize img {
-        width: 100%;
-    }
-
+    // .commodity+.commodity{
+    //     margin-left:10px;
+    // }
+}
 </style>
