@@ -16,14 +16,8 @@
                                         <div class="checks" @click='showServer(item.shopname)'>领券</div>
                                         <p></p>
                                     </div>
-                                    <div class="goodsBox" v-for="(items,indexs) in item.listgoods" :key="indexs">
-                                        <mt-cell-swipe :right="[  
-                                                            {  
-                                                                content: '删除',  
-                                                                style: { background: '#ff7900', color: '#fff'},  
-                                                                handler: () => deleteSection(index,indexs)  
-                                                            }  
-                                                        ]">
+                                    <div class="goodsBox list-item" v-for="(items,indexs) in item.listgoods" :key="indexs" data-type="0">
+                                        <div class="list-box" @touchstart.capture="touchStart"   @touchend.capture="touchEnd" @click="skip">
                                             <ul class="goods_detail" style='overflow: hidden; margin-top:0.2rem;'>
                                                 <li class="goods_img" style="margin-left:0px;">
                                                     <img :src="items.img">
@@ -42,8 +36,12 @@
                                                         <input type="button" @click="add(index,indexs)" value='＋'>
                                                     </div>
                                                 </li>
+                                                <!-- <span class="mui_shopcar_del" @click="remove(index,indexs)">
+                                                                        <i class='icon iconfont icon-lajitong'></i>
+                                                                    </span>!-->
                                             </ul>
-                                         </mt-cell-swipe>
+                                            <div class="delete" @click="deleteSection(index,indexs)" :data-index="index">删除</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -117,6 +115,8 @@
                 checked: '',
                 nums: '',
                 OrderTotal: 0,
+                startX: 0,
+                endX: 0,
                 list: [
                     // shop:[{'img': require('./../homepage/recommend/recommendImage/1.jpg')}],
                     {
@@ -128,7 +128,7 @@
                                 name: '奶片',
                                 price: 1.3,
                                 count: 2,
-                                 selected: false,
+                                selected: false,
                                 'img': require('./../homepage/recommend/recommendImage/1.jpg')
                             },
                             {
@@ -136,7 +136,7 @@
                                 name: '小辣椒',
                                 price: 100,
                                 count: 1,
-                                 selected: false,
+                                selected: false,
                                 'img': require('./../homepage/recommend/recommendImage/1.jpg')
                             },
                             {
@@ -144,7 +144,7 @@
                                 name: '小辣椒22222',
                                 price: 100,
                                 count: 1,
-                                 selected: false,
+                                selected: false,
                                 'img': require('./../homepage/recommend/recommendImage/1.jpg')
                             }
                         ]
@@ -166,7 +166,7 @@
                                 name: '华为1',
                                 price: 100,
                                 count: 1,
-                                 selected: false,
+                                selected: false,
                                 'img': require('./../homepage/recommend/recommendImage/1.jpg')
                             },
                             {
@@ -174,7 +174,7 @@
                                 name: '华为2',
                                 price: 100,
                                 count: 1,
-                                 selected: false,
+                                selected: false,
                                 'img': require('./../homepage/recommend/recommendImage/1.jpg')
                             },
                             {
@@ -182,7 +182,7 @@
                                 name: '华为3',
                                 price: 100,
                                 count: 1,
-                                 selected: false,
+                                selected: false,
                                 'img': require('./../homepage/recommend/recommendImage/1.jpg')
                             }
                         ]
@@ -263,6 +263,7 @@
             }
         },
         methods: {
+            
             //无限加载函数
             checkShop(pID) { //商品的全选和反宣
                 var self = this.list[pID];
@@ -271,7 +272,6 @@
                         list.selected = true;
                         console.log(list)
                     })
-                    
                 } else {
                     self.listgoods.forEach(function(list) {
                         list.selected = false;
@@ -340,7 +340,7 @@
                         }
                     }
                 });
-                console.log(OrderArry,TotalPrice)
+                console.log(OrderArry, TotalPrice)
             },
             btnClose() {
                 this.popupVisible = false;
@@ -348,39 +348,118 @@
             showServer(name) {
                 this.ShopName = name;
                 this.popupVisible = true;
-            }
+            },
+            //跳转
+            skip() {
+                if (this.checkSlide()) {
+                    this.restSlide();
+                } else {
+                    alert('You click the slide!')
+                }
+            },
+            //滑动开始
+            touchStart(e) {
+                // 记录初始位置
+                this.startX = e.touches[0].clientX;
+                
+                // 
+                //this.addEventListener('touchmove',this.touchmove(e));
+            },
+            // touchmove(e){
+            //     e.preventDefault(); 
+            // },
+            //滑动结束
+            touchEnd(e) {
+                // 当前滑动的父级元素
+                let parentElement = e.currentTarget.parentElement;
+               
+                // 记录结束位置
+                this.endX = e.changedTouches[0].clientX;
+                // 左滑
+                if (parentElement.dataset.type == 0 && this.startX - this.endX > 30) {
+                    this.restSlide();
+                    parentElement.dataset.type = 1;
+                }
+                // 右滑
+                if (parentElement.dataset.type == 1 && this.startX - this.endX < -30) {
+                    this.restSlide();
+                    parentElement.dataset.type = 0;
+                }
+                this.startX = 0;
+                this.endX = 0;
+                // this.removeEventListener('touchmove',this.touchmove(e));
+            },
+            //判断当前是否有滑块处于滑动状态
+            checkSlide() {
+                let listItems = document.querySelectorAll('.list-item');
+                for (let i = 0; i < listItems.length; i++) {
+                    if (listItems[i].dataset.type == 1) {
+                        return true;
+                    }
+                }
+                return false;
+            },
+            //复位滑动状态
+            restSlide() {
+                let listItems = document.querySelectorAll('.list-item');
+                // 复位
+                for (let i = 0; i < listItems.length; i++) {
+                    listItems[i].dataset.type = 0;
+                }
+            },
         },
     }
 </script>
 
 <style>
-    input[type=button]{
-    -webkit-appearance:none;
-    outline:none
-}
-    .Cmycar .mint-cell-value{
-            width:100%;
-        }
-    .Cmycar .mint-cell-wrapper{
-            padding-left: 0;
-        }
-   .Cmycar .mint-cell-swipe-button{
-            font-size:0.3rem;
-            line-height:3rem;
-        }
-
+    input[type=button] {
+        -webkit-appearance: none;
+        outline: none
+    }
+    .Cmycar .mint-cell-value {
+        width: 100%;
+    }
+    .Cmycar .mint-cell-wrapper {
+        padding-left: 0;
+    }
+    .Cmycar .mint-cell-swipe-button {
+        font-size: 0.3rem;
+        line-height: 3rem;
+    }
 </style>
 <style lang="less" scoped>
-    .cgqNumBox input[type=button]{
-        font-size:0.3rem;
-        background:#ddd;
-       vertical-align: middle;
-       line-height:0rem;
+    .list-item {
+        position: relative;
+        -webkit-transition: all 0.2s;
+        transition: all 0.2s;
+    }
+    .list-item[data-type="0"] {
+        transform: translate3d(0, 0, 0);
+    }
+    .list-item[data-type="1"] {
+        transform: translate3d(-2rem, 0, 0);
+    }
+    .list-item .delete {
+        width: 1.4rem;
+        height: 100%;
+        background: #ff4949;
+        font-size: 17px;
+        color: #fff;
+        text-align: center;
+        line-height: 2.8rem;
+        position: absolute;
+        top: 0;
+        right: -2rem;
+    }
+    .cgqNumBox input[type=button] {
+        font-size: 0.3rem;
+        background: #ddd;
+        vertical-align: middle;
+        line-height: 0rem;
     }
     .shopBox {
         margin-bottom: 0.4rem;
         font-size: 0.2rem;
-        
         button {
             position: absolute;
             right: 0;
@@ -390,7 +469,7 @@
             background: linear-gradient(to bottom, #0CBBB9 0%, #4AC6DC 100%);
             color: #fff;
             margin-right: 0.2rem;
-            font-size:0.25rem;
+            font-size: 0.25rem;
             border-radius: 5px;
         }
     }
@@ -577,10 +656,9 @@
     }
     .goods_detail li {
         height: 2.7rem;
-        margin-left:0rem;
+        margin-left: 0rem;
         text-align: left;
     }
-    
     .goods_detail .goods_img img {
         height: 100%;
         min-width: 3rem;
@@ -603,7 +681,7 @@
     .goods_price {
         color: #f38650;
         font-size: .26rem;
-        line-height:1.1rem;
+        line-height: 1.1rem;
     }
     .footer {
         width: 100%;
@@ -772,10 +850,10 @@
     }
     .cgqNumBox {
         width: 3rem;
-    position: absolute;
-    line-height:2rem;
-    right: -.5rem;
-    text-align:center;
+        position: absolute;
+        line-height: 2rem;
+        right: -.5rem;
+        text-align: center;
         button {
             width: 0.5rem;
             height: 0.5rem;
@@ -786,7 +864,7 @@
             text-align: center;
         }
     }
-     .strlen {
+    .strlen {
         margin-bottom: 0.2rem;
         font-size: 0.2rem;
         display: -webkit-box;
@@ -800,7 +878,7 @@
         font-size: 0.2rem;
         color: #707070;
     }
-     .brandDesc {
+    .brandDesc {
         font-size: 0.3rem;
         font-weight: 700;
     }
