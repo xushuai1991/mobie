@@ -9,16 +9,12 @@
                     <span>{{classifyname}}</span>
                     <i class='icon iconfont icon-sanjiaoxing-up'></i>
                 </li>
-                <li @click='changestatus($event,"price")'>
+                <li @click='changestatus($event,"price")' class='price'>
                     <span>价格</span>    
                     <i class='icon iconfont icon-jiantouarrow503'></i>
                 </li>
-                <li @click='changestatus($event,"sale")'>
+                <li @click='changestatus($event,"sale")' class='sale'>
                     <span>销量</span>    
-                    <i class='icon iconfont icon-jiantouarrow503'></i>
-                </li>
-                <li @click='changestatus($event,"")'>
-                    <span>人气</span>    
                     <i class='icon iconfont icon-jiantouarrow503'></i>
                 </li>
             </ul>
@@ -35,8 +31,8 @@
                         <img :src="item.imgurl" alt="图片丢失">
                         <p class='name'>{{item.name}}</p>
                         <p class='other'>
-                            <span class='price'>￥100</span>
-                            <span class='nums'>10人已付款</span>
+                            <span class='price'>￥{{item.price}}</span>
+                            <span class='nums'>已卖出{{item.nums}}件</span>
                         </p>
                     </a>
                 </div>
@@ -66,7 +62,6 @@ import { Indicator } from 'mint-ui';
                 imglist:[],
                 loading:false,
                 pagenum:[],
-                wrapperHeight:[],
             };
         },
         created(){
@@ -84,13 +79,17 @@ import { Indicator } from 'mint-ui';
         },
         methods:{
             changestatus(event,type,data){
+               
                 let dom=document.querySelector('.nav-bar').querySelector('.active');
                 dom.removeAttribute('class');
                 event.currentTarget.setAttribute('class','active');
-                let dom2=document.querySelector('.list').querySelectorAll('.icon-jiantouarrow503');
-                dom2.forEach(item=>{
-                    item.setAttribute('class','icon iconfont icon-jiantouarrow503');
-                })
+                // 当前点击的选项之前是否已选中
+                let iscurrent=dom==event.currentTarget;
+                let dom_i=event.currentTarget.querySelector('i');
+                let class_before=dom_i.getAttribute('class');
+                // 是否从小到大排序
+                let isup=class_before=='icon iconfont icon-jiantouarrow503';
+                console.log(class_before);
                 switch(type){
                     case 'classify':{
                         document.querySelector('.showmask').style.display='block';
@@ -99,14 +98,35 @@ import { Indicator } from 'mint-ui';
                     }
                     case 'price':{
                         document.querySelector('.showmask').style.display='none';
-                        event.currentTarget.querySelector('i').setAttribute('class','icon iconfont icon-jiantouarrow503 on');
+                        if(iscurrent){
+                            if(isup){
+                                dom_i.setAttribute('class','icon iconfont icon-jiantouarrow503 on');
+                                isup=false;
+                            }
+                            else{
+                                dom_i.setAttribute('class','icon iconfont icon-jiantouarrow503');
+                                isup=true;
+                            }
+                        }
+                        this.OrderBy(isup,'price');
                         break;
                     }
                     case 'sale':{
                         document.querySelector('.showmask').style.display='none';
-                        event.currentTarget.querySelector('i').setAttribute('class','icon iconfont icon-jiantouarrow503 on');
+                        if(iscurrent){
+                            if(isup){
+                                dom_i.setAttribute('class','icon iconfont icon-jiantouarrow503 on');
+                                isup=false;
+                            }
+                            else{
+                                dom_i.setAttribute('class','icon iconfont icon-jiantouarrow503');
+                                isup=true;
+                            }
+                        }
+                        this.OrderBy(isup,'sale');
                         break;
                     }
+                    default:break;
                 }
             },
             changeclassify(data){
@@ -122,6 +142,42 @@ import { Indicator } from 'mint-ui';
                     document.querySelector('.showmask').style.display='none';
                     document.querySelector('.list').querySelector('.icon').setAttribute('class','icon iconfont icon-sanjiaoxing-up');
                 }
+            },
+            // 从小到大排序价格
+            sortupprice(a,b){
+                return a.price-b.price;
+            },
+            // 从大到小排序价格
+            sortdownprice(a,b){
+                return b.price-a.price;
+            },
+            // 从小到大排序销量
+            sortupsale(a,b){
+                return a.nums-b.nums;
+            },
+            // 从大到小排序销量
+            sortdownsale(a,b){
+                return b.nums-a.nums;
+            },
+            // 排序
+            OrderBy(isup,type){
+                console.log(isup,type);
+                Indicator.open('排序中');
+                switch(type){
+                    case 'price':{
+                        this.commoditylist.sort(isup?this.sortupprice:this.sortdownprice);
+                        break;
+                    }
+                    case 'sale':{
+                        this.commoditylist.sort(isup?this.sortupsale:this.sortdownsale);
+                        break;
+                    }
+                    default:break;
+                }
+                setTimeout(() => {
+                    Indicator.close();
+                }, 500);
+               
             },
             // 获取商品分类
             getClassify(){
@@ -160,7 +216,6 @@ import { Indicator } from 'mint-ui';
                     categoryId:this.classifyid
                 })
                 .then(res=>{
-                    console.log(res);
                     that.maxpagenum=res.data.info.pages;
                     if(pagenum==1){
                         that.commoditylist=[];
@@ -171,7 +226,9 @@ import { Indicator } from 'mint-ui';
                                 id:commodity.id,
                                 imgurl:'',
                                 name:commodity.name,
-                                url:'/commodity?id='+commodity.id
+                                url:'/commodity?id='+commodity.id,
+                                price:commodity.priceRule==1?commodity.originalPrice:commodity.priceRule==2?commodity.discountPrice:commodity.currentPrice,
+                                nums:commodity.totalSales
                             };
                             for(let item of that.imglist){
                                 if(item.commodityId==commodity.id){
@@ -179,12 +236,8 @@ import { Indicator } from 'mint-ui';
                                     break;
                                 }
                             }
-                            // if(that.commoditylist[index])
                             that.commoditylist.push(json);
-                            // list.push(json);
                         });
-                        // that.$set(that.commoditylist,index,list);
-                        // this.commoditylist[index]=list;
                     }
                     else{
                         console.log(res);
@@ -371,9 +424,9 @@ import { Indicator } from 'mint-ui';
             text-overflow: ellipsis;
         }
         .other{
-            font-size:.2rem;
+            font-size:.3rem;
             overflow: hidden;
-            padding:0 .1rem .1rem .1rem;
+            padding:.05rem .1rem .1rem .1rem;
             .price{
                 float: left;
                 color:red;
