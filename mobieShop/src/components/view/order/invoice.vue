@@ -7,7 +7,7 @@
             <p style='height:.5rem;line-height:.5rem;'>
                 <span class='tip'>发票抬头</span>
                 <span class='right' @click="popupVisible = true">
-                    <span>{{invoicetype==''?'请选择':invoicetype}}</span>
+                    <span>{{invoicetype==''?'请选择':invoicetype==1?'个人发票':'单位发票'}}</span>
                     <i class='icon iconfont icon-arrow-right-copy' ></i>
                 </span>
             </p>
@@ -22,13 +22,17 @@
             </mt-popup>
         </div>
         <div class='area width_all'>
-            <p class='inputs'>
-                <label for="name_com">单位名称：</label>
-                <input type="text" class='input_1' id='name_com' placeholder="单位名称">
+            <p class='inputs' v-if='invoicetype==1'>
+                <label for="name_com">姓名：</label>
+                <input type="text" class='input_1' v-model="taxpayername" placeholder="请填写纳税人姓名">
             </p>
-            <p class='inputs'>
+            <p class='inputs' v-if='invoicetype==2'>
+                <label for="name_com">单位名称：</label>
+                <input type="text" class='input_1' v-model="compname"  placeholder="单位名称">
+            </p>
+            <p class='inputs' v-if='invoicetype==2'>
                 <label for="name_com">纳税人识别号：</label>
-                <input type="text" class='input_1' id='name_com' placeholder="纳税人识别号" v-model="personalnum">
+                <input type="text" class='input_1'  placeholder="纳税人识别号" v-model="personalnum">
             </p>
             <p class='inputs'>
                 <span class='tip'>发票金额：<span class='warning money'>￥{{money}}</span></span>
@@ -53,9 +57,20 @@ export default {
         return {
             popupVisible:false,
             invoicetype:'',
-            options:['个人发票','单位发票'],
+            options:[
+                {
+                    value:'1',
+                    label:'个人发票' 
+                },
+                {
+                    value:'2',
+                    label:'单位发票'
+                }
+            ],
             money:'200',
-            personalnum:''
+            taxpayername:'',
+            compname:'',
+            taxpayernum:''
         }
     },
     created:function(){
@@ -143,6 +158,7 @@ export default {
                 label{
                     width:2rem;
                     display: inline-block;
+                    // text-align: center;
                 }
                 .warning{
                     font-size: .4rem;

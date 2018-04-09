@@ -8,7 +8,7 @@
             </div>
         </div>
         <div class="meaningless"></div>
-        <div class="user_name" @click="handleClick(item)" v-for='(item,index) in userIfo'>{{item.name}}<span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>
+        <div class="user_name" @click="handleClick(item)" v-for='(item,index) in userIfo' :key='index'>{{item.name}}<span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>
         <!--<div class="true_name">真实姓名<span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>
                     <div class="sex">性别<span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>
                     <div class="meaningless "></div>
@@ -28,10 +28,9 @@
                 <div>{{listName2}}<input type='text' placeholder='请输入'></div>
                 <div v-show='isShow'>{{listName2}}<input type='text'></div>
                 <div class='isOk'>
-                <input type='button' class='orderOk' value='确认'/>
-                <input type='button' @click='clearBox' value='取消'/>
+                    <input type='button' class='orderOk' value='确认'/>
+                    <input type='button' @click='clearBox' value='取消'/>
                 </div>
-            </div>
             </div>
         </mt-popup>
     </section>
@@ -68,6 +67,9 @@
                     },
                 ]
             }
+        },
+        created(){
+            this.$root.$emit('header','账号管理');
         },
         methods: {
             handleClick: function(name) {
