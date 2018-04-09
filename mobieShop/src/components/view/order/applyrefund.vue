@@ -68,13 +68,6 @@
                 <ul class='imgs'>
                     <li class='upload'>
                         <input type="file" name='upload' class='imgupload' accept="image/*" @change='uploadimg'  multiple='true'>
-                        <!-- <vue-file-upload
-                            :max='max'
-                            url='/qpi/xas'
-
-                        >
-                            <span slot="label">上传文件</span>
-                        </vue-file-upload> -->
                         <i class='icon iconfont icon-xiangji'></i>
                         <div class='tip'>
                             <p>上传凭证</p>
@@ -107,7 +100,6 @@
     </div>
 </template>
 <script>
-import VueFileUpload from 'vue-file-upload';
 import { Toast } from 'mint-ui';
 // import Exif from 'exif-js'
 export default {
