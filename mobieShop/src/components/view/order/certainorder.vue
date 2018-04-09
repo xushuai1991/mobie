@@ -14,28 +14,87 @@
             <h3 class="title">确认商品信息</h3>
             <ul class='detail'>
                 <li v-for='(item,index) in goodslist' :key='index'>
-                    <div class='img-goods'>
-                        <img src="item.imgurl" alt="">
+                    <div v-if='item.childlist.length==0'>
+                        <div class='img-goods'>
+                            <img src="item.imgurl" alt="">
+                        </div>
+                        <div class='msg'>
+                            <p class='name'>{{item.name}}</p>
+                            <p class='brand'>品牌：{{item.brand}}</p>
+                            <p class='area'>服务区域：{{item.area_service}}</p>
+                        </div>
+                        <div class='tips'>
+                            <p class='price'>￥{{item.price_unit}}</p>
+                            <p class='oper'>
+                                <span>X{{item.num}}</span>
+                                <!-- <span>{{item.num}}</span> -->
+                                <i class='icon iconfont icon-edit_icon' @click="changenums(index)"></i>
+                            </p>
+                        </div>
                     </div>
-                    <div class='msg'>
+                    <div v-if='item.childlist.length>0' class='package'>
                         <p class='name'>{{item.name}}</p>
-                        <p class='brand'>品牌：{{item.brand}}</p>
-                        <p class='area'>服务区域：{{item.area_service}}</p>
-                    </div>
-                    <div class='tips'>
-                        <p class='price'>￥{{item.price_unit}}</p>
-                        <p class='oper'>
-                            <span>数量</span>
-                            <span>{{item.num}}</span>
-                            <i class='icon iconfont icon-edit_icon' @click="changenums(index)"></i>
-                        </p>
+                        <ul >
+                            <li v-for='(item1,index1) in item.childlist' :key='index1'>
+                                <div class='img-goods'>
+                                    <img src="item1.imgurl" alt="">
+                                </div>
+                                <div class='msg'>
+                                    <p class='name'>{{item1.name}}</p>
+                                    <p class='brand'>品牌：{{item1.brand}}</p>
+                                    <p class='area'>服务区域：{{item1.area_service}}</p>
+                                </div>
+                                <div class='tips'>
+                                    <p class='price'>￥{{item1.price_unit}}</p>
+                                    <p class='oper'>
+                                        <span>X{{item1.num}}</span>
+                                        <!-- <i class='icon iconfont icon-edit_icon' @click="changenums(index1)"></i> -->
+                                    </p>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class='tips'>
+                            <p class='price'>￥{{item.price_unit}}</p>
+                            <p class='oper'>
+                                <span>X{{item.num}}</span>
+                                <!-- <span>{{item.num}}</span> -->
+                                <i class='icon iconfont icon-edit_icon' @click="changenums(index)"></i>
+                            </p>
+                        </div>
                     </div>
                 </li>
             </ul>
         </div>
+        
         <div class='price-total'>
             <span class='tip'>金额合计：</span>
             <span class='value'>￥{{totalprice}}</span>
+        </div>
+        <!-- 积分抵扣 -->
+        <div class='deduction'>
+            <p class='label'>
+                <span>积分抵扣</span>
+                <input type="checkbox" style='float:right;' v-model='isdeduction'>    
+            </p>
+            <ul v-if='isdeduction'>
+                <li v-for='(item,index) in deductionlist' :key='index'>
+                    <label for="">{{item.label}}</label>
+                    <input type="radio" v-model="deductionvalue" :value='index' name='deduction'>
+                </li>
+            </ul>
+        </div>
+        <!-- 优惠券抵扣 -->
+        <div class='coupon'>
+            <p class='label'>
+                <span>优惠券</span>
+                <input type="checkbox" style='float:right;' v-model='iscoupon'>    
+            </p>
+            <ul v-if='iscoupon'>
+                <li v-for='(item,index) in couponlist' :key='index'>
+                    <label for="">{{item.label}}</label>
+                    <input type="radio" v-model="couponvalue" :value='index' name='coupon'>
+                </li>
+            </ul>
         </div>
         <div class='service-time'>
             <p>
@@ -78,7 +137,7 @@
         <div class='submitorder'>
             <span class='msgs'>
                 <p>共1件产品</p>
-                <p>合计：<span class='price'>￥300</span></p>
+                <p>合计：<span class='price'>￥{{finalprice}}</span></p>
             </span>
             <button class='submit'>提交订单</button>
         </div>
@@ -100,6 +159,7 @@ export default {
                     name:'fashion',
                     brand:'禾目',
                     area_service:'上海',
+                    childlist:[],
                     price_unit:200,
                     num:1,
                     imgurl:''
@@ -108,12 +168,68 @@ export default {
                     name:'fashion2',
                     brand:'禾目',
                     area_service:'上海',
+                    childlist:[],
                     price_unit:300,
                     num:10,
                     imgurl:''
+                },
+                {
+                    name:'套餐一',
+                    area_service:'上海',
+                    price_unit:200,
+                    num:1,
+                    childlist:[
+                        {
+                            name:'item1',
+                            brand:'hemu',
+                            area_service:'上海',
+                            price_unit:200,
+                            num:1,
+                            imgurl:''
+                        },
+                        {
+                            name:'item2',
+                            brand:'hemu',
+                            area_service:'上海',
+                            price_unit:100,
+                            num:2,
+                            imgurl:''
+                        }
+                    ]
                 }
             ],
-
+            isdeduction:true,
+            deductionlist:[
+                {
+                    score:'100',
+                    money:'1',
+                    label:'100积分抵扣1元',
+                    cheched:true,
+                },
+                {
+                    score:'50',
+                    money:'0.2',
+                    label:'50积分抵扣0.1元',
+                    checked:false
+                }
+            ],
+            deductionvalue:'0',
+            iscoupon:false,
+            couponlist:[
+                {
+                    id:'1',
+                    money:'100',
+                    label:'优惠券一',
+                    cheched:true,
+                },
+                {
+                    id:'2',
+                    money:'200',
+                    label:'优惠券2',
+                    checked:false
+                }
+            ],
+            couponvalue:'0',
             servicedate:'',
             datechange:'',
             popupVisible:false,
@@ -147,6 +263,13 @@ export default {
                 total+=item.price_unit*item.num
             });
             return total;
+        },
+        finalprice(){
+            let price=this.totalprice;
+            let deductionmoney=this.isdeduction?this.deductionlist[this.deductionvalue].money:0;
+            let coupmoney=this.iscoupon?this.couponlist[this.couponvalue].money:0;
+            price=price-deductionmoney-coupmoney;
+            return price;
         }
     },
     created:function(){
@@ -203,7 +326,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang='less'>
 .contain{
     margin-top:0.8rem;
     font-size: .28rem;
@@ -263,6 +386,7 @@ export default {
     border-bottom: 1px solid #cdcdcd;
 }
 .msg-goods .detail li{
+    position: relative;
     overflow: hidden;
     padding: .3rem 0;
 }
@@ -289,7 +413,12 @@ export default {
     font-size: .25rem;
     padding-bottom: .3rem;
 }
-
+.tips{
+    position: absolute;
+    width: 100%;
+    height:100%;
+    top:0;
+}
 .msg-goods .tips p{
     text-align: right;
     padding-right: .2rem;
@@ -297,6 +426,9 @@ export default {
 }
 .msg-goods .tips p.oper{
     margin-top: .5rem;
+    position: absolute;
+    bottom:.3rem;
+    right: 0;
 }
 .msg-goods .tips p.oper span{
     padding: 0 .2rem;
@@ -306,6 +438,88 @@ export default {
     border: none;
     outline:none;
     margin-left: .2rem;
+}
+.package{
+    >.name{
+        padding-left:.3rem;
+    }
+    ul{
+        padding:0 .5rem;
+        .img-goods{
+            width:1.8rem;
+            height:1.6rem;
+        }
+        .msg{
+            .name{
+                font-size: .3rem;
+            }
+            .brand,.area{
+                font-size:.2rem;
+            }  
+        }
+        .tips{
+            position: relative;
+            p{
+                font-size:.25rem;
+                padding-top:.25rem;
+                padding-right:1rem;
+            }
+            .oper{
+                position: static !important;
+            }
+        }
+        
+    }
+    .tips{
+        .oper{
+            bottom:.6rem !important;
+        }
+        
+    }
+}
+.deduction{
+    margin-top:.2rem;
+    background-color: #fff;
+    padding: .2rem;
+    input:checked{
+        background:black !important;
+    }
+    .label{
+        padding:.2rem 0;
+        color:red;
+    }
+    ul{
+        li{
+            padding:.2rem;
+            label{
+                color:red;
+            }
+            input[type='radio']{
+                float: right;
+            }
+        }
+    }
+}
+.coupon{
+    border-top:1px solid #cdcdcd;
+    background-color: #fff;
+    padding: .2rem;
+    .label{
+        padding:.2rem 0;
+        color:red;
+    }
+    ul{
+        li{
+            padding:.2rem;
+            label{
+                color:red;
+            }
+            input[type='radio']{
+                float: right;
+                
+            }
+        }
+    }
 }
 .price-total{
     padding:.4rem .2rem;
@@ -446,12 +660,25 @@ export default {
     outline: none;
 }
 </style>
-<style>
-.certainorder_xs .popup{
-    width: 100%;
-}
-.certainorder_xs .popup .picker-slot-wrapper,.certainorder_xs .popup .picker-item {
-          backface-visibility: hidden;
+<style lang='less'>
+.certainorder_xs{
+    .popup{
+        width: 100%;
+    }
+    .popup .picker-slot-wrapper,.popup .picker-item{
+        backface-visibility: hidden;
+    }
+    .mint-checklist{
+        background:#fff;
+        .mint-checklist-title{
+            margin-top:0;
+            padding-top:.2rem;
+            font-size:.28rem;
+            color:red;
         }
-        
+        .mint-checklist-label{
+            font-size:.26rem;
+        }
+    }
+}
 </style>

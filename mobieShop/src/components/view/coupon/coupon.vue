@@ -1,93 +1,106 @@
 <template>
     <section>
     <ul class="coupon_class">
-        <li class="whole_coupon">
-            <p class="coupon_left">全场优惠券</p>
-            <div class="border_color"></div>
+        <div class="coupon_left">
+            <p :class='{"on":show_whole}' @click='switchcoupon'>全场优惠券</p>
+            <p :class='{"on":show_limit}' @click='switchcoupon'>限定优惠券</p>    
+        </div>
+        <li :class="{'whole_coupon':true,'on':show_whole}">
             <div class="whole whole_left">
-                <div class="coupon_content" >
+                <div class="coupon_content" v-if='couplist_whole.list_using.length!=0||couplist_whole.list_overdue.length!=0'>
                     <div class="draw" >
                         <p class="draw_top">可领取优惠券</p>
                         <ul class="draw_info draw_left">
-                           <li class="bg_red">'
-                            <div class="receive_left" data-id="'+e.couponId+'"><br>立即<br>领取</div>
-                            <div class="cir_half cir_half_top"></div>
-                            <div class="cir_half cir_half_bottom"></div>
-                            <div class="receive_right">
-                            <div>￥<span class="money_fav">1</span></div>
-                            <div class="coupon_info">
-                            <p>满11使用</p>
-                            <p class="receive">2014-2015</p>
-                            </div>
-                            </div>
+                            <li class="bg_red" v-for='(item,index) in couplist_whole.list_using' :key='index'>
+                                <div class="receive_left" data-id="'+e.couponId+'"><br>立即<br>领取</div>
+                                <div class="cir_half cir_half_top"></div>
+                                <div class="cir_half cir_half_bottom"></div>
+                                <div class="receive_right">
+                                <div>￥<span class="money_fav">{{item.value}}</span></div>
+                                <div class="coupon_info">
+                                <p>{{item.condition}}</p>
+                                <p class="receive">{{item.deadline}}</p>
+                                </div>
+                                </div>
                             </li>
                         </ul>
+                        <div style='font-size:.2rem;' v-if='couplist_whole.list_using.length==0'>
+                            <p>暂无可使用优惠券！</p>
+                        </div>
                     </div>
                     <div class="overdue">
                         <p class="draw_bottom">已过期优惠券</p>
                         <ul class="overdue_info overdue_left">
-                           <li class="bg_red">'
-                            <div class="receive_left" data-id="'+e.couponId+'"><br>立即<br>领取</div>
-                            <div class="cir_half cir_half_top"></div>
-                            <div class="cir_half cir_half_bottom"></div>
-                            <div class="receive_right">
-                            <div>￥<span class="money_fav">1</span></div>
-                            <div class="coupon_info">
-                            <p>满11使用</p>
-                            <p class="receive">2014-2015</p>
-                            </div>
-                            </div>
+                            <li class="bg_gray" v-for='(item,index) in couplist_whole.list_overdue' :key='index'>
+                                <div class="receive_left" data-id="'+e.couponId+'"><br>立即<br>领取</div>
+                                <div class="cir_half cir_half_top"></div>
+                                <div class="cir_half cir_half_bottom"></div>
+                                <div class="receive_right">
+                                <div>￥<span class="money_fav">{{item.value}}</span></div>
+                                <div class="coupon_info">
+                                <p>{{item.condition}}</p>
+                                <p class="receive">{{item.deadline}}</p>
+                                </div>
+                                </div>
                             </li>
                         </ul>
+                        <div style='font-size:.2rem;' v-if='couplist_whole.list_overdue.length==0'>
+                            <p>暂无过期优惠券！</p>
+                        </div>
                     </div>
                 </div>
-                <div class="pre_coupon">
-                    <p><img src="static/HMMobilePhone/dsit/img/preSearch.png" alt=""></p>
+                <div class="pre_coupon" v-if='couplist_whole.list_using.length==0&&couplist_whole.list_overdue.length==0'>
+                    <p><img src="/static/images/nodata.png" alt=""></p>
                     <p>暂无可使用优惠券！</p>
                 </div>
             </div>
         </li>
-        <li class="limit_coupon">
-            <p class="coupon_right">限定优惠券</p>
+        <li :class="{'limit_coupon':true,'on':show_limit}">
             <div class="whole whole_right" >
-                <div class="coupon_content">
+                <div class="coupon_content" v-if='couplist_limit.list_using.length!=0||couplist_limit.list_overdue.length!=0'>
 					<div class="draw">
                         <p class="draw_top">可领取优惠券</p>
                         <ul class="draw_info draw_right">
-                          <li class="bg_red">'
-                            <div class="receive_left" data-id="'+e.couponId+'"><br>立即<br>领取</div>
-                            <div class="cir_half cir_half_top"></div>
-                            <div class="cir_half cir_half_bottom"></div>
-                            <div class="receive_right">
-                            <div>￥<span class="money_fav">1</span></div>
-                            <div class="coupon_info">
-                            <p>满11使用</p>
-                            <p class="receive">2014-2015</p>
-                            </div>
-                            </div>
+                            <li class="bg_red" v-for='(item,index) in couplist_limit.list_using' :key='index'>
+                                <div class="receive_left" data-id="'+e.couponId+'"><br>立即<br>领取</div>
+                                <div class="cir_half cir_half_top"></div>
+                                <div class="cir_half cir_half_bottom"></div>
+                                <div class="receive_right">
+                                    <div>￥<span class="money_fav">{{item.value}}</span></div>
+                                    <div class="coupon_info">
+                                        <p>{{item.condition}}</p>
+                                        <p class="receive">{{item.deadline}}</p>
+                                    </div>
+                                </div>
                             </li>
                         </ul>
+                        <div style='font-size:.2rem;' v-if='couplist_limit.list_using.length==0'>
+                            <p>暂无可使用优惠券！</p>
+                        </div>
                     </div>
                     <div class="overdue">
                         <p class="draw_bottom">已过期优惠券</p>
                         <ul class="overdue_info overdue_right">
-                           <li class="bg_red">'
-                            <div class="receive_left" data-id="'+e.couponId+'"><br>立即<br>领取</div>
-                            <div class="cir_half cir_half_top"></div>
-                            <div class="cir_half cir_half_bottom"></div>
-                            <div class="receive_right">
-                            <div>￥<span class="money_fav">1</span></div>
-                            <div class="coupon_info">
-                            <p>满11使用</p>
-                            <p class="receive">2014-2015</p>
-                            </div>
-                            </div>
+                            <li class="bg_gray" v-for="(item,index) in couplist_limit.list_overdue" :key='index'>
+                                <div class="receive_left" data-id="'+e.couponId+'"><br>立即<br>领取</div>
+                                <div class="cir_half cir_half_top"></div>
+                                <div class="cir_half cir_half_bottom"></div>
+                                <div class="receive_right">
+                                <div>￥<span class="money_fav">{{item.value}}</span></div>
+                                <div class="coupon_info">
+                                    <p>{{item.condition}}</p>
+                                    <p class="receive">{{item.deadline}}</p>
+                                </div>
+                                </div>
                             </li>
                         </ul>
+                        <div style='font-size:.2rem;' v-if='couplist_limit.list_overdue.length==0'>
+                            <p>暂无可使用优惠券！</p>
+                        </div>
                     </div>
                 </div>
-                <div class="pre_coupon" >
-                    <p><img src="static/HMMobilePhone/dsit/img/preSearch.png" alt=""></p>
+                <div class="pre_coupon" v-if='couplist_limit.list_using.length==0&&couplist_limit.list_overdue.length==0'>
+                    <p><img src="/static/images/nodata.png" alt=""></p>
                     <p>暂无可使用优惠券！</p>
                 </div>
             </div>
@@ -97,28 +110,114 @@
 </section>
 </template>
 <script>
-    
+export default {
+    data(){
+        return{
+            show_whole:true,
+            show_limit:false,
+            couplist_whole:{
+                list_using:[
+                    {
+                        id:'1',
+                        value:'1',
+                        deadline:'2018-4-8',
+                        condition:'满11元使用'
+                    },
+                    {
+                        id:'2',
+                        value:'100',
+                        deadline:'2018-4-8',
+                        condition:'满1000元使用'
+                    }
+                ],
+                list_overdue:[
+                    {
+                        id:'3',
+                        value:'1',
+                        deadline:'2018-4-8',
+                        condition:'满11元使用'
+                    },
+                    {
+                        id:'4',
+                        value:'1',
+                        deadline:'2018-4-8',
+                        condition:'满11元使用'
+                    },
+                ]
+            },
+            couplist_limit:{
+                list_using:[
+                    {
+                        id:'1',
+                        value:'1',
+                        deadline:'2018-4-8',
+                        condition:'满11元使用'
+                    },
+                    {
+                        id:'2',
+                        value:'100',
+                        deadline:'2018-4-8',
+                        condition:'满2000元使用'
+                    }
+                ],
+                list_overdue:[
+                    {
+                        id:'3',
+                        value:'1',
+                        deadline:'2018-4-8',
+                        condition:'满11元使用'
+                    }
+                ]
+            }
+        }
+    },
+    created(){
+        this.$root.$emit('header','优惠券');
+    },
+    methods:{
+        switchcoupon(){
+            this.show_whole=!this.show_whole;
+            this.show_limit=!this.show_limit;
+        }
+    }
+}
 </script>
+
 <style lang="" scoped>
     
 .coupon_class{
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: nowrap;
+    /* display: flex; */
+    /* justify-content: space-around; */
+    /* flex-wrap: nowrap; */
+    margin-top:.8rem;
 }
 .whole_coupon,.limit_coupon{
-    width: 50%;
+    width: 100%;
+    display: none;
 }
-.coupon_left,.coupon_right{
+.whole_coupon.on,.limit_coupon.on{
+    display: block;
+
+}
+.coupon_left p{
+    width:50%;
+}
+.coupon_left p.on{
+    border-bottom: #0cbbb9 solid .02rem;
+}
+.coupon_left{
+    /* width:50%; */
     height: .9rem;
     font-size: .26rem;
     color: #333;
     text-align: center;
     line-height: .9rem;
     border-bottom: .01rem solid #dcdcdc;
+    display: flex;
+    justify-content: center;
 }
 .border_color{
-    width: 100%;
+    width: 50%;
     border-bottom: #0cbbb9 solid .02rem;
 }
 .pre_coupon{
@@ -140,7 +239,7 @@
     opacity: .5;
 }
 .whole{
-    width: 200%;
+    /* width: 200%; */
 }
 .coupon_content{
     width: 7rem;
@@ -210,10 +309,16 @@
     display: inline-block;
     font-size: .36rem;
     text-align:left;
+    
 }
 .receive_right div{
     display: inline-block;
     color: white;
+    
+}
+.receive_right .coupon_info{
+    position: relative;
+    top:.15rem;
 }
 .receive_right div:first-child{
     width: 1.6rem;
@@ -234,7 +339,7 @@
 	font-size:.24rem;
 }
 .whole_right{
-	margin-left:-100%;
+	/* margin-left:-100%; */
 }
 </style>
 

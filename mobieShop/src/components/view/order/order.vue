@@ -92,8 +92,23 @@ export default {
     created(){
         this.$root.$emit('header','我的订单');
         this.selected=this.$route.params.type==undefined?'all':this.$route.params.type;
+        this.getOrderList(1);
     },
     methods:{
+        getOrderList(pagenum){
+            let that=this;
+            this.$http.post('/api/product/order/queryPageList',
+            {
+                pageSize:10,
+                pageNum:pagenum
+            })
+            .then(res=>{
+                console.log(res);
+            })
+            .catch(err=>{
+                console.log(err);
+            })
+        },
         loadMore() {
             console.log(111);
             this.loading[0] = true;

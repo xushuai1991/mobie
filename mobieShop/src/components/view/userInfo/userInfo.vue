@@ -90,7 +90,7 @@
             <div class='opera_list'>
                 <ul>
                     <li>
-                        <router-link to='addressManagnet'>
+                        <router-link to='addManagement?name=index'>
                             <i class='icon iconfont icon-dingwei fontSize operaicon'></i>
                             <i class='flag on'></i>
                             <p class='name_opera'>地址</p>

@@ -67,6 +67,14 @@
                 <p>上传凭证</p>
                 <ul class='imgs'>
                     <li class='upload'>
+                        <input type="file" name='upload' class='imgupload' accept="image/*" @change='uploadimg'  multiple='true'>
+                        <!-- <vue-file-upload
+                            :max='max'
+                            url='/qpi/xas'
+
+                        >
+                            <span slot="label">上传文件</span>
+                        </vue-file-upload> -->
                         <i class='icon iconfont icon-xiangji'></i>
                         <div class='tip'>
                             <p>上传凭证</p>
@@ -99,7 +107,11 @@
     </div>
 </template>
 <script>
+import VueFileUpload from 'vue-file-upload';
+import { Toast } from 'mint-ui';
+// import Exif from 'exif-js'
 export default {
+    components:{VueFileUpload},
     data(){
         return{
             goodslist:[
@@ -165,6 +177,57 @@ export default {
         // 选择退款原因
         selectreason(){
             this.popupVisible2=true;
+        },
+        uploadimg(e){
+            let that=this;
+            let fileObject=document.querySelector('.imgupload').files[0];
+            if(!fileObject||!window.FileReader){
+                return;
+            }
+            // console.log(fileObject.type);
+            if (/^image/.test(fileObject.type)) {
+                let reader = new FileReader(); 
+                reader.readAsDataURL(fileObject); 
+                reader.onload=function(){
+                    that.upfile(reader.result);
+                    console.log(reader.result.length);
+                }
+            }
+            else{
+                Toast('只能上传图片');
+                return;
+            }
+        },
+        upfile(file){
+            let that=this;
+            this.$http({
+                url: '/api/zuul/sms/file/fileUpload',
+                method: 'POST',
+                // 请求体重发送的数据
+                // headers: { 'Content-Type': "multipart/form-data" },
+                data:{
+                    fileUpload:file,
+                    type:'product'
+                }
+            })
+            .then(res=>{
+                console.log(res);
+            })
+            .catch(err=>{
+                Toast('上传失败！');
+            })
+            // this.$http.post('/api/zuul/sms/file/fileUpload',
+            // {
+            //     fileUpload:file,
+            //     type:'product'
+            // })
+            // .then(res=>{
+            //     console.log(res);
+            // })
+            // .catch(err=>{
+            //     Toast('上传失败！');
+            // })
+
         }
     }
 }
@@ -338,6 +401,14 @@ export default {
         padding: .3rem .2rem;
         text-align: left;
         overflow: hidden;
+        .vue-file-upload{
+            width:100%;
+            height:100%;
+            position: absolute;
+            opacity: 0;
+            z-index: 999;
+        }
+        
         .imgs{
             margin-top: .2rem;
             li{
@@ -404,6 +475,14 @@ export default {
         .mint-cell{
             text-align: left;
         }
+        
+    }
+    .imgupload{
+        width:100%;
+        height:100%;
+        position: absolute;
+        z-index: 999;
+        opacity: 0;
     }
 }
 </style>
