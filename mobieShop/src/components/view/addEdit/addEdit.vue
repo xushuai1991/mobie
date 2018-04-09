@@ -1,13 +1,13 @@
 <template>
     <div class='addEdit'>
         <mt-field label="用户名：" placeholder="请输入用户名" v-model="username"></mt-field>
-        <mt-field label="手机号：" placeholder="请输入手机号" v-model="username"></mt-field>
-        <mt-field label="大区：" placeholder="请输入大区" v-model="username"><span @click='LargeArea'>选择区域</span></mt-field>
-        <mt-field label="省市区：" placeholder="请输入省市区" v-model="cirty">
+        <mt-field label="手机号：" placeholder="请输入手机号" v-model="useriphone"></mt-field>
+        <mt-field label="大区：" placeholder="请输入大区" v-model="largeAre"><span @click='LargeArea'>选择区域</span></mt-field>
+        <mt-field label="省市区：" placeholder="请输入省市区" v-model="newCity">
             <!-- <span class="location" @click='getDetailedAddress'><i class='icon iconfont icon-dizhi1'></i> 定位</span>!--></mt-field>
         <mt-field label="街道：" placeholder="请输入街道" v-model="street"></mt-field>
         <mt-field label="详情地址：" placeholder="请输入详情地址" v-model="details"></mt-field>
-        <mt-checklist title="" class="morz" v-model="value" align="right" :options="options" @change="checkon">
+        <mt-checklist title="" class="morz" v-model="value" align="right" :options="options">
         </mt-checklist>
         <mt-popup v-model="popupVisible" position="bottom" style='width:100%;'>
             <mt-navbar v-model="selected">
@@ -20,27 +20,27 @@
             <mt-tab-container v-model="selected ">
                 <mt-tab-container-item id="1">
                     <ul class='addStyle'>
-                        <li v-for='(item,index) in largeAreArr' :key='index' v-text='item.regionName' @click="getlarge(item)"></li>
+                        <li v-for='(item,index) in largeAreArr' :class="{'active':item.id ==checkindex }" :key='index' v-text='item.regionName' @click="getlarge(item)"></li>
                     </ul>
                 </mt-tab-container-item>
                 <mt-tab-container-item id="2">
                     <ul class='addStyle'>
-                        <li v-for='(item,index) in proDisId' :key='index' v-text='item' @click="proDis(index)"></li>
+                        <li v-for='(item,index) in proDisId' :class="{'active':item.id ==checkindex1 }" :key='index' v-text='item.regionName' @click="proDis(item)"></li>
                     </ul>
                 </mt-tab-container-item>
                 <mt-tab-container-item id="3">
                     <ul class='addStyle'>
-                        <li v-for='(item,index) in countyInfo' :key='index' v-text='item.regionName' @click="cityDis(item)"></li>
+                        <li v-for='(item,index) in countyInfo' :class="{'active':item.id ==checkindex2 }" :key='index' v-text='item.regionName' @click="cityDis(item)"></li>
                     </ul>
                 </mt-tab-container-item>
                 <mt-tab-container-item id="4">
                     <ul class='addStyle'>
-                        <li v-for='(item,index) in streetInfo' :key='index' v-text='item.regionName' @click="countyDis(item)"></li>
+                        <li v-for='(item,index) in streetInfo' :class="{'active':item.id ==checkindex3 }" :key='index' v-text='item.regionName' @click="countyDis(item)"></li>
                     </ul>
                 </mt-tab-container-item>
                 <mt-tab-container-item id="5">
                     <ul class='addStyle'>
-                        <li v-for='(item,index) in streetInfos' :key='index' v-text='item.regionName' @click="streetDis(item)"></li>
+                        <li v-for='(item,index) in streetInfos' :class="{'active':item.id ==checkindex4 }" :key='index' v-text='item.regionName' @click="streetDis(item)"></li>
                     </ul>
                 </mt-tab-container-item>
             </mt-tab-container>
@@ -48,6 +48,7 @@
         </mt-popup>
         <baidu-map class="bm-view" style='display:none;'>
         </baidu-map>
+        <mt-badge class='btnStyle' @click.native='saveAddInfo' size="large" color="#26a2ff">保存</mt-badge>
     </div>
 </template>
 
@@ -56,15 +57,25 @@
     export default {
         data() {
             return {
+                alertInfo: true,
                 username: '',
+                useriphone: '',
                 largeAre: '', //大区
                 largeAreArr: '',
                 province: '', //省
+                newCity: '',
                 cirty: '', //城市
+                cirty2: '',
+                cirty3: '',
                 county: '', //县
                 street: '', //街道
                 details: '', //详细地址
                 selected: '1',
+                checkindex: 0,
+                checkindex1: 0,
+                checkindex2: 0,
+                checkindex3: 0,
+                checkindex4: 0,
                 provinceIshow: false,
                 cirtyIshwo: false,
                 countyIshwo: false,
@@ -81,14 +92,14 @@
                 streetInfo: [],
                 streetInfos: [],
                 bigDisId: {},
-                proDisId: {},
+                proDisId: [],
                 cityDisId: {},
                 //
                 popupVisible: false,
                 value: [],
                 options: [{
                     label: '默认地址：',
-                    value: 'A'
+                    value: '1'
                 }],
                 // currentLnglat: {  
                 //     lon: 116.331398,
@@ -97,7 +108,98 @@
             }
         },
         methods: {
-            LargeArea() {
+            saveAddInfo() { //提交地址
+             let userId = sessionStorage.getItem("userinfo");
+                userId = JSON.parse(userId).id;
+                let datainfo = {
+                    "areaId": this.checkindex,
+                    "provinceId": this.checkindex1,
+                    "cityId": this.checkindex2,
+                    "districtId": this.checkindex3,
+                    "regionId": this.checkindex4,
+                    "address": this.details,
+                    "consigneeName": this.username,
+                    "consigneeMobilePhone": this.useriphone,
+                    "customerId": userId
+                }
+                 let routerParams = this.$route.params;
+                let userifno = routerParams.dataObj;
+               
+               
+                if (!this.username) {
+                    this.$toast('用户不能为空');
+                    return false
+                }
+                if (!this.checkindex) {
+                    this.$toast('大区不能为空');
+                    return false
+                }
+                if (!this.checkindex2) {
+                    this.$toast('城市不能为空');
+                    return false
+                }
+                if (!this.checkindex4) {
+                    this.$toast('街道不能为空');
+                    return false
+                }
+               
+                if(routerParams.name=='addManagement'){
+                     let datainfo2 = {
+                    "areaId": this.checkindex,
+                    "provinceId": this.checkindex1,
+                    "cityId": this.checkindex2,
+                    "districtId": this.checkindex3,
+                    "regionId": this.checkindex4,
+                    "address": this.details,
+                    "consigneeName": this.username,
+                    "consigneeMobilePhone": this.useriphone,
+                    "customerId": userifno.customerId,
+                    'id':userifno.id
+                }
+                    let url = '/api/customer/address/update?useAsDefault=' + (this.value == true ? true : false);
+                    this.$http({
+                            url: url,
+                            method: 'post',
+                            // 请求体重发送的数据
+                            // headers: {
+                            //     'Content-Type': 'application/x-www-form-urlencoded'
+                            // }
+                            data:datainfo2
+                        })
+                        .then(response => {
+                            console.log(response)
+                            if (response.data.msg = '修改成功') {
+                                this.$toast(response.data.msg);
+                                this.$router.push('./addManagement')
+                            }
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        })
+                }else{
+                    let url = '/api/customer/address/insertOne?useAsDefault=' + (this.value == true ? true : false);
+                    this.$http({
+                            url: url,
+                            method: 'post',
+                            // 请求体重发送的数据
+                            // headers: {
+                            //     'Content-Type': 'application/x-www-form-urlencoded'
+                            // }
+                            data:datainfo
+                        })
+                        .then(response => {
+                            if (response.data.info.msg = '新增成功') {
+                                this.$toast(response.data.info.msg);
+                                this.$router.push('./addManagement')
+                            }
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        })
+                }
+                
+            },
+            LargeArea() { //大区
                 let that = this;
                 //获取地区的
                 this.popupVisible = true;
@@ -145,26 +247,37 @@
                 })
             },
             getlarge(item) { //大区选择
+                this.largeAre = item.regionName
+                this.checkindex = item.id
                 let that = this;
                 that.cirtyIshwo = false;
                 that.countyIshwo = false;
                 that.streetIshow = false;
-                that.proDisId = {};
+                // that.proDisId = {};
                 that.selected = '2'
                 that.provinceIshow = true;
-                    that.proInfo.forEach(function(e, i) {
-                        if (e.parentCode == (item.id)) {
-                            that.proDisId[e.id] = e.regionName;
-                            console.log(that.proDisId)
-                        }
+                this.$http.get('/api/public/region/findParent?parentId=' + item.id)
+                    .then(res => {
+                        that.provinceIshow = true;
+                        that.selected = '2';
+                        this.proDisId = res.data.info
+                    }).catch(err => {
+                        console.log(err)
                     });
+                // that.proInfo.forEach(function(e, i) {
+                //     if (e.parentCode == (item.id)) {
+                //         that.proDisId[e.id] = e.regionName;
+                //     }
+                //     alert('..')
+                // });
             },
             proDis(item) { //省选择
-                console.log(item)
+                this.cirty = item.regionName;
+                this.checkindex1 = item.id
                 let that = this;
                 that.countyIshwo = false;
                 that.streetIshow = false;
-                this.$http.get('/api/public/region/findParent?parentId=' + item)
+                this.$http.get('/api/public/region/findParent?parentId=' + item.id)
                     .then(res => {
                         that.cirtyIshwo = true;
                         that.selected = '3';
@@ -174,6 +287,9 @@
                     });
             },
             cityDis(item) { //市选择
+                this.cirty1 = ''
+                this.cirty1 = item.regionName;
+                this.checkindex2 = item.id
                 let that = this;
                 that.streetIshow = false;
                 this.$http.get('/api/public/region/findParent?parentId=' + item.id)
@@ -181,13 +297,39 @@
                         //console.log(res.data.info);
                         that.selected = '4'
                         that.countyIshwo = true;
-                        this.streetInfo = res.data.info;
+                        if (res.data.info.length == 0) {
+                            this.streetInfo = [{
+                                regionName: '暂无地区',
+                                id: 0
+                            }]
+                        } else {
+                            this.streetInfo = res.data.info;
+                        }
                     }).catch(err => {
                         console.log(err)
                     });
             },
-            countyDis(item) {
+            countyDis(item) { //区
+                if (item.regionName == "其他区域") {
+                    this.newCity = ''
+                    this.newCity = this.cirty + this.cirty1 + this.cirty2;
+                    this.btnClose();
+                }
+                if (item.regionName !== '暂无地区') {
+                    this.cirty2 = '';
+                    this.cirty2 = item.regionName;
+                    this.newCity = ''
+                    this.newCity = this.cirty + this.cirty1 + this.cirty2
+                } else {
+                    this.newCity = ''
+                    this.newCity = this.cirty + this.cirty1 + this.cirty2
+                }
+                this.checkindex3 = item.id
                 let that = this;
+                if (item.id == 0) {
+                    this.btnClose();
+                    return false
+                }
                 this.$http.get('/api/public/region/findParent?parentId=' + item.id)
                     .then(res => {
                         //console.log(res.data.info);
@@ -198,13 +340,17 @@
                         console.log(err)
                     });
             },
-            streetDis(item) {
-                console.log(item)
+            streetDis(item) { //街道
+                this.newCity = ''
+                this.newCity = this.cirty + this.cirty1 + this.cirty2
+                this.street = item.regionName;
+                this.checkindex4 = item.id
+                this.btnClose();
             },
-            btnClose() {
+            btnClose() { //关闭弹窗
                 this.popupVisible = false;
             },
-            getDetailedAddress() {  
+            getDetailedAddress() {   //定位
                 let that = this;
                 var geolocation = new BMap.Geolocation();  
                 geolocation.getCurrentPosition(function(r) {    
@@ -227,20 +373,53 @@
                 }, {
                     enableHighAccuracy: true
                 })
-            },
-            checkon() {
-                console.log('checkon')
+            }
+        },
+        created() {
+            let routerParams = this.$route.params;
+            let userifno = routerParams.dataObj;
+            if (userifno) {
+                console.log(userifno)
+                this.username = userifno.consigneeName
+                this.useriphone = userifno.consigneeMobilePhone
+                this.checkindex = userifno.areaId
+                this.checkindex1 = userifno.provinceId
+                this.checkindex2 = userifno.cityIdId
+                this.checkindex3 = userifno.districtIdId
+                this.checkindex4 = userifno.regionIdId
+                this.LargeArea()
+                this.getlarge(userifno.area)
+                this.proDis(userifno.province)
+                this.cityDis(userifno.city)
+                this.countyDis(userifno.district)
+                this.streetDis(userifno.region)
+                this.provinceIshow = true;
+                this.cirtyIshwo = true;
+                this.countyIshwo = true;
+                this.streetIshow = true;
+                this.selected = '5'
+                this.details = userifno.address
+                this.value = userifno.isDefaultAddress
             }
         }
     }
 </script>
 <style lang="less">
-    .closeBtn{
-        line-height:1rem;
-        text-align:center;
-        background:#26a2ff;
-        color:#fff;
-        font-size:0.3rem;
+    .btnStyle {
+        margin-top: 0.5rem;
+        margin-left: 45%;
+        padding: 0.1rem 0.2rem !important;
+        font-size: 0.3rem !important;
+    }
+    .addEdit .active {
+        color: #26a2ff;
+    }
+    .closeBtn {
+        line-height: 1rem;
+        text-align: center;
+        background: #26a2ff;
+        color: #fff;
+        font-size: 0.3rem;
     }
     .addStyle {
         font-size: 0.3rem;
@@ -274,7 +453,7 @@
                 // padding: 0 4.8rem 0 0.08rem;
             }
             .mint-checkbox-core {
-                left: -4.5rem;
+                left: -4.8rem;
             }
         }
     }

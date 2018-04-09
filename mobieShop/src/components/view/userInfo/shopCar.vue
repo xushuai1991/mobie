@@ -1,12 +1,11 @@
 <template>
     <div class='Cmycar'>
-        <mt-header fixed  title="购物车">
+        <mt-header fixed title="购物车">
         </mt-header>
         <section>
             <div class="wrap2">
                 <div class="goods_list">
                     <ul class="mui-table-view" infinite-scroll-immediate-check="false">
-                        
                         <!--li数据遍历循环部分-->
                         <li class="mui-table-view-cell" v-for="(item,index) in list" :key="index">
                             <div class="cart">
@@ -17,7 +16,7 @@
                                         <p></p>
                                     </div>
                                     <div class="goodsBox list-item" v-for="(items,indexs) in item.listgoods" :key="indexs" data-type="0">
-                                        <div class="list-box" @touchstart.capture="touchStart"   @touchend.capture="touchEnd" @click="skip">
+                                        <div class="list-box" @touchstart.capture="touchStart" @touchmove.capture="touchmove" @touchend.capture="touchEnd" @click="skip">
                                             <ul class="goods_detail" style='overflow: hidden; margin-top:0.2rem;'>
                                                 <li class="goods_img" style="margin-left:0px;">
                                                     <img :src="items.img">
@@ -37,8 +36,8 @@
                                                     </div>
                                                 </li>
                                                 <!-- <span class="mui_shopcar_del" @click="remove(index,indexs)">
-                                                                        <i class='icon iconfont icon-lajitong'></i>
-                                                                    </span>!-->
+                                                                                        <i class='icon iconfont icon-lajitong'></i>
+                                                                                    </span>!-->
                                             </ul>
                                             <div class="delete" @click="deleteSection(index,indexs)" :data-index="index">删除</div>
                                         </div>
@@ -99,7 +98,9 @@
     </div>
 </template>
 <script>
-    import {MessageBox} from 'mint-ui';
+    import {
+        MessageBox
+    } from 'mint-ui';
     export default {
         data() {
             return {
@@ -117,6 +118,8 @@
                 OrderTotal: 0,
                 startX: 0,
                 endX: 0,
+                startY: 0,
+                moveEndY: 0,
                 list: [
                     // shop:[{'img': require('./../homepage/recommend/recommendImage/1.jpg')}],
                     {
@@ -262,8 +265,36 @@
                 return total; //返回总价
             }
         },
+        created() {
+            this.getCarData()
+        },
         methods: {
-            
+            //购物车数据群
+            getCarData() {
+                let userInfo = sessionStorage.getItem("userinfo");
+                let userInfoId = JSON.parse(userInfo).id
+                let that = this;
+                let getdata = new Promise(function(rel, rej) {
+                    let url = '/api/product/shoppingCart/queryCommodityInfoByCustomerId?key=companyId&customerId='+userInfoId;
+                    that.$http({
+                        url: url,
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        data: {}
+                    }).then(response => {
+                        rel(response)
+                    }).catch(error => {
+                        rej(error)
+                    })
+                })
+                getdata.then(function(result) {
+                    console.log(result)
+                }).catch(function(errmsg) {
+                    console.log(errmsg)
+                })
+            },
             //无限加载函数
             checkShop(pID) { //商品的全选和反宣
                 var self = this.list[pID];
@@ -361,23 +392,33 @@
             touchStart(e) {
                 // 记录初始位置
                 this.startX = e.touches[0].clientX;
-                
-                // 
-                //this.addEventListener('touchmove',this.touchmove(e));
+                this.startY = e.changedTouches[0].pageY;
             },
-            // touchmove(e){
-            //     e.preventDefault(); 
-            // },
+            touchmove(e) {
+                this.moveEndY = e.changedTouches[0].pageY;
+                let Y = this.moveEndY - this.startY;
+                //    if (Math.abs(Y) >= 10) {　
+                //         console.log(1)　　　　　
+                //         document.addEventListener('touchmove', this.handler, false);　　　　
+                //     }else{
+                //         console.log(2)　　　　
+                //          document.removeEventListener('touchmove', this.handler, false);
+                //     }
+            },
+            handler() {
+                event.preventDefault();
+            },
             //滑动结束
             touchEnd(e) {
                 // 当前滑动的父级元素
                 let parentElement = e.currentTarget.parentElement;
-               
+                //  e.preventDefault(); 
                 // 记录结束位置
                 this.endX = e.changedTouches[0].clientX;
                 // 左滑
-                if (parentElement.dataset.type == 0 && this.startX - this.endX > 30) {
+                if (parentElement.dataset.type == 0 && this.startX - this.endX > 50) {
                     this.restSlide();
+                    // console.log('..')
                     parentElement.dataset.type = 1;
                 }
                 // 右滑
@@ -387,7 +428,6 @@
                 }
                 this.startX = 0;
                 this.endX = 0;
-                // this.removeEventListener('touchmove',this.touchmove(e));
             },
             //判断当前是否有滑块处于滑动状态
             checkSlide() {
@@ -690,8 +730,7 @@
         display: flex;
         flex-wrap: nowrap;
         justify-content: space-around;
-        font-size: .26rem;
-        // position: fixed;
+        font-size: .26rem; // position: fixed;
         // bottom: .9rem;
         z-index: 11;
         text-align: center;
