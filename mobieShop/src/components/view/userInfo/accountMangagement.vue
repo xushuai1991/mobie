@@ -2,34 +2,47 @@
     <section class='accountMangagement'>
         <div class="portrait">
             <div class="my_portrait">头像
-                <div class="check">
-                    <div class="check_img"><img src="static/HMMobilePhone/dsit/img/headPortrait2.png" alt=""></div>
+                <div class='upImgs'>
+                    <div style="padding:20px;">
+                        <div class="show">
+                            <div class="picture" :style="'backgroundImage:url('+headerImage+')'"></div>
+                        </div>
+                        <div style="margin-top:20px;">
+                            <input type="file" id="upload" accept="image" @change="upload">
+                            <label for="upload"></label>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="meaningless"></div>
         <div class="user_name" @click="handleClick(item)" v-for='(item,index) in userIfo'>{{item.name}}<span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>
         <!--<div class="true_name">真实姓名<span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>
-                    <div class="sex">性别<span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>
-                    <div class="meaningless "></div>
-                    <div class="contact">
-                        <div class="my_contact">联系方式
-                            <div class="check check_num"></div>
-                            <span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span>
-                        </div>
-                    </div>
-                    <div class="address">地址<span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>
-                    <div class="meaningless "></div>
-                    <div class="account_safety">密码修改 <span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>!-->
+                                                        <div class="sex">性别<span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>
+                                                        <div class="meaningless "></div>
+                                                        <div class="contact">
+                                                            <div class="my_contact">联系方式
+                                                                <div class="check check_num"></div>
+                                                                <span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="address">地址<span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>
+                                                        <div class="meaningless "></div>
+                                                        <div class="account_safety">密码修改 <span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>!-->
         <mt-popup v-model="popupVisible" position="right">
             <div class='userInfoBox'>
                 <h1>{{userName}}</h1>
-                <div>{{listName}}<input type='text' placeholder='请输入'></div>
-                <div>{{listName2}}<input type='text' placeholder='请输入'></div>
-                <div v-show='isShow'>{{listName2}}<input type='text'></div>
+                <div v-if='israido'>
+                    <div class='textinfo'>{{listName}}<input type='text' placeholder='请输入' :disabled='isTtrue' v-model='userInput1'></div>
+                    <div class='textinfo'>{{listName2}}<input type='text' placeholder='请输入' v-model='userInput2'></div>
+                </div>
+                <div v-else class='radios'>
+                    <mt-radio title="单项选择" v-model="value" :options="options" @change="check">
+                    </mt-radio>
+                </div>
                 <div class='isOk'>
-                <input type='button' class='orderOk' value='确认'/>
-                <input type='button' @click='clearBox' value='取消'/>
+                    <input type='button' class='orderOk' value='确认' @click='upData' />
+                    <input type='button' @click='clearBox' value='取消' />
                 </div>
             </div>
             </div>
@@ -37,14 +50,32 @@
     </section>
 </template>
 <script>
+    import Exif from 'exif-js'
     export default {
         data() {
             return {
+                headerImage: '',
                 popupVisible: false,
+                uerserInfo: '',
+                isTtrue: false,
+                israido: true,
                 userName: '',
+                userInput1: '',
+                userInput2: '',
+                userInput3: '',
                 listName: '',
                 listName2: '',
                 isShow: false,
+                value: "0",
+                options: [{
+                        label: '女',
+                        value: '0'
+                    },
+                    {
+                        label: '男',
+                        value: '1'
+                    }
+                ],
                 userIfo: [{
                         name: '昵称',
                         listname1: '用户姓名:',
@@ -52,34 +83,352 @@
                         isShow: false
                     },
                     {
-                        name: '真实姓名'
-                    },
-                    {
                         name: '性别'
                     },
                     {
-                        name: '联系方式'
+                        name: '联系方式',
+                        listname1: '手机号:',
+                        listname2: '修改手机号',
                     },
                     {
                         name: '地址'
                     },
                     {
-                        name: '修改密码'
+                        name: '修改密码',
+                        isShow: true,
+                        listname1: '新密码',
+                        listname2: '重复新密码',
                     },
                 ]
             }
         },
+        created() {
+            this.getUserInfo();
+        },
         methods: {
+            check: function() {
+                console.log(this.value)
+            },
+            getUserInfo() {
+                let that = this;
+                let data = sessionStorage.getItem("userinfo");
+                data = JSON.parse(data);
+                let getdata = new Promise(function(rel, rej) {
+                    let url = '/api/customer/account/query';
+                    that.$http({
+                        url: url,
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        data: {
+                            id: data.id
+                        }
+                    }).then(response => {
+                        rel(response)
+                    }).catch(error => {
+                        rej(error)
+                    })
+                })
+                getdata.then(function(result) {
+                    that.uerserInfo = (result)
+                    that.headerImage = that.uerserInfo.data.info.list[0].avatar
+                }).catch(function(errmsg) {
+                    console.log(errmsg)
+                })
+            },
+            upData() {
+                let url = '/api/customer/account/update';
+                let dataInfo = {}
+                if (this.userName == '昵称') {
+                    dataInfo = {
+                        name: this.userInput2
+                    }
+                }
+                if (this.userName == '性别') {
+                    dataInfo = {
+                        gender: this.value
+                    }
+                }
+                if (this.userName == '联系方式') {
+                    dataInfo = {
+                        mobile: this.userInput2
+                    }
+                }
+                if (this.userName == '修改密码') {
+                    console.log(this.userInput1 != this.userInput2)
+                    if (this.userInput2.length < 6) {
+                        alert("密码长度小于6");
+                        return false
+                    }
+                    if (this.userInput2 != this.userInput1) {
+                        alert("两次密码不一支");
+                        return false
+                    }
+                    dataInfo = {
+                        password: this.userInput2
+                    }
+                    this.$http({
+                        url: url,
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        data: JSON.stringify(dataInfo)
+                    }).then(response => {
+                        if (response.data.msg == '修改成功') {
+                            alert("修改成功")
+                            this.userInput2 = '';
+                            this.$router.push('/login');
+                            this.clearBox()
+                        }
+                    }).catch(error => {
+                        console.log(error)
+                    })
+                }
+                this.$http({
+                    url: url,
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(dataInfo)
+                }).then(response => {
+                    if (response.data.msg == '修改成功') {
+                        this.getUserInfo();
+                        this.userInput2 = '';
+                        this.clearBox()
+                    }
+                }).catch(error => {
+                    console.log(error)
+                })
+            },
             handleClick: function(name) {
+                let data = this.uerserInfo.data.info.list[0];
+                let orderOk = document.querySelector(".orderOk");
+                this.israido = true
+                if (name.name == '昵称') {
+                    this.userInput1 = data.name;
+                    this.isTtrue = true
+                }
+                if (name.name == '性别') {
+                    this.userInput1 = data.name;
+                    this.israido = false
+                }
+                if (name.name == '联系方式') {
+                    this.userInput1 = data.mobile;
+                    this.isTtrue = true;
+                    // if(this.userInput2){
+                    //     upData('mobile',this.userInput2)
+                    // }
+                }
+                if (name.name == '修改密码') {
+                    this.userInput1 = '';
+                    this.isTtrue = false;
+                    // if(this.userInput2){
+                    //     upData('password',this.userInput2)
+                    // }
+                }
+                if (name.name == '地址') {
+                    this.$router.push({
+                        path: '/addManagement',
+                        name: 'addManagement',
+                        params: {
+                            name: 'accountMangagement',
+                            dataObj: '1111'
+                        }
+                    });
+                    return false
+                }
                 this.popupVisible = true;
                 this.userName = name.name;
                 this.listName = name.listname1;
                 this.listName2 = name.listname2;
+                this.listName3 = name.listname3;
                 this.isShow = name.isShow;
             },
-            clearBox(){
-                this.popupVisible=false
-            }
+            clearBox() {
+                this.popupVisible = false
+            },
+            upload(e) {
+                let files = e.target.files || e.dataTransfer.files;
+                if (!files.length) return;
+                this.picValue = files[0];
+                this.imgPreview(this.picValue);
+            },
+            imgPreview(file) {
+                let self = this;
+                let Orientation;
+                //去获取拍照时的信息，解决拍出来的照片旋转问题 
+                Exif.getData(file, function() {
+                    Orientation = Exif.getTag(this, 'Orientation');
+                });
+                // 看支持不支持FileReader 
+                if (!file || !window.FileReader) return;
+                if (/^image/.test(file.type)) {
+                    // 创建一个reader 
+                    let reader = new FileReader();
+                    // 将图片2将转成 base64 格式 
+                    reader.readAsDataURL(file);
+                    // 读取成功后的回调 
+                    reader.onloadend = async function() {
+                        let result = this.result;
+                        let img = new Image();
+                        img.src = result;
+                        //判断图片是否大于100K,是就直接上传，反之压缩图片 
+                        if (this.result.length <= (100 * 1024)) {
+                            self.headerImage = this.result;
+                            self.postImg();
+                        } else {
+                            img.onload = function() {
+                                let data = self.compress(img, Orientation);
+                                console.log(data)
+                                self.headerImage = data;
+                                self.postImg(data);
+                            }
+                        }
+                    }
+                }
+            },
+            postImg(data) {
+                let dataInfo = {
+                    avatar: data
+                }
+                //这里写接口 
+                let url = '/api/customer/account/update';
+                this.$http({
+                    url: url,
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(dataInfo)
+                }).then(response => {
+                    console.log(response)
+                    if (response.data.msg == '修改成功') {
+                        this.getUserInfo();
+                        this.userInput2 = '';
+                        this.clearBox()
+                    }
+                }).catch(error => {
+                    console.log(error)
+                })
+            },
+            rotateImg(img, direction, canvas) {
+                //最小与最大旋转方向，图片旋转4次后回到原方向 
+                const min_step = 0;
+                const max_step = 3;
+                if (img == null) return;
+                //img的高度和宽度不能在img元素隐藏后获取，否则会出错 
+                let height = img.height;
+                let width = img.width;
+                let step = 2;
+                if (step == null) {
+                    step = min_step;
+                }
+                if (direction == 'right') {
+                    step++;
+                    //旋转到原位置，即超过最大值 
+                    step > max_step && (step = min_step);
+                } else {
+                    step--;
+                    step < min_step && (step = max_step);
+                }
+                //旋转角度以弧度值为参数 
+                let degree = step * 90 * Math.PI / 180;
+                let ctx = canvas.getContext('2d');
+                switch (step) {
+                    case 0:
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(img, 0, 0);
+                        break;
+                    case 1:
+                        canvas.width = height;
+                        canvas.height = width;
+                        ctx.rotate(degree);
+                        ctx.drawImage(img, 0, -height);
+                        break;
+                    case 2:
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.rotate(degree);
+                        ctx.drawImage(img, -width, -height);
+                        break;
+                    case 3:
+                        canvas.width = height;
+                        canvas.height = width;
+                        ctx.rotate(degree);
+                        ctx.drawImage(img, -width, 0);
+                        break;
+                }
+            },
+            compress(img, Orientation) {
+                let canvas = document.createElement("canvas");
+                let ctx = canvas.getContext('2d');
+                //瓦片canvas 
+                let tCanvas = document.createElement("canvas");
+                let tctx = tCanvas.getContext("2d");
+                let initSize = img.src.length;
+                let width = img.width;
+                let height = img.height;
+                //如果图片大于四百万像素，计算压缩比并将大小压至400万以下 
+                let ratio;
+                if ((ratio = width * height / 4000000) > 1) {
+                    console.log("大于400万像素")
+                    ratio = Math.sqrt(ratio);
+                    width /= ratio;
+                    height /= ratio;
+                } else {
+                    ratio = 1;
+                }
+                canvas.width = width;
+                canvas.height = height;
+                // 铺底色 
+                ctx.fillStyle = "#fff";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                //如果图片像素大于100万则使用瓦片绘制 
+                let count;
+                if ((count = width * height / 1000000) > 1) {
+                    console.log("超过100W像素");
+                    count = ~~(Math.sqrt(count) + 1); //计算要分成多少块瓦片 
+                    //  计算每块瓦片的宽和高 
+                    let nw = ~~(width / count);
+                    let nh = ~~(height / count);
+                    tCanvas.width = nw;
+                    tCanvas.height = nh;
+                    for (let i = 0; i < count; i++) {
+                        for (let j = 0; j < count; j++) {
+                            tctx.drawImage(img, i * nw * ratio, j * nh * ratio, nw * ratio, nh * ratio, 0, 0, nw, nh);
+                            ctx.drawImage(tCanvas, i * nw, j * nh, nw, nh);
+                        }
+                    }
+                } else {
+                    ctx.drawImage(img, 0, 0, width, height);
+                }
+                //修复ios上传图片的时候 被旋转的问题 
+                if (Orientation != "" && Orientation != 1) {
+                    switch (Orientation) {
+                        case 6: //需要顺时针（向左）90度旋转 
+                            this.rotateImg(img, 'left', canvas);
+                            break;
+                        case 8: //需要逆时针（向右）90度旋转 
+                            this.rotateImg(img, 'right', canvas);
+                            break;
+                        case 3: //需要180度旋转 
+                            this.rotateImg(img, 'right', canvas); //转两次 
+                            this.rotateImg(img, 'right', canvas);
+                            break;
+                    }
+                }
+                //进行最小压缩 
+                let ndata = canvas.toDataURL('image/jpeg', 0.1);
+                console.log('压缩前：' + initSize);
+                console.log('压缩后：' + ndata.length);
+                console.log('压缩率：' + ~~(100 * (initSize - ndata.length) / initSize) + "%");
+                tCanvas.width = tCanvas.height = canvas.width = canvas.height = 0;
+                return ndata;
+            },
         },
     }
 </script>
@@ -87,12 +436,41 @@
     #app {
         overflow: hidden;
     }
+    .upImgs {
+        z-index: 100;
+        top: -2.1rem;
+    }
+    #upload {
+        position: absolute;
+        top: -1.85rem;
+        left: 0.3rem;
+        opacity: 0;
+        height: 1.5rem;
+        width: 1.5rem;
+    }
+    .show {
+        width: 1.5rem;
+        height: 1.5rem;
+        overflow: hidden;
+        position: relative;
+        border-radius: 50%;
+        border: 1px solid #d5d5d5;
+        margin-left: 0.3rem;
+    }
+    .picture {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
 </style>
 <style lang="less" scoped>
-input[type=button]{
-	-webkit-appearance:none;
-	outline:none
-}
+    input[type=button] {
+        -webkit-appearance: none;
+        outline: none
+    }
     .userInfoBox {
         text-align: center;
         h1 {
@@ -103,8 +481,8 @@ input[type=button]{
             line-height: 1rem;
             font-size: 0.3rem;
         }
-        div {
-            height:1rem;
+        .textinfo {
+            height: 1rem;
             line-height: 1.32rem;
             width: 80%;
             margin-left: 10%;
@@ -118,20 +496,20 @@ input[type=button]{
         }
         .isOk {
             border: none;
-            text-align:center;
+            text-align: center;
             margin-top: 0.2rem;
             input {
-                padding:0.1rem 0.3rem;
-                border:1px solid #ddd;
-                :nth-child(1){
-                    background:red;
+                padding: 0.1rem 0.3rem;
+                border: 1px solid #ddd;
+                 :nth-child(1) {
+                    background: red;
                 }
             }
-            .orderOk{
-               background:#26a2ff; 
-               color:#fff;
-               border:1px solid #26a2ff;
-               margin-right:0.2rem;
+            .orderOk {
+                background: #26a2ff;
+                color: #fff;
+                border: 1px solid #26a2ff;
+                margin-right: 0.2rem;
             }
         }
     }
@@ -139,7 +517,7 @@ input[type=button]{
         overflow: hidden;
         position: absolute;
         width: 80%;
-        padding-bottom:0.4rem;
+        padding-bottom: 0.4rem;
         left: 10%;
         top: -3rem;
         border-radius: 0.4rem;
