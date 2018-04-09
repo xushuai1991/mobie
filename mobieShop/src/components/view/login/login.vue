@@ -142,9 +142,10 @@ export default {
                     var msg = res.data.msg
                     if (msg !== '登录成功') {
                         Toast(res.data.info);
-                        // this.cleardata();
                     } else {
-                        this.$store.commit('login',res.data.info)
+                        let data=res.data.info;
+                        sessionStorage.setItem('userinfo', JSON.stringify(data));
+                        // this.$store.commit('login',res.data.info)
                         // let userinfo = res.data
                         // sessionStorage.setItem('userinfo', JSON.stringify(data));
                         setTimeout(() => {
@@ -180,10 +181,11 @@ export default {
                     this.$http.post('/api/customer/account/quickLogin?mobile='+that.phone+'&code='+that.code)
                     .then(function(response){
                         Toast(response.data.msg);
-                        console.log(response.data.status)
-                        console.log(response.data.info)
+                        Indicator.close();
                         if(response.data.status == 200){
-                            that.$store.commit('login',response.data.info)
+                            let data=response.data.info;
+                            sessionStorage.setItem('userinfo', JSON.stringify(data));
+                            // that.$store.commit('login',response.data.info)
                             // this.cleardata();
                             // this.$store.commit('login',res.data)
                             setTimeout(() => {

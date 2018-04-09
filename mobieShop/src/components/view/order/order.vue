@@ -10,7 +10,7 @@
         <mt-tab-container v-model="selected">
             <!-- 全部 -->
             <mt-tab-container-item id="all">
-                <ul v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10" class='orderlist'>
+                <ul  v-infinite-scroll="loadMore" :infinite-scroll-disabled="loading[0]" infinite-scroll-distance="10" class='orderlist'>
                     <li v-for="item in list1" :key="item">
                         <pendpay></pendpay>
                     </li>
@@ -22,7 +22,7 @@
             </mt-tab-container-item>
             <!-- 待付款 -->
             <mt-tab-container-item id="willpay">
-                <ul v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10" class='orderlist'>
+                <ul v-infinite-scroll="loadMore1" :infinite-scroll-disabled="loading[1]" infinite-scroll-distance="10" class='orderlist'>
                     <li v-for="item in list2" :key="item">
                         <pendpay></pendpay>
                     </li>
@@ -34,7 +34,7 @@
             </mt-tab-container-item>
             <!-- 待服务 -->
             <mt-tab-container-item id="willservice">
-                <ul v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10" class='orderlist'>
+                <ul v-infinite-scroll="loadMore2" :infinite-scroll-disabled="loading[2]" infinite-scroll-distance="10" class='orderlist'>
                     <li v-for="item in list2" :key="item">
                         <inservice></inservice>
                     </li>
@@ -46,7 +46,7 @@
             </mt-tab-container-item>
             <!-- 服务中 -->
             <mt-tab-container-item id="inservice">
-                <ul v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10" class='orderlist'>
+                <ul v-infinite-scroll="loadMore3" :infinite-scroll-disabled="loading[3]" infinite-scroll-distance="10" class='orderlist'>
                     <li v-for="item in list2" :key="item">
                         <willservice></willservice>
                     </li>
@@ -58,7 +58,7 @@
             </mt-tab-container-item>
             <!-- 待评价 -->
             <mt-tab-container-item id="willevaluate">
-                <ul v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10" class='orderlist'>
+                <ul v-infinite-scroll="loadMore4" :infinite-scroll-disabled="loading[4]" infinite-scroll-distance="10" class='orderlist'>
                     <li v-for="item in list2" :key="item">
                         <willevaluate></willevaluate>
                     </li>
@@ -86,7 +86,7 @@ export default {
             list3:[1,2,3,4],
             list4:[1,2,3,4],
             list5:[1,2,3,4],
-            loading:false
+            loading:[false,false,false,false]
         };
     },
     created(){
@@ -95,15 +95,20 @@ export default {
     },
     methods:{
         loadMore() {
-            this.loading = true;
+            console.log(111);
+            this.loading[0] = true;
             setTimeout(() => {
                 let last = this.list1[this.list1.length - 1];
                 for (let i = 1; i <= 2; i++) {
                 this.list1.push(last + i);
                 }
-                this.loading = false;
+                this.loading[0] = false;
             }, 2500);
-        }
+        },
+        loadMore1(){},
+        loadMore2(){},
+        loadMore3(){},
+        loadMore4(){}
     },
 }
 </script>
