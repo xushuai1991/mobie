@@ -104,7 +104,7 @@
                         </router-link>
                     </li>
                     <li>
-                        <router-link to=''>
+                        <router-link to='Coupon'>
                             <i class='icon iconfont icon-youhuijuan fontSize operaicon'></i>
                             <i class='flag'></i>
                             <p class='name_opera'>优惠券</p>
