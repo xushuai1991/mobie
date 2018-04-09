@@ -90,6 +90,7 @@
 <script>
 import {checkClass} from '../../../assets/javascript/checkClass.js'
 import { Toast } from 'mint-ui'
+import { Indicator } from 'mint-ui';
 export default {
     data(){
         return {
@@ -128,6 +129,7 @@ export default {
         // 登录
         login(){
             if(this.phonejson.status&&this.pswjson.status&&this.codejson.status){
+                Indicator.open('Loading...');
                 let that=this;
                 this.$http({
                     url: '/api/customer/account/login?mobile='+this.phone+'&password='+this.psw,
@@ -138,6 +140,7 @@ export default {
                     }
                 })
                 .then(res => {
+                    Indicator.close();
                     console.log(res);
                     var msg = res.data.msg
                     if (msg !== '登录成功') {
@@ -159,6 +162,7 @@ export default {
                     }
                 })
                 .catch(err => {
+                    Indicator.close();
                     console.log("错误")
                     console.log(err)
                 })
@@ -171,6 +175,7 @@ export default {
         },
         // 快速登录
         loginquick(){
+            Indicator.open('Loading...');
             let that = this
             if(this.phonejson.status){
                 if(this.code==''){
@@ -200,6 +205,7 @@ export default {
                        
                     })
                     .catch(function(response){
+                        Indicator.close();
                          Toast('登录失败');
                     });
                 }
