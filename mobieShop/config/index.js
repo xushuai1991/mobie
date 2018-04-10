@@ -17,6 +17,13 @@ module.exports = {
                 pathRewrite: {
                     '^/api': '/'
                 }
+            },
+            '/weipay': {
+                target: 'https://api.mch.weixin.qq.com/', //设置你调用的接口域名和端口号 别忘了加http
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/weipay':''
+                }
             }
         },
 

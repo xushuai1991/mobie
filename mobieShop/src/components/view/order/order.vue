@@ -97,11 +97,7 @@ export default {
     methods:{
         getOrderList(pagenum){
             let that=this;
-            this.$http.post('/api/product/order/queryPageList',
-            {
-                pageSize:10,
-                pageNum:pagenum
-            })
+            this.$http.post('/api/product/order/mall/find?pageNo='+pagenum+'&pageSize=10',{})
             .then(res=>{
                 console.log(res);
             })

@@ -71,17 +71,17 @@
             <span class='value'>￥{{totalprice}}</span>
         </div>
         <!-- 积分抵扣 -->
-        <div class='deduction'>
+        <div class='deduction' v-if='scorecandeduct!=0'>
             <p class='label'>
-                <span>积分抵扣</span>
+                <span>{{scorecandeduct}}积分可以扣{{moneycanduct}}元</span>
                 <input type="checkbox" style='float:right;' v-model='isdeduction'>    
             </p>
-            <ul v-if='isdeduction'>
+            <!-- <ul v-if='isdeduction'>
                 <li v-for='(item,index) in deductionlist' :key='index'>
                     <label for="">{{item.label}}</label>
                     <input type="radio" v-model="deductionvalue" :value='index' name='deduction'>
                 </li>
-            </ul>
+            </ul> -->
         </div>
         <!-- 优惠券抵扣 -->
         <div class='coupon'>
@@ -139,7 +139,7 @@
                 <p>共1件产品</p>
                 <p>合计：<span class='price'>￥{{finalprice}}</span></p>
             </span>
-            <button class='submit'>提交订单</button>
+            <button class='submit' @click='submitorder'>提交订单</button>
         </div>
     </div>
 </template>
@@ -147,6 +147,7 @@
 import {formatdate} from '../../../assets/javascript/formatdate.js'
 import { MessageBox } from 'mint-ui'
 import { Toast } from 'mint-ui'
+import {weixinPay} from '../../../assets/javascript/weixinpay.js'
 export default {
     data(){
         return{
@@ -199,6 +200,8 @@ export default {
                 }
             ],
             isdeduction:true,
+            scorecandeduct:0,
+            moneycanduct:0,
             deductionlist:[
                 {
                     score:'100',
@@ -274,6 +277,7 @@ export default {
     },
     created:function(){
         this.$root.$emit('header','确认订单');
+        let data=this.$route.params.dataobj;
     },
     methods:{
         selectpaytype(e){
@@ -321,6 +325,11 @@ export default {
                     this.goodslist[index].num=value;
                 }
             }).catch(()=>{});
+        },
+        // 随机字符
+       
+        submitorder(){
+            weixinpay();
         }
     }
 }

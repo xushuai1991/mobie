@@ -238,6 +238,16 @@ import { Indicator } from 'mint-ui';
                             }
                             that.commoditylist.push(json);
                         });
+                        let length=res.data.info.list.length;
+                        if(length!=0){
+                            that.pagenum=length>=10?pagenum+1:pagenum;
+                        }
+                        else{
+                            setTimeout(() => {
+                                this.$refs.loadmore.onBottomLoaded();
+                                Toast('数据已加载完');
+                            }, 1000);
+                        }
                     }
                     else{
                         console.log(res);
@@ -268,20 +278,24 @@ import { Indicator } from 'mint-ui';
                 
             },
             loadMore(index) {
-                console.log(this.pagenum,this.maxpagenum);
-                if(this.pagenum<this.maxpagenum){
-                    this.pagenum+=1;
-                    this.getCommoditylist(this.pagenum,false);
-                    setTimeout(() => {
-                        this.$refs.loadmore.onBottomLoaded();
-                    }, 1000);
-                }
-                else{
-                    setTimeout(() => {
-                        this.$refs.loadmore.onBottomLoaded();
-                        Toast('数据已加载完');
-                    }, 1000);
-                }
+                this.getCommoditylist(this.pagenum,false);
+                setTimeout(() => {
+                    this.$refs.loadmore.onBottomLoaded();
+                }, 1000);
+                // console.log(this.pagenum,this.maxpagenum);
+                // if(this.pagenum<this.maxpagenum){
+                //     // this.pagenum+=1;
+                //     this.getCommoditylist(this.pagenum+1,false);
+                //     setTimeout(() => {
+                //         this.$refs.loadmore.onBottomLoaded();
+                //     }, 1000);
+                // }
+                // else{
+                //     setTimeout(() => {
+                //         this.$refs.loadmore.onBottomLoaded();
+                //         Toast('数据已加载完');
+                //     }, 1000);
+                // }
                 
                 
             }

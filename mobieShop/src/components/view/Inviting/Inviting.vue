@@ -58,6 +58,7 @@ export default {
     created(){
         this.share()
         this.shareUrlFn()
+        this.$root.$emit('header','邀请注册');
     },
     methods:{
         shareUrlFn(){
