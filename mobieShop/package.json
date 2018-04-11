@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
+    "exif-js": "^2.3.0",
     "vue": "^2.5.2",
     "vue-baidu-map": "^0.21.3",
     "vue-router": "^3.0.1",

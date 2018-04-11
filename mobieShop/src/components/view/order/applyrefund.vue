@@ -67,11 +67,16 @@
                 <p>上传凭证</p>
                 <ul class='imgs'>
                     <li class='upload'>
+                        <input type="file" name='upload' class='imgupload' accept="image/*" @change='uploadimg'  multiple='true'>
                         <i class='icon iconfont icon-xiangji'></i>
                         <div class='tip'>
                             <p>上传凭证</p>
                             <p>（最多3张）</p>
                         </div>
+                    </li>
+                    <li v-for='(item,index) in imglist' :key='index'>
+                        <i class='icon iconfont icon-close close' @click='removeImg(index)'></i>
+                        <img :src="item.imgurl" alt="图片丢失">
                     </li>
                 </ul>
             </div>
@@ -99,6 +104,9 @@
     </div>
 </template>
 <script>
+import { Toast } from 'mint-ui';
+import { Indicator } from 'mint-ui';
+import { MessageBox } from 'mint-ui';
 export default {
     data(){
         return{
@@ -130,7 +138,8 @@ export default {
             refundreason:['拍错了信息填写错误','不想买了','未收到货','和商家协商一致','收到商品破损','其他'],
             showopera:true,
             showstatus:true,
-            postage:0.5
+            postage:0.5,
+            imglist:[{'imgurl':''},{},{}]
         }
     },
     computed:{
@@ -152,7 +161,6 @@ export default {
         refundmoney(){
             this.showopera=false;
             this.showstatus=true
-            // this.showrefundmoney=true;
         },
         refundall(){
             this.showopera=false;
@@ -165,6 +173,62 @@ export default {
         // 选择退款原因
         selectreason(){
             this.popupVisible2=true;
+        },
+        uploadimg(){
+            let length=this.imglist.length;
+            if(length>=3){
+                Toast('最多上传3张图片');
+                return;
+            }
+            let that=this;
+            let fileObject=document.querySelector('.imgupload').files[0];
+            if(!fileObject||!window.FileReader){
+                return;
+            };
+            if (/^image/.test(fileObject.type)) {
+                let fd=new FormData();
+                fd.append('fileUpload',fileObject);
+                fd.append('type','product');
+                that.upfile(fd);
+            }
+            else{
+                Toast('只能上传图片');
+                return;
+            }
+        },
+        upfile(file){
+            Indicator.open('上传中。。。');
+            let that=this;
+            this.$http({
+                url: '/api/zuul/sms/file/fileUpload',
+                method: 'POST',
+                // 请求体重发送的数据
+                headers: { 'Content-Type': 'multipart/form-data'},
+                data:file
+            })
+            .then(res=>{
+                Indicator.close();
+                if(res.data.status==200){
+                    let url=res.info;
+                    this.imglist.push({'imgurl':url});
+                }
+                else{
+                    Toast(res.data.msg);
+                }
+            })
+            .catch(err=>{
+                Indicator.close();
+                Toast('上传失败！');
+                
+            })
+
+        },
+        // 删除图片
+        removeImg(index){
+            MessageBox.confirm('确定删除图片?').then(() => {
+                let list=this.imglist;
+                list.splice(index,1);
+            });
         }
     }
 }
@@ -338,8 +402,17 @@ export default {
         padding: .3rem .2rem;
         text-align: left;
         overflow: hidden;
+        .vue-file-upload{
+            width:100%;
+            height:100%;
+            position: absolute;
+            opacity: 0;
+            z-index: 999;
+        }
+        
         .imgs{
-            margin-top: .2rem;
+            padding-top: .2rem;
+            overflow: hidden;
             li{
                 width: 1.58rem;
                 height:1.58rem;
@@ -352,6 +425,28 @@ export default {
             }
             li+li{
                 margin-left: .2rem;
+                background-color: #f5f5f5;
+                position: relative;
+                img{
+                    width:1.58rem;
+                    height:1.58rem;
+                    font-size:.2rem;
+                    text-align: center;
+                    line-height: 1.58rem;
+                    display: block;
+                }
+                .close{
+                    line-height: .3rem;
+                    color:red;
+                    font-size:.3rem;
+                    border-radius: 50%;
+                    text-align: center;
+                    line-height: .2rem;
+                    right:-.1rem;
+                    top:-.05rem;
+                    position: absolute;
+                    display: block;
+                }
             }
             .upload{
                 border:1px dotted;
@@ -404,6 +499,14 @@ export default {
         .mint-cell{
             text-align: left;
         }
+        
+    }
+    .imgupload{
+        width:100%;
+        height:100%;
+        position: absolute;
+        z-index: 999;
+        opacity: 0;
     }
 }
 </style>

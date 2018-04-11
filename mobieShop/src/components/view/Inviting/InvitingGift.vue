@@ -79,6 +79,7 @@ export default {
     },
     created(){
         this.shareUrlFn()
+        this.$root.$emit('header','邀请有礼');
     },
     methods:{
         shareUrlFn(){

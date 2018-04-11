@@ -10,7 +10,7 @@
                 enter-active-class="animated fadeInLeft"
             >
                 <div v-if="show1" class="proDetail">
-                        <keep-alive v-for='(item,index) in comlist' :key='index'>
+                        <keep-alive v-for='(item,index) in bannerArr1' :key='index'>
                         <components :templateData='item.componentsData' :is='item.componentsName'  :type='item.componentsName'></components>
                         </keep-alive>
                         <productDetail></productDetail>
@@ -32,33 +32,40 @@
                             <p><span>温馨提示</span><i></i></p>
                             <p><span>温馨提示：</span>1.该商品为原产地（厂家）发货，每日1...</p>
                         </div>
-                        <keep-alive v-for='(item,index) in comlist' :key='index'>
+                        <keep-alive v-for='(item,index) in detailImgArr1' :key='index'>
                         <components :templateData='item.componentsData' :is='item.componentsName'  :type='item.componentsName'></components>
                         </keep-alive>
-                        <div id="zbd-customerReviews" class="clear" style="font-size:0.25rem;text-align:left;padding:0.3rem 0.1rem 0.3rem 0.3rem;border-top:0.12rem solid #efefef;">
-                            <p>顾客评价</p>
-                            <div class="commentHeaderInfo clear">
-                                <span class="commentNickname" >用户昵称</span>
-                                <span class="commentStar">
-                                    <img v-for="(item,index) in 3" :key="index" style="width: 0.3rem;height: 0.3rem;" src="./../evaluate/star.png">
-                                    <img v-for="(item,index) in 2" :key="index" style="width: 0.3rem;height: 0.3rem;" src="./../evaluate/star1.png">
-                                </span>
-                                <span class="userCommentTime">2016-7-7</span>
-                            </div>
-                            <div class="commentContent">
-                                <p class="userCommentContent">我只想说，特别的好！！！！！！！！！说点什么好呢，凑足十个字！</p>
-                                <ul class="clear userCommentImg">
-                                    <li v-for="(item,index) in 2" :key="index">
-                                        <img src="./test.jpg">
-                                    </li>
-                                </ul>
-                                <div class="merchantReply">
-                                    <span class="merchantReplyTitle">商家回复：</span>
-                                    <span class="merchantReplyTime">2016-7-4</span>
-                                    <p class="merchantReplyContent">谢谢光顾！欢迎下次再来！谢谢光顾！欢迎下次再来！谢谢光顾！欢迎下次再来！</p>
+                        <div id="zbd-customerReviews" class="clear" style="font-size:0.25rem;text-align:left;border-top:0.12rem solid #efefef;">
+                            <p style="text-align: center;
+    padding-top: 0.3rem;
+    padding-bottom: 0.1rem;
+    font-size: 0.3rem;">顾客评价</p>
+                            <div class="zbd-customerReviewContent" style="margin:0.3rem 0.1rem 0rem 0.1rem;-webkit-box-shadow: 0px 0px 2px #f4f4f4;
+    box-shadow: 0px 0px 0.2rem #f4f4f4;">
+                                <div class="commentHeaderInfo clear">
+                                    <span class="commentNickname" style="text-align: center;">用户昵称</span>
+                                    <span class="commentStar">
+                                        <img v-for="(item,index) in 3" :key="index" style="width: 0.3rem;height: 0.3rem;" src="./../evaluate/star.png">
+                                        <img v-for="(item,index) in 2" :key="index" style="width: 0.3rem;height: 0.3rem;" src="./../evaluate/star1.png">
+                                    </span>
+                                    <span class="userCommentTime">2016-7-7</span>
                                 </div>
-                                <div>
-                                    <p>查看全部<span>48</span>条评论<i>></i></p>
+                                <div class="commentContent">
+                                    <p class="userCommentContent">我只想说，特别的好！！！！！！！！！说点什么好呢，凑足十个字！</p>
+                                    <ul class="clear userCommentImg" style="padding-left: 0.2rem;
+    padding-right: 0.2rem;">
+                                        <li v-for="(item,index) in 2" :key="index">
+                                            <img src="./test.jpg">
+                                        </li>
+                                    </ul>
+                                    <div class="merchantReply">
+                                        <span class="merchantReplyTitle">商家回复：</span>
+                                        <span class="merchantReplyTime">2016-7-4</span>
+                                        <p class="merchantReplyContent">谢谢光顾！欢迎下次再来！谢谢光顾！欢迎下次再来！谢谢光顾！欢迎下次再来！</p>
+                                    </div>
+                                    <div style="padding: 0.2rem 0.1rem 0.2rem 0.2rem;">
+                                        <p class="clear"><span style="text-align: center;">查看全部<span>48</span>条评论</span>&ensp;<i class='icon iconfont icon-arrow-right' style="float:right;padding-right:0.1rem;    font-size: 0.25rem;"></i></p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -116,14 +123,25 @@
                         <p>客服</p>
                     </li>
                     <li>
-                        <i class='icon iconfont icon-shoucang'></i>
+                        <!-- 已被收藏时 icon-xingxing1 #ffa700 -->
+                        <i class='icon iconfont icon-xingxing1' style="color:#ffa700"></i>
+                        <!-- <i class='icon iconfont icon-shoucang' style="color:#838d98"></i> -->
                         <p>收藏</p>
                     </li>
-                    <li>
+                    <li style="position: relative;">
                         <i class='icon iconfont icon-gouwuche'></i>
                         <p>购物车</p>
+                        <div style="position: absolute;
+    top: 0.04rem;
+    right: 0.2rem;
+    width: 0.28rem;
+    height: 0.28rem;
+    line-height: 0.28rem;
+    border-radius: 25px;
+    background: #ff2500;
+    color: #fff;">{{ shopNum }}</div>
                     </li>
-                    <li>
+                    <li @click='addShopCar'>
                         <p>加入购物车</p>
                     </li>
                     <li>
@@ -154,6 +172,8 @@
                 selected: '1',
                 value: '',
                 comlist:'',
+                bannerArr1:'',
+                detailImgArr1:'',
                 detailTemplateUrl:'',
                 show1:true,
                 show2:false,
@@ -165,7 +185,8 @@
                     productDetailBack1:false,
                     productDetailBack2:true
                 },
-                popupVisible:false
+                popupVisible:false,
+                shopNum:5
             };
         },
         created(){
@@ -187,7 +208,11 @@
                         console.log(response)
                         let comlists = JSON.parse(response.data.info[0].comlist)
                         console.log(comlists)
-                        that.comlist = comlists
+                         //that.comlist = comlists
+                        let bannerArr = [];
+                        bannerArr.push(comlists[0])
+                        console.log(bannerArr)
+                        that.bannerArr1 = bannerArr
                         // 假设你对扩展原生 JavaScript 不反感,那么能够将这种方法加入到数组原型(Array prototype)中:
                         // Array.prototype.insert = function (index, item) {
                         // this.splice(index, 0, item);
@@ -216,7 +241,16 @@
                     console.log(response)
                     let comlists = JSON.parse(response.data.info[0].comlist)
                      console.log(comlists)
-                    that.comlist = comlists
+                   // that.comlist = comlists
+                   let bannerArr = [];
+                    bannerArr.push(comlists[0])
+                    let detailImgArr = [];
+                    for(let i = 1;i<comlists.length;i++){
+                        detailImgArr.push(comlists[i])
+                    }
+                    console.log(detailImgArr)
+                    that.bannerArr1 = bannerArr
+                    that.detailImgArr1 = detailImgArr
                 })
                 .catch(function(response){
                     console.log(response)
@@ -261,6 +295,31 @@
                 },
                 showServer(name) {
                     this.popupVisible = true;
+                },
+                addShopCar(){
+                    this.shopNum++;
+                    let id = 'b26ad5a2-3af7-11e8-8c96-88d7f652f92c'
+                    let commodityId = id
+                    console.log(commodityId)
+                    let customer = sessionStorage.getItem('userinfo')
+                    let customerId = JSON.parse(customer).id
+                    console.log(customerId)
+                    let commodityCount = this.shopNum
+                    console.log(commodityCount)
+                    //  let that=this;
+                    // this.$http.post('/api/product/shoppingCart/insertOne',
+                    //     {
+                    //         'commodityId':commodityId,
+                    //         'customerId':customerId,
+                    //         'commodityCount':commodityCount
+                    //     }
+                    // )
+                    // .then(function(response){
+                    //     console.log(response)
+                    // })
+                    // .catch(function(response){
+                    //     console.log(response)
+                    // })
                 }
         },
         components: {
@@ -369,9 +428,9 @@
                 border-bottom: 1px solid #cccc;
 }
 #detailTemplatePage .commentHeaderInfo{
-    width: 100%;
     height: 0.5rem;
     margin-bottom: 0.2rem;
+    padding: 0.2rem 0.2rem 0rem 0.2rem;
 }
 #detailTemplatePage .commentNickname{
     display: inline-block;
@@ -391,7 +450,8 @@
     line-height: 0.5rem;
     float: right;
     text-align: right;}
-#detailTemplatePage .userCommentContent{text-align: left;line-height: 0.37rem;}
+#detailTemplatePage .userCommentContent{text-align: left;line-height: 0.37rem;    padding-left: 0.2rem;
+    padding-right: 0.2rem;}
 #detailTemplatePage .userCommentImg li{float:left;float: left;
     padding: 0;
     margin-top: 0.1rem;
@@ -476,7 +536,7 @@
             right: -0.42rem;
     }
     .detailBottom li:nth-child(4),.detailBottom li:nth-child(5){
-        width:2.2rem;
+        width:2.21rem;
         border:1px solid #6ab4ff;
     }
     .detailBottom li:nth-child(4) p,.detailBottom li:nth-child(5) p{

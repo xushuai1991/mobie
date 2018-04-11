@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="meaningless"></div>
-        <div class="user_name" @click="handleClick(item)" v-for='(item,index) in userIfo'>{{item.name}}<span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>
+        <div class="user_name" @click="handleClick(item)" v-for='(item,index) in userIfo' :key='index'>{{item.name}}<span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>
         <!--<div class="true_name">真实姓名<span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>
                                                         <div class="sex">性别<span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>
                                                         <div class="meaningless "></div>
@@ -44,7 +44,6 @@
                     <input type='button' class='orderOk' value='确认' @click='upData' />
                     <input type='button' @click='clearBox' value='取消' />
                 </div>
-            </div>
             </div>
         </mt-popup>
     </section>

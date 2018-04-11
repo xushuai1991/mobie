@@ -61,6 +61,20 @@ export default {
         }
     },
     created(){
+        let direct=this.$route.params.direct;
+        console.log(direct==undefined);
+        if(direct!=undefined){
+            console.log(111);
+            switch(direct){
+                case 'commodity':{
+                    this.selected='分类';
+                    break;
+                }
+                default:{
+                    break;
+                }
+            }
+        }
         // 浏览状态（PC浏览）：根据'ID'和'商城模板类型'查询首页模板数据  。并将默认首页设置消失  isTrue = true
         let isBrowse;
         if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
@@ -179,7 +193,7 @@ export default {
         classifiCation,
         shopCar,
         userInfo
-    },
+    }
 }
 </script>
 <style> 

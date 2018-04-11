@@ -90,7 +90,7 @@
             <div class='opera_list'>
                 <ul>
                     <li>
-                        <router-link to='addManagement'>
+                        <router-link to='addManagement?name=index'>
                             <i class='icon iconfont icon-dingwei fontSize operaicon'></i>
                             <i class='flag on'></i>
                             <p class='name_opera'>地址</p>
@@ -104,7 +104,7 @@
                         </router-link>
                     </li>
                     <li>
-                        <router-link to=''>
+                        <router-link to='Coupon'>
                             <i class='icon iconfont icon-youhuijuan fontSize operaicon'></i>
                             <i class='flag'></i>
                             <p class='name_opera'>优惠券</p>
