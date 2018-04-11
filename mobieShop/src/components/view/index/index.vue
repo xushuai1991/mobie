@@ -70,6 +70,10 @@ export default {
                     this.selected='分类';
                     break;
                 }
+                case 'userinfo':{
+                    this.selected='我的';
+                    break;
+                }
                 default:{
                     break;
                 }
