@@ -273,7 +273,7 @@ export default {
     created:function(){
         this.$root.$emit('header','确认订单');
         // 订单内的商品数据
-        let data=JSON.stringify(this.$route.params)!='{}'?this.$route.params.dataObj:[];
+        let data=JSON.parse(localStorage.getItem(''));
         data.forEach(item=>{
             let json={
                 id:item.id,
@@ -287,7 +287,6 @@ export default {
                 childlist:[]
             };
             this.goodslist.push(json);
-            // this.goodslist
         });
         let userinfo=JSON.parse(sessionStorage.getItem('userinfo'));
         this.userinfo.id=userinfo.id;
