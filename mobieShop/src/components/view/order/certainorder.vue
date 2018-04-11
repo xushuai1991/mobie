@@ -1,13 +1,13 @@
 <template>
     <div class='contain certainorder_xs'>
         <div class='msg-customer'>
-            <img class='avatar' src="static/images/bgimg.png" alt="">
+            <img class='avatar' :src="userinfo.imgurl" alt="">
             <div class='msgs'>
-                <p class='name'>{{username}} {{phone}}</p>
-                <p class='area'><i class='icon iconfont icon-dingwei'></i>{{address}}</p>
+                <p class='name'>{{userinfo.username}} {{userinfo.phone}}</p>
+                <p class='area' v-if='userinfo.address!=""'><i class='icon iconfont icon-dingwei'></i>{{userinfo.address}}</p>
             </div>
             <div class='more'>
-                <p class='icon iconfont icon-arrow-right-copy'></p>
+                <p class='icon iconfont icon-arrow-right-copy' @click='changeaddress'></p>
             </div>
         </div>
         <div class='msg-goods'>
@@ -86,12 +86,13 @@
         <!-- 优惠券抵扣 -->
         <div class='coupon'>
             <p class='label'>
-                <span>优惠券</span>
-                <input type="checkbox" style='float:right;' v-model='iscoupon'>    
+                <span v-if='couponlist.length!=0'>优惠券</span>
+                <span v-if='couponlist.length==0'>无可用优惠券</span>
+                <input v-if='couponlist.length!=0' type="checkbox" style='float:right;' v-model='iscoupon'>    
             </p>
             <ul v-if='iscoupon'>
                 <li v-for='(item,index) in couponlist' :key='index'>
-                    <label for="">{{item.label}}</label>
+                    <label for="">{{item.couponType==0?'满'+item.fullmoney+'元减'+item.money+'元':(item.money+'元（'+(item.coupontype==1?'专享）':item.coupontype==2?'无门槛）':''))}}</label>
                     <input type="radio" v-model="couponvalue" :value='index' name='coupon'>
                 </li>
             </ul>
@@ -152,9 +153,16 @@ export default {
     data(){
         return{
             checked:'checked',
-            username:'徐X',
-            phone:'1505816****',
-            address:'上海市浦东新区',
+            userinfo:{
+                id:'',
+                username:'',
+                phone:'',
+                address:'',
+                imgurl:''
+            },
+            // username:'徐X',
+            // phone:'1505816****',
+            // address:'上海市浦东新区',
             goodslist:[
                 {
                     name:'fashion',
@@ -218,20 +226,7 @@ export default {
             ],
             deductionvalue:'0',
             iscoupon:false,
-            couponlist:[
-                {
-                    id:'1',
-                    money:'100',
-                    label:'优惠券一',
-                    cheched:true,
-                },
-                {
-                    id:'2',
-                    money:'200',
-                    label:'优惠券2',
-                    checked:false
-                }
-            ],
+            couponlist:[],
             couponvalue:'0',
             servicedate:'',
             datechange:'',
@@ -277,9 +272,36 @@ export default {
     },
     created:function(){
         this.$root.$emit('header','确认订单');
-        let data=this.$route.params.dataobj;
+        // 订单内的商品数据
+        let data=JSON.stringify(this.$route.params)!='{}'?this.$route.params.dataObj:[];
+        data.forEach(item=>{
+            let json={
+                id:item.id,
+                name:item.otherInfo.commodityName,
+                conditionname1:'',
+                conditionvalue1:'',
+                conditionname2:'',
+                conditionvalue3:'',
+                price_uint:item.otherInfo.commodityPrice,
+                nums:item.commodityCount,
+                childlist:[]
+            };
+            this.goodslist.push(json);
+            // this.goodslist
+        });
+        let userinfo=JSON.parse(sessionStorage.getItem('userinfo'));
+        this.userinfo.id=userinfo.id;
+        this.userinfo.username=userinfo.nickname==null?'无昵称':userinfo.nickname;
+        this.userinfo.phone=userinfo.mobile;
+        this.userinfo.imgurl=userinfo.avatar;
+        this.getDefaultaddress();
+        console.log(userinfo);
+        this.getCouponcanuse();
     },
     methods:{
+        changeaddress(){
+            this.$router.push({'name':'addManagement',params:{'name':'ordercertain'}});
+        },
         selectpaytype(e){
             let classname=e.target.getAttribute('class');
             if(classname=='check'){
@@ -326,8 +348,63 @@ export default {
                 }
             }).catch(()=>{});
         },
-        // 随机字符
-       
+        // 获取默认地址
+        getDefaultaddress(){
+            let that=this;
+            this.$http.post('/api/customer/address/queryMap',{customerId:this.userinfo.id})
+            .then(res=>{
+                if(res.data.status==200){
+                    for(let item of res.data.info){
+                        if(item.isDefaultAddress){
+                            let address=item.province.regionName+item.city.regionName+item.district.regionName+item.region.regionName+item.address;
+                            that.userinfo.address=address;
+                            break;
+                        }
+                    }
+                }
+                console.log(res);
+            })
+            .catch(err=>{
+                console.log(err);
+            });
+        },
+        // 获取可用优惠券
+        getCouponcanuse(){
+            let that=this;
+            let data={
+                amount:200
+            };
+            this.$http.post('/api/product/coupon/customer/display',data)
+            .then(res=>{
+                if(res.data.status==200){
+                    res.data.info.forEach(item=>{
+                        let json={
+                            id:item.id,
+                            money:item.couponMoney,
+                            fullmoney:item.fullAmount,
+                            coupontype:item.couponType
+                        };
+                        that.couponlist.push(json);
+                    });
+                }
+                console.log(res);
+            })
+            .catch(err=>{
+                console.log(err);
+            });
+        },
+        //生成订单
+        createOrder(){
+            let that=this;
+            this.$http.post('/api/product/order/mall/insert',data)
+            .then(res=>{
+                
+            })
+            .catch(err=>{
+                Toast('订单生成失败');
+                console.log(err);
+            });
+        },
         submitorder(){
             weixinpay();
         }
@@ -367,7 +444,10 @@ export default {
     margin-bottom: .2rem;
 }
 .msg-customer .msgs .area{
-    color: #787878;    
+    color: #787878;
+    text-overflow:ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 .msg-customer .more{
     padding-left: .2rem;
@@ -380,6 +460,7 @@ export default {
     font-size: .6rem;
     color: #787878;
     display: block;
+    
 }
 .msg-goods{
     margin-top: .2rem;
