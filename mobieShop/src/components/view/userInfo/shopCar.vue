@@ -423,7 +423,7 @@
                 if (OrderArry.length < 1) {
                     Toast('请选择点东西吧');
                 } else if (OrderArry.length == 1) {
-                    console.log(OrderArry)
+                    // console.log(OrderArry)
                       OrderArry.forEach((item, index) => {
                         let num = 0;
                         let prices = 0;

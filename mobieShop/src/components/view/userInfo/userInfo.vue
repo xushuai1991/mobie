@@ -11,7 +11,7 @@
                     <div class="change"><i class='icon iconfont icon-arrow-right-copy icon-qiehuan'></i></div>
                     <div class="portrait">
                         <div class="portrait_img">
-                            <img src="static/HMMobilePhone/dsit/img/headPortrait2.png" alt="">
+                            <img :src="userinfo.avatar" alt="">
                             <p class='vip'>{{viplevel}}</p>
                             <i class='icon iconfont icon--huangguan' style='color:#fdd23e;position:absolute;right:.2rem;top:-.15rem;transform:rotate(25deg);'></i>
                         </div>
