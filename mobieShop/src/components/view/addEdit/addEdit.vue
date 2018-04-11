@@ -53,6 +53,7 @@
 </template>
 
 <script>
+import { Toast } from 'mint-ui'; 
     import BaiduMap from 'vue-baidu-map/components/Map/Map.vue'
     export default {
         data() {
@@ -226,7 +227,7 @@
                 getUserInfo.then(function(ResultJson) {
                     that.largeAreArr = ResultJson.data.info
                     if (ResultJson.data.info == null) {
-                        alert(res.data.error)
+                        Toast(res.data.error)
                     } else {
                         that.houseInfo = ResultJson.data.info; //大区
                         (ResultJson.data.info).forEach(function(e, i) {

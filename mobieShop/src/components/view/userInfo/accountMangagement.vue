@@ -50,6 +50,7 @@
     </section>
 </template>
 <script>
+import { Toast } from 'mint-ui'; 
     import Exif from 'exif-js'
     export default {
         data() {
@@ -158,11 +159,11 @@
                 if (this.userName == '修改密码') {
                     console.log(this.userInput1 != this.userInput2)
                     if (this.userInput2.length < 6) {
-                        alert("密码长度小于6");
+                        Toast("密码长度小于6");
                         return false
                     }
                     if (this.userInput2 != this.userInput1) {
-                        alert("两次密码不一支");
+                        Toast("两次密码不一支");
                         return false
                     }
                     dataInfo = {
@@ -177,7 +178,7 @@
                         data: JSON.stringify(dataInfo)
                     }).then(response => {
                         if (response.data.msg == '修改成功') {
-                            alert("修改成功")
+                            Toast("修改成功")
                             this.userInput2 = '';
                             this.$router.push('/login');
                             this.clearBox()
