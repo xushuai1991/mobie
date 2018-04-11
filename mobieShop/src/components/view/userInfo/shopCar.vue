@@ -198,9 +198,10 @@
                         name: 'ordercertain',
                         params: {
                             name: 'shopCar',
-                            dataObj: item
+                            // dataObj: item
                         }
                     });
+                     localStorage.setItem("shopCar",JSON.stringify([item]))
             },
             //领取优惠劵
             okcoupon(id) {
@@ -438,9 +439,10 @@
                         name: 'ordercertain',
                         params: {
                             name: 'shopCar',
-                            dataObj: OrderArry
+                            // dataObj: OrderArry
                         }
                     });
+                    localStorage.setItem("shopCar",JSON.stringify(OrderArry))
                 } else if (OrderArry.length > 1) {
                     this.shopLIst = OrderArry
                     this.popupVisible2 = true;
