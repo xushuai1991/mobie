@@ -99,7 +99,6 @@ export default {
                     let list=res.data.info.list;
                     //  this.$set(that.couplist.list_using,0,{'text':1})
                     list.forEach(item=>{
-                        let [index1,index2]=[0,0];
                         let json={
                             'couponMoney':item.couponInfo.couponMoney,
                             'fullAmount':item.couponInfo.fullAmount,
@@ -108,13 +107,11 @@ export default {
                         }
                         // 可领取
                         if(item.couponInfo.couponStatus=='1'){
-                            this.$set(that.couplist.list_using,index1,json)
-                            index1++;
+                            that.couplist.list_using.push(json);
                         }
                         // 过期
                         else if(item.couponInfo.couponStatus=='0'){
-                            this.$set(that.couplist.list_overdue,index2,json);
-                            index2++;
+                            that.couplist.list_overdue.push(json);
                         }
                     });
                 }
