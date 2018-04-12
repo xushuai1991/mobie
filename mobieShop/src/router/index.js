@@ -25,6 +25,11 @@ export default new Router({
                     name: 'ordercertain',
                     component: resolve => require(['../components/view/order/certainorder.vue'], resolve)
                 },
+                {//订单详情
+                    path: '/orderDeil',
+                    name: 'orderDeil',
+                    component: resolve => require(['../components/view/order/orderDeil.vue'], resolve)
+                },
                 //开票申请
                 {
                     path: '/invoice',
