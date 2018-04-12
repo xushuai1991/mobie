@@ -197,24 +197,25 @@ export default {
             }
         },
         upfile(file){
+            console.log(file)
             Indicator.open('上传中。。。');
             let that=this;
             this.$http({
-                url: '/api/zuul/sms/file/fileUpload',
-                method: 'POST',
-                // 请求体重发送的数据
-                headers: { 'Content-Type': 'multipart/form-data'},
-                data:file
-            })
-            .then(res=>{
-                Indicator.close();
-                if(res.data.status==200){
-                    let url=res.info;
-                    this.imglist.push({'imgurl':url});
-                }
-                else{
-                    Toast(res.data.msg);
-                }
+            //     url: '/api/zuul/sms/file/fileUpload',
+            //     method: 'POST',
+            //     // 请求体重发送的数据
+            //     headers: { 'Content-Type': 'multipart/form-data'},
+            //     data:file
+            // })
+            // .then(res=>{
+            //     Indicator.close();
+            //     if(res.data.status==200){
+            //         let url=res.info;
+            //         this.imglist.push({'imgurl':url});
+            //     }
+            //     else{
+            //         Toast(res.data.msg);
+            //     }
             })
             .catch(err=>{
                 Indicator.close();

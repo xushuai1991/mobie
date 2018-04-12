@@ -192,7 +192,7 @@
         methods: {
             //购物车数据群
             //付款
-            playmoney(item) {
+            playmoney(items) {
                  this.$router.push({
                         path: '/ordercertain',
                         name: 'ordercertain',
@@ -201,7 +201,14 @@
                             // dataObj: item
                         }
                     });
-                     localStorage.setItem("shopCar",JSON.stringify([item]))
+                    //  localStorage.setItem("shopCar",JSON.stringify([item]))
+                    let commodityInfo = [];
+                    console.log(items)
+                    items.listgoods.forEach((item,index)=>{
+                        item.otherInfo.commodityInfo.nums = item.commodityCount
+                        commodityInfo.push(item.otherInfo.commodityInfo)
+                    })
+                    localStorage.setItem("commodityInfo",JSON.stringify(commodityInfo))
             },
             //领取优惠劵
             okcoupon(id) {
@@ -303,12 +310,12 @@
                 if (self.shopselected == true) {
                     self.listgoods.forEach(function(list, index) {
                         list.selected = true;
-                        console.log(list)
+                        // console.log(list)
                     })
                 } else {
                     self.listgoods.forEach(function(list) {
                         list.selected = false;
-                        console.log(list)
+                        // console.log(list)
                     })
                 }
             },
@@ -423,7 +430,6 @@
                 if (OrderArry.length < 1) {
                     Toast('请选择点东西吧');
                 } else if (OrderArry.length == 1) {
-                    // console.log(OrderArry)
                       OrderArry.forEach((item, index) => {
                         let num = 0;
                         let prices = 0;
@@ -442,7 +448,13 @@
                             // dataObj: OrderArry
                         }
                     });
-                    localStorage.setItem("shopCar",JSON.stringify(OrderArry))
+                    let commodityInfo = [];
+                    OrderArry[0].listgoods.forEach((item,index)=>{
+                        console.log()
+                        item.otherInfo.commodityInfo.nums = item.commodityCount
+                        commodityInfo.push(item.otherInfo.commodityInfo)
+                    })
+                    localStorage.setItem("commodityInfo",JSON.stringify(commodityInfo))
                 } else if (OrderArry.length > 1) {
                     this.shopLIst = OrderArry
                     this.popupVisible2 = true;
