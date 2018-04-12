@@ -252,7 +252,7 @@ export default {
         // 订单内的商品数据
         // let data=JSON.parse(localStorage.getItem('shopCar'))[0].listgoods;
         let data=JSON.parse(localStorage.getItem('commodityInfo'));
-        console.log(data);
+        // console.log(data);
         data.forEach(item=>{
             let json={
                 id:item.id,
@@ -261,7 +261,7 @@ export default {
                 conditionname1:'',
                 conditionvalue1:'',
                 conditionname2:'',
-                conditionvalue3:'',
+                conditionvalue2:'',
                 price_unit:item.originalPrice,
                 nums:item.nums,
                 childlist:[]
@@ -273,7 +273,7 @@ export default {
                     score:item.originalPricePoint,
                     moneycanduct:item.originalPriceMoney
                 };
-                this.deductionlist.push(json1)
+                this.deductionlist.push(json1);
             }
         });
         let userinfo=JSON.parse(sessionStorage.getItem('userinfo'));
@@ -387,6 +387,12 @@ export default {
             let that=this;
             this.$http.post('/api/product/order/mall/insert',data)
             .then(res=>{
+                if(res.data.status==200){
+                    Toast('订单生成成功！');
+                }
+                else{
+                    Toast(res.data.msg);
+                }
                 console.log(res);
             })
             .catch(err=>{

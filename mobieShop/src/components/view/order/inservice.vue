@@ -47,7 +47,7 @@ export default {
 </script>
 <style scoped>
 .pendpay{
-    margin-top: 0.2rem;
+    margin-bottom: 0.2rem;
     background-color: #fff;
     overflow: hidden;
 }

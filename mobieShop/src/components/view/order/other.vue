@@ -1,31 +1,26 @@
 <template>
-    <div class='pendpay'>
+    <div class='other'>
         <div class='title'>
-            <span class='tip'>待评价</span>
+            <span class='tip'>{{data.orderState==2?'已完成':data.orderState==3?'订单异常':data.orderState==4?'退款中':data.orderState==5?'退款完成':data.orderState==6?'订单已取消':''}}</span>
         </div>
         <div class='content'>
-            <div class='detail'>
+            <div class='detail' v-for='(item,index) in data.orderDetails' :key='index'>
                 <div class='img-goods'>
                     <img src="" alt="">
                 </div>
                 <div class='detail-goods'>
-                    <h3 class='name'>FASHION</h3>
+                    <h3 class='name'>{{item.commodityName}}</h3>
                     <P class='name-sub'>休闲舒适 潮男标配 SM1212</P>
                     <P class='area'>服务区域：萧山区</P>
                     <p class='date'>服务预约时间：2018-2-5</p>
                 </div>
                 <div class='price'>
                     <p>￥300</p>
-                    <p>x1</p>
+                    <p>x2</p>
                 </div>
             </div>
             <div class='price-total'>
                 <p>合计：<span class='total'>￥300</span></p>
-            </div>
-            <div class='operation'>
-                <button class='prime evaluate'>评价</button>
-                <button class='check'>查看报告</button>
-                <button class='complaint'>投诉</button>
             </div>
         </div>
     </div>
@@ -33,6 +28,7 @@
 </template>
 <script>
 export default {
+    props:['data'],
     data(){
         return{
 
@@ -41,7 +37,7 @@ export default {
 }
 </script>
 <style scoped>
-.pendpay{
+.other{
     margin-bottom: 0.2rem;
     background-color: #fff;
     overflow: hidden;
