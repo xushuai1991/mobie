@@ -10,7 +10,7 @@
         <mt-tab-container v-model="selected">
             <!-- 全部 -->
             <mt-tab-container-item id="all">
-                <ul  v-infinite-scroll="loadMore" :infinite-scroll-disabled="loading[0]" infinite-scroll-distance="10" class='orderlist'>
+                <ul  v-infinite-scroll="loadMore" :infinite-scroll-disabled="loading[0]" infinite-scroll-distance="10" class='orderlist' :autoFill='false'>
                     <li v-for="item in list1" :key="item">
                         <pendpay></pendpay>
                     </li>
@@ -22,7 +22,7 @@
             </mt-tab-container-item>
             <!-- 待付款 -->
             <mt-tab-container-item id="willpay">
-                <ul v-infinite-scroll="loadMore1" :infinite-scroll-disabled="loading[1]" infinite-scroll-distance="10" class='orderlist'>
+                <ul v-infinite-scroll="loadMore1" :infinite-scroll-disabled="loading[1]" infinite-scroll-distance="10" class='orderlist' :autoFill='false'>
                     <li v-for="item in list2" :key="item">
                         <pendpay></pendpay>
                     </li>
@@ -34,7 +34,7 @@
             </mt-tab-container-item>
             <!-- 待服务 -->
             <mt-tab-container-item id="willservice">
-                <ul v-infinite-scroll="loadMore2" :infinite-scroll-disabled="loading[2]" infinite-scroll-distance="10" class='orderlist'>
+                <ul v-infinite-scroll="loadMore2" :infinite-scroll-disabled="loading[2]" infinite-scroll-distance="10" class='orderlist' :autoFill='false'>
                     <li v-for="item in list2" :key="item">
                         <inservice></inservice>
                     </li>
@@ -46,7 +46,7 @@
             </mt-tab-container-item>
             <!-- 服务中 -->
             <mt-tab-container-item id="inservice">
-                <ul v-infinite-scroll="loadMore3" :infinite-scroll-disabled="loading[3]" infinite-scroll-distance="10" class='orderlist'>
+                <ul v-infinite-scroll="loadMore3" :infinite-scroll-disabled="loading[3]" infinite-scroll-distance="10" class='orderlist' :autoFill='false'>
                     <li v-for="item in list2" :key="item">
                         <willservice></willservice>
                     </li>
@@ -58,7 +58,7 @@
             </mt-tab-container-item>
             <!-- 待评价 -->
             <mt-tab-container-item id="willevaluate">
-                <ul v-infinite-scroll="loadMore4" :infinite-scroll-disabled="loading[4]" infinite-scroll-distance="10" class='orderlist'>
+                <ul v-infinite-scroll="loadMore4" :infinite-scroll-disabled="loading[4]" infinite-scroll-distance="10" class='orderlist' :autoFill='false'>
                     <li v-for="item in list2" :key="item">
                         <willevaluate></willevaluate>
                     </li>
@@ -76,6 +76,8 @@ import pendpay from './pendpay.vue'
 import inservice from './inservice.vue'
 import willevaluate from './willevaluate.vue'
 import willservice from './willservice.vue'
+import { Indicator } from 'mint-ui';
+import { Toast } from 'mint-ui'; 
 export default {
     components:{pendpay,inservice,willevaluate,willservice},
     data() {
@@ -92,17 +94,56 @@ export default {
     created(){
         this.$root.$emit('header','我的订单');
         this.selected=this.$route.params.type==undefined?'all':this.$route.params.type;
+        switch(this.selected){
+            //全部
+            case 'all':{
+                let data={};
+                this.getOrderList(1,data);
+                break;
+            }
+            // 待付款
+            case 'willpay':{
+                let data={payState:2};
+                this.getOrderList(1,data);
+                break;
+            }
+            //待服务
+            case 'willservice':{
+                let data={serviceState:1};
+                this.getOrderList(1,data);
+            }
+            //服务中
+            case 'inservice':{
+                let data={serviceState:2};
+                this.getOrderList(1,data);
+            }
+            //待评价
+            case 'willevaluate':{
+                let data={};
+                this.getOrderList(1,data);
+            }
+        }
         this.getOrderList(1);
     },
     methods:{
-        getOrderList(pagenum){
+        getOrderList(pagenum,data){
+            if(pagenum==1){
+                Indicator.open();
+            }
             let that=this;
-            this.$http.post('/api/product/order/mall/find?pageNo='+pagenum+'&pageSize=10',{})
+            this.$http.post('/api/product/order/mall/find?pageNo='+pagenum+'&pageSize=10',data)
             .then(res=>{
+                if(res.data.status==200){}
+                else{
+                    Toast(res.data.msg);
+                }
                 console.log(res);
+                Indicator.open();
             })
             .catch(err=>{
                 console.log(err);
+                Toast('查询失败');
+                Indicator.open();
             })
         },
         loadMore() {

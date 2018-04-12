@@ -250,28 +250,28 @@ export default {
     created:function(){
         this.$root.$emit('header','确认订单');
         // 订单内的商品数据
-        let data=JSON.parse(localStorage.getItem('shopCar'))[0].listgoods;
+        // let data=JSON.parse(localStorage.getItem('shopCar'))[0].listgoods;
+        let data=JSON.parse(localStorage.getItem('commodityInfo'));
         console.log(data);
         data.forEach(item=>{
-
             let json={
                 id:item.id,
-                name:item.otherInfo.commodityName,
-                imgurl:item.otherInfo.commodityInfo.commodityImageList.length>0?item.otherInfo.commodityInfo.commodityImageList[0]:'',
+                name:item.name,
+                imgurl:item.commodityImageList.length>0?item.commodityImageList[0]:'',
                 conditionname1:'',
                 conditionvalue1:'',
                 conditionname2:'',
                 conditionvalue3:'',
-                price_unit:item.otherInfo.commodityPrice,
-                nums:item.commodityCount,
+                price_unit:item.originalPrice,
+                nums:item.nums,
                 childlist:[]
             };
             this.goodslist.push(json);
-            if(item.otherInfo.commodityInfo.originalPricePoint!=null){
+            if(item.originalPricePoint!=null){
                 let json1={
-                    commodityname:item.otherInfo.commodityName,
-                    score:item.otherInfo.commodityInfo.originalPricePoint,
-                    moneycanduct:item.otherInfo.commodityInfo.originalPriceMoney
+                    commodityname:item.name,
+                    score:item.originalPricePoint,
+                    moneycanduct:item.originalPriceMoney
                 };
                 this.deductionlist.push(json1)
             }

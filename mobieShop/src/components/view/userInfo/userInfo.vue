@@ -56,21 +56,21 @@
                             <i class="pay orageColor">2</i>
                             <i class='icon iconfont icon-daifukuan fontSize'></i>
                         </div>
-                        <p class="text_wait">代付款</p>
+                        <p class="text_wait">待付款</p>
                     </li>
                     <li @click="myorder('willpay')">
                         <div class="img_wait">
                             <i class="wait orageColor">2</i>
                             <i class='icon iconfont icon-icondaifahuo fontSize'></i>
                         </div>
-                        <p class="text_wait">待发货</p>
+                        <p class="text_wait">待服务</p>
                     </li>
                     <li>
                         <div class="img_wait ">
                             <i class="receive orageColor">2</i>
                             <i class='icon iconfont icon-ziyuan fontSize'></i>
                         </div>
-                        <p class="text_wait">待收货</p>
+                        <p class="text_wait">服务中</p>
                     </li>
                     <li>
                         <div class="img_wait ">
