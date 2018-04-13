@@ -2,48 +2,123 @@
     <div class='pendpay'>
         <div class='title'>
             <span class='tip'>待付款</span>
-            <span class='time-remain'>还剩00小时20分00秒</span>
+            <span class='time-remain'>还剩{{date_ramian}}</span>
             <!-- <div class='time-remain'></div> -->
         </div>
         <div class='content'>
-            <div class='detail'>
+            <div class='detail' v-for='(item,index) in data.orderDetails' :key='index'>
                 <div class='img-goods'>
                     <img src="" alt="">
                 </div>
                 <div class='detail-goods'>
-                    <h3 class='name'>FASHION</h3>
+                    <h3 class='name'>{{item.commodityName}}</h3>
                     <P class='name-sub'>休闲舒适 潮男标配 SM1212</P>
-                    <P class='area'>服务区域：萧山区</P>
-                    <p class='date'>服务预约时间：2018-2-5</p>
+                    <P class='area'>{{item.condition1Name}}:服务区域：萧山区</P>
+                    <p class='date'>{{item.condition2Name}}</p>
                 </div>
                 <div class='price'>
                     <p>￥300</p>
-                    <p>x2</p>
+                    <p>x{{item.saleNumber}}</p>
                 </div>
             </div>
             <div class='price-total'>
                 <p>合计：<span class='total'>￥300</span></p>
             </div>
             <div class='operation'>
-                <button class='prime pay'>付款</button>
-                <button class='cancle'>取消订单</button>
+                <button class='prime pay' @click="pay">付款</button>
+                <button class='cancle' @click="cancleOrder">取消订单</button>
             </div>
         </div>
     </div>
 
 </template>
 <script>
+import { Toast } from 'mint-ui'; 
+import { Indicator } from 'mint-ui';
+import { MessageBox } from 'mint-ui';
 export default {
+    props:['data'],
     data(){
         return{
-
+            date_ramian:'',
+            date_dead:''
         }  
+    },
+    created(){
+        let date_create=new Date(this.data.createTime);
+        this.date_dead=new Date(date_create.getTime() + 24*60*60*1000);
+        this.countDown();
+        // console.log(date_dead,date_remain_ts,date_remain_h,date_remain_m,date_remain_s);
+    },
+    methods:{
+        //剩余时间
+        getRemianTime(){
+            console.log(111);
+            //当前时间
+            let date_current=new Date();
+            // 当前离截止时间的时间
+            let date_remain_ts=this.date_dead-date_current;
+            let date_remain_h=Math.floor(date_remain_ts/1000/60/60%24);;
+            let date_remain_m=Math.floor(date_remain_ts/1000/60%60);
+            let date_remain_s=Math.floor(date_remain_ts/1000%60);
+            this.date_ramian=   date_remain_h+'小时'+date_remain_m+'分'+date_remain_s+'秒'
+        },
+        //倒计时
+        countDown(){
+            let that=this;
+            setInterval(function(){that.getRemianTime()},1000);
+        },
+        changeStatusOrder(data,msg){
+            let that=this;
+            Indicator.open('操作中');
+            this.$http.post('/api/product/order/mall/update',data)
+            .then(res=>{
+                if(res.data.status==200){
+                    Toast(msg+'成功');
+                }
+                else{
+                    Toast(res.data.msg);
+                }
+                Indicator.close();
+            })
+            .catch(err=>{
+                Indicator.close();
+                Toast(msg+'失败');
+            })
+        },
+        //取消订单
+        cancleOrder(){
+            MessageBox({
+                title: '',
+                message: '是否取消订单?',
+                showCancelButton: true
+            }).then((flag)=>{
+                if(flag=='confirm'){
+                    let data=[
+                        {
+                            id:this.data.id,
+                            number:this.data.number,
+                            orderState:6
+                        }
+                    ];
+                    this.changeStatusOrder(data,'取消订单');
+                }
+                else{
+                    return;
+                }
+            });
+            
+        },
+        //付款
+        pay(){
+            console.log('付款。。。');
+        }
     }
 }
 </script>
 <style scoped>
 .pendpay{
-    margin-top: 0.2rem;
+    margin-bottom: 0.2rem;
     background-color: #fff;
     overflow: hidden;
 }

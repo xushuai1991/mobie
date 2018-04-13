@@ -1,105 +1,53 @@
 <template>
     <section>
     <ul class="coupon_class">
-        <div class="coupon_left">
-            <p :class='{"on":show_whole}' @click='switchcoupon'>全场优惠券</p>
-            <p :class='{"on":show_limit}' @click='switchcoupon'>限定优惠券</p>    
-        </div>
-        <li :class="{'whole_coupon':true,'on':show_whole}">
-            <div class="whole whole_left">
-                <div class="coupon_content" v-if='couplist_whole.list_using.length!=0||couplist_whole.list_overdue.length!=0'>
+        <li class="whole_coupon">
+            <div class="whole whole_left" >
+                <div class="coupon_content" v-if='couplist.list_using.length!=0||couplist.list_overdue.length!=0'>
                     <div class="draw" >
-                        <p class="draw_top">可领取优惠券</p>
+                        <p class="draw_top">可使用优惠券</p>
                         <ul class="draw_info draw_left">
-                            <li class="bg_red" v-for='(item,index) in couplist_whole.list_using' :key='index'>
-                                <div class="receive_left" data-id="'+e.couponId+'"><br>立即<br>领取</div>
+                            <li class="bg_red" v-for='(item,index) in couplist.list_using' :key='index'>
+                                <div class="receive_left" data-id="'+e.couponId+'" @click='toCommodity'>
+                                    <br>立即<br>使用
+                                </div>
                                 <div class="cir_half cir_half_top"></div>
                                 <div class="cir_half cir_half_bottom"></div>
                                 <div class="receive_right">
-                                <div>￥<span class="money_fav">{{item.value}}</span></div>
+                                <div>￥<span class="money_fav">{{item.couponMoney}}</span></div>
                                 <div class="coupon_info">
-                                <p>{{item.condition}}</p>
-                                <p class="receive">{{item.deadline}}</p>
+                                <p>{{item.couponType==0?'满'+item.fullAmount+'元使用':item.couponType==1?'专享':item.couponType==2?'无门槛':''}}</p>
+                                <p class="receive">{{item.endTime}}</p>
                                 </div>
                                 </div>
                             </li>
                         </ul>
-                        <div style='font-size:.2rem;' v-if='couplist_whole.list_using.length==0'>
+                        <div style='font-size:.2rem;' v-if='couplist.list_using.length==0'>
                             <p>暂无可使用优惠券！</p>
                         </div>
                     </div>
                     <div class="overdue">
                         <p class="draw_bottom">已过期优惠券</p>
                         <ul class="overdue_info overdue_left">
-                            <li class="bg_gray" v-for='(item,index) in couplist_whole.list_overdue' :key='index'>
-                                <div class="receive_left" data-id="'+e.couponId+'"><br>立即<br>领取</div>
+                            <li class="bg_gray" v-for='(item,index) in couplist.list_overdue' :key='index'>
+                                <div class="receive_left" ><br>立即<br>使用</div>
                                 <div class="cir_half cir_half_top"></div>
                                 <div class="cir_half cir_half_bottom"></div>
                                 <div class="receive_right">
-                                <div>￥<span class="money_fav">{{item.value}}</span></div>
+                                <div>￥<span class="money_fav">{{item.couponMoney}}</span></div>
                                 <div class="coupon_info">
-                                <p>{{item.condition}}</p>
-                                <p class="receive">{{item.deadline}}</p>
+                                <p>{{item.couponType==0?'满'+item.fullAmount+'元使用':item.couponType==1?'专享':item.couponType==2?'无门槛':''}}</p>
+                                <p class="receive">{{item.endTime}}</p>
                                 </div>
                                 </div>
                             </li>
                         </ul>
-                        <div style='font-size:.2rem;' v-if='couplist_whole.list_overdue.length==0'>
+                        <div style='font-size:.2rem;' v-if='couplist.list_overdue.length==0'>
                             <p>暂无过期优惠券！</p>
                         </div>
                     </div>
                 </div>
-                <div class="pre_coupon" v-if='couplist_whole.list_using.length==0&&couplist_whole.list_overdue.length==0'>
-                    <p><img src="/static/images/nodata.png" alt=""></p>
-                    <p>暂无可使用优惠券！</p>
-                </div>
-            </div>
-        </li>
-        <li :class="{'limit_coupon':true,'on':show_limit}">
-            <div class="whole whole_right" >
-                <div class="coupon_content" v-if='couplist_limit.list_using.length!=0||couplist_limit.list_overdue.length!=0'>
-					<div class="draw">
-                        <p class="draw_top">可领取优惠券</p>
-                        <ul class="draw_info draw_right">
-                            <li class="bg_red" v-for='(item,index) in couplist_limit.list_using' :key='index'>
-                                <div class="receive_left" data-id="'+e.couponId+'"><br>立即<br>领取</div>
-                                <div class="cir_half cir_half_top"></div>
-                                <div class="cir_half cir_half_bottom"></div>
-                                <div class="receive_right">
-                                    <div>￥<span class="money_fav">{{item.value}}</span></div>
-                                    <div class="coupon_info">
-                                        <p>{{item.condition}}</p>
-                                        <p class="receive">{{item.deadline}}</p>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                        <div style='font-size:.2rem;' v-if='couplist_limit.list_using.length==0'>
-                            <p>暂无可使用优惠券！</p>
-                        </div>
-                    </div>
-                    <div class="overdue">
-                        <p class="draw_bottom">已过期优惠券</p>
-                        <ul class="overdue_info overdue_right">
-                            <li class="bg_gray" v-for="(item,index) in couplist_limit.list_overdue" :key='index'>
-                                <div class="receive_left" data-id="'+e.couponId+'"><br>立即<br>领取</div>
-                                <div class="cir_half cir_half_top"></div>
-                                <div class="cir_half cir_half_bottom"></div>
-                                <div class="receive_right">
-                                <div>￥<span class="money_fav">{{item.value}}</span></div>
-                                <div class="coupon_info">
-                                    <p>{{item.condition}}</p>
-                                    <p class="receive">{{item.deadline}}</p>
-                                </div>
-                                </div>
-                            </li>
-                        </ul>
-                        <div style='font-size:.2rem;' v-if='couplist_limit.list_overdue.length==0'>
-                            <p>暂无可使用优惠券！</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="pre_coupon" v-if='couplist_limit.list_using.length==0&&couplist_limit.list_overdue.length==0'>
+                <div class="pre_coupon" v-if='couplist.list_using.length==0&&couplist.list_overdue.length==0'>
                     <p><img src="/static/images/nodata.png" alt=""></p>
                     <p>暂无可使用优惠券！</p>
                 </div>
@@ -110,74 +58,71 @@
 </section>
 </template>
 <script>
+import { Toast } from 'mint-ui';
 export default {
     data(){
         return{
             show_whole:true,
             show_limit:false,
-            couplist_whole:{
-                list_using:[
-                    {
-                        id:'1',
-                        value:'1',
-                        deadline:'2018-4-8',
-                        condition:'满11元使用'
-                    },
-                    {
-                        id:'2',
-                        value:'100',
-                        deadline:'2018-4-8',
-                        condition:'满1000元使用'
-                    }
-                ],
-                list_overdue:[
-                    {
-                        id:'3',
-                        value:'1',
-                        deadline:'2018-4-8',
-                        condition:'满11元使用'
-                    },
-                    {
-                        id:'4',
-                        value:'1',
-                        deadline:'2018-4-8',
-                        condition:'满11元使用'
-                    },
-                ]
+            userinfo:'',
+            couplist:{
+                list_using:[],
+                list_overdue:[]
             },
-            couplist_limit:{
-                list_using:[
-                    {
-                        id:'1',
-                        value:'1',
-                        deadline:'2018-4-8',
-                        condition:'满11元使用'
-                    },
-                    {
-                        id:'2',
-                        value:'100',
-                        deadline:'2018-4-8',
-                        condition:'满2000元使用'
-                    }
-                ],
-                list_overdue:[
-                    {
-                        id:'3',
-                        value:'1',
-                        deadline:'2018-4-8',
-                        condition:'满11元使用'
-                    }
-                ]
-            }
         }
     },
     created(){
-        this.$root.$emit('header','优惠券');
+        this.$root.$emit('header','我的优惠券');
+        let userinfo=JSON.parse(sessionStorage.getItem('userinfo'));
+        this.userinfo=userinfo;
+        // console.log(JSON.parse(userinfo_str));
+        this.getCouponlist();
     },
     methods:{
-        switchcoupon(){
-            this.show_whole=!this.show_whole;
-            this.show_limit=!this.show_limit;
+        toCommodity(){
+            this.$router.push({name:'index',params:{direct:'commodity'}});
+        },
+        // switchcoupon(){
+        //     this.show_whole=!this.show_whole;
+        //     this.show_limit=!this.show_limit;
+        // },
+        // 获取优惠券
+        getCouponlist(){
+            let that=this;
+            this.$http.post('/api/product/coupon/customer/find?pageSize=0',
+            {
+                customerId:that.userinfo.id,
+                isActive:1
+            })
+            .then(res=>{
+                if(res.data.status==200){
+                    let list=res.data.info.list;
+                    //  this.$set(that.couplist.list_using,0,{'text':1})
+                    list.forEach(item=>{
+                        let json={
+                            'couponMoney':item.couponInfo.couponMoney,
+                            'fullAmount':item.couponInfo.fullAmount,
+                            'couponType':item.couponInfo.couponType,
+                            'endTime':item.couponInfo.endTime.substring(0,10)
+                        }
+                        // 可领取
+                        if(item.couponInfo.couponStatus=='1'){
+                            that.couplist.list_using.push(json);
+                        }
+                        // 过期
+                        else if(item.couponInfo.couponStatus=='0'){
+                            that.couplist.list_overdue.push(json);
+                        }
+                    });
+                }
+                else{
+                    Toast(res.data.msg);
+                }
+                console.log(res);
+            })
+            .catch(err=>{
+                Toast('数据获取失败');
+            })
         }
     }
 }
@@ -193,7 +138,7 @@ export default {
 }
 .whole_coupon,.limit_coupon{
     width: 100%;
-    display: none;
+    /* display: none; */
 }
 .whole_coupon.on,.limit_coupon.on{
     display: block;
@@ -248,7 +193,7 @@ export default {
 .draw_top,.draw_bottom{
     width: 100%;
     margin: 0.2rem auto .3rem auto;
-    height: .75rem;
+    height: .7rem;
     line-height: .75rem;
     border-bottom: .01rem #dcdcdc solid;
     text-align: left;

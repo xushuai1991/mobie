@@ -11,7 +11,7 @@
                     <div class="change"><i class='icon iconfont icon-arrow-right-copy icon-qiehuan'></i></div>
                     <div class="portrait">
                         <div class="portrait_img">
-                            <img src="static/HMMobilePhone/dsit/img/headPortrait2.png" alt="">
+                            <img :src="userinfo.avatar" alt="">
                             <p class='vip'>{{viplevel}}</p>
                             <i class='icon iconfont icon--huangguan' style='color:#fdd23e;position:absolute;right:.2rem;top:-.15rem;transform:rotate(25deg);'></i>
                         </div>
@@ -56,21 +56,21 @@
                             <i class="pay orageColor">2</i>
                             <i class='icon iconfont icon-daifukuan fontSize'></i>
                         </div>
-                        <p class="text_wait">代付款</p>
+                        <p class="text_wait">待付款</p>
                     </li>
                     <li @click="myorder('willpay')">
                         <div class="img_wait">
                             <i class="wait orageColor">2</i>
                             <i class='icon iconfont icon-icondaifahuo fontSize'></i>
                         </div>
-                        <p class="text_wait">待发货</p>
+                        <p class="text_wait">待服务</p>
                     </li>
                     <li>
                         <div class="img_wait ">
                             <i class="receive orageColor">2</i>
                             <i class='icon iconfont icon-ziyuan fontSize'></i>
                         </div>
-                        <p class="text_wait">待收货</p>
+                        <p class="text_wait">服务中</p>
                     </li>
                     <li>
                         <div class="img_wait ">
@@ -90,7 +90,7 @@
             <div class='opera_list'>
                 <ul>
                     <li>
-                        <router-link to='addManagement?name=index'>
+                        <router-link :to='{name:"addManagement",params:{name:"index"} }'>
                             <i class='icon iconfont icon-dingwei fontSize operaicon'></i>
                             <i class='flag on'></i>
                             <p class='name_opera'>地址</p>
@@ -104,7 +104,7 @@
                         </router-link>
                     </li>
                     <li>
-                        <router-link to=''>
+                        <router-link to='Coupon'>
                             <i class='icon iconfont icon-youhuijuan fontSize operaicon'></i>
                             <i class='flag'></i>
                             <p class='name_opera'>优惠券</p>

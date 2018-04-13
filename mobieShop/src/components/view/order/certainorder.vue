@@ -1,13 +1,13 @@
 <template>
     <div class='contain certainorder_xs'>
         <div class='msg-customer'>
-            <img class='avatar' src="static/images/bgimg.png" alt="">
+            <img class='avatar' :src="userinfo.imgurl" alt="">
             <div class='msgs'>
-                <p class='name'>{{username}} {{phone}}</p>
-                <p class='area'><i class='icon iconfont icon-dingwei'></i>{{address}}</p>
+                <p class='name'>{{userinfo.username}} {{userinfo.phone}}</p>
+                <p class='area' v-if='userinfo.address!=""'><i class='icon iconfont icon-dingwei'></i>{{userinfo.address}}</p>
             </div>
             <div class='more'>
-                <p class='icon iconfont icon-arrow-right-copy'></p>
+                <p class='icon iconfont icon-arrow-right-copy' @click='changeaddress'></p>
             </div>
         </div>
         <div class='msg-goods'>
@@ -16,17 +16,17 @@
                 <li v-for='(item,index) in goodslist' :key='index'>
                     <div v-if='item.childlist.length==0'>
                         <div class='img-goods'>
-                            <img src="item.imgurl" alt="">
+                            <img :src="item.imgurl" alt="">
                         </div>
                         <div class='msg'>
                             <p class='name'>{{item.name}}</p>
-                            <p class='brand'>品牌：{{item.brand}}</p>
-                            <p class='area'>服务区域：{{item.area_service}}</p>
+                            <p class='brand' v-if='item.conditionname1!=""'>{{item.conditionname1}}：{{item.conditionvalue1}}</p>
+                            <p class='area' v-if='item.conditionname2!=""'>{{item.conditionname2}}：{{item.conditionvalue2}}</p>
                         </div>
                         <div class='tips'>
                             <p class='price'>￥{{item.price_unit}}</p>
                             <p class='oper'>
-                                <span>X{{item.num}}</span>
+                                <span>X{{item.nums}}</span>
                                 <!-- <span>{{item.num}}</span> -->
                                 <i class='icon iconfont icon-edit_icon' @click="changenums(index)"></i>
                             </p>
@@ -41,13 +41,13 @@
                                 </div>
                                 <div class='msg'>
                                     <p class='name'>{{item1.name}}</p>
-                                    <p class='brand'>品牌：{{item1.brand}}</p>
-                                    <p class='area'>服务区域：{{item1.area_service}}</p>
+                                    <p class='brand' v-if='item1.conditionname1!=""'>{{item1.conditionname1}}：{{item1.conditionvalue1}}</p>
+                                    <p class='area' v-if='item1.conditionname2!=""'>{{item1.conditionname2}}：{{item1.conditionvalue2}}</p>
                                 </div>
                                 <div class='tips'>
                                     <p class='price'>￥{{item1.price_unit}}</p>
                                     <p class='oper'>
-                                        <span>X{{item1.num}}</span>
+                                        <span>X{{item1.nums}}</span>
                                         <!-- <i class='icon iconfont icon-edit_icon' @click="changenums(index1)"></i> -->
                                     </p>
                                 </div>
@@ -73,26 +73,25 @@
         <!-- 积分抵扣 -->
         <div class='deduction'>
             <p class='label'>
-                <span>积分抵扣</span>
-                <input type="checkbox" style='float:right;' v-model='isdeduction'>    
+                <span>积分抵扣（可用积分：{{userinfo.consumptionpoints}}）</span>  
             </p>
-            <ul v-if='isdeduction'>
+            <ul >
                 <li v-for='(item,index) in deductionlist' :key='index'>
-                    <label for="">{{item.label}}</label>
-                    <input type="radio" v-model="deductionvalue" :value='index' name='deduction'>
+                    <label for="">{{item.score+'积分抵扣'+item.moneycanduct+'元（'+item.commodityname+')'}}</label>
+                    <input type="checkbox" v-model="deductionindex" style="float:right;" :value='index' name='deduction'>
                 </li>
             </ul>
         </div>
         <!-- 优惠券抵扣 -->
         <div class='coupon'>
             <p class='label'>
-                <span>优惠券</span>
-                <input type="checkbox" style='float:right;' v-model='iscoupon'>    
+                <span v-if='couponlist.length!=0'>优惠券</span>
+                <span v-if='couponlist.length==0'>无可用优惠券</span> 
             </p>
-            <ul v-if='iscoupon'>
+            <ul >
                 <li v-for='(item,index) in couponlist' :key='index'>
-                    <label for="">{{item.label}}</label>
-                    <input type="radio" v-model="couponvalue" :value='index' name='coupon'>
+                    <label for="">{{item.couponType==0?'满'+item.fullmoney+'元减'+item.money+'元':(item.money+'元（'+(item.coupontype==1?'专享）':item.coupontype==2?'无门槛）':''))}}</label>
+                    <input type="checkbox" v-model="couponindex" style="float:right;" :value='index' name='coupon'>
                 </li>
             </ul>
         </div>
@@ -139,7 +138,7 @@
                 <p>共1件产品</p>
                 <p>合计：<span class='price'>￥{{finalprice}}</span></p>
             </span>
-            <button class='submit'>提交订单</button>
+            <button class='submit' @click='submitorder'>提交订单</button>
         </div>
     </div>
 </template>
@@ -147,89 +146,39 @@
 import {formatdate} from '../../../assets/javascript/formatdate.js'
 import { MessageBox } from 'mint-ui'
 import { Toast } from 'mint-ui'
+import {weixinPay} from '../../../assets/javascript/weixinpay.js'
 export default {
     data(){
         return{
             checked:'checked',
-            username:'徐X',
-            phone:'1505816****',
-            address:'上海市浦东新区',
-            goodslist:[
-                {
-                    name:'fashion',
-                    brand:'禾目',
-                    area_service:'上海',
-                    childlist:[],
-                    price_unit:200,
-                    num:1,
-                    imgurl:''
-                },
-                {
-                    name:'fashion2',
-                    brand:'禾目',
-                    area_service:'上海',
-                    childlist:[],
-                    price_unit:300,
-                    num:10,
-                    imgurl:''
-                },
-                {
-                    name:'套餐一',
-                    area_service:'上海',
-                    price_unit:200,
-                    num:1,
-                    childlist:[
-                        {
-                            name:'item1',
-                            brand:'hemu',
-                            area_service:'上海',
-                            price_unit:200,
-                            num:1,
-                            imgurl:''
-                        },
-                        {
-                            name:'item2',
-                            brand:'hemu',
-                            area_service:'上海',
-                            price_unit:100,
-                            num:2,
-                            imgurl:''
-                        }
-                    ]
-                }
-            ],
-            isdeduction:true,
+            userinfo:{
+                id:'',
+                username:'',
+                phone:'',
+                address:'',
+                addressid:'',
+                imgurl:'',
+                consumptionpoints:0
+            },
+            goodslist:[],
             deductionlist:[
-                {
-                    score:'100',
-                    money:'1',
-                    label:'100积分抵扣1元',
-                    cheched:true,
-                },
-                {
-                    score:'50',
-                    money:'0.2',
-                    label:'50积分抵扣0.1元',
-                    checked:false
-                }
+                // {
+                //     commodityname:'商品一',
+                //     score:20,
+                //     moneycanduct:1
+                // },
+                // {
+                //     commodityname:'商品一',
+                //     score:20,
+                //     moneycanduct:1
+                // }
             ],
-            deductionvalue:'0',
+            scorecandeduct:0,
+            moneycanduct:0,
+            deductionindex:[],
             iscoupon:false,
-            couponlist:[
-                {
-                    id:'1',
-                    money:'100',
-                    label:'优惠券一',
-                    cheched:true,
-                },
-                {
-                    id:'2',
-                    money:'200',
-                    label:'优惠券2',
-                    checked:false
-                }
-            ],
-            couponvalue:'0',
+            couponlist:[],
+            couponindex:[],
             servicedate:'',
             datechange:'',
             popupVisible:false,
@@ -260,22 +209,87 @@ export default {
         totalprice(){
             let total=0;
             this.goodslist.forEach(item=>{
-                total+=item.price_unit*item.num
+                total+=item.price_unit*item.nums
             });
             return total;
         },
         finalprice(){
             let price=this.totalprice;
-            let deductionmoney=this.isdeduction?this.deductionlist[this.deductionvalue].money:0;
-            let coupmoney=this.iscoupon?this.couponlist[this.couponvalue].money:0;
+            let deductionmoney=0;
+            if(this.deductionindex.length!=0){
+                this.deductionindex.forEach(item=>{
+                    deductionmoney+=this.deductionlist[item].moneycanduct;
+                });
+            }
+            let coupmoney=0;
+            this.couponindex.forEach(item=>{
+                coupmoney+=this.couponlist[item].money;
+            });
             price=price-deductionmoney-coupmoney;
             return price;
         }
     },
+    watch:{
+        deductionindex(newvalue,oldvalue){
+            let length_old=oldvalue.length;
+            let length_new=newvalue.length;
+            if(length_old>length_new){
+                this.userinfo.consumptionpoints+=this.deductionlist[length_old-1].score;
+            }
+            else if(length_old<length_new){
+                if(this.userinfo.consumptionpoints-this.deductionlist[length_new-1].score<0){
+                    Toast('剩余积分不足，无法抵扣！');
+                    this.deductionindex.pop();
+                }
+                else{
+                    this.userinfo.consumptionpoints-=this.deductionlist[length_new-1].score;
+                }
+            }
+        }
+    },
     created:function(){
         this.$root.$emit('header','确认订单');
+        // 订单内的商品数据
+        // let data=JSON.parse(localStorage.getItem('shopCar'))[0].listgoods;
+        let data=JSON.parse(localStorage.getItem('commodityInfo'));
+        // console.log(data);
+        data.forEach(item=>{
+            let json={
+                id:item.id,
+                name:item.name,
+                imgurl:item.commodityImageList.length>0?item.commodityImageList[0]:'',
+                conditionname1:'',
+                conditionvalue1:'',
+                conditionname2:'',
+                conditionvalue2:'',
+                price_unit:item.originalPrice,
+                nums:item.nums,
+                childlist:[]
+            };
+            this.goodslist.push(json);
+            if(item.originalPricePoint!=null){
+                let json1={
+                    commodityname:item.name,
+                    score:item.originalPricePoint,
+                    moneycanduct:item.originalPriceMoney
+                };
+                this.deductionlist.push(json1);
+            }
+        });
+        let userinfo=JSON.parse(sessionStorage.getItem('userinfo'));
+        this.userinfo.id=userinfo.id;
+        this.userinfo.username=userinfo.nickname==null?'无昵称':userinfo.nickname;
+        this.userinfo.phone=userinfo.mobile;
+        this.userinfo.imgurl=userinfo.avatar;
+        this.userinfo.consumptionpoints=userinfo.consumptionPoints;
+        this.getDefaultaddress();
+        // console.log(userinfo);
+        this.getCouponcanuse();
     },
     methods:{
+        changeaddress(){
+            this.$router.push({'name':'addManagement',params:{'name':'ordercertain'}});
+        },
         selectpaytype(e){
             let classname=e.target.getAttribute('class');
             if(classname=='check'){
@@ -318,9 +332,129 @@ export default {
                     Toast('请输入数字');
                 }
                 else{
-                    this.goodslist[index].num=value;
+                    this.goodslist[index].nums=value;
                 }
             }).catch(()=>{});
+        },
+        // 获取默认地址
+        getDefaultaddress(){
+            let that=this;
+            this.$http.post('/api/customer/address/queryMap',{customerId:this.userinfo.id})
+            .then(res=>{
+                if(res.data.status==200){
+                    for(let item of res.data.info){
+                        if(item.isDefaultAddress){
+                            let address=item.province.regionName+item.city.regionName+item.district.regionName+item.region.regionName+item.address;
+                            that.userinfo.address=address;
+                            that.userinfo.addressid=item.id;
+                            break;
+                        }
+                    }
+                }
+                console.log(res);
+            })
+            .catch(err=>{
+                console.log(err);
+            });
+        },
+        // 获取可用优惠券
+        getCouponcanuse(){
+            let that=this;
+            let data={
+                amount:200
+            };
+            this.$http.post('/api/product/coupon/customer/display',data)
+            .then(res=>{
+                if(res.data.status==200){
+                    res.data.info.forEach(item=>{
+                        let json={
+                            id:item.id,
+                            money:item.couponMoney,
+                            fullmoney:item.fullAmount,
+                            coupontype:item.couponType
+                        };
+                        that.couponlist.push(json);
+                    });
+                }
+                console.log(res);
+            })
+            .catch(err=>{
+                console.log(err);
+            });
+        },
+        //生成订单
+        createOrder(data){
+            let that=this;
+            this.$http.post('/api/product/order/mall/insert',data)
+            .then(res=>{
+                if(res.data.status==200){
+                    Toast('订单生成成功！');
+                }
+                else{
+                    Toast(res.data.msg);
+                }
+                console.log(res);
+            })
+            .catch(err=>{
+                Toast('订单生成失败');
+                console.log(err);
+            });
+        },
+        //获取微信支付config
+        getWeixinpayconfig(){
+            return new Promise((resolve,reject)=>{
+                let that=this;
+                let url=window.location.href;
+                this.$http.get('/api/public/share/wechat/config/fetch?url='+url)
+                .then(res=>{
+                    console.log(res);
+                    if(res.data.status==200){
+                        resolve(true);
+                    }
+                })
+                .catch(err=>{
+                    console.log(err);
+                    resolve(false);
+                });
+            })
+        },
+        submitorder(){
+            if(this.checked!='checked'){
+                Toast('请选择支付方式！');
+                return;
+            }
+            let data={
+                mallOrderList:[],
+                regionTemplateId:this.userinfo.addressid,
+                couponInfoList:[]
+            };
+            let mallOrderList=[];
+            this.goodslist.forEach(item=>{
+                let json={
+                    commodityId:item.id,
+                    amount:item.nums,
+                    usePoint:false,
+                    pointSum:0,
+                    condition1Name:item.conditionname1+item.conditionvalue1,
+                    condition2Name:item.conditionname2+item.conditionvalue2
+                };
+                mallOrderList.push(json);
+            });
+            this.deductionindex.forEach(item=>{
+                mallOrderList[item].usePoint=true;
+                mallOrderList[item].pointSum=this.deductionlist[item].score;
+            })
+            data.mallOrderList=mallOrderList;
+            this.couponindex.forEach(item=>{
+                let json={
+                    id:this.couponlist[item].id,
+                    couponAmount:1
+                };
+                data.couponInfoList.push(json);
+            });
+            this.getWeixinpayconfig();
+            this.createOrder(data);
+            // weixinpay();
         }
     }
 }
@@ -358,7 +492,10 @@ export default {
     margin-bottom: .2rem;
 }
 .msg-customer .msgs .area{
-    color: #787878;    
+    color: #787878;
+    text-overflow:ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 .msg-customer .more{
     padding-left: .2rem;
@@ -371,6 +508,7 @@ export default {
     font-size: .6rem;
     color: #787878;
     display: block;
+    
 }
 .msg-goods{
     margin-top: .2rem;

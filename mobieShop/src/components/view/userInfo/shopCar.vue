@@ -11,8 +11,8 @@
                             <div class="cart">
                                 <div class="goods">
                                     <div class="goods_title type-pay">
-                                        <input type="checkbox" class='CinputBox' v-model="item.shopselected" @change="checkShop(index)" /><span>{{item.shopname}}</span>
-                                        <div class="checks" @click='showServer(item.shopname)'>领券</div>
+                                        <input type="checkbox" class='CinputBox' v-model="item.shopselected" @change="checkShop(index)" /><span>{{item.listgoods[0].otherInfo.company.companyName}}</span>
+                                        <div class="checks" @click='showServer(item.shopname,4)'>领券</div>
                                         <p></p>
                                     </div>
                                     <div class="goodsBox list-item" v-for="(items,indexs) in item.listgoods" :key="indexs" data-type="0">
@@ -22,24 +22,24 @@
                                                     <img :src="items.img">
                                                 </li>
                                                 <li class="goods_info">
-                                                    <p class="brandDesc">{{items.name}}</p>
+                                                    <p class="brandDesc">{{items.otherInfo.commodityName}}</p>
                                                     <p class="goods_identifier strlen" style="width:3rem;"><span>水电费收到发生的防守打法收到发生的防守打法斯蒂芬斯蒂芬是收到放斯蒂芬斯蒂芬松放松发顺丰</span></p>
                                                     <p class="goods_color">颜色：<span>红色</span></p>
                                                     <p class="goods_size">尺码：<span>尺寸</span></p>
                                                 </li>
                                                 <li class="goods_info_se">
-                                                    <p class="goods_price">￥<span>{{items.price}}</span></p>
+                                                    <p class="goods_price">￥<span>{{items.otherInfo.commodityPrice}}</span></p>
                                                     <div class='cgqNumBox'>
-                                                        <input type="button" @click="reduce(index,indexs)" value='－'>
-                                                        <input type="number" disabled :value="items.count" />
-                                                        <input type="button" @click="add(index,indexs)" value='＋'>
+                                                        <input type="button" @click="reduce(index,indexs,items.commodityCount,items.id)" value='－'>
+                                                        <input type="number" disabled :value="items.commodityCount" />
+                                                        <input type="button" @click="add(index,indexs,items.commodityCount,items.id)" value='＋'>
                                                     </div>
                                                 </li>
                                                 <!-- <span class="mui_shopcar_del" @click="remove(index,indexs)">
-                                                                                        <i class='icon iconfont icon-lajitong'></i>
-                                                                                    </span>!-->
+                                                                                                                    <i class='icon iconfont icon-lajitong'></i>
+                                                                                                                </span>!-->
                                             </ul>
-                                            <div class="delete" @click="deleteSection(index,indexs)" :data-index="index">删除</div>
+                                            <div class="delete" @click="deleteSection(index,indexs,items.id)" :data-index="index">删除</div>
                                         </div>
                                     </div>
                                 </div>
@@ -67,37 +67,40 @@
                 </li>
             </ul>
         </footer>
-        <mt-popup v-model="popupVisible" position="bottom" style='width:100%;'>
+        <mt-popup v-model="popupVisible" position="bottom" style='width:100%; margin-bottom: 0.96rem;'>
             <div class='shopBoxS'>{{ShopName}}</div>
             <p class='shopBxo'>领取优惠劵</p>
             <ul class='shopBox'>
-                <li>
+                <li v-for='(item,index) in coupon' :key='index'>
                     <div class='shopFont'>
-                        <p>15元</p>
-                        <p>订单满149使用(不含邮费)</p>
-                        <p>使用期限 2018.03.25-2018.03.31</p>
-                    </div><button>领取</button>
+                        <p>{{item.couponMoney}}元</p>
+                        <p>{{item.couponName}}</p>
+                        <p>使用期限 {{item.starTime.split(" ")[0]}}—{{item.endTime.split(" ")[0]}}</p>
+                    </div><button @click='okcoupon(item.id)'>领取</button>
                 </li>
-                <li>
+            </ul>
+            <div class='closeBtn' @click="btnClose">关闭</div>
+        </mt-popup>
+        <mt-popup v-model="popupVisible2" position="bottom" style='width:100%; margin-bottom: 0.96rem;'>
+            <div class='shopBoxS'></div>
+            <p class='shopBxo'>付款</p>
+            <ul class='shopBox'>
+                <li v-for='(item,index) in shopLIst' :key='index'>
                     <div class='shopFont'>
-                        <p>15元</p>
-                        <p>订单满149使用(不含邮费)</p>
-                        <p>使用期限 2018.03.25-2018.03.31</p>
-                    </div><button>领取</button>
-                </li>
-                <li>
-                    <div class='shopFont'>
-                        <p>15元</p>
-                        <p>订单满149使用(不含邮费)</p>
-                        <p>使用期限 2018.03.25-2018.03.31</p>
-                    </div><button>领取</button>
+                        <p>{{item.listgoods[0].otherInfo.company.companyName}}</p>
+                        <p>合计:{{item.num}}件 合计金额:{{item.prices}}元</p>
+                    </div><button @click='playmoney(item)'>付款</button>
                 </li>
             </ul>
             <div class='closeBtn' @click="btnClose">关闭</div>
         </mt-popup>
     </div>
 </template>
+
 <script>
+    import {
+        Toast
+    } from 'mint-ui';
     import {
         MessageBox
     } from 'mint-ui';
@@ -113,6 +116,7 @@
                 pageNum: 1,
                 ShopName: '',
                 value: [],
+                coupon: [],
                 checked: '',
                 nums: '',
                 OrderTotal: 0,
@@ -120,91 +124,10 @@
                 endX: 0,
                 startY: 0,
                 moveEndY: 0,
-                list: [
-                    // shop:[{'img': require('./../homepage/recommend/recommendImage/1.jpg')}],
-                    {
-                        id: 1,
-                        shopname: '内蒙古原产牛奶',
-                        shopselected: false,
-                        listgoods: [{
-                                id: 101,
-                                name: '奶片',
-                                price: 1.3,
-                                count: 2,
-                                selected: false,
-                                'img': require('./../homepage/recommend/recommendImage/1.jpg')
-                            },
-                            {
-                                id: 102,
-                                name: '小辣椒',
-                                price: 100,
-                                count: 1,
-                                selected: false,
-                                'img': require('./../homepage/recommend/recommendImage/1.jpg')
-                            },
-                            {
-                                id: 103,
-                                name: '小辣椒22222',
-                                price: 100,
-                                count: 1,
-                                selected: false,
-                                'img': require('./../homepage/recommend/recommendImage/1.jpg')
-                            }
-                        ]
-                    },
-                    {
-                        id: 2,
-                        shopname: '云端电子',
-                        shopselected: false,
-                        listgoods: [{
-                                id: 201,
-                                name: '三星',
-                                price: 400000,
-                                count: 2,
-                                selected: false,
-                                'img': require('./../homepage/recommend/recommendImage/1.jpg')
-                            },
-                            {
-                                id: 202,
-                                name: '华为1',
-                                price: 100,
-                                count: 1,
-                                selected: false,
-                                'img': require('./../homepage/recommend/recommendImage/1.jpg')
-                            },
-                            {
-                                id: 203,
-                                name: '华为2',
-                                price: 100,
-                                count: 1,
-                                selected: false,
-                                'img': require('./../homepage/recommend/recommendImage/1.jpg')
-                            },
-                            {
-                                id: 204,
-                                name: '华为3',
-                                price: 100,
-                                count: 1,
-                                selected: false,
-                                'img': require('./../homepage/recommend/recommendImage/1.jpg')
-                            }
-                        ]
-                    },
-                    {
-                        id: 3,
-                        shopname: '小米官方商店',
-                        shopselected: false,
-                        listgoods: [{
-                            id: 301,
-                            name: '小米4',
-                            price: 1.3,
-                            count: 2,
-                            selected: false,
-                            'img': require('./../homepage/recommend/recommendImage/1.jpg')
-                        }]
-                    }
-                ], //领取优惠劵
+                list: [], //领取优惠劵
                 popupVisible: false,
+                popupVisible2: false,
+                shopLIst: []
             }
         },
         params() {
@@ -236,10 +159,8 @@
             num() {
                 var num = 0;
                 this.list.forEach(function(item) {
-                    item.listgoods.filters(function(a) {
-                        return a.selected
-                    }).map(function(a) {
-                        return a.count
+                    item.listgoods.map(function(a) {
+                        return a.commodityCount
                     }).foreEach(function(a) {
                         num += a
                     })
@@ -253,8 +174,8 @@
                     item.listgoods.filter(function(a) {
                         return a.selected
                     }).map(function(a) {
-                        as += a.count
-                        return a.count * a.price
+                        as += a.commodityCount
+                        return a.commodityCount * a.otherInfo.commodityPrice
                     }).forEach(function(a) {
                         total += a;
                     })
@@ -266,25 +187,113 @@
             }
         },
         created() {
-            this.getCarData()
+            this.getCarData();
         },
         methods: {
             //购物车数据群
+            //付款
+            playmoney(items) {
+                 this.$router.push({
+                        path: '/ordercertain',
+                        name: 'ordercertain',
+                        params: {
+                            name: 'shopCar',
+                            // dataObj: item
+                        }
+                    });
+                    //  localStorage.setItem("shopCar",JSON.stringify([item]))
+                    let commodityInfo = [];
+                    console.log(items)
+                    items.listgoods.forEach((item,index)=>{
+                        item.otherInfo.commodityInfo.nums = item.commodityCount
+                        commodityInfo.push(item.otherInfo.commodityInfo)
+                    })
+                    localStorage.setItem("commodityInfo",JSON.stringify(commodityInfo))
+            },
+            //领取优惠劵
+            okcoupon(id) {
+                let userInfo = sessionStorage.getItem("userinfo");
+                let userInfoId = JSON.parse(userInfo).id
+                let url = '/api/product/coupon/customer/insert?couponId=' + id + '&number=1';
+                this.$http({
+                    url: url,
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    data: {}
+                }).then(response => {
+                    if (response.data.status == 200) {
+                        Toast(response.data.msg);
+                    } else {
+                        Toast(response.data.msg);
+                    }
+                }).catch(error => {
+                    console.log(error)
+                })
+            },
+            //获取优惠劵
+            getcoupon(id) {
+                let that = this;
+                let getdata = new Promise(function(rel, rej) {
+                    let url = '/api/product/coupon/info/find';
+                    that.$http({
+                        url: url,
+                        method: 'POST',
+                        // headers: {
+                        //     'Content-Type': 'application/x-www-form-urlencoded'
+                        // },
+                        data: {
+                            companyId: id
+                        }
+                    }).then(response => {
+                        rel(response)
+                    }).catch(error => {
+                        rej(error)
+                    })
+                })
+                getdata.then(function(result) {
+                    that.coupon = result.data.info.list
+                    console.log(that.coupon)
+                }).catch(function(errmsg) {
+                    console.log(errmsg)
+                })
+            },
             getCarData() {
                 let userInfo = sessionStorage.getItem("userinfo");
                 let userInfoId = JSON.parse(userInfo).id
                 let that = this;
                 let getdata = new Promise(function(rel, rej) {
-                    let url = '/api/product/shoppingCart/queryCommodityInfoByCustomerId?key=companyId&customerId='+userInfoId;
+                    let url = '/api/product/shoppingCart/myShoppingCart';
                     that.$http({
                         url: url,
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
+                        // headers: {
+                        //     'Content-Type': 'application/x-www-form-urlencoded'
+                        // },
                         data: {}
                     }).then(response => {
-                        rel(response)
+                        // console.log(response.data.info)
+                        // that.list=[response]
+                        let data = response.data.info;
+                        var b = data.reduce((v, k) => { //循环
+                            k['selected'] = false;
+                            var filters = v.filter((data) => {
+                                return data.commodityCount === k.otherInfo.commodityCompanyId //过滤相同的companyId
+                            });
+                            if (filters.length === 0) { //判断数组的长度
+                                v.push({
+                                    commodityCount: k.otherInfo.commodityCompanyId, //设置对象
+                                    shopselected: false,
+                                    listgoods: [k] //设置值
+                                })
+                            } else {
+                                filters[0].listgoods.push(k) //扔进去
+                            };
+                            return v
+                        }, [])
+                        that.list = (b)
+                        console.log(that.list)
                     }).catch(error => {
                         rej(error)
                     })
@@ -301,34 +310,68 @@
                 if (self.shopselected == true) {
                     self.listgoods.forEach(function(list, index) {
                         list.selected = true;
-                        console.log(list)
+                        // console.log(list)
                     })
                 } else {
                     self.listgoods.forEach(function(list) {
                         list.selected = false;
-                        console.log(list)
+                        // console.log(list)
                     })
                 }
             },
-            add: function(parentID, ID) { //parentID是商家id,ID是商品id
+            add: function(parentID, ID, sum, shopId) { //parentID是商家id,ID是商品id
                 var self = this.list[parentID].listgoods[ID];
-                if (self.count > 100) {
+                if (self.commodityCount > 100) {
+                    Toast('最多99件');
                     return false;
                 }
-                self.count++;
+                self.commodityCount++;
+                console.log(self.commodityCount)
+                console.log(shopId)
+                let url = '/api/product/shoppingCart/update';
+                this.$http({
+                        url: url,
+                        method: "post",
+                        data: {
+                            id: shopId,
+                            commodityCount: self.commodityCount
+                        }
+                    })
+                    .then(res => {
+                        console.log(res)
+                    }).catch(error => {
+                        console.log(error)
+                    })
             },
             //减少商品数量 最少买一件
-            reduce: function(parentID, ID) { //parentID是商家id,ID是商品id
+            reduce: function(parentID, ID, sum, shopId) { //parentID是商家id,ID是商品id
                 var self = this.list[parentID].listgoods[ID];
-                if (self.count <= 1) {
+                if (self.commodityCount <= 1) {
+                    Toast('最少买一件');
                     return false
                 }
-                self.count--;
+                self.commodityCount--;
+                console.log(self.commodityCount)
+                let url = '/api/product/shoppingCart/update';
+                this.$http({
+                        url: url,
+                        method: "post",
+                        data: {
+                            id: shopId,
+                            commodityCount: self.commodityCount
+                        }
+                    })
+                    .then(res => {
+                        console.log(res)
+                    }).catch(error => {
+                        console.log(error)
+                    })
             },
-            deleteSection(parentID, ID) { //parentID是商家id,ID是商品id
-                this.unbind(parentID, ID)
+            deleteSection(parentID, ID, shopID) { //parentID是商家id,ID是商品id
+                this.unbind(parentID, ID, shopID)
             },
-            unbind(parentID, ID) {
+            unbind(parentID, ID, shopID) {
+                let that = this;
                 const htmls = `是否删除此信息？`;
                 MessageBox.confirm('', {
                     message: htmls,
@@ -344,6 +387,19 @@
                         var self = this.list[parentID]; //删除购车商品执行部分
                         self.listgoods.length == 1 ? this.list.splice(parentID, 1) : self.listgoods.splice(ID, 1); //如果删除最后一个商品，则商家一并删除
                     }
+                    let url = '/api/product/shoppingCart/remove';
+                    that.$http({
+                            url: url,
+                            method: "post",
+                            data: [shopID]
+                        })
+                        .then(res => {
+                            if (res.data.status == 200) {
+                                Toast('删除成功');
+                            }
+                        }).catch(error => {
+                            console.log(error)
+                        })
                 }).catch(err => {
                     if (err == 'cancel') {}
                 });
@@ -371,21 +427,65 @@
                         }
                     }
                 });
-                console.log(OrderArry, TotalPrice)
+                if (OrderArry.length < 1) {
+                    Toast('请选择点东西吧');
+                } else if (OrderArry.length == 1) {
+                      OrderArry.forEach((item, index) => {
+                        let num = 0;
+                        let prices = 0;
+                        item.listgoods.forEach((item) => {
+                            num += (item.commodityCount - 0)
+                            prices += item.commodityCount * item.otherInfo.commodityPrice
+                        })
+                        item['num'] = num;
+                        item['prices'] = prices;
+                    })
+                    this.$router.push({
+                        path: '/ordercertain',
+                        name: 'ordercertain',
+                        params: {
+                            name: 'shopCar',
+                            // dataObj: OrderArry
+                        }
+                    });
+                    let commodityInfo = [];
+                    OrderArry[0].listgoods.forEach((item,index)=>{
+                        console.log()
+                        item.otherInfo.commodityInfo.nums = item.commodityCount
+                        commodityInfo.push(item.otherInfo.commodityInfo)
+                    })
+                    localStorage.setItem("commodityInfo",JSON.stringify(commodityInfo))
+                } else if (OrderArry.length > 1) {
+                    this.shopLIst = OrderArry
+                    this.popupVisible2 = true;
+                    OrderArry.forEach((item, index) => {
+                        let num = 0;
+                        let prices = 0;
+                        item.listgoods.forEach((item) => {
+                            num += (item.commodityCount - 0)
+                            prices += item.commodityCount * item.otherInfo.commodityPrice
+                        })
+                        item['num'] = num;
+                        item['prices'] = prices;
+                    })
+                    
+                }
             },
             btnClose() {
                 this.popupVisible = false;
+                this.popupVisible2 = false;
             },
-            showServer(name) {
+            showServer(name, companyId) {
                 this.ShopName = name;
                 this.popupVisible = true;
+                this.getcoupon(companyId)
             },
             //跳转
             skip() {
                 if (this.checkSlide()) {
                     this.restSlide();
                 } else {
-                    alert('You click the slide!')
+                    // alert('You click the slide!')
                 }
             },
             //滑动开始
@@ -465,6 +565,16 @@
     .Cmycar .mint-cell-swipe-button {
         font-size: 0.3rem;
         line-height: 3rem;
+    }
+    .mint-toast-text {
+        position: relative;
+        z-index: 999999 !important;
+    }
+    .mint-popup-bottom {
+        z-index: 16 !important;
+    }
+    .v-modal {
+        z-index: 15 !important;
     }
 </style>
 <style lang="less" scoped>

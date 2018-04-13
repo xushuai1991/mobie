@@ -1,21 +1,29 @@
 <template>
     <div class='CmyOveroderDeil'>
         <!--<ul v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
-                            <li v-for="item in list">{{ item }}</li>
-                        </ul>!-->
+                                        <li v-for="item in list">{{ item }}</li>
+                                    </ul>!-->
         <section>
             <div class="wrap2">
                 <div class='tiemBox'>
-                    <p>等待买家付款</p>
-                    <p>00时29分29秒自动取消订单</p>
+                    <p>{{ orderState}}</p>
+                    <p v-if='orderState=="等待买家支付"'>
+                    <span :endTime="endTime" :callback="callback" :endText="endText">
+                            <slot>
+                                {{content}}
+                            </slot>
+                        </span></p>
+                    <p v-else>
+                        {{orderText}}
+                    </p>
                 </div>
                 <div class='userInfo'>
                     <div class='userImg'>
                         <img src='./../homepage/recommend/recommendImage/1.jpg'>
                     </div>
                     <div class='infoNmae'>
-                        <p><span>郭相君</span> <span>15035896892</span></p>
-                        <p><i class='icon iconfont icon-dizhi1'></i><span>上海浦东新区商城路988弄8号508</span></p>
+                        <p><span>{{uerName}}</span> <span>{{userPhone}}</span></p>
+                        <p><i class='icon iconfont icon-dizhi1'></i><span>{{userAdd}}</span></p>
                     </div>
                 </div>
                 <div class="goods_list">
@@ -24,48 +32,69 @@
                         <li class="mui-table-view-cell" v-for="(item,index) in list" :key="index">
                             <div class="cart">
                                 <div class="goods">
-                                    <div class="goods_title type-pay">
-                                        <span>{{item.shopname}}</span>
+                                    <div class="goods_title type-pay" style='height:0;'>
                                     </div>
-                                    <div class="goodsBox" v-for="(items,indexs) in item.listgoods" :key="indexs">
+                                    <div class="goodsBox" >
+                                        <ul class="goods_detail" style=' margin-top:0.2rem;'>
+                                            <li class="goods_img" style="margin-left:0px;">
+                                                <img :src="item.img">
+                                            </li>
+                                            <li class="goods_info">
+                                                <p class="brandDesc">{{item.commodityName}}</p>
+                                                 <p class="goods_identifier strlen" style="width:2.5rem;padding-right:0.2rem;"><span></span></p>
+                                                <p class="goods_color">颜色：<span>红色</span></p>
+                                                <p class="goods_size">尺码：<span>尺寸</span></p>
+                                            </li>
+                                            <li class="goods_info_se">
+                                                <p class="goods_price">￥<span>{{item.price}}</span></p>
+                                                <div class='cgqNumBox'>
+                                                    数量:<input type="number" disabled :value="item.saleNumber" style='background:#fff;margint-top:0.2rem;' />
+                                                </div>
+                                                <!--<span class="mui_shopcar_del" @click="remove(index,indexs)">
+                                                                            <i class='icon iconfont icon-lajitong'></i>
+                                                                        </span>!-->
+                                            </li>
+                                        </ul>
+                                        <!--</mt-cell-swipe>!-->
+                                    </div>
+                                    <div class="goodsBox" v-for="(items,indexs) in item.orderDetailList" :key="indexs">
                                         <ul class="goods_detail" style=' margin-top:0.2rem;'>
                                             <li class="goods_img" style="margin-left:0px;">
                                                 <img :src="items.img">
                                             </li>
                                             <li class="goods_info">
-                                                <p class="brandDesc">{{items.name}}</p>
-                                                <p class="goods_identifier strlen" style="width:2.5rem;padding-right:0.2rem;"><span>第三方辅导费胜多负少发斯蒂芬斯发斯蒂芬是否锁定蒂芬视斯蒂芬斯蒂芬收到发生的</span></p>
+                                                <p class="brandDesc">{{items.commodityName}}</p>
+                                                <p class="goods_identifier strlen" style="width:2.5rem;padding-right:0.2rem;"><span></span></p>
                                                 <p class="goods_color">颜色：<span>红色</span></p>
                                                 <p class="goods_size">尺码：<span>尺寸</span></p>
                                             </li>
                                             <li class="goods_info_se">
                                                 <p class="goods_price">￥<span>{{items.price}}</span></p>
                                                 <div class='cgqNumBox'>
-                                                    数量:<input type="number" disabled :value="items.count" style='background:#fff;margint-top:0.2rem;' />
+                                                    数量:<input type="number" disabled :value="items.saleNumber" style='background:#fff;margint-top:0.2rem;' />
                                                 </div>
                                                 <!--<span class="mui_shopcar_del" @click="remove(index,indexs)">
-                                                                <i class='icon iconfont icon-lajitong'></i>
-                                                            </span>!-->
+                                                                            <i class='icon iconfont icon-lajitong'></i>
+                                                                        </span>!-->
                                             </li>
                                         </ul>
                                         <!--</mt-cell-swipe>!-->
                                     </div>
-                                    <div class='orderFooter'>
-                                        <p><span class='floatLeft'>快递运费:全国包邮</span> <span>￥0.00</span></p>
-                                        <p><span class='floatLeft'>合计金额:</span> <span>￥0.00</span></p>
-                                    </div>
-                                    <div class='orderDeilText'>
-                                        <p>订单编号编号:<span>758487985468487</span></p>
-                                         <p>下单时间:<span>2018-05-18</span></p>
-                                         <input type='button' value='复制单号'>
-                                    </div>
-                                    <div>
-                                    </div>
+                                    
                                 </div>
                             </div>
                         </li>
                         <!--底部判断是加载图标还是提示“全部加载”-->
                     </ul>
+                    <div class='orderFooter'>
+                                        <p><span class='floatLeft'>快递运费:全国包邮</span> <span>￥0.00</span></p>
+                                        <p><span class='floatLeft'>合计金额:</span> <span>￥0.00</span></p>
+                                    </div>
+                                    <div class='orderDeilText'>
+                                        <p>订单编号编号:<span>758487985468487</span></p>
+                                        <p>下单时间:<span>2018-05-18</span></p>
+                                        <input type='button' value='复制单号'>
+                                    </div>
                 </div>
             </div>
         </section>
@@ -83,23 +112,51 @@
     export default {
         data() {
             return {
-                selected: '1',
-                loading: false,
-                queryLoading: false,
-                moreLoading: false,
-                allLoaded: false,
+                content: '',
+                orderStaty:'',
+                orderState:'',
+                uerName:'',
+                userPhone:'',
+                userAdd:'',
+                orderText:'',
                 list: [
                     // shop:[{'img': require('./../homepage/recommend/recommendImage/1.jpg')}],
                     {
                         id: 1,
                         shopname: '内蒙古原产牛奶',
-                        shopselected: false,
                         listgoods: [{
                                 id: 101,
                                 name: '奶片',
                                 price: 1.3,
                                 count: 2,
+                                'img': require('./../homepage/recommend/recommendImage/1.jpg')
+                            },
+                            {
+                                id: 102,
+                                name: '小辣椒',
+                                price: 100,
+                                count: 1,
                                 selected: false,
+                                'img': require('./../homepage/recommend/recommendImage/1.jpg')
+                            },
+                            {
+                                id: 103,
+                                name: '小辣椒22222',
+                                price: 100,
+                                count: 1,
+                                selected: false,
+                                'img': require('./../homepage/recommend/recommendImage/1.jpg')
+                            }
+                        ]
+                    },
+                    {
+                        id: 1,
+                        shopname: '内蒙古原产牛奶',
+                        listgoods: [{
+                                id: 101,
+                                name: '奶片',
+                                price: 1.3,
+                                count: 2,
                                 'img': require('./../homepage/recommend/recommendImage/1.jpg')
                             },
                             {
@@ -123,38 +180,108 @@
                 ]
             }
         },
+        props:{
+            endTime:{
+                type: String,
+                default :''
+            },
+            endText:{
+               type : String,
+               default:'订单超时已结束'
+            },
+            callback : {
+                // type : Function,
+                default :''
+            }
+        },
         methods: {
-            loadMore() {
-                this.loading = true;
-                setTimeout(() => {
-                    let last = this.list[this.list.length - 1];
-                    this.loading = true;
-                }, 2500);
-            },
-            deleteSection(parentID, ID) { //parentID是商家id,ID是商品id
-                this.unbind(parentID, ID)
-            },
-            unbind(parentID, ID) {
-                const htmls = `是否删除此信息？`;
-                MessageBox.confirm('', {
-                    message: htmls,
-                    title: '',
-                    showConfirmButton: true,
-                    showCancelButton: true,
-                    cancelButtonClass: 'cancelButton',
-                    confirmButtonClass: 'confirmButton',
-                    confirmButtonText: '删除',
-                    cancelButtonText: '不删除'
-                }).then(action => {
-                    if (action == 'confirm') {
-                        var self = this.list[parentID]; //删除购车商品执行部分
-                        self.listgoods.length == 1 ? this.list.splice(parentID, 1) : self.listgoods.splice(ID, 1); //如果删除最后一个商品，则商家一并删除
+            getDate() {
+                let url = '/api/product/order/mall/find';
+                this.$http({
+                    url: url,
+                    method: 'post',
+                    data: {
+                        "number": "2018041215233645"
                     }
-                }).catch(err => {
-                    if (err == 'cancel') {}
-                });
+                }).then((res) => {
+                    if(res.data.status!=200){
+                        return false
+                    }
+                    
+                    let orderStaty =  res.data.info.list[0];
+                    this.uerName = orderStaty.name;
+                    this.userPhone = orderStaty.phone
+                    this.userAdd = orderStaty.detailAddress
+                    console.log(orderStaty)
+                    if(orderStaty.payState==1){
+                        this.orderState = '已经支付等待卖家发货'
+                        this.orderText = '';
+                    }else if(orderStaty.payState==2){
+                        this.orderState = '等待买家支付'
+                         this.countdowm((this.timestampToTime((new Date(res.data.info.list[0].createTime).getTime() / 1000) + (24 * 60 * 60))))//时间戳加24小时;
+                        
+                    }else if(orderStaty.payState==3){
+                        this.orderState = '订单已过期'
+                        this.orderText = '订单已过期';
+                    }
+                   this.list=(orderStaty.orderDetails) 
+                   
+                }).catch((error) => {
+                    console.log(error)
+                })
             },
-        }
+            countdowm(timestamp) {
+                let self = this;
+                let timer = setInterval(function() {
+                    let nowTime = new Date();
+                    let endTime = new Date(timestamp);
+                    let t = endTime.getTime() - nowTime.getTime();
+                    console.log(t)
+                    if (t > 0) {
+                        let day = Math.floor(t / 86400000);
+                        let hour = Math.floor((t / 3600000) % 24);
+                        let min = Math.floor((t / 60000) % 60);
+                        let sec = Math.floor((t / 1000) % 60);
+                        hour = hour < 10 ? "0" + hour : hour;
+                        min = min < 10 ? "0" + min : min;
+                        sec = sec < 10 ? "0" + sec : sec;
+                        let format = '';
+                        if (day > 0) {
+                            format = `${day}天${hour}小时${min}分${sec}秒`;
+                        }
+                        if (day <= 0 && hour > 0) {
+                            format = `${hour}小时${min}分${sec}秒`;
+                        }
+                        if (day <= 0 && hour <= 0) {
+                            format = `${min}分${sec}秒`;
+                        }
+                        self.content = format;
+                    } else {
+                        clearInterval(timer);
+                        self.content = self.endText;
+                        self._callback();
+                    }
+                }, 1000);
+            },
+            _callback() {
+            //   this.orderState = "订单已结束";
+            //   this.orderStaty = 3
+            //   console.log(this.orderState)
+            },
+            timestampToTime(timestamp) {//转成时间
+                var date = new Date(timestamp * 1000); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
+                let Y = date.getFullYear() + '-';
+                let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                let D = date.getDate() + ' ';
+                let h = date.getHours() + ':';
+                let m = date.getMinutes() + ':';
+                let s = date.getSeconds();
+                return Y + M + D + h + m + s;
+            },
+        },
+        created() {
+            this.getDate()
+        },
     }
 </script>
 <style>
@@ -174,95 +301,94 @@
     }
 </style>
 <style scoped lang='less'>
-.tiemBox{
-    height:1.02rem;
-    background:#0cbbb9;
-    font-size:0.25rem;
-    line-height:0.4rem;
-    padding-top:0.2rem;
-    text-align:left;
-    padding-left:0.5rem;
-    color:#fff;
-}
-.userInfo{
-    position:relative;
-    height:1.76rem;
-    line-height:1.76rem;
-    overflow:hidden;
-    .userImg{
-        width:1.2rem;
-        height:1.2rem;
-        margin:0.22rem;
-        border-radius:1rem;
-        overflow:hidden;
-        img{
-            width:100%;
-            height:100%;
+    .tiemBox {
+        height: 1.02rem;
+        background: #0cbbb9;
+        font-size: 0.25rem;
+        line-height: 0.4rem;
+        padding-top: 0.2rem;
+        text-align: left;
+        padding-left: 0.5rem;
+        color: #fff;
+    }
+    .userInfo {
+        position: relative;
+        height: 1.76rem;
+        line-height: 1.76rem;
+        overflow: hidden;
+        .userImg {
+            width: 1.2rem;
+            height: 1.2rem;
+            margin: 0.22rem;
+            border-radius: 1rem;
+            overflow: hidden;
+            img {
+                width: 100%;
+                height: 100%;
+            }
+        }
+        .infoNmae {
+            position: absolute;
+            font-size: 0.25rem;
+            top: 0;
+            line-height: 0.5rem;
+            text-align: left;
+            color: #888;
+            top: 0.4rem;
+            left: 25%;
         }
     }
-    .infoNmae{
-        position:absolute;
-        font-size:0.25rem;
-        top:0;
-        line-height:0.5rem;
-        text-align:left;
-        color:#888;
-        top:0.4rem;
-        left:25%;
-    }
-}
-.markOrder{
-    height:1rem;
-    position:fixed;
-    bottom:0;
-    width:100%;
-    background:#fff;
-    border-top:1px solid #ddd;
-    font-size:0.25rem;
-    line-height:1rem;
-    text-align:right;
-    .nums{
-        
-        float:left;
-        padding-left:0.2rem;
-        span{
-            font-size:0.3rem;
-            font-weight:700;
-            color:#f38650;
+    .markOrder {
+        height: 1rem;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background: #fff;
+        border-top: 1px solid #ddd;
+        font-size: 0.25rem;
+        line-height: 1rem;
+        text-align: right;
+        .nums {
+            float: left;
+            padding-left: 0.2rem;
+            span {
+                font-size: 0.3rem;
+                font-weight: 700;
+                color: #f38650;
+            }
         }
     }
-}
-.markOrder input{
-    background:#28c0c9;
-    padding:0.1rem 0.2rem;
-    color:#fff;
-    margin-right:0.2rem;
-    border-radius:0.1rem;
-}
-.markOrder input:nth-child(1){
-    background:#fff;
-    border:1px solid #ddd;
-    color:#888;
-}
-.orderDeilText{
-    border-top:1px solid #ddd;
-    font-size:0.25rem;
-    text-align:left;
-    line-height:0.8rem;
-    padding-top:0.2rem;
-    padding-left:0.2rem;
-    position:relative;
-    color:#bababa;
-    input{
-        position:absolute;
-        top:15%;
-        right:2%;
-        padding:0.1rem 0.2rem;
-        border:1px solid #ddd;
-        background:#fff;
-        border-radius:0.1rem;
+    .markOrder input {
+        background: #28c0c9;
+        padding: 0.1rem 0.2rem;
+        color: #fff;
+        margin-right: 0.2rem;
+        border-radius: 0.1rem;
     }
-}
+    .markOrder input:nth-child(1) {
+        background: #fff;
+        border: 1px solid #ddd;
+        color: #888;
+    }
+    .orderDeilText {
+        border-top: 1px solid #ddd;
+        font-size: 0.25rem;
+        text-align: left;
+        line-height: 0.8rem;
+        padding-top: 0.2rem;
+        padding-left: 0.2rem;
+        position: relative;
+        color: #bababa;
+        input {
+            position: absolute;
+            top: 15%;
+            right: 2%;
+            padding: 0.1rem 0.2rem;
+            border: 1px solid #ddd;
+            background: #fff;
+            border-radius: 0.1rem;
+        }
+    }
     .floatLeft {
         float: left;
         padding-left: 0.2rem;
@@ -313,7 +439,6 @@
     .goods {
         width: 100%;
         background: white;
-        overflow: hidden;
         position: relative;
     }
     .cart {
@@ -346,7 +471,6 @@
     .goods {
         width: 100%;
         background: white;
-        overflow: hidden;
         position: relative;
     }
     .goods_title {

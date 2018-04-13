@@ -1,10 +1,10 @@
 <template>
     <div>
         <div class="page-loadmore-wrapper addManage" ref="wrapper" :style="{ height: wrapperHeight + 'px' }">
-            <mt-loadmore @translate-change="translateChange" :bottom-method="loadBottom" @bottom-status-change="handleBottomChange" :bottom-all-loaded="allLoaded" ref="loadmore">
+            <mt-loadmore @translate-change="translateChange" :autoFill='false' :bottom-method="loadBottom" @bottom-status-change="handleBottomChange" :bottom-all-loaded="allLoaded" ref="loadmore">
                 <div v-for="(item,index) in list" :key='index' style='overflow: hidden;'>
                     <div class='header'>
-                        <p class='userName'><span v-text='item.consigneeName'></span></span><span v-text='item.consigneeMobilePhone'>15800000000</span></p>
+                        <p class='userName'><span v-text='item.consigneeName'></span><span v-text='item.consigneeMobilePhone'>15800000000</span></p>
                         <p class='p2'><i class='icon iconfont icon-dizhi1'></i><span>
                         {{item.area.regionName+'区'+item.province.regionName+item.city.regionName+item.region.regionName+item.address}}
                         </span></p>
@@ -41,6 +41,7 @@
             }
         },
         created() {
+            this.$root.$emit('header','地址管理');
             this.getAddInfo();
             let routerParams = this.$route.params;
             this.goName = routerParams.name
@@ -69,11 +70,11 @@
                     .catch(error => {
                         console.log(error)
                     })
-               this.$router.push({
+                    this.$router.push({
                         path:'/'+this.goName,
                         name: this.goName,
                         params: { 
-                            name: 'addManagement', 
+                            direct: 'userinfo', 
                             dataObj:value
                         }
                     });
@@ -135,6 +136,7 @@
                 this.bottomStatus = status;
             },
             loadBottom() {
+                alert(111);
                 setTimeout(() => {
                     let lastValue = this.list.length;
                     console.log(lastValue)
