@@ -3,7 +3,7 @@
             <div class="productDetailSwitch">
                 <span class="productDetailBtn1" :class="productDetailBack" @click="productDetailBtn1">商品</span>
                 <span class="productDetailBtn2" :class="productDetailBacks" @click="productDetailBtn2">评论</span>
-                <i class='icon iconfont icon-fenxiang productDetailIcon'></i>
+                <i class='icon iconfont icon-fenxiang productDetailIcon' @click="showShare"></i>
             </div>
             <transition
                 name="custom-classes-transition"
@@ -14,24 +14,32 @@
                         <components :templateData='item.componentsData' :is='item.componentsName'  :type='item.componentsName'></components>
                         </keep-alive>
                         <productDetail></productDetail>
-                        <div id="zbd-preferences" class="clear" style="font-size:0.25rem;text-align:left;padding:0.3rem 0.1rem 0.3rem 0.3rem;border-top:0.12rem solid #efefef;">
-                            <p style="float:left;">已选<span style="margin-left: 0.1rem;">唯润俏枝头18头</span></p>
-                            <p style="float: right;margin-right: 0.1rem;" @click="showServer">其他规格&ensp;></p>
+                        <div id="zbd-preferences" class="clear" style="font-size:0.25rem;text-align:left;padding:0.4rem 0.1rem 0.4rem 0.3rem;border-top:0.12rem solid #efefef;">
+                            <p style="float:left;    color: #7b7b7b;">已选<span style="margin-left: 0.1rem;    color: #1d1d1d;">唯润俏枝头18头</span></p>
+                            <p style="float: right;margin-right: 0.1rem; color: #7b7b7b;" @click="showServer">其他规格&ensp;></p>
                         </div>  
-                        <div id="zbd-productDescription" class="clear" style="font-size:0.25rem;text-align:left;padding:0.3rem 0.1rem 0.3rem 0.3rem;border-top:0.12rem solid #efefef;">
-                            <p>包邮<span>上海市满60.00元包邮</span></p>
-                            <p>产地<span>唐山市</span></p>
-                            <div>
-                                <span><i></i>全面质检</span>
-                                <span><i></i>资深买手</span>
-                                <span><i></i>原产地直采</span>
-                                <span><i></i>...</span>
-                            </div>
+                        <div id="zbd-productDescription" class="clear" style="font-size:0.25rem;text-align:left;padding:0.4rem 0.1rem 0rem 0.3rem;border-top:0.12rem solid #efefef; ">
+                            <p style="    padding-bottom: 0.2rem;
+    color: #7b7b7b;">包邮<span style="padding-left: 0.1rem;
+    color: #1d1d1d;">上海市满60.00元包邮</span></p>
+                            <p style="    padding-top: 0.2rem;
+    padding-bottom: 0.4rem;
+    color: #7b7b7b;">产地<span style="padding-left: 0.1rem;
+    color: #1d1d1d;">唐山市</span></p>
                         </div>
-                        <div id="zbd-Tips" class="clear" style="font-size:0.25rem;text-align:left;padding:0.3rem 0.1rem 0.3rem 0.3rem;border-top:0.12rem solid #efefef;border-bottom:0.12rem solid #efefef;">
-                            <p><span>温馨提示</span><i></i></p>
-                            <p><span>温馨提示：</span>1.该商品为原产地（厂家）发货，每日1...</p>
+                        <div id="zbd-baozhang" class="clear" style="font-size:0.3rem;text-align:left;padding:0.4rem 0.1rem 0.4rem 0.3rem;   border-top: 0.02rem solid #efefef;">
+                            <span><i class="icon iconfont icon-iconset0126"></i>全面质检</span>
+                            <span><i class="icon iconfont icon-iconset0126"></i>资深买手</span>
+                            <span><i class="icon iconfont icon-iconset0126"></i>原产地直采</span>
+                            <span><i class="icon iconfont icon-more"></i></span>
                         </div>
+                        <div id="zbd-Tips" class="clear" style="font-size: 0.3rem;text-align:left;    padding: 0.3rem 0.1rem 0rem 0.3rem;border-top:0.12rem solid #efefef;">
+                            <p style="
+    padding-top: 0.1rem;
+    padding-bottom: 0.3rem;"><span>温馨提示</span><i class="icon iconfont icon-xiajiantou"></i></p>
+                        </div>
+                        <div id="zbd-TipsContent" style="font-size: 0.25rem;text-align:left;padding:0.4rem 0.1rem 0.4rem 0.3rem;border-bottom: 0.12rem solid #efefef;border-top:0.02rem solid #efefef;"><span>温馨提示：</span>1.该商品为原产地（厂家）发货，每日1...</div>
+                        <div id="zbd-commodityInfoTitle" style="font-size:0.32rem;padding:0.32rem 0.1rem 0.32rem 0.3rem;">商品信息</div>
                         <keep-alive v-for='(item,index) in detailImgArr1' :key='index'>
                         <components :templateData='item.componentsData' :is='item.componentsName'  :type='item.componentsName'></components>
                         </keep-alive>
@@ -69,8 +77,46 @@
                                 </div>
                             </div>
                         </div>
-                        <mt-popup v-model="popupVisible" position="bottom" style='width:100%;'>
-                            <div class='closeBtn' @click="btnClose">关闭</div>
+                        <mt-popup v-model="popupVisible" position="bottom" style='width:100%;font-size:0.28rem;'>
+                            <div class="clear" style="margin-top: 0.1rem;position: relative;    height: 1.8rem;">
+                                <div style="    width: 2rem;
+    border: 1px solid #ddd;
+    border-radius: 0.05rem;
+    position: absolute;
+    top: -0.4rem;
+    left: 0.3rem;
+    background-color: #fff;"><img src="./test.jpg" style="        width: 1.9rem;
+    padding-top: 0.02rem;"></div>
+                                 <div style="width: 4rem;
+    float: left;
+    margin-left: 2.6rem;
+    text-align: left;"><p style="margin-top: 0.2rem;">￥299</p><p style="margin-top: 0.1rem;">唯润俏枝头</p></div>
+                                 <div style="    width: 0.7rem;
+    float: right;
+    color: #7b7b7b;
+    font-size: 0.54rem;" class='closeBtn' @click="btnClose">&times;</div>
+    <div style="    width: 6.8rem;
+    position: absolute;
+    bottom: 0px;
+    left: 0.3rem;
+    border-bottom: 1px solid rgb(221, 221, 221);"></div>
+                            </div>
+                            <p style="padding-left: 0.4rem;
+    padding-top: 0.2rem;
+    text-align: left;">数量</p>
+                            <div style="position: relative;
+    height: 0.6rem;
+    line-height: 0.6rem;
+    padding-left: 0.4rem;">
+                                <div style="float:left;">-</div>
+                                <input type="number" style="float:left;">
+                                <div style="float:left;">+</div>
+                            </div>
+                            <div style="height: 0.8rem;
+    line-height: 0.8rem;"><p>确认</p></div>
+                        </mt-popup>
+                        <mt-popup v-model="shareVisible" position="bottom" style='width:100%;'>
+                            <div class='closeBtn' @click="btnClose">分享</div>
                         </mt-popup>
                 </div>
             </transition>
@@ -88,8 +134,11 @@
                                 </ul>
                             </div>
                             <div class="userReviewList">
-                                <ul>
-                                    <li v-for="(item,index) in 5" :key="index">
+                                <ul v-infinite-scroll="loadMore"
+                                    infinite-scroll-disabled="loading"
+                                    infinite-scroll-distance="2"
+                                >
+                                    <li v-for="(item,index) in commentList" :key="index">
                                         <div class="commentHeaderInfo clear">
                                             <span class="commentNickname" >用户昵称</span>
                                             <span class="commentStar">
@@ -99,8 +148,9 @@
                                             <span class="userCommentTime">2016-7-7</span>
                                         </div>
                                         <div class="commentContent">
-                                            <p class="userCommentContent">我只想说，特别的好！！！！！！！！！说点什么好呢，凑足十个字！</p>
-                                            <ul class="clear userCommentImg">
+                                            <p class="userCommentContent">{{ item }}我只想说，特别的好！！！！！！！！！说点什么好呢，凑足十个字！</p>
+                                            <ul class="clear userCommentImg" style="padding-left: 0.2rem;
+    padding-right: 0.2rem;">
                                                 <li v-for="(item,index) in 2" :key="index">
                                                     <img src="./test.jpg">
                                                 </li>
@@ -114,6 +164,7 @@
                                     </li>
                                 </ul>
                             </div>
+                            <mt-spinner v-show="commentLoading" :type="2" :size="25" color="#26a2ff"></mt-spinner>
                         </div>
             </transition>
             <div class='detailBottom'>
@@ -122,30 +173,30 @@
                         <i class='icon iconfont icon-tubiaolunkuo-'></i>
                         <p>客服</p>
                     </li>
-                    <li>
-                        <!-- 已被收藏时 icon-xingxing1 #ffa700 -->
-                        <i class='icon iconfont icon-xingxing1' style="color:#ffa700"></i>
-                        <!-- <i class='icon iconfont icon-shoucang' style="color:#838d98"></i> -->
+                    <li @click="collectionStar">
+                        <i class="icon iconfont" :class="starXingXing" :style="starXingXingColor"></i>
                         <p>收藏</p>
                     </li>
-                    <li style="position: relative;">
-                        <i class='icon iconfont icon-gouwuche'></i>
-                        <p>购物车</p>
-                        <div style="position: absolute;
-    top: 0.04rem;
-    right: 0.2rem;
-    width: 0.28rem;
-    height: 0.28rem;
-    line-height: 0.28rem;
-    border-radius: 25px;
-    background: #ff2500;
-    color: #fff;">{{ shopNum }}</div>
+                    <li style="position: relative;" @click="goToList">
+                            <i class='icon iconfont icon-gouwuche'></i>
+                            <p>购物车</p>
+                            <div v-show="shopCarNumShow" style="position: absolute;
+                            top: 0.04rem;
+                            right: 0.2rem;
+                            width: 0.28rem;
+                            height: 0.28rem;
+                            line-height: 0.28rem;
+                            border-radius: 25px;
+                            background: #ff2500;
+                            color: #fff;">{{ shopNum }}</div>
                     </li>
                     <li @click='addShopCar'>
                         <p>加入购物车</p>
                     </li>
-                    <li>
-                        <p>立即购买</p>
+                    <li @click='buyNow'>
+                        <router-link to='ordercertain'>
+                            <p>立即购买</p>
+                        </router-link>
                     </li>
                 </ul>
             </div>
@@ -157,6 +208,9 @@
         Swipe,
         SwipeItem
     } from 'mint-ui';
+    import { Toast } from 'mint-ui'
+    import { InfiniteScroll } from 'mint-ui'
+    import { Spinner } from 'mint-ui'
     // import { mapState,mapMutations,mapGetters } from 'vuex'
     import imageAds from '@/components/view/template/imageAds.vue'
     import classification from '@/components/view/template/classification.vue'
@@ -186,17 +240,113 @@
                     productDetailBack2:true
                 },
                 popupVisible:false,
-                shopNum:5
+                shareVisible:false,
+                shopNum:'',
+                shopCarNumShow:false,
+                commodityId:'bb561d8f-3ad8-11e8-8c86-88d7f652f92c',
+                customerId:'',
+                starXingXing:{
+                    "icon-shoucang":true,
+                    "icon-xingxing1":false
+                },
+                starXingXingColor:{
+                    "color":"#838d98"
+                },
+                isStar:false,
+                starId:'',
+                commentList:['1','2','3','4','5','6','7','8','9','10'],
+                commentLoading:false
             };
         },
         created(){
+            //客户ID 
+            let customer = sessionStorage.getItem('userinfo')
+            this.customerId = JSON.parse(customer).id
+
+            //根据商品ID 查询相关的商品信息
+             this.$http.post('/api/product/commodity/info/queryMap',{
+                "id":this.commodityId
+            })
+            .then(function(response){
+                console.log(response)
+            })
+            .catch(function(response){
+                console.log(response)
+            });
+            //购物车数量
+              let that=this;
+            this.$http.post('/api/product/shoppingCart/myShoppingCart',{})
+            .then(function(response){
+                console.log(response)
+                if(response.data.status == 401){
+                    that.shopCarNumShow = false
+                    console.log(that.shopCarNumShow)
+                }else{
+                    if(response.data.info.length == 0){
+                        that.shopCarNumShow = false
+                    }else if(response.data.info.length > 0){
+                        that.shopCarNumShow = true
+                        let num = null;
+                        response.data.info.forEach((element,i) => {
+                            console.log(element.commodityCount)
+                            num += element.commodityCount
+                        });
+                        that.shopNum =num
+                    }
+                }
+            })
+            .catch(function(response){
+                console.log(response)
+            })
+            
+            //查询产品是否收藏
+            this.$http.post('/api/product/commodity/favorite/queryOne?commodityId='+that.commodityId)
+            .then(function(response){
+                console.log(response)
+                if(response.data.status == 201){
+                    Toast({
+                        message:response.data.msg,
+                        duration:1000
+                       }
+                    );
+                }else if(response.data.status == 203){
+                    that.starXingXing['icon-shoucang'] = true
+                    that.starXingXing['icon-xingxing1'] = false
+                    that.starXingXingColor.color = "#838d98"
+                    that.isStar = false
+                }else if(response.data.status == 200){
+                    that.starXingXing['icon-shoucang'] = false
+                    that.starXingXing['icon-xingxing1'] = true
+                    that.starXingXingColor.color = "#ffa700"
+                    that.isStar = true
+                    that.starId = response.data.info.id
+                }
+            })
+            .catch(function(response){
+                console.log(response)
+            });
+
+            //根据商品ID 查询相关的评论列表
+            this.$http.post('/api/product/commodity/evaluation/query?page=1&pageSize=10',{
+                "commodityId":this.commodityId
+            })
+            .then(function(response){
+                console.log(response)
+            })
+            .catch(function(response){
+                console.log(response)
+            });
+
             //console.log(this.comlist)
+            ///////////////////////（详情模板）/////////////////////////////
+
+            //浏览状态 和 手机状态显示的不同详情页 
             let isBrowse = sessionStorage.getItem ("isBrowse");
             console.log(isBrowse)
             if(isBrowse == true){
                 this.eventTemplateUrl = sessionStorage.getItem ("eventTemplateUrl");
                 let id = this.getUrlParms("id")
-                 console.log(id)
+                 console.log(id)//详情模板ID
                   let that=this;
                     this.$http.post('/api/product/mall/template/queryMap',
                         {
@@ -205,30 +355,21 @@
                         }
                     )
                     .then(function(response){
-                        console.log(response)
+                       // console.log(response)
                         let comlists = JSON.parse(response.data.info[0].comlist)
-                        console.log(comlists)
+                       // console.log(comlists)
                          //that.comlist = comlists
                         let bannerArr = [];
                         bannerArr.push(comlists[0])
                         console.log(bannerArr)
                         that.bannerArr1 = bannerArr
-                        // 假设你对扩展原生 JavaScript 不反感,那么能够将这种方法加入到数组原型(Array prototype)中:
-                        // Array.prototype.insert = function (index, item) {
-                        // this.splice(index, 0, item);
-                        // };
-
-                        // 此时,能够这样调用:
-                        // var nums = ["one", "two", "four"];
-                        // nums.insert(2, 'three'); // 注意数组索引, [0,1,2..]
-                        // array	// ["one", "two", "three", "four"]
                     })
                     .catch(function(response){
                         console.log(response)
                     })
             }else if(isBrowse == null){
                 let id = this.getURLparms("id");
-                console.log(id)
+                console.log(id)//详情模板ID
                 //console.log(this.comlist)
                 let that=this;
                 this.$http.post('/api/product/mall/template/queryMap',
@@ -240,7 +381,7 @@
                 .then(function(response){
                     console.log(response)
                     let comlists = JSON.parse(response.data.info[0].comlist)
-                     console.log(comlists)
+                    // console.log(comlists)
                    // that.comlist = comlists
                    let bannerArr = [];
                     bannerArr.push(comlists[0])
@@ -248,7 +389,7 @@
                     for(let i = 1;i<comlists.length;i++){
                         detailImgArr.push(comlists[i])
                     }
-                    console.log(detailImgArr)
+                    //console.log(detailImgArr)
                     that.bannerArr1 = bannerArr
                     that.detailImgArr1 = detailImgArr
                 })
@@ -292,34 +433,172 @@
                 },
                 btnClose() {
                     this.popupVisible = false;
+                    this.shareVisible = false;
                 },
                 showServer(name) {
                     this.popupVisible = true;
                 },
+                showShare(name){
+                    this.shareVisible = true;
+                },
+                goToList(){
+                    let that=this;
+                    that.$http.post('/api/product/shoppingCart/myShoppingCart',{})
+                            .then(function(response){
+                                console.log(response)
+                                if(response.data.status == 401){
+                                    Toast({
+                                        message:'尚未登录',
+                                        duration:1000
+                                    }
+                                    );
+                                }else{
+                                    that.$router.push('./shopCar')
+                                }
+                            })
+                            .catch(function(response){
+                                console.log(response)
+                            })
+                },
                 addShopCar(){
-                    this.shopNum++;
-                    let id = 'b26ad5a2-3af7-11e8-8c96-88d7f652f92c'
-                    let commodityId = id
+                    //this.shopNum++;
+                   
+                    let commodityId = this.commodityId
                     console.log(commodityId)
-                    let customer = sessionStorage.getItem('userinfo')
-                    let customerId = JSON.parse(customer).id
+                    let customerId = this.customerId
                     console.log(customerId)
-                    let commodityCount = this.shopNum
+                    let commodityCount = 1
                     console.log(commodityCount)
-                    //  let that=this;
-                    // this.$http.post('/api/product/shoppingCart/insertOne',
-                    //     {
-                    //         'commodityId':commodityId,
-                    //         'customerId':customerId,
-                    //         'commodityCount':commodityCount
-                    //     }
-                    // )
-                    // .then(function(response){
-                    //     console.log(response)
-                    // })
-                    // .catch(function(response){
-                    //     console.log(response)
-                    // })
+                     let that=this;
+                    this.$http.post('/api/product/shoppingCart/insertOne',
+                        {
+                            'commodityId':commodityId,
+                            'customerId':customerId,
+                            'commodityCount':commodityCount
+                        }
+                    )
+                    .then(function(response){
+                        console.log(response)
+                        if(response.data.status == 401){
+                        that.shopCarNumShow = false
+                        Toast({
+                            message:'尚未登录',
+                            duration:1000
+                        }
+                        );
+                       }else{
+                           that.$http.post('/api/product/shoppingCart/myShoppingCart',{})
+                            .then(function(response){
+                                console.log(response)
+                                if(response.data.info.length == 0){
+                                    that.shopCarNumShow = false
+                                }else{
+                                    that.shopCarNumShow = true
+                                    let num = null;
+                                    response.data.info.forEach((element,i) => {
+                                        console.log(element.commodityCount)
+                                        num += element.commodityCount
+                                    });
+                                    that.shopNum =num
+                                }
+                            })
+                            .catch(function(response){
+                                console.log(response)
+                            })
+                       }
+                    })
+                    .catch(function(response){
+                        console.log(response)
+                    })
+                },
+                collectionStar(){
+                    if(this.isStar == false){
+                        //未收藏状态 调用收藏接口
+                        let that=this;
+                        this.$http.post('/api/product/commodity/favorite/insertOne',{
+                            "commodityId":that.commodityId
+                        })
+                        .then(function(response){
+                            console.log(response)
+                            if(response.data.status == 401){
+                                Toast({
+                                    message:'尚未登录',
+                                    duration:1000
+                                }
+                                );
+                            }else if(response.data.status == 203){
+                                Toast({
+                                    message:response.data.msg,
+                                    duration:1000
+                                }
+                                );
+                            }else if(response.data.status == 200){
+                                Toast({
+                                    message:response.data.msg,
+                                    duration:1000
+                                }
+                                );
+                                that.starXingXing['icon-shoucang'] = false
+                                that.starXingXing['icon-xingxing1'] = true
+                                that.starXingXingColor.color = "#ffa700"
+                                that.isStar = true
+                                that.starId = response.data.info.id
+                            }
+                        })
+                        .catch(function(response){
+                            console.log(response)
+                        });
+                    }else if(this.isStar == true){
+                        //收藏状态 调用取消收藏接口
+                         let that=this;
+                        this.$http.post('/api/product/commodity/favorite/remove?id='+that.starId)
+                        .then(function(response){
+                            console.log(response)
+                            if(response.data.status == 201){
+                                Toast({
+                                    message:response.data.msg,
+                                    duration:1000
+                                }
+                                );
+                            }else if(response.data.status == 203){
+                                Toast({
+                                    message:response.data.msg,
+                                    duration:1000
+                                }
+                                );
+                            }else if(response.data.status == 200){
+                                Toast({
+                                    message:response.data.msg,
+                                    duration:1000
+                                }
+                                );
+                                that.starXingXing['icon-shoucang'] = true
+                                that.starXingXing['icon-xingxing1'] = false
+                                that.starXingXingColor.color = "#838d98"
+                                that.isStar = false
+                            }
+                        })
+                        .catch(function(response){
+                            console.log(response)
+                        });
+                        // alert(this.isStar)
+                    }
+                },
+                loadMore() {
+                    //评论滚动到底部自动加载
+                    this.loading = true;
+                    this.commentLoading = true
+                    setTimeout(() => {
+                        let last = this.commentList[this.commentList.length - 1];
+                        for (let i = 1; i <= 2; i++) {
+                        this.commentList.push(last + i);
+                        }
+                        this.loading = false;
+                        this.commentLoading = false
+                    }, 2500);
+                },
+                buyNow(){
+                    localStorage.setItem('commodityInfo','11')
                 }
         },
         components: {
