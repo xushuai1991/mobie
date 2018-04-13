@@ -11,7 +11,7 @@
             <!-- 全部 -->
             <mt-tab-container-item id="all">
                 <ul  v-infinite-scroll="loadMore" infinite-scroll-disabled="loading1" infinite-scroll-immediate-check='false'  class='orderlist'>
-                    <li v-for="(item,index) in orderlist[0]" :key="index" @click='toOrderDetail(item.id,0)'>
+                    <li v-for="(item,index) in orderlist[0]" :key="index" @click='toOrderDetail(item.number,0)'>
                         <pendpay :data='item' index='0' v-if="item.payState!=1&&item.orderState==1"></pendpay>
                         <inservice :data='item' v-if='item.payState==1&&item.orderState!=2&&item.orderState!=3&&item.orderState!=4&&item.orderState!=5&&item.orderState!=6&&item.serviceState==2'></inservice>
                         <willservice :data='item' v-if='item.payState==1&&item.orderState!=2&&item.orderState!=3&&item.orderState!=4&&item.orderState!=5&&item.orderState!=6&&item.serviceState==1'></willservice>
@@ -305,9 +305,9 @@ export default {
             }
         },
         //跳转订单详情
-        toOrderDetail(orderid,index){
-            this.$router.push('orderDeil?orderid='+orderid+'&index='+index);
-            console.log(orderid,index);
+        toOrderDetail(ordernumber,index){
+            this.$router.push('orderDeil?ordernumber='+ordernumber+'&index='+index);
+            // console.log(orderid,index);
         },
         // 加载全部订单
         loadMore() {
