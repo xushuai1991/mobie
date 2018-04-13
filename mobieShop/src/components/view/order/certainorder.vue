@@ -114,7 +114,6 @@
             
         </div>
         <div class='invoice'>
-            <!-- <router-link class='tip' to='/invoice'>我要开发票</router-link> -->
             <p>
                 <span class='tip'>我要开发票</span>
                 <i class='icon iconfont icon-arrow-right-copy' style='position:absolute;right:.2rem;'  @click='makeinvoice'></i>   
@@ -389,6 +388,7 @@ export default {
             .then(res=>{
                 if(res.data.status==200){
                     Toast('订单生成成功！');
+                    that.$router.push('/order');
                 }
                 else{
                     Toast(res.data.msg);

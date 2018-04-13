@@ -1,5 +1,5 @@
 <template>
-    <div class='pendpay'>
+    <div class='pendpay' >
         <div class='title'>
             <span class='tip'>待付款</span>
             <span class='time-remain'>还剩{{date_ramian}}</span>
@@ -29,6 +29,15 @@
                 <button class='cancle' @click="cancleOrder">取消订单</button>
             </div>
         </div>
+        <mt-popup v-model="popupVisible" position="bottom" class="popup">
+            <mt-picker :slots="dates" @change='onValuesChange'  :showToolbar='true'>
+                <p class='btn-group'>
+                    <button class='cancle' @click='cancledate'>取消</button>
+                    <button class='certain' @click="getdate">确定</button>
+                </p>
+            </mt-picker>
+        </mt-popup>
+        <button class='certain' @click="appointment">预约时间</button>
     </div>
 
 </template>
@@ -37,11 +46,35 @@ import { Toast } from 'mint-ui';
 import { Indicator } from 'mint-ui';
 import { MessageBox } from 'mint-ui';
 export default {
-    props:['data'],
+    props:['data','index'],
     data(){
         return{
             date_ramian:'',
-            date_dead:''
+            date_dead:'',
+            popupVisible:false,
+            dates:[
+                {
+                    values: ['今天', '明天', '后天'],  
+                    className: 'slot1',  
+                    textAlign: 'left'  
+                },
+                {
+                    flex: 1,  
+                    values: ['00点','01点','02点','03点','04点','05点',
+                            '06点','07点','08点','09点','10点','11点',
+                            '12点','13点','14点','15点','16点','17点',
+                            '18点','19点','20点','21点','22点','23点'],  
+                    className: 'slot2',  
+                    textAlign: 'center'  
+                },
+                {
+                    values: ['00分', '10分','20分','30分','40分','50分',],  
+                    className: 'slot3',  
+                    textAlign: 'right'  
+                }
+            ],
+            currentindex:'',
+            datechange:''
         }  
     },
     created(){
@@ -53,7 +86,7 @@ export default {
     methods:{
         //剩余时间
         getRemianTime(){
-            console.log(111);
+            // console.log(111);
             //当前时间
             let date_current=new Date();
             // 当前离截止时间的时间
@@ -75,6 +108,7 @@ export default {
             .then(res=>{
                 if(res.data.status==200){
                     Toast(msg+'成功');
+                    that.$root.$emit('loaddata',this.index);
                 }
                 else{
                     Toast(res.data.msg);
@@ -86,8 +120,35 @@ export default {
                 Toast(msg+'失败');
             })
         },
+        // 唤醒时间插件
+        appointment(index){
+            this.popupVisible=true;
+            this.currentindex=index;
+        },
+        onValuesChange(values){
+            this.datechange=values;
+        },
+        getdate(){
+            let day=new Date();
+            if(this.datechange[0]=='今天'){
+                day=day.format('yyyy-MM-dd');
+            }
+            else if(this.datechange[0]=='明天'){
+                day=new Date(day.setDate(day.getDate()+1)).format('yyyy-MM-dd');
+            }
+            else if(this.datechange[0]=='后天'){
+                day=new Date(day.setDate(day.getDate()+2)).format('yyyy-MM-dd');
+            }
+            let date=day+' '+this.datechange[1].substring(0,2) +':'+this.datechange[2].substring(0,2);
+            this.data.time=date;
+            this.popupVisible=false;
+        },
+        cancledate(){
+            this.popupVisible=false;
+        },
         //取消订单
         cancleOrder(){
+            // console.log(this.index);
             MessageBox({
                 title: '',
                 message: '是否取消订单?',

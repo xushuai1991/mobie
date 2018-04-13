@@ -11,8 +11,8 @@
             <!-- 全部 -->
             <mt-tab-container-item id="all">
                 <ul  v-infinite-scroll="loadMore" infinite-scroll-disabled="loading1" infinite-scroll-immediate-check='false'  class='orderlist'>
-                    <li v-for="(item,index) in orderlist[0]" :key="index">
-                        <pendpay :data='item' v-if="item.payState!=1&&item.orderState==1"></pendpay>
+                    <li v-for="(item,index) in orderlist[0]" :key="index" @click='toOrderDetail(item.id,0)'>
+                        <pendpay :data='item' index='0' v-if="item.payState!=1&&item.orderState==1"></pendpay>
                         <inservice :data='item' v-if='item.payState==1&&item.orderState!=2&&item.orderState!=3&&item.orderState!=4&&item.orderState!=5&&item.orderState!=6&&item.serviceState==2'></inservice>
                         <willservice :data='item' v-if='item.payState==1&&item.orderState!=2&&item.orderState!=3&&item.orderState!=4&&item.orderState!=5&&item.orderState!=6&&item.serviceState==1'></willservice>
                         <!-- <willevaluate :data='item'></willevaluate> -->
@@ -105,6 +105,7 @@ export default {
         };
     },
     created(){
+        // this.getOrderList(3,{});
         this.$root.$emit('header','我的订单');
         this.selected=this.$route.params.type==undefined?'all':this.$route.params.type;
         switch(this.selected){
@@ -142,6 +143,46 @@ export default {
                 break;
             }
         }
+        // 对订单操作后，重新刷新对应tab下的数据
+        this.$root.$on('loaddata',index=>{
+            // console.log(index);
+            this.pagenumlist[index]=1;
+            this.dataover[index]=false;
+            switch(index){
+                // 更新全部数据
+                case '0':{
+                    this.getOrderList(1,{});
+                    break;
+                }
+                // 更新待付款数据
+                case '1':{
+                    let data={payState:2,orderState:1};
+                    this.getOrderList(1,data);
+                }
+                 //更新待服务数据
+                case '2':{
+                    let data={payState:1,serviceState:1,orderState:1};
+                    this.getOrderList(1,data);
+                    break;
+                }
+                //更新服务中数据
+                case '3':{
+                    let data={payState:1,serviceState:2,orderState:1};
+                    this.getOrderList(1,data);
+                    break;
+                }
+                //更新待评价数据
+                case '4':{
+                    let data={};
+                    this.getOrderList(1,data);
+                    break;
+                }
+                default:{
+                    break;
+                }
+            }
+            
+        });
     },
     watch:{
         selected(value){
@@ -194,11 +235,12 @@ export default {
     },
     methods:{
         getOrderList(pagenum,data){
+            let index=this.selected=='all'?0:this.selected=='willpay'?1:this.selected=='willservice'?2:this.selected=='inservice'?3:4;
             if(pagenum==1){
                 Indicator.open();
+                this.orderlist[index]=[];
             }
             let that=this;
-            let index=that.selected=='all'?0:that.selected=='willpay'?1:that.selected=='willservice'?2:that.selected=='inservice'?3:4;
             this.changeStatus(index,true);
             this.$http.post('/api/product/order/mall/find?pageNo='+pagenum+'&pageSize=5',data)
             .then(res=>{
@@ -262,6 +304,11 @@ export default {
                 }
             }
         },
+        //跳转订单详情
+        toOrderDetail(orderid,index){
+            this.$router.push('orderDeil?orderid='+orderid+'&index='+index);
+            console.log(orderid,index);
+        },
         // 加载全部订单
         loadMore() {
             if(this.dataover[0]==true){
@@ -305,6 +352,9 @@ export default {
         //加载未评价订单
         loadMore4(){}
     },
+    beforeDestroy(){
+        this.$root.$off('loaddata');
+    }
 }
 </script>
 <style lang="less" scoped>
@@ -347,9 +397,27 @@ export default {
         margin-right: 5px;
         padding-top: .1rem;
     }
-    .page-over{
-        font-size:.3rem;
+    // .page-over{
+    //     font-size:.3rem;
+    //     padding:.2rem 0;
+    // }
+    .popup{
+        width: 100%;
+        
+    }
+    .btn-group{
         padding:.2rem 0;
+        line-height:0;
+        border-bottom:1px solid #eaeaea;
+        text-align: center;
+    }
+    .btn-group button{
+        background: none;
+        border: none;
+        color:#46c5d9;
+        font-size: .3rem;
+        padding: 0 1.5rem;
+        outline: none;
     }
 }
 
