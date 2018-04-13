@@ -97,7 +97,7 @@
                         </router-link>
                     </li>
                     <li>
-                        <router-link to=''>
+                        <router-link to='detailTemplate'>
                             <i class='icon iconfont icon-kefu fontSize operaicon'></i>
                             <i class='flag on'></i>
                             <p class='name_opera'>客服</p>
