@@ -147,7 +147,13 @@ export default new Router({
                     path: '/logistics', // 物流详情
                     name: 'logistics',
                     component: resolve => require(['../components/view/userInfo/logistics.vue'], resolve)
+                },
+                {
+                    path: '/Customer', // 售后订单
+                    name: 'Customer',
+                    component: resolve => require(['../components/view/userInfo/Customer.vue'], resolve)
                 }
+                
             ]
         },
         {
