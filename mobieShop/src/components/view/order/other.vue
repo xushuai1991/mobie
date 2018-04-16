@@ -1,7 +1,7 @@
 <template>
     <div class='other'>
         <div class='title'>
-            <span class='tip'>{{data.orderState==2?'已完成':data.orderState==3?'订单异常':data.orderState==4?'退款中':data.orderState==5?'退款完成':data.orderState==6?'订单已取消':''}}</span>
+            <span class='tip'>{{data.payState==1&&data.orderState==4?'退款中':data.payState==1&&data.orderState==5?'退款完成':data.orderState==6?'订单已取消':data.serviceState==3?'已完成':data.payState==3?'已过期':''}}</span>
         </div>
         <div class='content'>
             <div class='detail' v-for='(item,index) in data.orderDetails' :key='index'>
@@ -10,9 +10,11 @@
                 </div>
                 <div class='detail-goods'>
                     <h3 class='name'>{{item.commodityName}}</h3>
-                    <P class='name-sub'>休闲舒适 潮男标配 SM1212</P>
+                    <!-- <P class='name-sub'>休闲舒适 潮男标配 SM1212</P>
                     <P class='area'>服务区域：萧山区</P>
-                    <p class='date'>服务预约时间：2018-2-5</p>
+                    <p class='date'>服务预约时间：2018-2-5</p> -->
+                    <P class='area'>{{item.condition1Name}}</P>
+                    <p class='date'>{{item.condition2Name}}</p>
                 </div>
                 <div class='price'>
                     <p>￥300</p>
@@ -21,6 +23,9 @@
             </div>
             <div class='price-total'>
                 <p>合计：<span class='total'>￥300</span></p>
+            </div>
+            <div class='operation' v-if='data.payState==3'>
+                <button class='prime'>关闭订单</button>
             </div>
         </div>
     </div>
@@ -50,7 +55,7 @@ export default {
 }
 .title .tip{
     float: left;
-    color: #31B1B0;
+    color: #26a2ff;
 }
 .title .time-remain{
     color: #cdcdcd;
@@ -125,12 +130,12 @@ export default {
     float: right;
     padding: .15rem .2rem;
     margin-right: .2rem;
-    border:1px solid #31B1B0;
+    border:1px solid #26a2ff;
     border-radius: .1rem;
     background-color: #fff;
 }
 .operation button.prime{
-    background-color: #31B1B0;
+    background-color: #26a2ff;
     color: #fff;
 }
 /* .price{

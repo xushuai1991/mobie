@@ -95,7 +95,7 @@
                 </li>
             </ul>
         </div>
-        <div class='service-time'>
+        <!-- <div class='service-time'>
             <p>
                 <span class='tip' >可预约服务时间</span>
                 <span class='data'>{{servicedate}}</span>
@@ -112,7 +112,7 @@
                 </mt-picker>
             </mt-popup>
             
-        </div>
+        </div> -->
         <div class='invoice'>
             <p>
                 <span class='tip'>我要开发票</span>
@@ -145,7 +145,7 @@
 import {formatdate} from '../../../assets/javascript/formatdate.js'
 import { MessageBox } from 'mint-ui'
 import { Toast } from 'mint-ui'
-import {weixinPay} from '../../../assets/javascript/weixinpay.js'
+// import {weixinPay} from '../../../assets/javascript/weixinpay.js'
 export default {
     data(){
         return{
@@ -387,8 +387,13 @@ export default {
             this.$http.post('/api/product/order/mall/insert',data)
             .then(res=>{
                 if(res.data.status==200){
+                    let number=res.data.info.number;
                     Toast('订单生成成功！');
-                    that.$router.push('/order');
+                    let url='http://www.itchun.com/paying?number='+number;
+                    let weixinurl="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx047af049a2f7c678&redirect_uri="+encodeURI(url)+"&response_type=code&scope=snsapi_base&state=123#wechat_redirect"
+                    window.location.href=encodeURI(weixinurl);
+                    
+                    // that.$router.push('/order');
                 }
                 else{
                     Toast(res.data.msg);
@@ -401,23 +406,23 @@ export default {
             });
         },
         //获取微信支付config
-        getWeixinpayconfig(){
-            return new Promise((resolve,reject)=>{
-                let that=this;
-                let url=window.location.href;
-                this.$http.get('/api/public/share/wechat/config/fetch?url='+url)
-                .then(res=>{
-                    console.log(res);
-                    if(res.data.status==200){
-                        resolve(true);
-                    }
-                })
-                .catch(err=>{
-                    console.log(err);
-                    resolve(false);
-                });
-            })
-        },
+        // getWeixinpayconfig(){
+        //     return new Promise((resolve,reject)=>{
+        //         let that=this;
+        //         let url=window.location.href;
+        //         this.$http.get('/api/public/share/wechat/config/fetch?url='+url)
+        //         .then(res=>{
+        //             console.log(res);
+        //             if(res.data.status==200){
+        //                 resolve(true);
+        //             }
+        //         })
+        //         .catch(err=>{
+        //             console.log(err);
+        //             resolve(false);
+        //         });
+        //     })
+        // },
         submitorder(){
             if(this.checked!='checked'){
                 Toast('请选择支付方式！');
@@ -452,9 +457,9 @@ export default {
                 };
                 data.couponInfoList.push(json);
             });
-            this.getWeixinpayconfig();
+            console.log(data);
             this.createOrder(data);
-            // weixinpay();
+           
         }
     }
 }

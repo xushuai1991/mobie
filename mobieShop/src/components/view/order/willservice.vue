@@ -10,20 +10,25 @@
                 </div>
                 <div class='detail-goods'>
                     <h3 class='name'>FASHION</h3>
-                    <P class='name-sub'>休闲舒适 潮男标配 SM1212</P>
-                    <P class='area'>服务区域：萧山区</P>
-                    <p class='date'>服务预约时间：2018-2-5</p>
+                    <!-- <P class='name-sub'>休闲舒适 潮男标配 SM1212</P> -->
+                    <!-- <P class='area'>服务区域：萧山区</P>
+                    <p class='date'>服务预约时间：2018-2-5</p> -->
+                    <P class='area'>{{item.condition1Name}}</P>
+                    <p class='date'>{{item.condition2Name}}</p>
                 </div>
                 <div class='price'>
                     <p>￥300</p>
                     <p>x1</p>
+                </div>
+                <div class='appointment' v-if='true'>
+                    <button  @click.stop="appointment">预约时间</button>
                 </div>
             </div>
             <div class='price-total'>
                 <p>合计：<span class='total'>￥300</span></p>
             </div>
             <div class='operation'>
-                <button class='prime appoint' @click='appointment'>预约时间</button>
+                <!-- <button class='prime appoint' @click='appointment'>预约时间</button> -->
                 <button class='apply'>申请退款</button>
             </div>
         </div>
@@ -64,8 +69,10 @@ export default {
                     values: ['00分', '10分','20分','30分','40分','50分',],  
                     className: 'slot3',  
                     textAlign: 'right'  
-                }
-            ]
+                },
+                
+            ],
+            datechange:''
         }  
     },
     methods:{
@@ -73,8 +80,8 @@ export default {
             this.popupVisible=true;
             this.currentindex=index;
         },
-        onValuesChange(){
-
+        onValuesChange(picker,values){
+            this.datechange=values;
         },
         getdate(){
             let day=new Date();
@@ -111,7 +118,7 @@ export default {
 }
 .title .tip{
     float: left;
-    color: #31B1B0;
+    color: #26a2ff;
 }
 .title .time-remain{
     color: #cdcdcd;
@@ -186,17 +193,35 @@ export default {
     float: right;
     padding: .15rem .2rem;
     margin-right: .2rem;
-    border:1px solid #31B1B0;
+    border:1px solid #26a2ff;
     border-radius: .1rem;
     background-color: #fff;
 }
 .operation button.prime{
-    background-color: #31B1B0;
+    background-color: #26a2ff;
     color: #fff;
 }
 /* .price{
     width: 1rem;
     float: left;
 } */
+.appointment{
+    text-align: right;
+    margin:1.8rem 0 .2rem 0;
+    /* position: absolute; */
+    width:100%;
+}
+.appointment button{
+    /* position: absolute;
+    bottom:.2rem;
+    right:.2rem; */
+    background-color: #26a2ff;
+    outline: none;
+    border:0;
+    color:#fff;
+    padding:.1rem .2rem;
+    margin-right:.2rem;
+    border-radius: .1rem;
+}
 </style>
 

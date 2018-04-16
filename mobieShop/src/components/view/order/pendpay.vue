@@ -1,47 +1,52 @@
 <template>
     <div class='pendpay' >
-        <div class='title'>
+        <div class='title' @click.stop='toOrderDetail(data.number,index)'>
             <span class='tip'>待付款</span>
             <span class='time-remain'>还剩{{date_ramian}}</span>
             <!-- <div class='time-remain'></div> -->
         </div>
-        <div class='content'>
+        <div class='content' @click.stop='toOrderDetail(data.number,index)'>
             <div class='detail' v-for='(item,index) in data.orderDetails' :key='index'>
                 <div class='img-goods'>
-                    <img src="" alt="">
+                    <img :src="item.image" alt="">
                 </div>
                 <div class='detail-goods'>
                     <h3 class='name'>{{item.commodityName}}</h3>
-                    <P class='name-sub'>休闲舒适 潮男标配 SM1212</P>
-                    <P class='area'>{{item.condition1Name}}:服务区域：萧山区</P>
+                    <!-- <P class='name-sub'>休闲舒适 潮男标配 SM1212</P> -->
+                    <P class='area'>{{item.condition1Name}}</P>
                     <p class='date'>{{item.condition2Name}}</p>
                 </div>
                 <div class='price'>
                     <p>￥300</p>
                     <p>x{{item.saleNumber}}</p>
                 </div>
+                <!-- 服务类商品，添加预约时间功能 -->
+                <div class='appointment' v-if='false'>
+                    <button  @click.stop="appointment(index)">预约时间</button>
+                </div>
             </div>
             <div class='price-total'>
                 <p>合计：<span class='total'>￥300</span></p>
             </div>
             <div class='operation'>
-                <button class='prime pay' @click="pay">付款</button>
-                <button class='cancle' @click="cancleOrder">取消订单</button>
+                <button class='prime pay' @click.stop="pay">付款</button>
+                <button class='cancle' @click.stop="cancleOrder">取消订单</button>
             </div>
         </div>
         <mt-popup v-model="popupVisible" position="bottom" class="popup">
-            <mt-picker :slots="dates" @change='onValuesChange'  :showToolbar='true'>
+            <mt-picker :slots="dates" @change='onValuesChange'  :showToolbar='true' >
                 <p class='btn-group'>
-                    <button class='cancle' @click='cancledate'>取消</button>
-                    <button class='certain' @click="getdate">确定</button>
+                    <button class='cancle' @click.stop='cancledate'>取消</button>
+                    <button class='certain' @click.stop="getdate">确定</button>
                 </p>
             </mt-picker>
         </mt-popup>
-        <button class='certain' @click="appointment">预约时间</button>
+        
     </div>
 
 </template>
 <script>
+import {formatdate} from '../../../assets/javascript/formatdate.js'
 import { Toast } from 'mint-ui'; 
 import { Indicator } from 'mint-ui';
 import { MessageBox } from 'mint-ui';
@@ -140,11 +145,25 @@ export default {
                 day=new Date(day.setDate(day.getDate()+2)).format('yyyy-MM-dd');
             }
             let date=day+' '+this.datechange[1].substring(0,2) +':'+this.datechange[2].substring(0,2);
-            this.data.time=date;
+            // this.data.time=date;
+            // 修改服务时间
+            let con1=this.data.orderDetails[this.currentindex].condition1Name;
+            let con2=this.data.orderDetails[this.currentindex].condition2Name;
+            if(con1.indexOf("服务时间") > 0){
+                this.data.orderDetails[this.currentindex].condition1Name='服务时间：'+date;
+            }
+            else if(con2.indexOf("服务时间") > 0){
+                this.data.orderDetails[this.currentindex].condition2Name='服务时间：'+date;                
+            }
+            
             this.popupVisible=false;
         },
         cancledate(){
             this.popupVisible=false;
+        },
+        //跳转订单详情
+        toOrderDetail(ordernumber,index){
+            this.$router.push('orderDeil?ordernumber='+ordernumber+'&index='+index);
         },
         //取消订单
         cancleOrder(){
@@ -191,7 +210,7 @@ export default {
 }
 .title .tip{
     float: left;
-    color: #31B1B0;
+    color: #26a2ff;
 }
 .title .time-remain{
     color: #cdcdcd;
@@ -201,6 +220,25 @@ export default {
     padding: .2rem 0;
     border-bottom: 1px solid #e9e9e9;
     overflow: hidden;
+    position: relative;
+}
+.appointment{
+    text-align: right;
+    margin:1.8rem 0 .2rem 0;
+    /* position: absolute; */
+    width:100%;
+}
+.appointment button{
+    /* position: absolute;
+    bottom:.2rem;
+    right:.2rem; */
+    background-color: #26a2ff;
+    outline: none;
+    border:0;
+    color:#fff;
+    padding:.1rem .2rem;
+    margin-right:.2rem;
+    border-radius: .1rem;
 }
 .img-goods{
     width: 2.2rem;
@@ -252,6 +290,7 @@ export default {
     padding: .2rem;
     text-align: right;
     border-bottom: 1px solid #e9e9e9;
+    /* border-top: 1px solid #e9e9e9; */
 }
 .price-total .total{
     font-size: .5rem;
@@ -266,12 +305,12 @@ export default {
     float: right;
     padding: .15rem .2rem;
     margin-right: .2rem;
-    border:1px solid #31B1B0;
+    border:1px solid #26a2ff;
     border-radius: .1rem;
     background-color: #fff;
 }
 .operation button.prime{
-    background-color: #31B1B0;
+    background-color: #26a2ff;
     color: #fff;
 }
 /* .price{

@@ -73,6 +73,8 @@ import { Indicator } from 'mint-ui';
                             this.getClassify();
                         }
                     });
+                    // this.getCommoditylist(1,true);
+                    // // this.getClassify();
                 }
             });
             
@@ -226,7 +228,7 @@ import { Indicator } from 'mint-ui';
                                 id:commodity.id,
                                 imgurl:'',
                                 name:commodity.name,
-                                url:'/commodity?id='+commodity.id,
+                                url:'/detailTemplate?commodityId='+commodity.id,
                                 price:commodity.priceRule==1?commodity.originalPrice:commodity.priceRule==2?commodity.discountPrice:commodity.currentPrice,
                                 nums:commodity.totalSales
                             };
@@ -344,7 +346,7 @@ import { Indicator } from 'mint-ui';
 </style>
 <style lang='less' scoped>
 .nav-bar{
-    margin-top:1rem;
+    margin-top:1.2rem;
     font-size:.3rem;
     padding-bottom:.1rem;
     border-bottom:1px solid #e9e9e9;
@@ -413,7 +415,7 @@ import { Indicator } from 'mint-ui';
     // flex-wrap:wrap ;
     padding:.2rem;
     background-color:#f5f5f5;
-    margin-top:1.76rem;
+    margin-top:1.9rem;
     .commodity{
         width:49%;
         height:min-content;
