@@ -62,19 +62,19 @@ import { Indicator } from 'mint-ui';
                 imglist:[],
                 loading:false,
                 pagenum:[],
+                companyId:''
             };
         },
         created(){
-            this.$root.$on('loadclassify',()=>{
+            this.$root.$on('loadclassify',(companyId)=>{
+                this.companyId=companyId;
                 // 首次加载商品分类函数
                 if(this.classifylist.length==1){
-                    this.getImgall().then(completed=>{
-                        if(completed){
-                            this.getClassify();
-                        }
-                    });
-                    // this.getCommoditylist(1,true);
-                    // // this.getClassify();
+                    // this.getImgall().then(completed=>{
+                    //     if(completed){
+                    //         this.getClassify();
+                    //     }
+                    // });
                 }
             });
             
@@ -184,7 +184,7 @@ import { Indicator } from 'mint-ui';
             // 获取商品分类
             getClassify(){
                 let that=this;
-                this.$http.post('/api/product/commodity/category/query?pageSize=50',{})
+                this.$http.post('/api/product/commodity/category/query?pageSize=50',{companyId:this.companyId})
                 .then(res=>{
                     if(res.data.status==200){
                         res.data.info.list.forEach((item,index)=>{
@@ -215,7 +215,8 @@ import { Indicator } from 'mint-ui';
                 this.$http.post('/api/product/commodity/info/query?pageSize=10&page='+pagenum,
                 {
                     isOnSale:true,
-                    categoryId:this.classifyid
+                    categoryId:this.classifyid,
+                    companyId:this.companyId
                 })
                 .then(res=>{
                     that.maxpagenum=res.data.info.pages;
@@ -228,7 +229,7 @@ import { Indicator } from 'mint-ui';
                                 id:commodity.id,
                                 imgurl:'',
                                 name:commodity.name,
-                                url:'/detailTemplate?commodityId='+commodity.id,
+                                url:'/detailTemplate?commodityId='+commodity.id+'&companyId='+this.companyId,
                                 price:commodity.priceRule==1?commodity.originalPrice:commodity.priceRule==2?commodity.discountPrice:commodity.currentPrice,
                                 nums:commodity.totalSales
                             };

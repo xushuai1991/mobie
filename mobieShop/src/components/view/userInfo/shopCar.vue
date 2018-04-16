@@ -54,7 +54,7 @@
                 </div>
             </div>
         </section>
-        <footer>
+        <footer v-if='list.length!=0'>
             <ul class="footer">
                 <li class='type-pay'>
                     <input type="checkbox" v-model="selectAll" style='position: relative; top: 0.02rem;'> 全选 (<span class="shopNum">{{nums}}</span>)
@@ -67,6 +67,7 @@
                 </li>
             </ul>
         </footer>
+        <div style='margin-top:4rem;font-size:.4rem;' v-if='list.length==0'>暂无数据</div>
         <mt-popup v-model="popupVisible" position="bottom" style='width:100%; margin-bottom: 0.96rem;'>
             <div class='shopBoxS'>{{ShopName}}</div>
             <p class='shopBxo'>领取优惠劵</p>
@@ -187,7 +188,12 @@
             }
         },
         created() {
-            this.getCarData();
+            this.$root.$on('loadShopcar',()=>{
+                // 首次进入购物车页面，加载商品信息
+                if(this.list.length==0){
+                    this.getCarData();
+                }
+            });
         },
         methods: {
             //购物车数据群
@@ -264,8 +270,12 @@
                 })
             },
             getCarData() {
-                let userInfo = sessionStorage.getItem("userinfo");
-                let userInfoId = JSON.parse(userInfo).id
+                // let userInfo = sessionStorage.getItem("userinfo");
+                // console.log(userInfo);
+                // if(userInfo==null){
+                //     Toast
+                // }
+                // let userInfoId = JSON.parse(userInfo).id
                 let that = this;
                 let getdata = new Promise(function(rel, rej) {
                     let url = '/api/product/shoppingCart/myShoppingCart';
@@ -277,26 +287,29 @@
                         // },
                         data: {}
                     }).then(response => {
-                        // console.log(response.data.info)
-                        // that.list=[response]
-                        let data = response.data.info;
-                        var b = data.reduce((v, k) => { //循环
-                            k['selected'] = false;
-                            var filters = v.filter((data) => {
-                                return data.commodityCount === k.otherInfo.commodityCompanyId //过滤相同的companyId
-                            });
-                            if (filters.length === 0) { //判断数组的长度
-                                v.push({
-                                    commodityCount: k.otherInfo.commodityCompanyId, //设置对象
-                                    shopselected: false,
-                                    listgoods: [k] //设置值
-                                })
-                            } else {
-                                filters[0].listgoods.push(k) //扔进去
-                            };
-                            return v
-                        }, [])
-                        that.list = (b)
+                        if(response.data.status==200){
+                            let data = response.data.info;
+                            var b = data.reduce((v, k) => { //循环
+                                k['selected'] = false;
+                                var filters = v.filter((data) => {
+                                    return data.commodityCount === k.otherInfo.commodityCompanyId //过滤相同的companyId
+                                });
+                                if (filters.length === 0) { //判断数组的长度
+                                    v.push({
+                                        commodityCount: k.otherInfo.commodityCompanyId, //设置对象
+                                        shopselected: false,
+                                        listgoods: [k] //设置值
+                                    })
+                                } else {
+                                    filters[0].listgoods.push(k) //扔进去
+                                };
+                                return v
+                            }, [])
+                            that.list = (b)
+                        }
+                        else{
+                            Toast(response.data.msg);
+                        }
                         console.log(that.list)
                     }).catch(error => {
                         rej(error)
@@ -555,6 +568,9 @@
                 }
             },
         },
+        beforeDestroy(){
+            this.$root.$off('loadShopcar');
+        }
     }
 </script>
 

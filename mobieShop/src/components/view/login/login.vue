@@ -119,12 +119,20 @@ export default {
             loginflag:true,
             loginquickflag:false,
             resignflag:false,
-            second:'获取验证码'
+            second:'获取验证码',
+            to:''
         }
     },
     mounted(){
         this.yzn();
     },
+    // created(){
+    //     let from=this.$route.params.from;
+    //     if(from!=null){
+    //         this.to=from;
+    //     }
+    //     console.log(params);
+    // },
     methods:{
         // 登录
         login(){
@@ -229,7 +237,8 @@ export default {
                         {
                             mobile:that.phone,
                             password:that.psw,
-                            code:that.code
+                            code:that.code,
+                            openId:sessionStorage.getItem('openId')
                         }
                     )
                     .then(function(response){

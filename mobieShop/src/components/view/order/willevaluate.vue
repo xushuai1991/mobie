@@ -1,12 +1,12 @@
 <template>
     <div class='pendpay'>
-        <div class='title'>
+        <div class='title' @click.stop='toOrderDetail(data.number,index)'>
             <span class='tip'>待评价</span>
         </div>
-        <div class='content'>
-            <div class='detail'>
+        <div class='content' @click.stop='toOrderDetail(data.number,index)'>
+            <div class='detail' v-for='(item,index) in data.orderDetails' :key='index'>
                 <div class='img-goods'>
-                    <img src="" alt="">
+                    <img :src="item.image" alt="">
                 </div>
                 <div class='detail-goods'>
                     <h3 class='name'>FASHION</h3>
@@ -15,15 +15,15 @@
                     <p class='date'>服务预约时间：2018-2-5</p>
                 </div>
                 <div class='price'>
-                    <p>￥300</p>
-                    <p>x1</p>
+                    <p>￥{{item.price}}</p>
+                    <p>x{{item.saleNumber}}</p>
                 </div>
             </div>
             <div class='price-total'>
-                <p>合计：<span class='total'>￥300</span></p>
+                <p>合计：<span class='total'>￥{{totalmoney}}</span></p>
             </div>
             <div class='operation'>
-                <button class='prime evaluate'>评价</button>
+                <button class='prime evaluate' @click.stop='evaluate'>评价</button>
                 <button class='check'>查看报告</button>
                 <button class='complaint'>投诉</button>
             </div>
@@ -33,10 +33,36 @@
 </template>
 <script>
 export default {
+    props:['data','index'],
     data(){
         return{
 
         }  
+    },
+    created(){
+        // console.log(this.data);
+    },
+    computed:{
+        totalmoney(){
+            let total=0;
+            for(let item of this.data.orderDetails==null?[]:this.data.orderDetails){
+                total+=item.price*item.saleNumber;
+            }
+            return total;
+        }
+    },
+    methods:{
+        evaluate(){
+            let order_withoutevaluate=[];
+            this.data.forEach(item=>{
+
+            });
+            this.$router.push({'name':'',params:{'orderlist':order_withoutevaluate}});
+        },
+        //跳转订单详情
+        toOrderDetail(ordernumber,index){
+            this.$router.push('orderDeil?ordernumber='+ordernumber+'&index='+index);
+        },
     }
 }
 </script>
@@ -81,7 +107,7 @@ export default {
     float: left;
 }
 .detail-goods .name{
-    font-size: .4rem;
+    font-size: .35rem;
     padding-top: .1rem;
     padding-bottom: .1rem;
 }
@@ -98,10 +124,10 @@ export default {
     padding-bottom: .2rem;
 }
 .price{
+    position: absolute;
     font-size: .28rem;
-    float: right;
-    margin-right: .2rem;
-    padding-top: .6rem;
+    right:.2rem;
+    top:.6rem;
 }
 .price p{
     padding-top: .1rem;

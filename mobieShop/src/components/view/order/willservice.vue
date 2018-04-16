@@ -1,12 +1,12 @@
 <template>
     <div class='pendpay'>
-        <div class='title'>
+        <div class='title' @click.stop='toOrderDetail(data.number,index)'>
             <span class='tip'>待服务</span>
         </div>
-        <div class='content'>
-            <div class='detail'>
+        <div class='content' @click.stop='toOrderDetail(data.number,index)'>
+            <div class='detail' v-for='(item,index) in data.orderDetails' :key='index'>
                 <div class='img-goods'>
-                    <img src="" alt="">
+                    <img :src="item.image" alt="">
                 </div>
                 <div class='detail-goods'>
                     <h3 class='name'>FASHION</h3>
@@ -17,15 +17,15 @@
                     <p class='date'>{{item.condition2Name}}</p>
                 </div>
                 <div class='price'>
-                    <p>￥300</p>
-                    <p>x1</p>
+                    <p>￥{{item.price}}</p>
+                    <p>x{{item.saleNumber}}</p>
                 </div>
                 <div class='appointment' v-if='true'>
                     <button  @click.stop="appointment">预约时间</button>
                 </div>
             </div>
             <div class='price-total'>
-                <p>合计：<span class='total'>￥300</span></p>
+                <p>合计：<span class='total'>￥{{totalmoney}}</span></p>
             </div>
             <div class='operation'>
                 <!-- <button class='prime appoint' @click='appointment'>预约时间</button> -->
@@ -35,8 +35,8 @@
         <mt-popup v-model="popupVisible" position="bottom" class="popup">
             <mt-picker :slots="dates" @change='onValuesChange'  :showToolbar='true'>
                 <p class='btn-group'>
-                    <button class='cancle' @click='cancledate'>取消</button>
-                    <button class='certain' @click="getdate">确定</button>
+                    <button class='cancle' @click.stop='cancledate'>取消</button>
+                    <button class='certain' @click.stop="getdate">确定</button>
                 </p>
             </mt-picker>
         </mt-popup>
@@ -45,7 +45,7 @@
 </template>
 <script>
 export default {
-    props:['data'],
+    props:['data','index'],
     data(){
         return{
             currentindex:'',
@@ -75,6 +75,16 @@ export default {
             datechange:''
         }  
     },
+    computed:{
+        totalmoney(){
+            let total=0;
+            // console.log(this.data);
+           for(let item of this.data.orderDetails==null?[]:this.data.orderDetails){
+                total+=item.price*item.saleNumber;
+            }
+            return total;
+        }
+    },
     methods:{
         appointment(index){
             this.popupVisible=true;
@@ -100,6 +110,10 @@ export default {
         },
         cancledate(){
             this.popupVisible=false;
+        },
+        //跳转订单详情
+        toOrderDetail(ordernumber,index){
+            this.$router.push('orderDeil?ordernumber='+ordernumber+'&index='+index);
         },
     }
 }
@@ -145,7 +159,7 @@ export default {
     float: left;
 }
 .detail-goods .name{
-    font-size: .4rem;
+    font-size: .35rem;
     padding-top: .1rem;
     padding-bottom: .1rem;
 }
@@ -162,10 +176,10 @@ export default {
     padding-bottom: .2rem;
 }
 .price{
+    position: absolute;
     font-size: .28rem;
-    float: right;
-    margin-right: .2rem;
-    padding-top: .6rem;
+    right:.2rem;
+    top:.6rem;
 }
 .price p{
     padding-top: .1rem;

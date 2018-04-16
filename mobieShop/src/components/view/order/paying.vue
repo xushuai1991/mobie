@@ -11,6 +11,7 @@
 </template>
 <script>
 import {weixinPay} from '../../../assets/javascript/weixinpay.js'
+import { Toast } from 'mint-ui'; 
 export default {
     data(){
         return{
@@ -23,11 +24,18 @@ export default {
     },
     created(){
         this.$root.$emit('header','确认交易');
+        
         let url=location.search;
         let number=this.getQueryString('number');
-        let code=this.getQueryString('code');
-        this.code=code;
         this.orderNumber=number;
+        // let number=this.$route.params.number;
+        // if(number==undefined){
+        //     Toast('支付失败,请从订单列表支付');
+        // }
+        // else{
+        //     this.orderNumber=this.$route.params.number;
+        // }
+        
         // console.log(code);
     },
     methods:{
@@ -39,7 +47,7 @@ export default {
         },
         pay(){
             let that=this;
-            this.$http.post('/api/product/order/weixin/pay?code='+this.code,[this.orderNumber])
+            this.$http.post('/api/product/order/weixin/pay',[this.orderNumber])
             .then(res=>{
                 if(res.data.info.code){
                     let data=res.data.info;

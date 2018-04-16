@@ -11,7 +11,7 @@ export default new Router({
             component: resolve => require(['../components/common/home.vue'], resolve),
             children: [{
                     path: '',
-                    redirect: '/login'
+                    redirect: '/index'
                 },
                 // 订单列表
                 {
