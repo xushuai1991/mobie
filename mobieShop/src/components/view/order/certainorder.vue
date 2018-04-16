@@ -387,8 +387,13 @@ export default {
             this.$http.post('/api/product/order/mall/insert',data)
             .then(res=>{
                 if(res.data.status==200){
+                    let number=res.data.info.number;
                     Toast('订单生成成功！');
-                    that.$router.push('/order');
+                    let url='http://www.itchun.com/paying?number='+number;
+                    let weixinurl="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx047af049a2f7c678&redirect_uri="+encodeURI(url)+"&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect"
+                    window.location.href=encodeURI(weixinurl);
+                    
+                    // that.$router.push('/order');
                 }
                 else{
                     Toast(res.data.msg);
@@ -452,9 +457,10 @@ export default {
                 };
                 data.couponInfoList.push(json);
             });
-            this.getWeixinpayconfig();
+            // this.getWeixinpayconfig();
             this.createOrder(data);
             // weixinpay();
+            // this.$router.push({name:'paying',params:{ordernums:'xxx',money:20,cheques:'禾目'}});
         }
     }
 }

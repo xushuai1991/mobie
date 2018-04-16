@@ -30,6 +30,12 @@ export default new Router({
                     name: 'orderDeil',
                     component: resolve => require(['../components/view/order/orderDeil.vue'], resolve)
                 },
+                //支付
+                {
+                    path:'/paying',
+                    name:'paying',
+                    component: resolve => require(['../components/view/order/paying.vue'], resolve)
+                },
                 //开票申请
                 {
                     path: '/invoice',

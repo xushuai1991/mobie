@@ -10,9 +10,11 @@
                 </div>
                 <div class='detail-goods'>
                     <h3 class='name'>FASHION</h3>
-                    <P class='name-sub'>休闲舒适 潮男标配 SM1212</P>
-                    <P class='area'>服务区域：萧山区</P>
-                    <p class='date'>服务预约时间：2018-2-5</p>
+                    <!-- <P class='name-sub'>休闲舒适 潮男标配 SM1212</P> -->
+                    <!-- <P class='area'>服务区域：萧山区</P>
+                    <p class='date'>服务预约时间：2018-2-5</p> -->
+                    <P class='area'>{{item.condition1Name}}</P>
+                    <p class='date'>{{item.condition2Name}}</p>
                 </div>
                 <div class='price'>
                     <p>￥300</p>
@@ -59,7 +61,7 @@ export default {
 }
 .title .tip{
     float: left;
-    color: #31B1B0;
+    color: #26a2ff;
 }
 .title .time-remain{
     color: #cdcdcd;
@@ -134,12 +136,12 @@ export default {
     float: right;
     padding: .15rem .2rem;
     margin-right: .2rem;
-    border:1px solid #31B1B0;
+    border:1px solid #26a2ff;
     border-radius: .1rem;
     background-color: #fff;
 }
 .operation button.prime{
-    background-color: #31B1B0;
+    background-color: #26a2ff;
     color: #fff;
 }
 /* .price{

@@ -11,12 +11,12 @@
             <!-- 全部 -->
             <mt-tab-container-item id="all">
                 <ul  v-infinite-scroll="loadMore" infinite-scroll-disabled="loading1" infinite-scroll-immediate-check='false'  class='orderlist'>
-                    <li v-for="(item,index) in orderlist[0]" :key="index" @click='toOrderDetail(item.number,0)'>
+                    <li v-for="(item,index) in orderlist[0]" :key="index">
                         <pendpay :data='item' index='0' v-if="item.payState!=1&&item.orderState==1"></pendpay>
-                        <inservice :data='item' v-if='item.payState==1&&item.orderState!=2&&item.orderState!=3&&item.orderState!=4&&item.orderState!=5&&item.orderState!=6&&item.serviceState==2'></inservice>
-                        <willservice :data='item' v-if='item.payState==1&&item.orderState!=2&&item.orderState!=3&&item.orderState!=4&&item.orderState!=5&&item.orderState!=6&&item.serviceState==1'></willservice>
+                        <inservice :data='item' v-if='item.payState==1&&item.orderState==1&&item.serviceState==2'></inservice>
+                        <willservice :data='item' v-if='item.payState==1&&item.orderState==1&&item.serviceState==1'></willservice>
                         <!-- <willevaluate :data='item'></willevaluate> -->
-                        <other :data='item' v-if='item.orderState!=1&&item.orderState!=2'></other>
+                        <other :data='item' v-if='(item.payState==1&&item.orderState==4)||(item.payState==1&&item.orderState==5)||(item.orderState==6)||(item.serviceState==3)||(item.payState==3)'></other>
                     </li>
                 </ul>
                 <p v-show="!loading1" class="page-infinite-loading">
@@ -117,19 +117,19 @@ export default {
             }
             // 待付款
             case 'willpay':{
-                let data={payState:2,orderState:1};
+                let data={payState:2};
                 this.getOrderList(1,data);
                 break;
             }
             //待服务
             case 'willservice':{
-                let data={payState:1,serviceState:1,orderState:1};
+                let data={payState:1,serviceState:1};
                 this.getOrderList(1,data);
                 break;
             }
             //服务中
             case 'inservice':{
-                let data={payState:1,serviceState:2,orderState:1};
+                let data={payState:1,serviceState:2};
                 this.getOrderList(1,data);
                 break;
             }
@@ -156,18 +156,18 @@ export default {
                 }
                 // 更新待付款数据
                 case '1':{
-                    let data={payState:2,orderState:1};
+                    let data={payState:2};
                     this.getOrderList(1,data);
                 }
                  //更新待服务数据
                 case '2':{
-                    let data={payState:1,serviceState:1,orderState:1};
+                    let data={payState:1,serviceState:1};
                     this.getOrderList(1,data);
                     break;
                 }
                 //更新服务中数据
                 case '3':{
-                    let data={payState:1,serviceState:2,orderState:1};
+                    let data={payState:1,serviceState:2};
                     this.getOrderList(1,data);
                     break;
                 }
@@ -198,7 +198,7 @@ export default {
                 // 待付款
                 case 'willpay':{
                     if(this.orderlist[1].length==0){
-                        let data={payState:2,orderState:1};
+                       let data={payState:2};
                         this.getOrderList(1,data);
                     }
                     break;
@@ -206,7 +206,7 @@ export default {
                 //待服务
                 case 'willservice':{
                     if(this.orderlist[2].length==0){
-                        let data={payState:1,serviceState:1,orderState:1};
+                        let data={payState:1,serviceState:1};
                         this.getOrderList(1,data);
                     }
                     break;
@@ -214,7 +214,7 @@ export default {
                 //服务中
                 case 'inservice':{
                     if(this.orderlist[3].length==0){
-                        let data={payState:1,serviceState:2,orderState:1};
+                        let data={payState:1,serviceState:2};
                         this.getOrderList(1,data);
                     }
                     break;
@@ -304,11 +304,7 @@ export default {
                 }
             }
         },
-        //跳转订单详情
-        toOrderDetail(ordernumber,index){
-            this.$router.push('orderDeil?ordernumber='+ordernumber+'&index='+index);
-            // console.log(orderid,index);
-        },
+        
         // 加载全部订单
         loadMore() {
             if(this.dataover[0]==true){
@@ -377,8 +373,8 @@ export default {
         font-size: 0.3rem;
     }
     .mint-navbar .mint-tab-item.is-selected{
-        border-bottom: 3px solid #31B1B0;
-        color: #31B1B0;
+        border-bottom: 3px solid #26a2ff;
+        color: #26a2ff;
     }
     .mint-tab-container-item{
         /* background-color: #e9e9e9 !important; */
@@ -397,10 +393,10 @@ export default {
         margin-right: 5px;
         padding-top: .1rem;
     }
-    // .page-over{
-    //     font-size:.3rem;
-    //     padding:.2rem 0;
-    // }
+    .page-over{
+        font-size:.3rem;
+        padding:.2rem 0;
+    }
     .popup{
         width: 100%;
         
