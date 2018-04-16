@@ -20,7 +20,7 @@
                                         <div class="list-box" @touchstart.capture="touchStart" @touchmove.capture="touchmove" @touchend.capture="touchEnd" @click="skip">
                                             <ul class="goods_detail" style='overflow: hidden; margin-top:0.2rem;'>
                                                 <li class="goods_img" style="margin-left:0px;">
-                                                    <img :src="items.img">
+                                                    <img :src='items.otherInfo.commodityImageUrl?items.otherInfo.commodityImageUrl:"./test.jpg"' >
                                                 </li>
                                                 <li class="goods_info">
                                                     <p class="brandDesc">{{items.otherInfo.commodityName}}</p>

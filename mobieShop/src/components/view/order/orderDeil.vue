@@ -37,7 +37,7 @@
                                     <div class="goodsBox">
                                         <ul class="goods_detail" style=' margin-top:0.2rem;'>
                                             <li class="goods_img" style="margin-left:0px;">
-                                                <img :src="item.img">
+                                                <img :src="item.commodityImageUrl">
                                             </li>
                                             <li class="goods_info">
                                                 <p class="brandDesc">{{item.commodityBrand}}</p>
@@ -113,7 +113,6 @@
             <input type='button' class='delBtn' v-show=showBtn4 @click='delOrder(number)' value='订单退款'>
             <input type='button' class='delBtn' v-show=showBtn6 @click='delOrder(number)' value='取消退款'>
             <input type='button'  v-show=showBtn5 @click='delOrder(number)' value='确认收货'>
-            
         </div>
     </div>
 </template>
@@ -294,15 +293,12 @@
                 })
             },
             playOrder(order, actualMoney,companyId) { //支付订单
-                console.log(order)
-                console.log(actualMoney)
-                console.log(companyId)
                 let objs = {
                     "order":order,
                     'actualMoney':actualMoney,
                     'companyId':companyId
                 }
-                this.$router.push({'name':'addManagement',params:{dataObj:objs}});
+                this.$router.push({'name':'paying',params:{dataObj:objs}});
             },
             copy() {
                 var clipboard = new Clipboard('.tag-read')
