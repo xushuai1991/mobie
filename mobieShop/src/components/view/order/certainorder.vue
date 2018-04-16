@@ -95,7 +95,7 @@
                 </li>
             </ul>
         </div>
-        <div class='service-time'>
+        <!-- <div class='service-time'>
             <p>
                 <span class='tip' >可预约服务时间</span>
                 <span class='data'>{{servicedate}}</span>
@@ -112,7 +112,7 @@
                 </mt-picker>
             </mt-popup>
             
-        </div>
+        </div> -->
         <div class='invoice'>
             <p>
                 <span class='tip'>我要开发票</span>
@@ -457,10 +457,9 @@ export default {
                 };
                 data.couponInfoList.push(json);
             });
-            // this.getWeixinpayconfig();
-            this.createOrder(data);
-            // weixinpay();
-            // this.$router.push({name:'paying',params:{ordernums:'xxx',money:20,cheques:'禾目'}});
+            console.log(data);
+            // this.createOrder(data);
+           
         }
     }
 }
