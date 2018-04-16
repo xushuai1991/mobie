@@ -228,7 +228,7 @@ import { Indicator } from 'mint-ui';
                                 id:commodity.id,
                                 imgurl:'',
                                 name:commodity.name,
-                                url:'/commodity?commodityId='+commodity.id,
+                                url:'/detailTemplate?commodityId='+commodity.id,
                                 price:commodity.priceRule==1?commodity.originalPrice:commodity.priceRule==2?commodity.discountPrice:commodity.currentPrice,
                                 nums:commodity.totalSales
                             };
