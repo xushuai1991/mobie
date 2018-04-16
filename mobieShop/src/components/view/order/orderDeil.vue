@@ -37,7 +37,7 @@
                                     <div class="goodsBox">
                                         <ul class="goods_detail" style=' margin-top:0.2rem;'>
                                             <li class="goods_img" style="margin-left:0px;">
-                                                <img :src="item.img">
+                                                <img :src="item.commodityImageUrl">
                                             </li>
                                             <li class="goods_info">
                                                 <p class="brandDesc">{{item.commodityBrand}}</p>
@@ -108,12 +108,11 @@
         <div class='markOrder'>
             <div class='nums'>合计:<span class="moneyColor">￥{{actualMoney}}</span></div>
             <input type='button' class='delBtn' v-show=showBtn1 @click='clearOrder(number,actualMoney)' value='取消订单'>
-            <input type='button' v-show=showBtn2 value='立即付款'>
+            <input type='button' v-show=showBtn2 value='立即付款' @click='playOrder(number,actualMoney,companyId)'>
             <input type='button' class='delBtn' v-show=showBtn3 @click='delOrder(number)' value='删除订单'>
             <input type='button' class='delBtn' v-show=showBtn4 @click='delOrder(number)' value='订单退款'>
             <input type='button' class='delBtn' v-show=showBtn6 @click='delOrder(number)' value='取消退款'>
             <input type='button'  v-show=showBtn5 @click='delOrder(number)' value='确认收货'>
-            
         </div>
     </div>
 </template>
@@ -133,6 +132,7 @@
                 orderStaty: '',
                 orderMoney: '',
                 actualMoney: '',
+                companyId:'',
                 orderState: '',
                 uerName: '',
                 userPhone: '',
@@ -192,6 +192,7 @@
                     this.userAdd = orderStaty.detailAddress
                     this.orderMoney = orderStaty.orderMoney
                     this.actualMoney = orderStaty.actualMoney
+                    this.companyId = orderStaty.companyId
                     this.createTime = orderStaty.createTime
                     this.number = orderStaty.number
                     console.log(orderStaty)
@@ -290,6 +291,14 @@
                 }).catch((err) => {
                     console.log(err)
                 })
+            },
+            playOrder(order, actualMoney,companyId) { //支付订单
+                let objs = {
+                    "order":order,
+                    'actualMoney':actualMoney,
+                    'companyId':companyId
+                }
+                this.$router.push({'name':'paying',params:{dataObj:objs}});
             },
             copy() {
                 var clipboard = new Clipboard('.tag-read')

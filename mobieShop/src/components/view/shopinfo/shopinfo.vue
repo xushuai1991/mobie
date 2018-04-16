@@ -69,6 +69,7 @@
 }
 .accountMangagement{
     font-size:0.2rem;
+    margin-top:0.7rem;
 }
 .accountMangagement li{
     height:1.54rem;

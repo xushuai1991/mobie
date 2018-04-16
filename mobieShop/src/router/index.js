@@ -110,6 +110,16 @@ export default new Router({
                     component: resolve => require(['../components/view/shopinfo/shopinfo.vue'], resolve)
                 },
                 {
+                    path: '/active', // 活动提醒
+                    name: 'active',
+                    component: resolve => require(['../components/view/shopinfo/active.vue'], resolve)
+                },
+                {
+                    path: '/invoiceDateil', // 发票
+                    name: 'invoiceDateil',
+                    component: resolve => require(['../components/view/shopinfo/invoice.vue'], resolve)
+                },
+                {
                     path: '/Inviting', // 受邀码
                     name: 'Inviting',
                     component: resolve => require(['../components/view/Inviting/Inviting.vue'], resolve)
