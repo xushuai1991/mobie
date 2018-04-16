@@ -145,7 +145,7 @@
 import {formatdate} from '../../../assets/javascript/formatdate.js'
 import { MessageBox } from 'mint-ui'
 import { Toast } from 'mint-ui'
-import {weixinPay} from '../../../assets/javascript/weixinpay.js'
+// import {weixinPay} from '../../../assets/javascript/weixinpay.js'
 export default {
     data(){
         return{
@@ -390,7 +390,7 @@ export default {
                     let number=res.data.info.number;
                     Toast('订单生成成功！');
                     let url='http://www.itchun.com/paying?number='+number;
-                    let weixinurl="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx047af049a2f7c678&redirect_uri="+encodeURI(url)+"&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect"
+                    let weixinurl="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx047af049a2f7c678&redirect_uri="+encodeURI(url)+"&response_type=code&scope=snsapi_base&state=123#wechat_redirect"
                     window.location.href=encodeURI(weixinurl);
                     
                     // that.$router.push('/order');
@@ -406,23 +406,23 @@ export default {
             });
         },
         //获取微信支付config
-        getWeixinpayconfig(){
-            return new Promise((resolve,reject)=>{
-                let that=this;
-                let url=window.location.href;
-                this.$http.get('/api/public/share/wechat/config/fetch?url='+url)
-                .then(res=>{
-                    console.log(res);
-                    if(res.data.status==200){
-                        resolve(true);
-                    }
-                })
-                .catch(err=>{
-                    console.log(err);
-                    resolve(false);
-                });
-            })
-        },
+        // getWeixinpayconfig(){
+        //     return new Promise((resolve,reject)=>{
+        //         let that=this;
+        //         let url=window.location.href;
+        //         this.$http.get('/api/public/share/wechat/config/fetch?url='+url)
+        //         .then(res=>{
+        //             console.log(res);
+        //             if(res.data.status==200){
+        //                 resolve(true);
+        //             }
+        //         })
+        //         .catch(err=>{
+        //             console.log(err);
+        //             resolve(false);
+        //         });
+        //     })
+        // },
         submitorder(){
             if(this.checked!='checked'){
                 Toast('请选择支付方式！');
@@ -458,7 +458,7 @@ export default {
                 data.couponInfoList.push(json);
             });
             console.log(data);
-            // this.createOrder(data);
+            this.createOrder(data);
            
         }
     }

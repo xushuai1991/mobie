@@ -10,6 +10,7 @@
     </div>
 </template>
 <script>
+import {weixinPay} from '../../../assets/javascript/weixinpay.js'
 export default {
     data(){
         return{
@@ -40,6 +41,18 @@ export default {
             let that=this;
             this.$http.post('/api/product/order/weixin/pay?code='+this.code,[this.orderNumber])
             .then(res=>{
+                if(res.data.info.code){
+                    let data=res.data.info;
+                    let config={
+                        appId:data.appId,
+                        timeStamp:data.timeStamp,
+                        nonceStr:data.nonceStr,
+                        package:data.package,
+                        signType:data.signType,
+                        paySign:data.paySign
+                    };
+                    weixinPay(config);
+                }
                 console.log(res);
             })
             .catch(err=>{

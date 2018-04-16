@@ -160,9 +160,7 @@
 <script>
     import { Toast } from 'mint-ui';
     // import buttomNav from '@/components/common/buttomNav.vue'
-    import {
-        mapState
-    } from 'vuex'
+    import {mapState} from 'vuex'
     export default {
         prop: ['listLoading'],
         data() {
@@ -210,9 +208,10 @@
             }
         },
         mounted() {
-            console.log(this.userinfo);
+            // console.log(this.userinfo);
             let that = this;
-            this.$http.post('/api/customer/customerLevelComputing/query', {
+            if(this.userinfo.id!=''){
+                this.$http.post('/api/customer/customerLevelComputing/query', {
                     level: that.userinfo.level
                 })
                 .then(function(response) {
@@ -230,14 +229,30 @@
                 .catch(function(response) {
                     console.log(response);
                 });
+            }
+            
         },
         components: {
             // buttomNav
         },
         computed: {
             userinfo(){
-                let data = JSON.parse(sessionStorage.getItem('userinfo'));
-                return data;
+                let userinfo_session=sessionStorage.getItem('userinfo');
+                console.log(userinfo_session);
+                if(userinfo_session==null){
+                    let json={
+                        id:'',
+                        avatar:'',
+                        nickname:'',
+                        level:1
+                    };
+                    return json;
+                }
+                else{
+                    let data = JSON.parse(sessionStorage.getItem('userinfo'));
+                    return data;
+                }
+                
             }
             // ...mapState({
             //     userinfo: function(state) {
