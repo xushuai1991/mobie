@@ -12,7 +12,9 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
+    "clipboard": "^2.0.0",
     "exif-js": "^2.3.0",
+    "mint-ui": "^2.2.13",
     "vue": "^2.5.2",
     "vue-baidu-map": "^0.21.3",
     "vue-router": "^3.0.1",

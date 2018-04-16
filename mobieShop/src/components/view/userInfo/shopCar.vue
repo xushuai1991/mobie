@@ -201,12 +201,16 @@
                             // dataObj: item
                         }
                     });
-                    //  localStorage.setItem("shopCar",JSON.stringify([item]))
+                     localStorage.setItem("shopCar",JSON.stringify([item]))
                     let commodityInfo = [];
-                    console.log(items)
+                     
                     items.listgoods.forEach((item,index)=>{
-                        item.otherInfo.commodityInfo.nums = item.commodityCount
+                       let cartIdList =[];
+                        cartIdList.push(item.id);
+                        item.otherInfo.commodityInfo.cartIdList = cartIdList;
+                        item.otherInfo.commodityInfo.nums = item.commodityCount;
                         commodityInfo.push(item.otherInfo.commodityInfo)
+                       
                     })
                     localStorage.setItem("commodityInfo",JSON.stringify(commodityInfo))
             },
@@ -423,6 +427,7 @@
                             return arry.listgoods.push(a) //将选中的商品添加到数组中
                         });
                         if (arry.listgoods.length > 0) { //如果有商品选中在添加到数组
+                         
                             OrderArry.push(arry)
                         }
                     }
@@ -450,7 +455,9 @@
                     });
                     let commodityInfo = [];
                     OrderArry[0].listgoods.forEach((item,index)=>{
-                        console.log()
+                        let cartIdList =[];
+                        cartIdList.push(item.id);
+                        item.otherInfo.commodityInfo.cartIdList = cartIdList;
                         item.otherInfo.commodityInfo.nums = item.commodityCount
                         commodityInfo.push(item.otherInfo.commodityInfo)
                     })
