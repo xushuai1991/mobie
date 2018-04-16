@@ -108,7 +108,7 @@
         <div class='markOrder'>
             <div class='nums'>合计:<span class="moneyColor">￥{{actualMoney}}</span></div>
             <input type='button' class='delBtn' v-show=showBtn1 @click='clearOrder(number,actualMoney)' value='取消订单'>
-            <input type='button' v-show=showBtn2 value='立即付款'>
+            <input type='button' v-show=showBtn2 value='立即付款' @click='playOrder(number,actualMoney,companyId)'>
             <input type='button' class='delBtn' v-show=showBtn3 @click='delOrder(number)' value='删除订单'>
             <input type='button' class='delBtn' v-show=showBtn4 @click='delOrder(number)' value='订单退款'>
             <input type='button' class='delBtn' v-show=showBtn6 @click='delOrder(number)' value='取消退款'>
@@ -133,6 +133,7 @@
                 orderStaty: '',
                 orderMoney: '',
                 actualMoney: '',
+                companyId:'',
                 orderState: '',
                 uerName: '',
                 userPhone: '',
@@ -192,6 +193,7 @@
                     this.userAdd = orderStaty.detailAddress
                     this.orderMoney = orderStaty.orderMoney
                     this.actualMoney = orderStaty.actualMoney
+                    this.companyId = orderStaty.companyId
                     this.createTime = orderStaty.createTime
                     this.number = orderStaty.number
                     console.log(orderStaty)
@@ -290,6 +292,17 @@
                 }).catch((err) => {
                     console.log(err)
                 })
+            },
+            playOrder(order, actualMoney,companyId) { //支付订单
+                console.log(order)
+                console.log(actualMoney)
+                console.log(companyId)
+                let objs = {
+                    "order":order,
+                    'actualMoney':actualMoney,
+                    'companyId':companyId
+                }
+                this.$router.push({'name':'addManagement',params:{dataObj:objs}});
             },
             copy() {
                 var clipboard = new Clipboard('.tag-read')

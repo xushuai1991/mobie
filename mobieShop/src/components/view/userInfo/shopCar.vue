@@ -12,7 +12,8 @@
                                 <div class="goods">
                                     <div class="goods_title type-pay">
                                         <input type="checkbox" class='CinputBox' v-model="item.shopselected" @change="checkShop(index)" /><span>{{item.listgoods[0].otherInfo.company.companyName}}</span>
-                                        <div class="checks" @click='showServer(item.shopname,4)'>领券</div>
+                                        <div class="checks" @click='showServer(item.shopname,item.listgoods[0].otherInfo.company.companyId)'>领券</div>
+                                        
                                         <p></p>
                                     </div>
                                     <div class="goodsBox list-item" v-for="(items,indexs) in item.listgoods" :key="indexs" data-type="0">
@@ -23,9 +24,10 @@
                                                 </li>
                                                 <li class="goods_info">
                                                     <p class="brandDesc">{{items.otherInfo.commodityName}}</p>
-                                                    <p class="goods_identifier strlen" style="width:3rem;"><span>水电费收到发生的防守打法收到发生的防守打法斯蒂芬斯蒂芬是收到放斯蒂芬斯蒂芬松放松发顺丰</span></p>
+                                                    <p class="goods_identifier strlen" style="width:3rem;"></p>
                                                     <p class="goods_color">颜色：<span>红色</span></p>
                                                     <p class="goods_size">尺码：<span>尺寸</span></p>
+                                                    <p @click="open('picker1',index,indexs)" size="large">{{items.otherInfo.commodityInfo.playTime}}</p>
                                                 </li>
                                                 <li class="goods_info_se">
                                                     <p class="goods_price">￥<span>{{items.otherInfo.commodityPrice}}</span></p>
@@ -36,8 +38,8 @@
                                                     </div>
                                                 </li>
                                                 <!-- <span class="mui_shopcar_del" @click="remove(index,indexs)">
-                                                                                                                    <i class='icon iconfont icon-lajitong'></i>
-                                                                                                                </span>!-->
+                                                                                                                                    <i class='icon iconfont icon-lajitong'></i>
+                                                                                                                                </span>!-->
                                             </ul>
                                             <div class="delete" @click="deleteSection(index,indexs,items.id)" :data-index="index">删除</div>
                                         </div>
@@ -94,6 +96,8 @@
             </ul>
             <div class='closeBtn' @click="btnClose">关闭</div>
         </mt-popup>
+        <mt-datetime-picker ref="picker1" type="date" v-model="value1" year-format="{value} 年" month-format="{value} 月" date-format="{value} 日" :startDate="startDate" :endDate="endDate" @confirm="handleChange">
+        </mt-datetime-picker>
     </div>
 </template>
 
@@ -107,6 +111,12 @@
     export default {
         data() {
             return {
+                pIndex:'',
+                pIndex2:'',
+                value: null,
+                value1: null,
+                startDate: new Date(),
+                endDate: this.addDay(2),
                 //初始化无限加载相关参数
                 queryLoading: false,
                 moreLoading: false,
@@ -190,29 +200,60 @@
             this.getCarData();
         },
         methods: {
+            addDay(dayNumber, date) {
+                date = date ? date : new Date();
+                var ms = dayNumber * (1000 * 60 * 60 * 24)
+                var newDate = new Date(date.getTime() + ms);
+                return newDate;
+            },
+            open(picker,index,index2) {
+                this.startDate=new Date(),
+                this.pIndex = index
+                this.pIndex1 = index2
+                this.$refs[picker].open();
+                
+            },
+            handleChange(value) {
+                this.date1 = value;
+                this.timestampToTime(this.date1)
+                this.list[this.pIndex].listgoods[this.pIndex1]['otherInfo']['commodityInfo'].playTime= this.timestampToTime(this.date1)
+                //this.show = true;
+                // Toast({
+                //     message: '已选择 ' + value.toString(),
+                //     position: 'bottom'
+                // });
+            },
+            timestampToTime(timestamp) {
+                var date = new Date(timestamp ); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
+                let Y = date.getFullYear() + '-';
+                let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                let D = date.getDate() + ' ';
+                let h = date.getHours() + ':';
+                let m = date.getMinutes() + ':';
+                let s = date.getSeconds();
+                return Y + M + D + h + m + s;
+            },
             //购物车数据群
             //付款
             playmoney(items) {
-                 this.$router.push({
-                        path: '/ordercertain',
-                        name: 'ordercertain',
-                        params: {
-                            name: 'shopCar',
-                            // dataObj: item
-                        }
-                    });
-                     localStorage.setItem("shopCar",JSON.stringify([item]))
-                    let commodityInfo = [];
-                     
-                    items.listgoods.forEach((item,index)=>{
-                       let cartIdList =[];
-                        cartIdList.push(item.id);
-                        item.otherInfo.commodityInfo.cartIdList = cartIdList;
-                        item.otherInfo.commodityInfo.nums = item.commodityCount;
-                        commodityInfo.push(item.otherInfo.commodityInfo)
-                       
-                    })
-                    localStorage.setItem("commodityInfo",JSON.stringify(commodityInfo))
+                this.$router.push({
+                    path: '/ordercertain',
+                    name: 'ordercertain',
+                    params: {
+                        name: 'shopCar',
+                        // dataObj: item
+                    }
+                });
+                localStorage.setItem("shopCar", JSON.stringify([item]))
+                let commodityInfo = [];
+                items.listgoods.forEach((item, index) => {
+                    let cartIdList = [];
+                    cartIdList.push(item.id);
+                    item.otherInfo.commodityInfo.cartIdList = cartIdList;
+                    item.otherInfo.commodityInfo.nums = item.commodityCount;
+                    commodityInfo.push(item.otherInfo.commodityInfo)
+                })
+                localStorage.setItem("commodityInfo", JSON.stringify(commodityInfo))
             },
             //领取优惠劵
             okcoupon(id) {
@@ -282,6 +323,7 @@
                         let data = response.data.info;
                         var b = data.reduce((v, k) => { //循环
                             k['selected'] = false;
+                            k.otherInfo.commodityInfo['playTime']='请选择时间'
                             var filters = v.filter((data) => {
                                 return data.commodityCount === k.otherInfo.commodityCompanyId //过滤相同的companyId
                             });
@@ -427,7 +469,6 @@
                             return arry.listgoods.push(a) //将选中的商品添加到数组中
                         });
                         if (arry.listgoods.length > 0) { //如果有商品选中在添加到数组
-                         
                             OrderArry.push(arry)
                         }
                     }
@@ -435,7 +476,7 @@
                 if (OrderArry.length < 1) {
                     Toast('请选择点东西吧');
                 } else if (OrderArry.length == 1) {
-                      OrderArry.forEach((item, index) => {
+                    OrderArry.forEach((item, index) => {
                         let num = 0;
                         let prices = 0;
                         item.listgoods.forEach((item) => {
@@ -454,14 +495,14 @@
                         }
                     });
                     let commodityInfo = [];
-                    OrderArry[0].listgoods.forEach((item,index)=>{
-                        let cartIdList =[];
+                    OrderArry[0].listgoods.forEach((item, index) => {
+                        let cartIdList = [];
                         cartIdList.push(item.id);
                         item.otherInfo.commodityInfo.cartIdList = cartIdList;
                         item.otherInfo.commodityInfo.nums = item.commodityCount
                         commodityInfo.push(item.otherInfo.commodityInfo)
                     })
-                    localStorage.setItem("commodityInfo",JSON.stringify(commodityInfo))
+                    localStorage.setItem("commodityInfo", JSON.stringify(commodityInfo))
                 } else if (OrderArry.length > 1) {
                     this.shopLIst = OrderArry
                     this.popupVisible2 = true;
@@ -475,7 +516,6 @@
                         item['num'] = num;
                         item['prices'] = prices;
                     })
-                    
                 }
             },
             btnClose() {
@@ -483,6 +523,7 @@
                 this.popupVisible2 = false;
             },
             showServer(name, companyId) {
+                console.log(companyId)
                 this.ShopName = name;
                 this.popupVisible = true;
                 this.getcoupon(companyId)
