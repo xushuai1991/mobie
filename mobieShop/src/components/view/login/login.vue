@@ -147,7 +147,6 @@ export default {
                 else{
                     data='mobile='+this.phone+'&password='+this.psw+'&openId='+openId;
                 }
-                alert(data);
                 this.$http({
                     url: '/api/customer/account/login?'+data,
                     method: 'POST',
@@ -208,7 +207,6 @@ export default {
                     else{
                         data='mobile='+this.phone+'&code='+this.code+'&openId='+openId;
                     }
-                    alert(data);
                     this.$http.post('/api/customer/account/quickLogin?'+data)
                     .then(function(response){
                         Toast(response.data.msg);
