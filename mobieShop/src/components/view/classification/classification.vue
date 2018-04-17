@@ -233,7 +233,7 @@ import { Indicator } from 'mint-ui';
                                 id:commodity.id,
                                 imgurl:commodity.commodityImageList.length==0?'':commodity.commodityImageList[0],
                                 name:commodity.name,
-                                url:'/detailTemplate?commodityId='+commodity.id+'&companyId='+this.companyId,
+                                url:'/detailTemplate?commodityId='+commodity.id,
                                 price:commodity.priceRule==1?commodity.originalPrice:commodity.priceRule==2?commodity.discountPrice:commodity.currentPrice,
                                 nums:commodity.totalSales
                             };

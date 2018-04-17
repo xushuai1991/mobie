@@ -68,6 +68,7 @@ export default {
         let code=this.getURLparms('code');
         this.code=code;
         this.companyid=companyid;
+        sessionStorage.setItem('companyId',companyid);
         if(code!=null){
             this.getOpenid();
         }

@@ -125,6 +125,7 @@ import { Toast } from 'mint-ui';
                 }
                 console.log(JSON.parse(userId))
                  let routerParams = this.$route.params;
+                 console.log(routerParams);
                 let userifno = routerParams.dataObj;
                
                console.log(userifno)

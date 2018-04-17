@@ -4,7 +4,7 @@
             <span class='tip'>待评价</span>
         </div>
         <div class='content' @click.stop='toOrderDetail(data.number,index)'>
-            <div class='detail' v-for='(item,index) in data.orderDetails' :key='index'>
+            <div :class='{"detail":true,"haseval":item.evaluation!=null}' v-for='(item,index) in data.orderDetails' :key='index'>
                 <div class='img-goods'>
                     <img :src="item.image" alt="图片丢失">
                 </div>
@@ -54,7 +54,9 @@ export default {
         evaluate(){
             let order_withoutevaluate=[];
             this.data.orderDetails.forEach(item=>{
-                order_withoutevaluate.push(item);
+                if(item.evaluation==null){
+                    order_withoutevaluate.push(item.commodityId);
+                }
             });
             this.$router.push({'name':'',params:{'orderlist':order_withoutevaluate}});
         },
@@ -70,6 +72,9 @@ export default {
     margin-bottom: 0.2rem;
     background-color: #fff;
     overflow: hidden;
+}
+.haseval{
+    background-color: #f5f5f5;
 }
 .title{
     font-size: 0.26rem;
