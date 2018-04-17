@@ -186,7 +186,9 @@
                         "number": ordernumber
                     }
                 }).then((res) => {
-                    if (res.data.status != 200) {
+                   console.log(res)
+                    if ( res.data.info.list.length==0 || res.data.status != 200) {
+                        Toast('订单有问题请联系客服')
                         return false
                     }
                     let orderStaty = res.data.info.list[0];

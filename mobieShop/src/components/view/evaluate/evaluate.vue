@@ -129,12 +129,25 @@
         },
         methods: {　　
             getDataInfo() {
-                let url = '/api/product/commodity/evaluation/queryByIds';
+                let url = '/api/product/commodity/info/queryMapByIds'; 
                 this.$http({
                         url: url,
                         method: 'POST',
                         // 请求体重发送的数据
-                        data: ["7bda1bc6-3c93-11e8-b8d4-88d7f652f92c", "6446efb7-3c92-11e8-b8d4-88d7f652f92c"]
+                        data: ["d9300732-3ad8-11e8-8c96-88d7f652f92c","bb561d8f-3ad8-11e8-8c86-88d7f652f92c"]
+                    })
+                    .then(res => {
+                        console.log(res)
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+                     let Markurl = '/api/product/commodity/evaluation/label/queryByIds'; 
+                this.$http({
+                        url: Markurl,
+                        method: 'POST',
+                        // 请求体重发送的数据
+                        data: ["d9300732-3ad8-11e8-8c96-88d7f652f92c","bb561d8f-3ad8-11e8-8c86-88d7f652f92c"]
                     })
                     .then(res => {
                         console.log(res)

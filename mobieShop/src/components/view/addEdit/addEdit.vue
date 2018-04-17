@@ -111,7 +111,7 @@ import { Toast } from 'mint-ui';
         methods: {
             saveAddInfo() { //提交地址
              let userId = sessionStorage.getItem("userinfo");
-                userId = JSON.parse(userId).id;
+              let  userIds = JSON.parse(userId).id;
                 let datainfo = {
                     "areaId": this.checkindex,
                     "provinceId": this.checkindex1,
@@ -121,12 +121,13 @@ import { Toast } from 'mint-ui';
                     "address": this.details,
                     "consigneeName": this.username,
                     "consigneeMobilePhone": this.useriphone,
-                    "customerId": userId
+                    "customerId": userIds
                 }
+                console.log(JSON.parse(userId))
                  let routerParams = this.$route.params;
                 let userifno = routerParams.dataObj;
                
-               
+               console.log(userifno)
                 if (!this.username) {
                     this.$toast('用户不能为空');
                     return false
@@ -143,8 +144,8 @@ import { Toast } from 'mint-ui';
                     this.$toast('街道不能为空');
                     return false
                 }
-               
-                if(routerParams.name=='addManagement'){
+            //    console.log(routerParams.name =='addManagement')
+                if(false){
                      let datainfo2 = {
                     "areaId": this.checkindex,
                     "provinceId": this.checkindex1,
@@ -154,8 +155,8 @@ import { Toast } from 'mint-ui';
                     "address": this.details,
                     "consigneeName": this.username,
                     "consigneeMobilePhone": this.useriphone,
-                    "customerId": userifno.customerId,
-                    'id':userifno.id
+                    "customerId": userifno?userifno.customerId:userIds,
+                    'id':userifno?userifno.id:""
                 }
                     let url = '/api/customer/address/update?useAsDefault=' + (this.value == true ? true : false);
                     this.$http({

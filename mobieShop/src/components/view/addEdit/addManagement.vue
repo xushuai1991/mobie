@@ -126,7 +126,7 @@
 
                     this.list = res.data.info.list
                     this.listpages = res.data.info.pages;
-                    console.log(res.data.info.list.isDefaultAddress)
+                    // console.log(res.data.info.list.isDefaultAddress)
                     
                 }).catch(error => {
                     console.log(error)
