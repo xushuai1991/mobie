@@ -937,23 +937,30 @@
     }
     .detailBottom li:nth-child(1),.detailBottom li:nth-child(2),.detailBottom li:nth-child(3){
         width:1rem;
-        border-top:1px solid #ddd;
+        border-top:0.01rem solid #ddd;
         background-color:#fff;
-         border-bottom:1px solid #ffffff;
+         border-bottom:0.03rem solid #ffffff;
     }
     .detailBottom li:nth-child(1)::after,.detailBottom li:nth-child(2)::after{
-            display: inline-block;
-            content: "";
-            height: 0.4rem;
-            border-right: 1px solid #dddddd;
-            position: relative;
-            top: -0.5rem;
-            right: -0.42rem;
+                display: inline-block;
+    content: "";
+    height: 0.4rem;
+    border-right: 0.02rem solid #dddddd;
+    position: relative;
+    top: -0.5rem;
+    right: -0.46rem;
     }
     .detailBottom li:nth-child(4),.detailBottom li:nth-child(5){
         width:2.21rem;
-        border:1px solid #6ab4ff;
+        border:0.01rem solid #6ab4ff;
     }
+    .detailBottom li:nth-child(4){
+        border:0.02rem solid #6ab4ff;
+    }
+    .detailBottom li:nth-child(5){
+       border-bottom: 0.03rem solid #6ab4ff;
+    }
+    
     .detailBottom li:nth-child(4) p,.detailBottom li:nth-child(5) p{
         line-height:1rem;
     }
@@ -988,7 +995,7 @@
             color: #fff;
             margin-right: 0.2rem;
             font-size: 0.25rem;
-            border-radius: 5px;
+            border-radius: 0.05rem;
         }
     }
     .shopBox li {
