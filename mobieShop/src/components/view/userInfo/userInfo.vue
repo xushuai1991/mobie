@@ -65,28 +65,28 @@
                 <ul class="wait_for">
                     <li @click="myorder('willpay')">
                         <div class="img_wait">
-                            <i class="pay orageColor">2</i>
+                            <i class="pay orageColor" v-if='num_orderwillpay!=0'>{{num_orderwillpay}}</i>
                             <i class='icon iconfont icon-daifukuan fontSize'></i>
                         </div>
                         <p class="text_wait">待付款</p>
                     </li>
                     <li @click="myorder('willservice')">
                         <div class="img_wait">
-                            <i class="wait orageColor">2</i>
+                            <i class="wait orageColor" v-if='num_orderwillservice!=0'>{{num_orderwillservice}}</i>
                             <i class='icon iconfont icon-icondaifahuo fontSize'></i>
                         </div>
                         <p class="text_wait">待服务</p>
                     </li>
                     <li @click="myorder('inservice')">
                         <div class="img_wait ">
-                            <i class="receive orageColor">2</i>
+                            <i class="receive orageColor" v-if='num_orderinservice!=0'>{{num_orderinservice}}</i>
                             <i class='icon iconfont icon-ziyuan fontSize'></i>
                         </div>
                         <p class="text_wait">服务中</p>
                     </li>
                     <li @click="myorder('willevaluate')">
                         <div class="img_wait ">
-                            <i class="evaluate orageColor">2</i>
+                            <i class="evaluate orageColor" v-if='num_orderwillevaluate!=0'>{{num_orderwillevaluate}}</i>
                             <i class='icon iconfont icon-daipingjia fontSize'></i>
                         </div>
                         <p class="text_wait">待评价</p>
@@ -177,6 +177,10 @@
                 expiredPoints:0,
                 num_collection:0,
                 num_shopcar:0,
+                num_orderwillpay:0,
+                num_orderwillservice:0,
+                num_orderinservice:0,
+                num_orderwillevaluate:0,
                 memberId:'',
                 userinfo:{
                     id:'',
@@ -192,7 +196,7 @@
             if(userinfo_session!=null){
                 let data = JSON.parse(sessionStorage.getItem('userinfo'));
                 this.userinfo=data;
-                this.integral()
+                this.integral();
             }
             
         },
@@ -252,11 +256,34 @@
                             this.$router.push("/inviting?recommendedCustomerId="+userinfo.id);
                             break;
                         }
+                        case 'invoice':{
+                            this.$router.push("/invoiceDateil");
+                            break;
+                        }
                         default:{
                             break;
                         }
                     }
                 }
+            },
+            //查询订单数量
+            getNUmberOrder(data){
+                let that=this;
+                this.$http.post('/api/product/order/mall/find?pageSize=0')
+                .then(res=>{
+                    if(res.data.status==200){
+                        return res.data.info.total;
+                    }
+                    else{
+                        Toast(res.data.msg);
+                        return 0;
+                    }
+                    console.log(res);
+                })
+                .catch(err=>{
+                    console.log(err);
+                    return 0;
+                });
             }
         },
         mounted() {

@@ -42,7 +42,7 @@
             <mt-tab-container-item id="willservice">
                 <ul v-infinite-scroll="loadMore2" infinite-scroll-disabled="loading3" infinite-scroll-immediate-check='false'  class='orderlist'>
                     <li v-for="item in orderlist[2]" :key="item">
-                        <inservice :data='item' index='2'></inservice>
+                        <willservice :data='item' index='2'></willservice>
                     </li>
                 </ul>
                 <p v-show="!loading3" class="page-infinite-loading">
@@ -55,7 +55,7 @@
             <mt-tab-container-item id="inservice">
                 <ul v-infinite-scroll="loadMore3" infinite-scroll-disabled="loading4" infinite-scroll-immediate-check='false'  class='orderlist'>
                     <li v-for="item in orderlist[3]" :key="item">
-                        <willservice :data='item' index='3'></willservice>
+                        <inservice :data='item' index='3'></inservice>
                     </li>
                 </ul>
                 <p v-show="!loading4" class="page-infinite-loading">
@@ -94,7 +94,7 @@ export default {
         return {
             test:true,
             selected: 'all',
-            orderlist:[[],[],[],[], [],],
+            orderlist:[[],[],[],[], []],
             loading1:true,
             loading2:true,
             loading3:true,
@@ -193,6 +193,10 @@ export default {
                         let data={};
                         this.getOrderList(1,data);
                     }
+                    else{
+                        this.loading1=this.dataover[0];
+                    }
+                    
                     this.loading2=true;
                     this.loading3=true;
                     this.loading4=true;
@@ -205,7 +209,11 @@ export default {
                        let data={payState:2};
                         this.getOrderList(1,data);
                     }
+                    else{
+                        this.loading2=this.dataover[1];
+                    }
                     this.loading1=true;
+                    
                     this.loading3=true;
                     this.loading4=true;
                     this.loading5=true;
@@ -216,6 +224,9 @@ export default {
                     if(this.orderlist[2].length==0){
                         let data={payState:1,serviceState:1};
                         this.getOrderList(1,data);
+                    }
+                    else{
+                        this.loading3=this.dataover[2];
                     }
                     this.loading1=true;
                     this.loading2=true;
@@ -229,9 +240,13 @@ export default {
                         let data={payState:1,serviceState:2};
                         this.getOrderList(1,data);
                     }
+                    else{
+                        this.loading4=this.dataover[3];
+                    }
                     this.loading1=true;
                     this.loading2=true;
                     this.loading3=true;
+                    
                     this.loading5=true;
                     break;
                 }
@@ -240,10 +255,14 @@ export default {
                     if(this.orderlist[4].length==0){
                         this.getOrder_Willevaluate(1);
                     }
+                    else{
+                        this.loading5=this.dataover[4];
+                    }
                     this.loading1=true;
                     this.loading2=true;
                     this.loading3=true;
                     this.loading4=true;
+                    
                     break;
                 }
                 default:{
