@@ -1,50 +1,64 @@
 <template>
     <div class='CmyOveroder'>
-        <!--<ul v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
-                        <li v-for="item in list">{{ item }}</li>
-                    </ul>!-->
         <section>
             <div class="wrap2">
                 <div class="goods_list">
-                    <ul class="mui-table-view" infinite-scroll-immediate-check="false">
+                    <ul class="mui-table-view" v-infinite-scroll="loadMore" infinite-scroll-disabled="moreLoading" infinite-scroll-distance="0" infinite-scroll-immediate-check="false">
                         <!--li数据遍历循环部分-->
                         <li class="mui-table-view-cell" v-for="(item,index) in list" :key="index">
                             <div class="cart">
                                 <div class="goods">
                                     <div class="goods_title type-pay">
-                                        <span>{{item.shopname}}</span>
-                                        
+                                        <span>{{item.name}}</span>
                                     </div>
-                                    <div class="goodsBox" v-for="(items,indexs) in item.listgoods" :key="indexs">
-                                        <!--<mt-cell-swipe :right="[  
-                                                        {  
-                                                            content: '删除',  
-                                                            style: { background: '#ff7900', color: '#fff'},  
-                                                            handler: () => deleteSection(index,indexs)  
-                                                        }  
-                                                    ]">!-->
-                                                    <ul class="goods_detail" style=' margin-top:0.2rem;'>
-                                                <li class="goods_img" style="margin-left:0px;">
-                                                    <img :src="items.img">
-                                                </li>
-                                                <li class="goods_info">
-                                                    <p class="brandDesc">{{items.name}}</p>
-                                                    <p class="goods_identifier strlen" style="width:2.5rem;padding-right:0.2rem;"><span>第三方辅导费胜多负少发斯蒂芬斯发斯蒂芬是否锁定蒂芬视斯蒂芬斯蒂芬收到发生的</span></p>
-                                                    <p class="goods_color">颜色：<span>红色</span></p>
-                                                    <p class="goods_size">尺码：<span>尺寸</span></p>
-                                                </li>
-                                                <li class="goods_info_se">
-                                                    <p class="goods_price">￥<span>{{items.price}}</span></p>
-                                                    <div class='cgqNumBox'>
-                                                        数量:<input type="number" disabled :value="items.count" style='background:#fff;margint-top:0.2rem;' />
-                                                    </div>
-                                                    <div  class='tuikuan'>退款</div>
-                                                    <!--<span class="mui_shopcar_del" @click="remove(index,indexs)">
-                                                            <i class='icon iconfont icon-lajitong'></i>
-                                                        </span>!-->
-                                                </li>
-                                            </ul>
+                                    <div class="goodsBox">
+                                        <ul class="goods_detail" style=' margin-top:0.2rem;' @click='goShopDateil(item)'>
+                                            <li class="goods_img" style="margin-left:0px;">
+                                                <img :src="item.commodityImageUrl">
+                                            </li>
+                                            <li class="goods_info">
+                                                <p class="brandDesc">{{item.commodityBrand}}</p>
+                                                <p class="goods_identifier strlen" style="width:2.5rem;padding-right:0.2rem;"><span></span></p>
+                                                <p class="goods_color">颜色：<span>红色</span></p>
+                                                <p class="goods_size">尺码：<span>尺寸</span></p>
+                                            </li>
+                                            <li class="goods_info_se">
+                                                <p class="goods_price">￥<span>{{item.price}}</span></p>
+                                                <div class='cgqNumBox'>
+                                                    数量:<input type="number" disabled :value="item.saleNumber" style='background:#fff;margint-top:0.2rem;' />
+                                                </div>
+                                                <!--<span class="mui_shopcar_del" @click="remove(index,indexs)">
+                                                                                                <i class='icon iconfont icon-lajitong'></i>
+                                                                                            </span>!-->
+                                            </li>
+                                        </ul>
+                                        <!--<div class='refundDetail' v-show='refundOrder'>
+                                            <button @click='refundButton($event, index)'>退款状态</button>
+                                            <div class='hiddles'>
+                                                <p>退款金额：{{item.priceEnd}}</p>
+                                                <p>退款状态：{{orderState}}</p>
+                                            </div>
+                                        </div>!-->
                                         <!--</mt-cell-swipe>!-->
+                                    </div>
+                                    <div class="goodsBox" v-for="(items,indexs) in item.orderDetailList" :key="indexs">
+                                        <ul class="goods_detail" style=' margin-top:0.2rem;'>
+                                            <li class="goods_img" style="margin-left:0px;">
+                                                <img :src="items.img">
+                                            </li>
+                                            <li class="goods_info">
+                                                <p class="brandDesc">套餐:{{items.commodityBrand}}</p>
+                                                <p class="goods_identifier strlen" style="width:2.5rem;padding-right:0.2rem;"><span></span></p>
+                                                <p class="goods_color">颜色：<span>红色</span></p>
+                                                <p class="goods_size">尺码：<span>尺寸</span></p>
+                                            </li>
+                                            <li class="goods_info_se">
+                                                <p class="goods_price">￥<span>{{items.price}}</span></p>
+                                                <div class='cgqNumBox'>
+                                                    数量:<input type="number" disabled :value="items.count" style='background:#fff;margint-top:0.2rem;' />
+                                                </div>
+                                            </li>
+                                        </ul>
                                     </div>
                                     <div class='orderFooter'>
                                         <p>全国包邮 合计:<span>$299</span></p>
@@ -67,194 +81,134 @@
     </div>
 </template>
 <script>
- import {
+    import {
         MessageBox
     } from 'mint-ui';
     export default {
         data() {
             return {
                 selected: '1',
-                list: [1, 2, 3, 4, 1, 2, 3, 41, 2, 3, 41, 2, 3, 41, 2, 3, 41, 2, 3, 41, 2, 3, 4],
-                loading: false,
                 queryLoading: false,
                 moreLoading: false,
                 allLoaded: false,
-                list: [
-                    // shop:[{'img': require('./../homepage/recommend/recommendImage/1.jpg')}],
-                    {
-                        id: 1,
-                        shopname: '内蒙古原产牛奶',
-                        shopselected: false,
-                        listgoods: [{
-                                id: 101,
-                                name: '奶片',
-                                price: 1.3,
-                                count: 2,
-                                selected: false,
-                                'img': require('./../homepage/recommend/recommendImage/1.jpg')
-                            },
-                            {
-                                id: 102,
-                                name: '小辣椒',
-                                price: 100,
-                                count: 1,
-                                selected: false,
-                                'img': require('./../homepage/recommend/recommendImage/1.jpg')
-                            },
-                            {
-                                id: 103,
-                                name: '小辣椒22222',
-                                price: 100,
-                                count: 1,
-                                selected: false,
-                                'img': require('./../homepage/recommend/recommendImage/1.jpg')
-                            }
-                        ]
-                    },
-                    {
-                        id: 2,
-                        shopname: '云端电子',
-                        shopselected: false,
-                        listgoods: [{
-                                id: 201,
-                                name: '三星',
-                                price: 4000,
-                                count: 2,
-                                selected: false,
-                                'img': require('./../homepage/recommend/recommendImage/1.jpg')
-                            },
-                            {
-                                id: 202,
-                                name: '华为1',
-                                price: 100,
-                                count: 1,
-                                selected: false,
-                                'img': require('./../homepage/recommend/recommendImage/1.jpg')
-                            },
-                            {
-                                id: 203,
-                                name: '华为2',
-                                price: 100,
-                                count: 1,
-                                selected: false,
-                                'img': require('./../homepage/recommend/recommendImage/1.jpg')
-                            },
-                            {
-                                id: 204,
-                                name: '华为3',
-                                price: 100,
-                                count: 1,
-                                selected: false,
-                                'img': require('./../homepage/recommend/recommendImage/1.jpg')
-                            }
-                        ]
-                    },
-                    {
-                        id: 3,
-                        shopname: '小米官方商店',
-                        shopselected: false,
-                        listgoods: [{
-                            id: 301,
-                            name: '小米4',
-                            price: 1.3,
-                            count: 2,
-                            selected: false,
-                            'img': require('./../homepage/recommend/recommendImage/1.jpg')
-                        }]
-                    }
-                ]
+                totalNum: 0,
+                pageSize: 10,
+                pageNum: 0,
+                list: []
             }
+        },
+        computed: {
+            params() {
+                return {
+                    pageSize: this.pageSize
+                }
+            }
+        },
+        created(){
+            this.loadMore();
         },
         methods: {
             loadMore() {
-                this.loading = true;
-                setTimeout(() => {
-                    let last = this.list[this.list.length - 1];
-                    this.loading = true;
-                }, 2500);
-            },
-            deleteSection(parentID, ID) { //parentID是商家id,ID是商品id
-                this.unbind(parentID, ID)
-            },
-            unbind(parentID, ID) {
-                const htmls = `是否删除此信息？`;
-                MessageBox.confirm('', {
-                    message: htmls,
-                    title: '',
-                    showConfirmButton: true,
-                    showCancelButton: true,
-                    cancelButtonClass: 'cancelButton',
-                    confirmButtonClass: 'confirmButton',
-                    confirmButtonText: '删除',
-                    cancelButtonText: '不删除'
-                }).then(action => {
-                    if (action == 'confirm') {
-                        var self = this.list[parentID]; //删除购车商品执行部分
-                        self.listgoods.length == 1 ? this.list.splice(parentID, 1) : self.listgoods.splice(ID, 1); //如果删除最后一个商品，则商家一并删除
+                if (this.allLoaded) {
+                    this.moreLoading = true;
+                    return;
+                }
+                if (this.queryLoading) {
+                    return;
+                }
+                this.moreLoading = !this.queryLoading;
+                this.pageNum++;
+                console.log(this.pageNum)
+                this.$http.post("/api/product/order/mall/find?pageNo="+this.pageNum, Object.assign( this.params)).then((res) => {
+                    console.log(res.data.info)
+                    if (res.data.info && res.data.info.list) {
+                        res.data.info.list.forEach((item,i)=>{
+                           
+                            if(item.orderDetails){
+                                if(item.payState==1){
+                                    this.list = this.list.concat(item.orderDetails);
+                                    
+                                }
+                                 
+                            }
+                           
+                        })
+                        console.log(this.list.length)
+                        if(this.list.length<=0){
+                            this.loadMore();
+                        }
+                        console.log( this.list)
+                        this.allLoaded = this.list.length == res.data.info.total;
                     }
-                }).catch(err => {
-                    if (err == 'cancel') {}
+                    this.moreLoading = this.allLoaded;
                 });
-            },
+            }
         }
     }
 </script>
 <style>
-    .CmyOveroder .mint-cell-value{
-            width:100%;
-        }
-    .CmyOveroder .mint-cell-wrapper{
-            padding-left: 0;
-        }
-   .CmyOveroder .mint-cell-swipe-button{
-            font-size:0.3rem;
-            line-height:3rem;
-        }
-    .CmyOveroder  .mint-cell-wrapper{
-            border-bottom:none;
-            padding-bottom:0.2rem;
-        }
+    .CmyOveroder .mint-cell-value {
+        width: 100%;
+    }
+    .CmyOveroder .mint-cell-wrapper {
+        padding-left: 0;
+    }
+    .CmyOveroder .mint-cell-swipe-button {
+        font-size: 0.3rem;
+        line-height: 3rem;
+    }
+    .CmyOveroder .mint-cell-wrapper {
+        border-bottom: none;
+        padding-bottom: 0.2rem;
+    }
+    .CmyOveroder .more_loading{
+        text-align:center;
+        font-size:0.3rem;
+    }
+    .CmyOveroder .mint-spinner-snake{
+        margin-left: 45%;
+    }
 </style>
 <style scoped lang='less'>
-    input[type=button]{
-	-webkit-appearance:none;
-	outline:none
-}
-.orderFooter{
-    text-align:right;
-    margin-top:0.2rem;
-    font-size:0.3rem;
-    line-height:1rem;
-    border-top:1px solid #ddd;
-}
-.orderFooter p{
-    padding-right:0.2rem;
-}
-.orderFooter p:nth-child(2){
-    border-top:1px solid #ddd;
-}
-.orderFooter input{
-    background:#0cbbb9;
-    color:#fff;
-    padding:0.08rem 0.15rem;
-    border-radius:0.1rem;
-}
-.orderFooter input:nth-child(1){
-    background:#fff;
-    color:#888;
-    border:1px solid #ddd;
-    padding:0.08rem 0.15rem;
-    border-radius:0.1rem;
-}
-.CmyOveroder .tuikuan{
+    input[type=button] {
+        -webkit-appearance: none;
+        outline: none
+    }
+    .orderFooter {
+        text-align: right;
+        margin-top: 0.2rem;
+        font-size: 0.3rem;
+        line-height: 1rem;
+        border-top: 1px solid #ddd;
+    }
+    .orderFooter p {
+        padding-right: 0.2rem;
+    }
+    .orderFooter p:nth-child(2) {
+        border-top: 1px solid #ddd;
+    }
+    .orderFooter input {
+        background: #0cbbb9;
+        color: #fff;
+        padding: 0.08rem 0.15rem;
+        border-radius: 0.1rem;
+    }
+    .orderFooter input:nth-child(1) {
+        background: #fff;
+        color: #888;
+        border: 1px solid #ddd;
+        padding: 0.08rem 0.15rem;
+        border-radius: 0.1rem;
+    }
+    .CmyOveroder .tuikuan {
         position: absolute;
-    bottom: 0.1rem;
-    border: 1px solid #ddd;
-    height: 0rem;
-    padding: 0.2rem;
-    line-height: 0;
-    border-radius:0.1rem;
-}
+        bottom: 0.1rem;
+        border: 1px solid #ddd;
+        height: 0rem;
+        padding: 0.2rem;
+        line-height: 0;
+        border-radius: 0.1rem;
+    }
     .brandDesc {
         font-size: 0.3rem;
         font-weight: 700;
@@ -262,8 +216,7 @@
     .goods {
         width: 100%;
         background: white;
-      
-      border-bottom:0.15rem solid #ddd;
+        border-bottom: 0.15rem solid #ddd;
         overflow: hidden;
         position: relative;
     }
@@ -272,7 +225,7 @@
         /*margin-left: -1.1rem;*/
     }
     .wrap2 {
-        margin-top:0.1rem;
+        margin-top: 0.1rem;
         .CinputBox {
             position: absolute;
             left: 0.4rem;
@@ -286,7 +239,6 @@
         .mint-popup-bottom {
             width: 100%;
         }
-       
     }
     .delete_this img {
         width: .3rem;
@@ -298,7 +250,6 @@
     .goods {
         width: 100%;
         background: white;
-       
         overflow: hidden;
         position: relative;
     }
@@ -396,7 +347,7 @@
     .goods_price {
         color: #f38650;
         font-size: .26rem;
-        line-height:1.1rem;
+        line-height: 1.1rem;
     }
     .footer {
         width: 100%;
@@ -498,16 +449,16 @@
             text-align: center;
         }
     }
-    .goods_info  .strlen {
+    .goods_info .strlen {
         margin-bottom: 0.2rem;
         font-size: 0.2rem;
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
         overflow: hidden;
-        width:1rem;
+        width: 1rem;
         line-height: 0.3rem;
-        padding-left:0.2rem;
+        padding-left: 0.2rem;
         text-indent: 0rem;
     }
     .goods_color,
