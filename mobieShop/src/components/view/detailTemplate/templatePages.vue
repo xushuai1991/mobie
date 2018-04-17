@@ -14,67 +14,49 @@
                         <components :templateData='item.componentsData' :is='item.componentsName'  :type='item.componentsName'></components>
                         </keep-alive>
                         <productDetail :zbdCommodityInfo="commodityInfo"></productDetail>
-                        <div v-show="couponShow" style="font-size:0.25rem;padding:0.1rem 0.1rem 0.3rem 0.3rem;">
-                            <img @click="getcoupon" src="./coupon.png" style="width:95%;">
+                        <div class="zbd-coupon" v-show="couponShow">
+                            <img @click="getcoupon" src="./coupon.png">
                         </div>
-                        <div id="zbd-preferences" class="clear" style="font-size:0.25rem;text-align:left;padding:0.4rem 0.1rem 0.4rem 0.3rem;border-top:0.12rem solid #efefef;">
-                            <p style="float:left;    color: #7b7b7b;">已选<span style="margin-left: 0.1rem;    color: #1d1d1d;">唯润俏枝头18头</span></p>
-                            <p style="float: right;margin-right: 0.1rem; color: #7b7b7b;" @click="showServer">其他规格&ensp;></p>
+                        <div id="zbd-preferences" class="clear">
+                            <p>已选<span>唯润俏枝头</span></p>
+                            <p @click="showServer">其他规格&ensp;></p>
                         </div>  
-                        <div id="zbd-productDescription" class="clear" style="font-size:0.25rem;text-align:left;padding:0.4rem 0.1rem 0rem 0.3rem;border-top:0.12rem solid #efefef; ">
-                            <p style="    padding-bottom: 0.2rem;
-    color: #7b7b7b;">包邮<span style="padding-left: 0.1rem;
-    color: #1d1d1d;">上海市满60.00元包邮</span></p>
-                            <p style="    padding-top: 0.2rem;
-    padding-bottom: 0.4rem;
-    color: #7b7b7b;">产地<span style="padding-left: 0.1rem;
-    color: #1d1d1d;">唐山市</span></p>
+                        <div id="zbd-productDescription" class="clear">
+                            <p >包邮<span>上海市满60.00元包邮</span></p>
+                            <p >产地<span>唐山市</span></p>
                         </div>
-                        <div id="zbd-baozhang" class="clear" style="font-size:0.3rem;text-align:left;padding:0.4rem 0.1rem 0.4rem 0.3rem;   border-top: 0.02rem solid #efefef;">
-                            <span style="padding-right: 0.3rem;"><i class="icon iconfont icon-iconset0126" style="color: #27a1f2;
-    font-weight: 600;    padding-right: 0.04rem;"></i>全面质检</span>
-                            <span style="padding-right: 0.3rem;"><i class="icon iconfont icon-iconset0126" style="color: #27a1f2;
-    font-weight: 600;    padding-right: 0.04rem;"></i>资深买手</span>
-                            <span style="padding-right: 0.3rem;"><i class="icon iconfont icon-iconset0126" style="color: #27a1f2;
-    font-weight: 600;    padding-right: 0.04rem;"></i>原产地直采</span>
-                            <span style="padding-left: 0.6rem;"><i class="icon iconfont icon-more" style="color: #b1b1b1;
-    font-weight: 700;    padding-right: 0.04rem;"></i></span>
+                        <div id="zbd-baozhang" class="clear">
+                            <span><i class="icon iconfont icon-iconset0126"></i>全面质检</span>
+                            <span><i class="icon iconfont icon-iconset0126"></i>资深买手</span>
+                            <span><i class="icon iconfont icon-iconset0126"></i>原产地直采</span>
+                            <span><i class="icon iconfont icon-more"></i></span>
                         </div>
-                        <div id="zbd-Tips" class="clear" style="font-size: 0.3rem;text-align:left;    padding: 0.2rem 0.1rem 0rem 0.3rem;border-top:0.12rem solid #efefef;">
-                            <p class="clear" style="
-    padding-top: 0.1rem;
-    padding-bottom: 0.3rem;"><span>温馨提示</span><i class="icon iconfont icon-xiajiantou" style="font-size: 0.4rem;color: #b1b1b1;float:right;transition: transform .3s;
-    transform: rotate(0deg);"></i></p>
-    <!-- transform: rotate(180deg); -->
+                        <div id="zbd-Tips" class="clear">
+                            <p class="clear"><span>温馨提示</span><i class="icon iconfont icon-xiajiantou"></i></p>
+                            <!-- transform: rotate(180deg); -->
                         </div>
-                        <div id="zbd-TipsContent" style="font-size: 0.25rem;text-align:left;    height: 0.1rem;
-    line-height: 0.5rem;
-    overflow: hidden;padding:0.2rem 0.2rem 0.4rem 0.3rem;border-bottom: 0.12rem solid #efefef;border-top:0.02rem solid #efefef;">
+                        <div id="zbd-TipsContent">
                             <span>温馨提示：</span>1.该商品为原产地（厂家）发货，每日1该商品为原产地（厂家）发货，每日1该商品为原产地（厂家）发货，每日1该商品为原产地（厂家）发货，每日1该商品为原产地（厂家）发货，每日1
                         </div>
-                        <div id="zbd-commodityInfoTitle" style="font-size:0.32rem;padding:0.32rem 0.1rem 0.32rem 0.3rem;">商品信息</div>
+                        <div id="zbd-commodityInfoTitle">商品信息</div>
                         <keep-alive v-for='(item,index) in detailImgArr1' :key='index'>
                         <components :templateData='item.componentsData' :is='item.componentsName'  :type='item.componentsName'></components>
                         </keep-alive>
-                        <div id="zbd-customerReviews" class="clear" style="font-size:0.25rem;text-align:left;border-top:0.12rem solid #efefef;">
-                            <p style="text-align: center;
-    padding-top: 0.3rem;
-    padding-bottom: 0.1rem;
-    font-size: 0.3rem;">顾客评价</p>
-                            <div class="zbd-customerReviewContent" style="margin:0.3rem 0.1rem 0rem 0.1rem;-webkit-box-shadow: 0px 0px 2px #f4f4f4;
-    box-shadow: 0px 0px 0.2rem #f4f4f4;">
+                        
+                        <div id="zbd-customerReviews" class="clear">
+                            <p class="zbd-reviewsTitle">顾客评价</p>
+                            <div class="zbd-customerReviewContent">
                                 <div class="commentHeaderInfo clear">
-                                    <span class="commentNickname" style="text-align: center;">用户昵称</span>
+                                    <span class="commentNickname">用户昵称</span>
                                     <span class="commentStar">
-                                        <!-- <img v-for="(item,index) in 3" :key="index" style="width: 0.3rem;height: 0.3rem;" src="./../evaluate/star.png">
-                                        <img v-for="(item,index) in 2" :key="index" style="width: 0.3rem;height: 0.3rem;" src="./../evaluate/star1.png"> -->
+                                        <!-- <img v-for="(item,index) in 3" :key="index" src="./../evaluate/star.png">
+                                        <img v-for="(item,index) in 2" :key="index" src="./../evaluate/star1.png"> -->
                                     </span>
                                     <span class="userCommentTime">2016-7-7</span>
                                 </div>
                                 <div class="commentContent">
                                     <p class="userCommentContent">我只想说，特别的好！！！！！！！！！说点什么好呢，凑足十个字！</p>
-                                    <ul class="clear userCommentImg" style="padding-left: 0.2rem;
-    padding-right: 0.2rem;">
+                                    <ul class="clear userCommentImg">
                                         <!-- <li v-for="(item,index) in 2" :key="index">
                                             <img src="./test.jpg">
                                         </li> -->
@@ -84,68 +66,27 @@
                                         <span class="merchantReplyTime">2016-7-4</span>
                                         <p class="merchantReplyContent">谢谢光顾！欢迎下次再来！谢谢光顾！欢迎下次再来！谢谢光顾！欢迎下次再来！</p>
                                     </div>
-                                    <div style="padding: 0.2rem 0.1rem 0.2rem 0.2rem;">
-                                        <p class="clear"><span style="text-align: center;">查看全部<span>48</span>条评论</span>&ensp;<i class='icon iconfont icon-arrow-right' style="float:right;padding-right:0.1rem;    font-size: 0.25rem;"></i></p>
+                                    <div class="seeAllReview">
+                                        <p class="clear"><span style="text-align: center;">查看全部<span>48</span>条评论</span>&ensp;<i class='icon iconfont icon-arrow-right'></i></p>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        
                         <mt-popup v-model="popupVisible" position="bottom" style='width:100%;font-size:0.28rem;'>
-                            <div class="clear" style="margin-top: 0.1rem;position: relative;    height: 1.8rem;">
-                                <div style="    width: 2rem;
-    border: 1px solid #ddd;
-    border-radius: 0.05rem;
-    position: absolute;
-    top: -0.4rem;
-    left: 0.3rem;
-    background-color: #fff;"><img src="./test.jpg" style="        width: 1.9rem;
-    padding-top: 0.02rem;"></div>
-                                 <div style="width: 4rem;
-    float: left;
-    margin-left: 2.6rem;
-    text-align: left;"><p style="margin-top: 0.2rem;">￥299</p><p style="margin-top: 0.1rem;">唯润俏枝头</p></div>
-                                 <div style="    width: 0.7rem;
-    float: right;
-    color: #7b7b7b;
-    font-size: 0.54rem;" class='closeBtn' @click="btnClose">&times;</div>
-    <div style="    width: 6.8rem;
-    position: absolute;
-    bottom: 0px;
-    left: 0.3rem;
-    border-bottom: 1px solid rgb(221, 221, 221);"></div>
+                            <div id="zbd-commodityInformation" class="clear">
+                                <div class="zbd_commodityImg"><img src="./test.jpg"></div>
+                                 <div class="zbd_commodityInfo" ><p>￥299</p><p>唯润俏枝头</p></div>
+                                 <div class='commodityInfoCloseBtn' @click="btnClose">&times;</div>
+                                 <div class="commodityInfoLine"></div>
                             </div>
-                            <p style="padding-left: 0.4rem;
-    padding-top: 0.2rem;
-    text-align: left;">数量</p>
-                            <div style="    position: relative;
-    height: 0.6rem;
-    line-height: 0.6rem;
-    padding-left: 0.4rem;
-    margin-top: 0.18rem;">
-                                <div style="float: left;
-    font-size: 0.5rem;
-    color: #ff3b30;
-    border: 1px solid #c1c0c0;
-    width: 0.6rem;
-    height: 0.43rem;
-    line-height: 0.38rem;">-</div>
-                                <input type="number" style="    float: left;
-    border: 1px solid #ddd;
-    width: 0.6rem;
-    height: 0.43rem;
-    margin-left: 0.1rem;
-    margin-right: 0.1rem;
-    text-align: center;">
-                                <div style="float: left;
-    font-size: 0.35rem;
-    color: #ff3b30;
-    border: 1px solid #c1c0c0;
-    width: 0.6rem;
-    height: 0.43rem;
-    line-height: 0.43rem;">+</div>
+                            <p class="zbd-commodityInfoNums">数量</p>
+                            <div class="zbd-num">
+                                <div class="zbd-numLess">-</div>
+                                <input type="number" class="zbd-numInput">
+                                <div class="zbd-numPlus">+</div>
                             </div>
-                            <div style="height: 0.8rem;
-    line-height: 0.8rem;"><p>确认</p></div>
+                            <div  class="zbd-Confirmation"><p>确认</p></div>
                         </mt-popup>
                         <mt-popup v-model="shareVisible" position="bottom" style='width:100%;'>
                             <div class='closeBtn' @click="btnClose">分享</div>
@@ -194,8 +135,7 @@
                                         </div>
                                         <div class="commentContent">
                                             <p class="userCommentContent">{{ item }}我只想说，特别的好！！！！！！！！！说点什么好呢，凑足十个字！</p>
-                                            <ul class="clear userCommentImg" style="padding-left: 0.2rem;
-    padding-right: 0.2rem;">
+                                            <ul class="clear userCommentImg">
                                                 <!-- <li v-for="(item,index) in 2" :key="index">
                                                     <img src="./test.jpg">
                                                 </li> -->
@@ -1031,4 +971,111 @@
         font-size: 0.2rem;
         color: #b8bbbf;
     }
+    .zbd-coupon{
+        font-size:0.25rem;padding:0.1rem 0.1rem 0.3rem 0.3rem;
+    }
+    .zbd-coupon img{
+        width:95%;
+    }
+    #zbd-preferences{
+        font-size:0.25rem;text-align:left;padding:0.4rem 0.1rem 0.4rem 0.3rem;border-top:0.12rem solid #efefef;
+    }
+    #zbd-preferences p:nth-child(1){
+        float:left;color: #7b7b7b;
+    }
+    #zbd-preferences p:nth-child(1) span{
+        margin-left: 0.1rem;color: #1d1d1d;
+    }
+    #zbd-preferences p:nth-child(2){
+        float: right;margin-right: 0.1rem; color: #7b7b7b;
+    }
+    #zbd-productDescription{font-size:0.25rem;text-align:left;padding:0.4rem 0.1rem 0rem 0.3rem;border-top:0.12rem solid #efefef;}
+    #zbd-productDescription p:nth-child(1){padding-bottom: 0.2rem;color: #7b7b7b;}
+    #zbd-productDescription p:nth-child(1) span{padding-left: 0.1rem;color: #1d1d1d;}
+    #zbd-productDescription p:nth-child(2){padding-top: 0.2rem;padding-bottom: 0.4rem;color: #7b7b7b;}
+    #zbd-productDescription p:nth-child(2) span{padding-left: 0.1rem;color: #1d1d1d;}
+    #zbd-baozhang{font-size:0.3rem;text-align:left;padding:0.4rem 0.1rem 0.4rem 0.3rem;border-top: 0.02rem solid #efefef;}
+    #zbd-baozhang span:nth-child(1){padding-right: 0.3rem;}
+    #zbd-baozhang span:nth-child(1) i{color: #27a1f2;font-weight: 600;padding-right: 0.04rem;}
+    #zbd-baozhang span:nth-child(2){padding-right: 0.3rem;}
+    #zbd-baozhang span:nth-child(2) i{color: #27a1f2;font-weight: 600;padding-right: 0.04rem;}
+    #zbd-baozhang span:nth-child(3){padding-right: 0.3rem;}
+    #zbd-baozhang span:nth-child(3) i{color: #27a1f2;font-weight: 600;padding-right: 0.04rem;}
+    #zbd-baozhang span:nth-child(4){padding-left: 0.6rem;}
+    #zbd-baozhang span:nth-child(4) i{color: #b1b1b1;font-weight: 700;padding-right: 0.04rem;}
+    #zbd-Tips{font-size: 0.3rem;text-align:left;padding: 0.2rem 0.1rem 0rem 0.3rem;border-top:0.12rem solid #efefef;}
+    #zbd-Tips p{padding-top: 0.1rem;padding-bottom: 0.3rem;}
+    #zbd-Tips i{font-size: 0.4rem;color: #b1b1b1;float:right;transition: transform .3s;transform: rotate(0deg);}
+    #zbd-TipsContent{font-size: 0.25rem;text-align:left;height: 0.1rem;line-height: 0.5rem;overflow: hidden;padding:0.2rem 0.2rem 0.4rem 0.3rem;border-bottom: 0.12rem solid #efefef;border-top:0.02rem solid #efefef;}
+    #zbd-commodityInfoTitle{font-size:0.32rem;padding:0.32rem 0.1rem 0.32rem 0.3rem;}
+    #zbd-customerReviews{font-size:0.25rem;text-align:left;border-top:0.12rem solid #efefef;}
+    .zbd-reviewsTitle{text-align: center;padding-top: 0.3rem;padding-bottom: 0.1rem;font-size: 0.3rem;}
+    .zbd-customerReviewContent{margin:0.3rem 0.1rem 0rem 0.1rem;-webkit-box-shadow: 0px 0px 2px #f4f4f4;box-shadow: 0px 0px 0.2rem #f4f4f4;}
+    .commentNickname{text-align: center;}
+    .commentStar img{width: 0.3rem;height: 0.3rem;}
+    .userCommentImg{padding-left: 0.2rem;padding-right: 0.2rem;}
+    .seeAllReview{padding: 0.2rem 0.1rem 0.2rem 0.2rem;}
+    .seeAllReview i{float:right;padding-right:0.1rem;    font-size: 0.25rem;}
+    #zbd-commodityInformation{margin-top: 0.1rem;position: relative;height: 1.8rem;}
+    .zbd_commodityImg{width: 2rem;
+    border: 1px solid #ddd;
+    border-radius: 0.05rem;
+    position: absolute;
+    top: -0.4rem;
+    left: 0.3rem;
+    background-color: #fff;}
+    .zbd_commodityImg img{width: 1.9rem;
+    padding-top: 0.02rem;}
+    .zbd_commodityInfo{width: 4rem;
+    float: left;
+    margin-left: 2.6rem;
+    text-align: left;}
+    .zbd_commodityInfo p:nth-child(1){margin-top: 0.2rem;}
+    .zbd_commodityInfo p:nth-child(2){margin-top: 0.1rem;}
+    .commodityInfoCloseBtn{width: 0.7rem;
+    float: right;
+    color: #7b7b7b;
+    font-size: 0.54rem;}
+    .commodityInfoLine{ width: 6.8rem;
+    position: absolute;
+    bottom: 0px;
+    left: 0.3rem;
+    border-bottom: 1px solid rgb(221, 221, 221);}
+    .zbd-commodityInfoNums{padding-left: 0.4rem;
+    padding-top: 0.2rem;
+    text-align: left;}
+    .zbd-num{position: relative;
+    height: 0.6rem;
+    line-height: 0.6rem;
+    padding-left: 0.4rem;
+    margin-top: 0.18rem;}
+    .zbd-numLess{float: left;
+    font-size: 0.5rem;
+    color: #ff3b30;
+    border: 1px solid #c1c0c0;
+    width: 0.6rem;
+    height: 0.43rem;
+    line-height: 0.38rem;}
+    .zbd-numInput{float: left;
+    border: 1px solid #ddd;
+    width: 0.6rem;
+    height: 0.43rem;
+    margin-left: 0.1rem;
+    margin-right: 0.1rem;
+    text-align: center;}
+    .zbd-numPlus{float: left;
+    font-size: 0.35rem;
+    color: #ff3b30;
+    border: 1px solid #c1c0c0;
+    width: 0.6rem;
+    height: 0.43rem;
+    line-height: 0.43rem;}
+    .zbd-Confirmation{height: 0.8rem;
+    line-height: 0.8rem;}
+    .zbd-Confirmation p{
+        background: -webkit-gradient(linear, left top, left bottom, from(#0CBBB9), to(#4AC6DC));
+        background: linear-gradient(to bottom, #0CBBB9 0%, #4AC6DC 100%);
+        line-height: 0.9rem;
+        font-size: 0.34rem;
+        color: #fff;}
 </style>
