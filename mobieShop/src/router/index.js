@@ -169,7 +169,6 @@ export default new Router({
                     name: 'Customer',
                     component: resolve => require(['../components/view/userInfo/Customer.vue'], resolve)
                 }
-                
             ]
         },
         {
