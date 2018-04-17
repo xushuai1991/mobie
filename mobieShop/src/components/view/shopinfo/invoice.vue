@@ -18,15 +18,16 @@
 <script>
 
 </script>
-
-<style scoped>
-    html,
-    body {
+<style >
+   html,body,#app,.wrapper{
+       height:100%;
+   }
+</style>
+<style lang="less" scoped>
+ .CInvoice {
         height: 100%;
         background: #4ab6f7;
     }
-</style>
-<style lang="less" scoped>
     .CInvoice {
         font-size: 0.2rem;
         margin-top: 0.8rem;

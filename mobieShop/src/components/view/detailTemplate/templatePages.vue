@@ -248,6 +248,7 @@
             };
         },
         created(){
+            this.$root.$emit('header','商品详情');
             //客户ID 
             let customer = sessionStorage.getItem('userinfo')
             this.customerId = JSON.parse(customer).id
@@ -833,6 +834,9 @@
     margin-top: 0.2rem;}
 </style>
 <style lang="less" scoped>
+    #detailTemplatePage{
+        margin-top:1rem;
+    }
     .clear:after {
         content: "";
         display: block;

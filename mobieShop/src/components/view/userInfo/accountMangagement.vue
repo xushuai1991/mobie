@@ -103,6 +103,7 @@ import { Toast } from 'mint-ui';
             }
         },
         created() {
+            this.$root.$emit('header','账号管理');
             this.getUserInfo();
         },
         methods: {

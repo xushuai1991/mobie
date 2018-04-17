@@ -9,10 +9,9 @@
                     <img :src="item.image" alt="图片丢失">
                 </div>
                 <div class='detail-goods'>
-                    <h3 class='name'>FASHION</h3>
-                    <P class='name-sub'>休闲舒适 潮男标配 SM1212</P>
-                    <P class='area'>服务区域：萧山区</P>
-                    <p class='date'>服务预约时间：2018-2-5</p>
+                    <h3 class='name'>{{item.commodityName}}</h3>
+                    <P class='area'>{{item.condition1Name}}</P>
+                    <p class='date'>{{item.condition2Name}}</p>
                 </div>
                 <div class='price'>
                     <p>￥{{item.price}}</p>
@@ -24,8 +23,8 @@
             </div>
             <div class='operation'>
                 <button class='prime evaluate' @click.stop='evaluate'>评价</button>
-                <button class='check'>查看报告</button>
-                <button class='complaint'>投诉</button>
+                <!-- <button class='check'>查看报告</button> -->
+                <!-- <button class='complaint'>投诉</button> -->
             </div>
         </div>
     </div>
@@ -54,8 +53,8 @@ export default {
     methods:{
         evaluate(){
             let order_withoutevaluate=[];
-            this.data.forEach(item=>{
-
+            this.data.orderDetails.forEach(item=>{
+                order_withoutevaluate.push(item);
             });
             this.$router.push({'name':'',params:{'orderlist':order_withoutevaluate}});
         },
@@ -90,6 +89,7 @@ export default {
     padding: .2rem 0;
     border-bottom: 1px solid #e9e9e9;
     overflow: hidden;
+    position: relative;
 }
 .img-goods{
     width: 2.2rem;

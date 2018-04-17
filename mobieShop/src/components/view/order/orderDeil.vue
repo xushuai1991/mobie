@@ -35,7 +35,7 @@
                                     <div class="goods_title type-pay" style='height:5px;'>
                                     </div>
                                     <div class="goodsBox">
-                                        <ul class="goods_detail" style=' margin-top:0.2rem;'>
+                                        <ul class="goods_detail" style=' margin-top:0.2rem;' @click='goShopDateil(item)'>
                                             <li class="goods_img" style="margin-left:0px;">
                                                 <img :src="item.commodityImageUrl">
                                             </li>
@@ -173,6 +173,9 @@
               }else{
                    $event.currentTarget.nextElementSibling.classList.add("hiddles")
               }
+            },
+            goShopDateil(item){
+               this.$router.push({name:'detailTemplate',query:{commodityId:item.commodityId,companyId:item.companyId}});
             },
             getDate(ordernumber) {
                 let url = '/api/product/order/mall/find';
