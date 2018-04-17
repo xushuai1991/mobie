@@ -25,7 +25,7 @@
                 <p>合计：<span class='total'>￥{{totalmoney}}</span></p>
             </div>
             <div class='operation' v-if='data.payState==3'>
-                <button class='prime'>关闭订单</button>
+                <button class='prime' @click.stop="cancleOrder">取消订单</button>
             </div>
         </div>
     </div>
@@ -52,6 +52,48 @@ export default {
         //跳转订单详情
         toOrderDetail(ordernumber,index){
             this.$router.push('orderDeil?ordernumber='+ordernumber+'&index='+index);
+        },
+        changeStatusOrder(data,msg){
+            let that=this;
+            Indicator.open('操作中');
+            this.$http.post('/api/product/order/mall/update',data)
+            .then(res=>{
+                if(res.data.status==200){
+                    Toast(msg+'成功');
+                    that.$root.$emit('loaddata',this.index);
+                }
+                else{
+                    Toast(res.data.msg);
+                }
+                Indicator.close();
+            })
+            .catch(err=>{
+                Indicator.close();
+                Toast(msg+'失败');
+            })
+        },
+        //取消订单
+        cancleOrder(){
+            // console.log(this.index);
+            MessageBox({
+                title: '',
+                message: '是否取消订单?',
+                showCancelButton: true
+            }).then((flag)=>{
+                if(flag=='confirm'){
+                    let data=[
+                        {
+                            id:this.data.id,
+                            number:this.data.number,
+                            orderState:6
+                        }
+                    ];
+                    this.changeStatusOrder(data,'取消订单');
+                }
+                else{
+                    return;
+                }
+            });
         },
     }
 }

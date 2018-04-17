@@ -1,24 +1,33 @@
 import axios from 'axios'
 let weixinPay=function(config){
+    console.log(config);
     let onBridgeReady=function(){
         WeixinJSBridge.invoke(
             'getBrandWCPayRequest',
-            config,
+            {
+                "appId":config.appId,     //公众号名称，由商户传入     
+                "timeStamp":config.timeStamp,         //时间戳，自1970年以来的秒数     
+                "nonceStr":config.nonceStr, //随机串     
+                "package":config.package,     
+                "signType":config.signType,         //微信签名方式：     
+                "paySign":config.paySign //微信签名 
+            },
             (res)=>{
-                alert(res);
                 if (res.err_msg == "get_brand_wcpay_request:ok") {
-                    that.alert('支付成功');
+                    alert('支付成功');
                     window.location.reload();
                 }
                 if (res.err_msg == "get_brand_wcpay_request:cancel") {
-                    that.alert('取消支付');
+                    alert('取消支付');
                     window.location.reload();
+                }
+                if(res.err_msg == "get_brand_wcpay_request:fail"){
+                    alert('支付失败');
                 }
             }
         );
     };
     let callpay=function(){
-        alert(222);
         if (typeof WeixinJSBridge == "undefined") {
             if (document.addEventListener) {
                 document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);

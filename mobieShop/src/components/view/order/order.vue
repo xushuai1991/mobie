@@ -10,7 +10,7 @@
         <mt-tab-container v-model="selected">
             <!-- 全部 -->
             <mt-tab-container-item id="all">
-                <ul  v-infinite-scroll="loadMore" infinite-scroll-disabled="loading1" infinite-scroll-immediate-check='false'  class='orderlist'>
+                <ul  v-infinite-scroll="loadMore"  infinite-scroll-disabled="loading1" :infinite-scroll-immediate-check='false'  class='orderlist'>
                     <li v-for="(item,index) in orderlist[0]" :key="index">
                         <pendpay :data='item' index='0' v-if="item.payState!=1&&item.orderState==1"></pendpay>
                         <inservice :data='item' index='0' v-if='item.payState==1&&item.orderState==1&&item.serviceState==2'></inservice>
@@ -27,7 +27,7 @@
             </mt-tab-container-item>
             <!-- 待付款 -->
             <mt-tab-container-item id="willpay">
-                <ul v-infinite-scroll="loadMore1" infinite-scroll-disabled="loading2" infinite-scroll-immediate-check='false' class='orderlist'>
+                <ul v-infinite-scroll="loadMore1" infinite-scroll-disabled="loading2" :infinite-scroll-immediate-check='false' class='orderlist'>
                     <li v-for="(item,index) in orderlist[1]" :key="index">
                         <pendpay :data='item' index='1'></pendpay>
                     </li>
@@ -92,6 +92,7 @@ export default {
     components:{pendpay,inservice,willevaluate,willservice,other},
     data() {
         return {
+            test:true,
             selected: 'all',
             orderlist:[[],[],[],[], [],],
             loading1:true,
@@ -192,6 +193,10 @@ export default {
                         let data={};
                         this.getOrderList(1,data);
                     }
+                    this.loading2=true;
+                    this.loading3=true;
+                    this.loading4=true;
+                    this.loading5=true;
                     break;
                 }
                 // 待付款
@@ -200,6 +205,10 @@ export default {
                        let data={payState:2};
                         this.getOrderList(1,data);
                     }
+                    this.loading1=true;
+                    this.loading3=true;
+                    this.loading4=true;
+                    this.loading5=true;
                     break;
                 }
                 //待服务
@@ -208,6 +217,10 @@ export default {
                         let data={payState:1,serviceState:1};
                         this.getOrderList(1,data);
                     }
+                    this.loading1=true;
+                    this.loading2=true;
+                    this.loading4=true;
+                    this.loading5=true;
                     break;
                 }
                 //服务中
@@ -216,6 +229,10 @@ export default {
                         let data={payState:1,serviceState:2};
                         this.getOrderList(1,data);
                     }
+                    this.loading1=true;
+                    this.loading2=true;
+                    this.loading3=true;
+                    this.loading5=true;
                     break;
                 }
                 //待评价
@@ -223,6 +240,10 @@ export default {
                     if(this.orderlist[4].length==0){
                         this.getOrder_Willevaluate(1);
                     }
+                    this.loading1=true;
+                    this.loading2=true;
+                    this.loading3=true;
+                    this.loading4=true;
                     break;
                 }
                 default:{
@@ -349,6 +370,7 @@ export default {
         
         // 加载全部订单
         loadMore() {
+            // console.log('全部');
             if(this.dataover[0]==true){
                 Toast('数据已加载完');
             }
@@ -358,6 +380,7 @@ export default {
         },
         //加载待付款订单
         loadMore1(){
+            // console.log('待付款');
             let data={payState:2};
             if(this.dataover[1]==true){
                 Toast('数据已加载完');
@@ -369,6 +392,7 @@ export default {
         },
         //加载待服务订单
         loadMore2(){
+            console.log(222);
             let data={payState:1,serviceState:1};
             this.getOrderList(this.pagenumlist[2],data);
         },

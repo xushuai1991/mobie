@@ -18,7 +18,8 @@
 <script>
 
 </script>
-<style>
+
+<style scoped>
     html,
     body {
         height: 100%;

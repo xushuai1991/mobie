@@ -24,10 +24,9 @@ export default {
     },
     created(){
         this.$root.$emit('header','确认交易');
-        
         let url=location.search;
         let number=this.getQueryString('number');
-        this.orderNumber=number;
+        this.orderNumber=number!=null?number:'';
         // let number=this.$route.params.number;
         // if(number==undefined){
         //     Toast('支付失败,请从订单列表支付');
@@ -47,19 +46,28 @@ export default {
         },
         pay(){
             let that=this;
+            // alert(this.orderNumber);
+            
             this.$http.post('/api/product/order/weixin/pay',[this.orderNumber])
             .then(res=>{
-                if(res.data.info.code){
-                    let data=res.data.info;
-                    let config={
-                        appId:data.appId,
-                        timeStamp:data.timeStamp,
-                        nonceStr:data.nonceStr,
-                        package:data.package,
-                        signType:data.signType,
-                        paySign:data.paySign
-                    };
-                    weixinPay(config);
+                // Toast(res);
+                if(res.data.status==200){
+                    if(res.data.info.code){
+                        let data=res.data.info;
+                        let config={
+                            appId:data.appId,
+                            timeStamp:data.timeStamp,
+                            nonceStr:data.nonceStr,
+                            package:data.package,
+                            signType:data.signType,
+                            paySign:data.paySign
+                        };
+                        // Toast(config.appId);
+                        weixinPay(config);
+                    }
+                }
+                else{
+                    Toast(res.data.msg);
                 }
                 console.log(res);
             })

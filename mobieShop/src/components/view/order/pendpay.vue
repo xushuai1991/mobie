@@ -8,7 +8,7 @@
         <div class='content' @click.stop='toOrderDetail(data.number,index)'>
             <div class='detail' v-for='(item,index) in data.orderDetails' :key='index'>
                 <div class='img-goods'>
-                    <img :src="item.image" alt="">
+                    <img :src="item.image" alt="图片丢失">
                 </div>
                 <div class='detail-goods'>
                     <h3 class='name'>{{item.commodityName}}</h3>
@@ -253,6 +253,7 @@ export default {
 .img-goods{
     width: 2.2rem;
     height: 2rem;
+    font-size: .2rem;
     border-radius: 5%;
     box-shadow: 0 0 0.1rem #e9e9e9;
     border:1px solid #e9e9e9;

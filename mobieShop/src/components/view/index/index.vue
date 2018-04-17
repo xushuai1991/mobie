@@ -68,7 +68,14 @@ export default {
         let code=this.getURLparms('code');
         this.code=code;
         this.companyid=companyid;
-        this.getOpenid();
+        if(code!=null){
+            this.getOpenid();
+        }
+        else{
+            if(sessionStorage.getItem('openId')==null){
+                Toast('请授权后再登录商城');
+            }
+        }
         let direct=this.$route.params.direct;
         // console.log(direct==undefined);
         if(direct!=undefined){
