@@ -13,7 +13,10 @@
                         <keep-alive v-for='(item,index) in bannerArr1' :key='index'>
                         <components :templateData='item.componentsData' :is='item.componentsName'  :type='item.componentsName'></components>
                         </keep-alive>
-                        <productDetail></productDetail>
+                        <productDetail :zbdCommodityInfo="commodityInfo"></productDetail>
+                        <div v-show="couponShow" style="font-size:0.25rem;padding:0.1rem 0.1rem 0.3rem 0.3rem;">
+                            <img @click="getcoupon" src="./coupon.png" style="width:95%;">
+                        </div>
                         <div id="zbd-preferences" class="clear" style="font-size:0.25rem;text-align:left;padding:0.4rem 0.1rem 0.4rem 0.3rem;border-top:0.12rem solid #efefef;">
                             <p style="float:left;    color: #7b7b7b;">已选<span style="margin-left: 0.1rem;    color: #1d1d1d;">唯润俏枝头18头</span></p>
                             <p style="float: right;margin-right: 0.1rem; color: #7b7b7b;" @click="showServer">其他规格&ensp;></p>
@@ -28,17 +31,27 @@
     color: #1d1d1d;">唐山市</span></p>
                         </div>
                         <div id="zbd-baozhang" class="clear" style="font-size:0.3rem;text-align:left;padding:0.4rem 0.1rem 0.4rem 0.3rem;   border-top: 0.02rem solid #efefef;">
-                            <span><i class="icon iconfont icon-iconset0126"></i>全面质检</span>
-                            <span><i class="icon iconfont icon-iconset0126"></i>资深买手</span>
-                            <span><i class="icon iconfont icon-iconset0126"></i>原产地直采</span>
-                            <span><i class="icon iconfont icon-more"></i></span>
+                            <span style="padding-right: 0.3rem;"><i class="icon iconfont icon-iconset0126" style="color: #27a1f2;
+    font-weight: 600;    padding-right: 0.04rem;"></i>全面质检</span>
+                            <span style="padding-right: 0.3rem;"><i class="icon iconfont icon-iconset0126" style="color: #27a1f2;
+    font-weight: 600;    padding-right: 0.04rem;"></i>资深买手</span>
+                            <span style="padding-right: 0.3rem;"><i class="icon iconfont icon-iconset0126" style="color: #27a1f2;
+    font-weight: 600;    padding-right: 0.04rem;"></i>原产地直采</span>
+                            <span style="padding-left: 0.6rem;"><i class="icon iconfont icon-more" style="color: #b1b1b1;
+    font-weight: 700;    padding-right: 0.04rem;"></i></span>
                         </div>
-                        <div id="zbd-Tips" class="clear" style="font-size: 0.3rem;text-align:left;    padding: 0.3rem 0.1rem 0rem 0.3rem;border-top:0.12rem solid #efefef;">
-                            <p style="
+                        <div id="zbd-Tips" class="clear" style="font-size: 0.3rem;text-align:left;    padding: 0.2rem 0.1rem 0rem 0.3rem;border-top:0.12rem solid #efefef;">
+                            <p class="clear" style="
     padding-top: 0.1rem;
-    padding-bottom: 0.3rem;"><span>温馨提示</span><i class="icon iconfont icon-xiajiantou"></i></p>
+    padding-bottom: 0.3rem;"><span>温馨提示</span><i class="icon iconfont icon-xiajiantou" style="font-size: 0.4rem;color: #b1b1b1;float:right;transition: transform .3s;
+    transform: rotate(0deg);"></i></p>
+    <!-- transform: rotate(180deg); -->
                         </div>
-                        <div id="zbd-TipsContent" style="font-size: 0.25rem;text-align:left;padding:0.4rem 0.1rem 0.4rem 0.3rem;border-bottom: 0.12rem solid #efefef;border-top:0.02rem solid #efefef;"><span>温馨提示：</span>1.该商品为原产地（厂家）发货，每日1...</div>
+                        <div id="zbd-TipsContent" style="font-size: 0.25rem;text-align:left;    height: 0.1rem;
+    line-height: 0.5rem;
+    overflow: hidden;padding:0.2rem 0.2rem 0.4rem 0.3rem;border-bottom: 0.12rem solid #efefef;border-top:0.02rem solid #efefef;">
+                            <span>温馨提示：</span>1.该商品为原产地（厂家）发货，每日1该商品为原产地（厂家）发货，每日1该商品为原产地（厂家）发货，每日1该商品为原产地（厂家）发货，每日1该商品为原产地（厂家）发货，每日1
+                        </div>
                         <div id="zbd-commodityInfoTitle" style="font-size:0.32rem;padding:0.32rem 0.1rem 0.32rem 0.3rem;">商品信息</div>
                         <keep-alive v-for='(item,index) in detailImgArr1' :key='index'>
                         <components :templateData='item.componentsData' :is='item.componentsName'  :type='item.componentsName'></components>
@@ -53,8 +66,8 @@
                                 <div class="commentHeaderInfo clear">
                                     <span class="commentNickname" style="text-align: center;">用户昵称</span>
                                     <span class="commentStar">
-                                        <img v-for="(item,index) in 3" :key="index" style="width: 0.3rem;height: 0.3rem;" src="./../evaluate/star.png">
-                                        <img v-for="(item,index) in 2" :key="index" style="width: 0.3rem;height: 0.3rem;" src="./../evaluate/star1.png">
+                                        <!-- <img v-for="(item,index) in 3" :key="index" style="width: 0.3rem;height: 0.3rem;" src="./../evaluate/star.png">
+                                        <img v-for="(item,index) in 2" :key="index" style="width: 0.3rem;height: 0.3rem;" src="./../evaluate/star1.png"> -->
                                     </span>
                                     <span class="userCommentTime">2016-7-7</span>
                                 </div>
@@ -62,9 +75,9 @@
                                     <p class="userCommentContent">我只想说，特别的好！！！！！！！！！说点什么好呢，凑足十个字！</p>
                                     <ul class="clear userCommentImg" style="padding-left: 0.2rem;
     padding-right: 0.2rem;">
-                                        <li v-for="(item,index) in 2" :key="index">
+                                        <!-- <li v-for="(item,index) in 2" :key="index">
                                             <img src="./test.jpg">
-                                        </li>
+                                        </li> -->
                                     </ul>
                                     <div class="merchantReply">
                                         <span class="merchantReplyTitle">商家回复：</span>
@@ -104,13 +117,32 @@
                             <p style="padding-left: 0.4rem;
     padding-top: 0.2rem;
     text-align: left;">数量</p>
-                            <div style="position: relative;
+                            <div style="    position: relative;
     height: 0.6rem;
     line-height: 0.6rem;
-    padding-left: 0.4rem;">
-                                <div style="float:left;">-</div>
-                                <input type="number" style="float:left;">
-                                <div style="float:left;">+</div>
+    padding-left: 0.4rem;
+    margin-top: 0.18rem;">
+                                <div style="float: left;
+    font-size: 0.5rem;
+    color: #ff3b30;
+    border: 1px solid #c1c0c0;
+    width: 0.6rem;
+    height: 0.43rem;
+    line-height: 0.38rem;">-</div>
+                                <input type="number" style="    float: left;
+    border: 1px solid #ddd;
+    width: 0.6rem;
+    height: 0.43rem;
+    margin-left: 0.1rem;
+    margin-right: 0.1rem;
+    text-align: center;">
+                                <div style="float: left;
+    font-size: 0.35rem;
+    color: #ff3b30;
+    border: 1px solid #c1c0c0;
+    width: 0.6rem;
+    height: 0.43rem;
+    line-height: 0.43rem;">+</div>
                             </div>
                             <div style="height: 0.8rem;
     line-height: 0.8rem;"><p>确认</p></div>
@@ -118,6 +150,19 @@
                         <mt-popup v-model="shareVisible" position="bottom" style='width:100%;'>
                             <div class='closeBtn' @click="btnClose">分享</div>
                         </mt-popup>
+                        <!-- <mt-popup v-model="receiveCoupons" position="bottom" style='width:100%;'>
+                            <p class='shopBxo'>领取优惠劵</p>
+                            <ul class='shopBox'>
+                                <li v-for='(item,index) in coupon' :key='index'>
+                                    <div class='shopFont'>
+                                        <p>{{item.couponMoney}}元</p>
+                                        <p>{{item.couponName}}</p>
+                                        <p>使用期限 {{item.starTime.split(" ")[0]}}—{{item.endTime.split(" ")[0]}}</p>
+                                    </div><button @click='okcoupon(item.id)'>领取</button>
+                                </li>
+                            </ul>
+                            <div class='closeBtn' @click="closeCoupon">关闭</div>
+                        </mt-popup> -->
                 </div>
             </transition>
              <transition
@@ -127,9 +172,9 @@
             <div v-if="show2" class="commentDetail">
                             <div class="userAvatarList">
                                 <ul class="clear">
-                                    <li v-for="(item,index) in 13" :key="index">
+                                    <!-- <li v-for="(item,index) in 13" :key="index">
                                         <img src="./test.jpg" >
-                                    </li>
+                                    </li> -->
                                     <li style="line-height: 0.5rem;background-color: #fff;font-size: 0.45rem;">...</li>
                                 </ul>
                             </div>
@@ -142,8 +187,8 @@
                                         <div class="commentHeaderInfo clear">
                                             <span class="commentNickname" >用户昵称</span>
                                             <span class="commentStar">
-                                                <img v-for="(item,index) in 3" :key="index" style="width: 0.3rem;height: 0.3rem;" src="./../evaluate/star.png">
-                                                <img v-for="(item,index) in 2" :key="index" style="width: 0.3rem;height: 0.3rem;" src="./../evaluate/star1.png">
+                                                <!-- <img v-for="(item,index) in 3" :key="index" style="width: 0.3rem;height: 0.3rem;" src="./../evaluate/star.png">
+                                                <img v-for="(item,index) in 2" :key="index" style="width: 0.3rem;height: 0.3rem;" src="./../evaluate/star1.png"> -->
                                             </span>
                                             <span class="userCommentTime">2016-7-7</span>
                                         </div>
@@ -151,9 +196,9 @@
                                             <p class="userCommentContent">{{ item }}我只想说，特别的好！！！！！！！！！说点什么好呢，凑足十个字！</p>
                                             <ul class="clear userCommentImg" style="padding-left: 0.2rem;
     padding-right: 0.2rem;">
-                                                <li v-for="(item,index) in 2" :key="index">
+                                                <!-- <li v-for="(item,index) in 2" :key="index">
                                                     <img src="./test.jpg">
-                                                </li>
+                                                </li> -->
                                             </ul>
                                             <div class="merchantReply">
                                                 <span class="merchantReplyTitle">商家回复：</span>
@@ -231,6 +276,7 @@
                 detailTemplateUrl:'',
                 show1:true,
                 show2:false,
+                commodityInfo:'',
                 productDetailBack:{
                     productDetailBack1:true,
                     productDetailBack2:false
@@ -241,6 +287,9 @@
                 },
                 popupVisible:false,
                 shareVisible:false,
+                coupon:[],
+                receiveCoupons:false,
+                couponShow:false,
                 shopNum:'',
                 shopCarNumShow:false,
                 commodityId:'bb561d8f-3ad8-11e8-8c86-88d7f652f92c',
@@ -259,22 +308,127 @@
             };
         },
         created(){
+            this.$root.$emit('header','商品详情');
             //客户ID 
             let customer = sessionStorage.getItem('userinfo')
             this.customerId = JSON.parse(customer).id
 
-            //根据商品ID 查询相关的商品信息
-             this.$http.post('/api/product/commodity/info/queryMap',{
-                "id":this.commodityId
-            })
-            .then(function(response){
-                console.log(response)
-            })
-            .catch(function(response){
-                console.log(response)
-            });
+            //console.log(this.comlist)
+            ///////////////////////（详情模板）/////////////////////////////
+
+            //浏览状态 和 手机状态显示的不同详情页 
+            let isBrowse = sessionStorage.getItem ("isBrowse");
+            console.log(isBrowse)
+            if(isBrowse == true){ //后台管理浏览效果
+                this.detailTemplateUrl = sessionStorage.getItem ("detailTemplateUrl");
+                let id = this.getUrlParms("id")
+                 console.log(id)//详情模板ID
+                  let that=this;
+                    this.$http.post('/api/product/mall/template/queryMap',
+                        {
+                            'templateID':id,
+                            'templateType':3
+                        }
+                    )
+                    .then(function(response){
+                       // console.log(response)
+                        let comlists = JSON.parse(response.data.info[0].comlist)
+                       // console.log(comlists)
+                         //that.comlist = comlists
+                        let bannerArr = [];
+                        bannerArr.push(comlists[0])
+                        console.log(bannerArr)
+                        that.bannerArr1 = bannerArr
+                    })
+                    .catch(function(response){
+                        console.log(response)
+                    })
+            }else if(isBrowse == null){ //移动端浏览效果
+                let id = this.getURLparms("id");
+                console.log(id)
+                if(id == null){
+                    let that=this;
+                    //模板ID 为空的情况下，先取商品ID 根据商品ID 查询模板ID
+                    let commodityId = this.getURLparms("commodityId");
+                    let companyId = this.getURLparms("companyId");
+                    this.commodityId = commodityId
+                    //根据商品ID 查询相关的商品信息(根据商品取模板ID)
+                    this.$http.post('/api/product/commodity/info/queryMap',{
+                        "companyId":1,
+                        "id":commodityId
+
+                    })
+                    .then(function(response){
+                        console.log(response)
+                        let detailTemplateId = response.data.info[0].detailTemplateId
+                        //根据详情模板ID查询模板信息
+                        that.$http.post('/api/product/mall/template/queryMap',
+                                {
+                                    'templateID':detailTemplateId,
+                                    'templateType':3
+                                }
+                            )
+                            .then(function(response){
+                                console.log(response)
+                                if(response.data.info.length == 0){
+                                    alert('商品没有绑定详情模板')
+                                }else{
+                                    let comlists = JSON.parse(response.data.info[0].comlist)
+                                    // console.log(comlists)
+                                    // that.comlist = comlists
+                                    let bannerArr = [];
+                                    bannerArr.push(comlists[0])
+                                    let detailImgArr = [];
+                                    for(let i = 1;i<comlists.length;i++){
+                                        detailImgArr.push(comlists[i])
+                                    }
+                                    //console.log(detailImgArr)
+                                    that.bannerArr1 = bannerArr
+                                    that.detailImgArr1 = detailImgArr
+                                }
+                            })
+                            .catch(function(response){
+                                console.log(response)
+                            })
+                        //商品信息的调用及渲染
+                        that.commodityInfo = response.data.info[0]
+                        console.log(that.commodityInfo)
+                    })
+                    .catch(function(response){
+                        console.log(response)
+                    });
+                }else{
+                    //console.log(this.comlist)
+                    let that=this;
+                    this.$http.post('/api/product/mall/template/queryMap',
+                        {
+                            'templateID':id,
+                            'templateType':3
+                        }
+                    )
+                    .then(function(response){
+                        console.log(response)
+                        let comlists = JSON.parse(response.data.info[0].comlist)
+                        // console.log(comlists)
+                        // that.comlist = comlists
+                        let bannerArr = [];
+                        bannerArr.push(comlists[0])
+                        let detailImgArr = [];
+                        for(let i = 1;i<comlists.length;i++){
+                            detailImgArr.push(comlists[i])
+                        }
+                        //console.log(detailImgArr)
+                        that.bannerArr1 = bannerArr
+                        that.detailImgArr1 = detailImgArr
+                    })
+                    .catch(function(response){
+                        console.log(response)
+                    })
+                }
+            }
+
             //购物车数量
-              let that=this;
+            let that=this;
             this.$http.post('/api/product/shoppingCart/myShoppingCart',{})
             .then(function(response){
                 console.log(response)
@@ -328,7 +482,7 @@
 
             //根据商品ID 查询相关的评论列表
             this.$http.post('/api/product/commodity/evaluation/query?page=1&pageSize=10',{
-                "commodityId":this.commodityId
+                "commodityId":that.commodityId
             })
             .then(function(response){
                 console.log(response)
@@ -336,67 +490,43 @@
             .catch(function(response){
                 console.log(response)
             });
-
-            //console.log(this.comlist)
-            ///////////////////////（详情模板）/////////////////////////////
-
-            //浏览状态 和 手机状态显示的不同详情页 
-            let isBrowse = sessionStorage.getItem ("isBrowse");
-            console.log(isBrowse)
-            if(isBrowse == true){
-                this.eventTemplateUrl = sessionStorage.getItem ("eventTemplateUrl");
-                let id = this.getUrlParms("id")
-                 console.log(id)//详情模板ID
-                  let that=this;
-                    this.$http.post('/api/product/mall/template/queryMap',
-                        {
-                            'templateID':id,
-                            'templateType':2
-                        }
-                    )
-                    .then(function(response){
-                       // console.log(response)
-                        let comlists = JSON.parse(response.data.info[0].comlist)
-                       // console.log(comlists)
-                         //that.comlist = comlists
-                        let bannerArr = [];
-                        bannerArr.push(comlists[0])
-                        console.log(bannerArr)
-                        that.bannerArr1 = bannerArr
-                    })
-                    .catch(function(response){
-                        console.log(response)
-                    })
-            }else if(isBrowse == null){
-                let id = this.getURLparms("id");
-                console.log(id)//详情模板ID
-                //console.log(this.comlist)
-                let that=this;
-                this.$http.post('/api/product/mall/template/queryMap',
-                    {
-                        'templateID':id,
-                        'templateType':3
+            
+            //根据商品ID 查询相关优惠券列表
+            //  this.$http.post('/api/product/coupon/commodity/find/mall',{
+            //     "commodityId":that.commodityId
+            // })
+            // .then(function(response){
+            //     console.log(response)
+            // })
+            // .catch(function(response){
+            //     console.log(response)
+            // });
+            let getcouponData = new Promise(function(rel,rej){
+                let url = '/api/product/coupon/commodity/find/mall';
+                that.$http({
+                    url:url,
+                    method:'POST',
+                    data:{
+                        commodityId:that.commodityId
                     }
-                )
-                .then(function(response){
-                    console.log(response)
-                    let comlists = JSON.parse(response.data.info[0].comlist)
-                    // console.log(comlists)
-                   // that.comlist = comlists
-                   let bannerArr = [];
-                    bannerArr.push(comlists[0])
-                    let detailImgArr = [];
-                    for(let i = 1;i<comlists.length;i++){
-                        detailImgArr.push(comlists[i])
-                    }
-                    //console.log(detailImgArr)
-                    that.bannerArr1 = bannerArr
-                    that.detailImgArr1 = detailImgArr
+                }).then(response => {
+                    rel(response)
+                }).catch(error => {
+                    rej(error)
                 })
-                .catch(function(response){
-                    console.log(response)
-                })
-            }
+            });
+            getcouponData.then(function(result){
+                console.log(result)
+                that.coupon = result.data.info.list
+                console.log(that.coupon)
+                if(that.coupon.length == 0){
+                    that.couponShow = false
+                }else{
+                    that.couponShow = true
+                }
+            }).catch(function(errmsg){
+                console.log(errmsg)
+            })
         },
         methods:{
                 //获取地址栏参数，name:参数名称
@@ -440,6 +570,13 @@
                 },
                 showShare(name){
                     this.shareVisible = true;
+                },
+                getcoupon(){
+                    //获取优惠券
+                    this.receiveCoupons = true
+                },
+                closeCoupon(){
+                    this.receiveCoupons = false
                 },
                 goToList(){
                     let that=this;
@@ -756,7 +893,10 @@
     text-align: left;
     margin-top: 0.2rem;}
 </style>
-<style lang="" scoped>
+<style lang="less" scoped>
+    #detailTemplatePage{
+        margin-top:1rem;
+    }
     .clear:after {
         content: "";
         display: block;
@@ -801,23 +941,30 @@
     }
     .detailBottom li:nth-child(1),.detailBottom li:nth-child(2),.detailBottom li:nth-child(3){
         width:1rem;
-        border-top:1px solid #ddd;
+        border-top:0.01rem solid #ddd;
         background-color:#fff;
-         border-bottom:1px solid #ffffff;
+         border-bottom:0.03rem solid #ffffff;
     }
     .detailBottom li:nth-child(1)::after,.detailBottom li:nth-child(2)::after{
-            display: inline-block;
-            content: "";
-            height: 0.4rem;
-            border-right: 1px solid #dddddd;
-            position: relative;
-            top: -0.5rem;
-            right: -0.42rem;
+                display: inline-block;
+    content: "";
+    height: 0.4rem;
+    border-right: 0.02rem solid #dddddd;
+    position: relative;
+    top: -0.5rem;
+    right: -0.46rem;
     }
     .detailBottom li:nth-child(4),.detailBottom li:nth-child(5){
         width:2.21rem;
-        border:1px solid #6ab4ff;
+        border:0.01rem solid #6ab4ff;
     }
+    .detailBottom li:nth-child(4){
+        border:0.02rem solid #6ab4ff;
+    }
+    .detailBottom li:nth-child(5){
+       border-bottom: 0.03rem solid #6ab4ff;
+    }
+    
     .detailBottom li:nth-child(4) p,.detailBottom li:nth-child(5) p{
         line-height:1rem;
     }
@@ -834,5 +981,58 @@
         font-size:0.3rem;
         background: #ffffff;
             letter-spacing: 0.005rem;
+    }
+    .shopBxo {
+        font-size: 0.3rem;
+        padding-top: 0.1rem;
+    }
+    .shopBox {
+        margin-bottom: 0.4rem;
+        font-size: 0.2rem;
+        button {
+            position: absolute;
+            right: 0;
+            top: 0.2rem;
+            border: none;
+            padding: 0.15rem;
+            background: linear-gradient(to bottom, #0CBBB9 0%, #4AC6DC 100%);
+            color: #fff;
+            margin-right: 0.2rem;
+            font-size: 0.25rem;
+            border-radius: 0.05rem;
+        }
+    }
+    .shopBox li {
+        position: relative;
+        height: 0.5rem;
+        width: 90%;
+        margin-left: 5%;
+        border-bottom: 1px solid #ddd;
+        margin-top: 0.2rem;
+        margin-bottom: 0.2rem;
+    }
+    .shopBox li:last-child {
+        border-bottom: none;
+    }
+     .shopBox li {
+        height: 1.26rem;
+        line-height: 1.26rem;
+    }
+    .shopFont {
+        float: left;
+        padding-left: 0.2rem;
+    }
+    .shopFont p {
+        font-size: 0.2rem;
+        line-height: 0.4rem;
+        text-align: left;
+    }
+    .shopFont p:nth-child(1) {
+        font-size: 0.25rem;
+        color: #0CBBB9;
+    }
+    .shopFont p:nth-child(3) {
+        font-size: 0.2rem;
+        color: #b8bbbf;
     }
 </style>

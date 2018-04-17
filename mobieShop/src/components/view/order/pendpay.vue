@@ -8,7 +8,7 @@
         <div class='content' @click.stop='toOrderDetail(data.number,index)'>
             <div class='detail' v-for='(item,index) in data.orderDetails' :key='index'>
                 <div class='img-goods'>
-                    <img :src="item.image" alt="">
+                    <img :src="item.image" alt="图片丢失">
                 </div>
                 <div class='detail-goods'>
                     <h3 class='name'>{{item.commodityName}}</h3>
@@ -17,7 +17,7 @@
                     <p class='date'>{{item.condition2Name}}</p>
                 </div>
                 <div class='price'>
-                    <p>￥300</p>
+                    <p>￥{{item.price}}</p>
                     <p>x{{item.saleNumber}}</p>
                 </div>
                 <!-- 服务类商品，添加预约时间功能 -->
@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div class='price-total'>
-                <p>合计：<span class='total'>￥300</span></p>
+                <p>合计：<span class='total'>￥{{totalmoney}}</span></p>
             </div>
             <div class='operation'>
                 <button class='prime pay' @click.stop="pay">付款</button>
@@ -98,13 +98,14 @@ export default {
             let date_remain_ts=this.date_dead-date_current;
             let date_remain_h=Math.floor(date_remain_ts/1000/60/60%24);;
             let date_remain_m=Math.floor(date_remain_ts/1000/60%60);
-            let date_remain_s=Math.floor(date_remain_ts/1000%60);
-            this.date_ramian=   date_remain_h+'小时'+date_remain_m+'分'+date_remain_s+'秒'
+            // let date_remain_s=Math.floor(date_remain_ts/1000%60);
+            this.date_ramian=   date_remain_h+'小时'+date_remain_m+'分'
         },
         //倒计时
         countDown(){
             let that=this;
-            setInterval(function(){that.getRemianTime()},1000);
+            this.getRemianTime()
+            setInterval(function(){that.getRemianTime()},60000);
         },
         changeStatusOrder(data,msg){
             let that=this;
@@ -193,6 +194,15 @@ export default {
         pay(){
             console.log('付款。。。');
         }
+    },
+    computed:{
+        totalmoney(){
+            let total=0;
+            for(let item of this.data.orderDetails==null?[]:this.data.orderDetails){
+                total+=item.price*item.saleNumber;
+            }
+            return total;
+        }
     }
 }
 </script>
@@ -243,6 +253,7 @@ export default {
 .img-goods{
     width: 2.2rem;
     height: 2rem;
+    font-size: .2rem;
     border-radius: 5%;
     box-shadow: 0 0 0.1rem #e9e9e9;
     border:1px solid #e9e9e9;
@@ -256,7 +267,7 @@ export default {
     float: left;
 }
 .detail-goods .name{
-    font-size: .4rem;
+    font-size: .35rem;
     padding-top: .1rem;
     padding-bottom: .1rem;
 }
@@ -273,10 +284,13 @@ export default {
     padding-bottom: .2rem;
 }
 .price{
+    position: absolute;
     font-size: .28rem;
-    float: right;
-    margin-right: .2rem;
-    padding-top: .6rem;
+    right:.2rem;
+    top:.6rem;
+    /* float: right; */
+    /* margin-right: .2rem; */
+    /* padding-top: .6rem; */
 }
 .price p{
     padding-top: .1rem;

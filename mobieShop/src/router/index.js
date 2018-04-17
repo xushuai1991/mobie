@@ -11,7 +11,7 @@ export default new Router({
             component: resolve => require(['../components/common/home.vue'], resolve),
             children: [{
                     path: '',
-                    redirect: '/login'
+                    redirect: '/index'
                 },
                 // 订单列表
                 {
@@ -67,7 +67,7 @@ export default new Router({
                     path: '/addEdit', // 添加地址
                     name: 'addEdit',
                     component: resolve => require(['../components/view/addEdit/addEdit.vue'], resolve)
-              },
+                },
                 
                 {
                     path: '/addManagement', // 地址管理
@@ -168,7 +168,13 @@ export default new Router({
                     path: '/Customer', // 售后订单
                     name: 'Customer',
                     component: resolve => require(['../components/view/userInfo/Customer.vue'], resolve)
-                }
+                },
+                {
+                    path: '/detailTemplate', // 详情模板
+                    name: 'detailTemplate',
+                    component: resolve => require(['../components/view/detailTemplate/templatePages.vue'], resolve)
+                },
+                
             ]
         },
         {
@@ -191,11 +197,7 @@ export default new Router({
             name: 'eventTemplate',
             component: resolve => require(['../components/view/eventTemplate/templatePages.vue'], resolve)
         },
-        {
-            path: '/detailTemplate', // 详情模板
-            name: 'detailTemplate',
-            component: resolve => require(['../components/view/detailTemplate/templatePages.vue'], resolve)
-        },
+        
         {
             path: '/login',
             name: 'login',

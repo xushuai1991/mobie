@@ -1,31 +1,30 @@
 <template>
     <div class='pendpay'>
-        <div class='title'>
+        <div class='title' @click.stop='toOrderDetail(data.number,index)'>
             <span class='tip'>待评价</span>
         </div>
-        <div class='content'>
-            <div class='detail'>
+        <div class='content' @click.stop='toOrderDetail(data.number,index)'>
+            <div class='detail' v-for='(item,index) in data.orderDetails' :key='index'>
                 <div class='img-goods'>
-                    <img src="" alt="">
+                    <img :src="item.image" alt="图片丢失">
                 </div>
                 <div class='detail-goods'>
-                    <h3 class='name'>FASHION</h3>
-                    <P class='name-sub'>休闲舒适 潮男标配 SM1212</P>
-                    <P class='area'>服务区域：萧山区</P>
-                    <p class='date'>服务预约时间：2018-2-5</p>
+                    <h3 class='name'>{{item.commodityName}}</h3>
+                    <P class='area'>{{item.condition1Name}}</P>
+                    <p class='date'>{{item.condition2Name}}</p>
                 </div>
                 <div class='price'>
-                    <p>￥300</p>
-                    <p>x1</p>
+                    <p>￥{{item.price}}</p>
+                    <p>x{{item.saleNumber}}</p>
                 </div>
             </div>
             <div class='price-total'>
-                <p>合计：<span class='total'>￥300</span></p>
+                <p>合计：<span class='total'>￥{{totalmoney}}</span></p>
             </div>
             <div class='operation'>
-                <button class='prime evaluate'>评价</button>
-                <button class='check'>查看报告</button>
-                <button class='complaint'>投诉</button>
+                <button class='prime evaluate' @click.stop='evaluate'>评价</button>
+                <!-- <button class='check'>查看报告</button> -->
+                <!-- <button class='complaint'>投诉</button> -->
             </div>
         </div>
     </div>
@@ -33,10 +32,36 @@
 </template>
 <script>
 export default {
+    props:['data','index'],
     data(){
         return{
 
         }  
+    },
+    created(){
+        // console.log(this.data);
+    },
+    computed:{
+        totalmoney(){
+            let total=0;
+            for(let item of this.data.orderDetails==null?[]:this.data.orderDetails){
+                total+=item.price*item.saleNumber;
+            }
+            return total;
+        }
+    },
+    methods:{
+        evaluate(){
+            let order_withoutevaluate=[];
+            this.data.orderDetails.forEach(item=>{
+                order_withoutevaluate.push(item);
+            });
+            this.$router.push({'name':'',params:{'orderlist':order_withoutevaluate}});
+        },
+        //跳转订单详情
+        toOrderDetail(ordernumber,index){
+            this.$router.push('orderDeil?ordernumber='+ordernumber+'&index='+index);
+        },
     }
 }
 </script>
@@ -54,7 +79,7 @@ export default {
 }
 .title .tip{
     float: left;
-    color: #31B1B0;
+    color: #26a2ff;
 }
 .title .time-remain{
     color: #cdcdcd;
@@ -64,10 +89,12 @@ export default {
     padding: .2rem 0;
     border-bottom: 1px solid #e9e9e9;
     overflow: hidden;
+    position: relative;
 }
 .img-goods{
     width: 2.2rem;
     height: 2rem;
+    font-size: .2rem;
     border-radius: 5%;
     box-shadow: 0 0 0.1rem #e9e9e9;
     border:1px solid #e9e9e9;
@@ -81,7 +108,7 @@ export default {
     float: left;
 }
 .detail-goods .name{
-    font-size: .4rem;
+    font-size: .35rem;
     padding-top: .1rem;
     padding-bottom: .1rem;
 }
@@ -98,10 +125,10 @@ export default {
     padding-bottom: .2rem;
 }
 .price{
+    position: absolute;
     font-size: .28rem;
-    float: right;
-    margin-right: .2rem;
-    padding-top: .6rem;
+    right:.2rem;
+    top:.6rem;
 }
 .price p{
     padding-top: .1rem;
@@ -129,12 +156,12 @@ export default {
     float: right;
     padding: .15rem .2rem;
     margin-right: .2rem;
-    border:1px solid #31B1B0;
+    border:1px solid #26a2ff;
     border-radius: .1rem;
     background-color: #fff;
 }
 .operation button.prime{
-    background-color: #31B1B0;
+    background-color: #26a2ff;
     color: #fff;
 }
 /* .price{

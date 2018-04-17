@@ -8,32 +8,44 @@
         <section class='infoBottom' style='background-image:url("static/images/background_info.png");background-repeat: no-repeat;background-size:contain;'>
             <div class="account">
                 <div class="account_info">
-                    <div class="change"><i class='icon iconfont icon-arrow-right-copy icon-qiehuan'></i></div>
+                    <div class="change" v-if='userinfo.id!=""'>
+                        <router-link to='accountMangagement'>
+                            <i class='icon iconfont icon-arrow-right-copy icon-qiehuan'></i>
+                        </router-link>
+                        
+                    </div>
                     <div class="portrait">
                         <div class="portrait_img">
                             <img :src="userinfo.avatar" alt="">
                             <p class='vip'>{{viplevel}}</p>
-                            <i class='icon iconfont icon--huangguan' style='color:#fdd23e;position:absolute;right:.2rem;top:-.15rem;transform:rotate(25deg);'></i>
+                            <i :class="{'icon':true,'iconfont':true,'icon--huangguan':false}" style='color:#fdd23e;position:absolute;right:.2rem;top:-.15rem;transform:rotate(25deg);'></i>
                         </div>
                         <div class="portrait_info">
-                            <p style='font-size:.3rem;padding-top:.1rem;'>{{userinfo.nickname==null?'&nbsp;':userinfo.nickname}}</p>
-                            <router-link to='/personalScores'>
-                                <p style='color:#e47524;margin-top:.2rem;font-size:.25rem;'><i class='icon iconfont icon-qian' style='font-size:.4rem;'></i>&nbsp;{{point}}</p>
-                            </router-link>
-                            <p class='info_other' style='color:#939393'>至2019.1.1 &nbsp;&nbsp;过期积分：{{expiredPoints}}分</p>
+                            <!-- 用户已登录 ，显示用户信息 -->
+                            <div v-if='userinfo.id!=""'>
+                                <p style='font-size:.3rem;padding-top:.1rem;'>{{userinfo.nickname==null?'&nbsp;':userinfo.nickname}}</p>
+                                <router-link to='/personalScores'>
+                                    <p style='color:#e47524;margin-top:.2rem;font-size:.25rem;'><i class='icon iconfont icon-qian' style='font-size:.4rem;'></i>&nbsp;{{point}}</p>
+                                </router-link>
+                                <p class='info_other' style='color:#939393'>至2019.1.1 &nbsp;&nbsp;过期积分：{{expiredPoints}}分</p>
+                            </div>
+                            <!-- 未登录，跳转到登录页面 -->
+                            <div v-else style='font-size:.3rem;padding-top:.5rem;padding-left:.2rem;'>
+                                <router-link :to="{name:'login'}" style='color:#e47524;'>点击登录</router-link>
+                            </div>
                         </div>
                         <ul class="behavior">
                             <li>
                                 <div class="collect">
                                     <i class='icon iconfont icon-xingxing coloBule'></i>
                                 </div>
-                                <p class="text_wait">收藏 <span class="coller">20</span></p>
+                                <p class="text_wait">收藏 <span class="coller">{{num_collection}}</span></p>
                             </li>
                             <li class="shopCar">
                                 <div class="collect">
                                     <i class='icon iconfont icon-gouwuche coloBule'></i>
                                 </div>
-                                <p class="text_wait">购物车 <span class="carNum">5</span></p>
+                                <p class="text_wait">购物车 <span class="carNum">{{num_shopcar}}</span></p>
                             </li>
                             <li class="markFooter">
                                 <div class="collect">
@@ -53,28 +65,28 @@
                 <ul class="wait_for">
                     <li @click="myorder('willpay')">
                         <div class="img_wait">
-                            <i class="pay orageColor">2</i>
+                            <i class="pay orageColor" v-if='num_orderwillpay!=0'>{{num_orderwillpay}}</i>
                             <i class='icon iconfont icon-daifukuan fontSize'></i>
                         </div>
                         <p class="text_wait">待付款</p>
                     </li>
-                    <li @click="myorder('willpay')">
+                    <li @click="myorder('willservice')">
                         <div class="img_wait">
-                            <i class="wait orageColor">2</i>
+                            <i class="wait orageColor" v-if='num_orderwillservice!=0'>{{num_orderwillservice}}</i>
                             <i class='icon iconfont icon-icondaifahuo fontSize'></i>
                         </div>
                         <p class="text_wait">待服务</p>
                     </li>
-                    <li>
+                    <li @click="myorder('inservice')">
                         <div class="img_wait ">
-                            <i class="receive orageColor">2</i>
+                            <i class="receive orageColor" v-if='num_orderinservice!=0'>{{num_orderinservice}}</i>
                             <i class='icon iconfont icon-ziyuan fontSize'></i>
                         </div>
                         <p class="text_wait">服务中</p>
                     </li>
-                    <li>
+                    <li @click="myorder('willevaluate')">
                         <div class="img_wait ">
-                            <i class="evaluate orageColor">2</i>
+                            <i class="evaluate orageColor" v-if='num_orderwillevaluate!=0'>{{num_orderwillevaluate}}</i>
                             <i class='icon iconfont icon-daipingjia fontSize'></i>
                         </div>
                         <p class="text_wait">待评价</p>
@@ -89,61 +101,56 @@
             </div>
             <div class='opera_list'>
                 <ul>
-                    <li>
-                        <router-link :to='{name:"addManagement",params:{name:"index"} }'>
+                    <li @click='toLink("address")'>
                             <i class='icon iconfont icon-dingwei fontSize operaicon'></i>
                             <i class='flag on'></i>
                             <p class='name_opera'>地址</p>
-                        </router-link>
                     </li>
-                    <li>
-                        <router-link to='detailTemplate'>
+                    <li @click='toLink("kefu")'>
                             <i class='icon iconfont icon-kefu fontSize operaicon'></i>
                             <i class='flag on'></i>
                             <p class='name_opera'>客服</p>
-                        </router-link>
                     </li>
-                    <li>
-                        <router-link to='Coupon'>
+                    <li @click='toLink("coupon")'>
                             <i class='icon iconfont icon-youhuijuan fontSize operaicon'></i>
                             <i class='flag'></i>
                             <p class='name_opera'>优惠券</p>
-                        </router-link>
+                        <!-- </router-link> -->
                     </li>
-                    <li>
-                        <router-link to=''>
+                    <li @click='toLink("msg")'>
+                        <!-- <router-link to=''> -->
                             <i class='icon iconfont icon-lingdang fontSize operaicon'></i>
                             <i class='flag'></i>
                             <p class='name_opera'>消息</p>
-                        </router-link>
+                        <!-- </router-link> -->
                     </li>
-                    <li>
-                        <router-link to=''>
+                    <li @click='toLink("activity")'>
+                        <!-- <router-link to=''> -->
                             <i class='icon iconfont icon-liwu fontSize operaicon'></i>
                             <i class='flag'></i>
                             <p class='name_opera'>活动专区</p>
-                        </router-link>
+                        <!-- </router-link> -->
                     </li>
-                    <li>
-                        <router-link to=''>
+                    <li @click='toLink("report")'>
+                        <!-- <router-link to=''> -->
                             <i class='icon iconfont icon-fapiao fontSize operaicon'></i>
                             <i class='flag'></i>
                             <p class='name_opera'>服务报告更新</p>
-                        </router-link>
+                        <!-- </router-link> -->
                     </li>
-                    <li>
-                        <router-link :to="'/inviting?recommendedCustomerId='+userinfo.id">
+                    <li @click='toLink("invite")'>
+                        <!-- <router-link :to="'/inviting?recommendedCustomerId='+userinfo.id"> -->
                             <i class='icon iconfont icon-yaoqing fontSize operaicon'></i>
                             <i class='flag'></i>
                             <p class='name_opera'>邀请注册</p>
-                        </router-link>
+                        <!-- </router-link> -->
                     </li>
-                    <li>
-                        <router-link to=''>
+                    <li @click='toLink("invoice")'>
+                        <!-- <router-link to=''> -->
                             <i class='icon iconfont icon-printer fontSize operaicon'></i>
                             <i class='flag'></i>
                             <p class='name_opera'>发票管理</p>
-                        </router-link>
+                        <!-- </router-link> -->
                     </li>
                 </ul>
             </div>
@@ -165,15 +172,33 @@
         prop: ['listLoading'],
         data() {
             return {
-                viplevel: '非会员',
+                viplevel: '',
                 point:0,
                 expiredPoints:0,
-                memberId:''
+                num_collection:0,
+                num_shopcar:0,
+                num_orderwillpay:0,
+                num_orderwillservice:0,
+                num_orderinservice:0,
+                num_orderwillevaluate:0,
+                memberId:'',
+                userinfo:{
+                    id:'',
+                    avatar:'',
+                    nickname:'',
+                    level:''
+                }
             }
         },
         created() {
             // this.$root.$emit('header', '个人中心')
-            this.integral()
+            let userinfo_session=sessionStorage.getItem('userinfo');
+            if(userinfo_session!=null){
+                let data = JSON.parse(sessionStorage.getItem('userinfo'));
+                this.userinfo=data;
+                this.integral();
+            }
+            
         },
         methods: {
             integral(){
@@ -193,18 +218,72 @@
                 })
             },
             // 获取个人信息
-            getinfo() {
-                this.$http.post('/api/customer/account/register', {
-                    mobile: that.phone,
-                    password: that.psw,
-                    code: that.code
-                })
-            },
+            // getinfo() {
+            //     this.$http.post('/api/customer/account/register', {
+            //         mobile: that.phone,
+            //         password: that.psw,
+            //         code: that.code
+            //     })
+            // },
             // goback(){
             //     this.$router.go(-1);
             // },
             myorder(type){
-                this.$router.push({name:'order',params:{type:type}});
+                //未登录，提示先登录
+                if(this.userinfo.id==''){
+                    Toast('请先登录！');
+                }
+                else{
+                    this.$router.push({name:'order',params:{type:type}});
+                }
+            },
+            // 跳转
+            toLink(direct){
+                if(this.userinfo.id==''){
+                    Toast('请先登录！');
+                }
+                else{
+                    switch(direct){
+                        case 'address':{
+                            this.$router.push({name:"addManagement",params:{name:"index"} });
+                            break;
+                        }
+                        case 'coupon':{
+                            this.$router.push("Coupon");
+                            break;
+                        }
+                        case 'invite':{
+                            this.$router.push("/inviting?recommendedCustomerId="+userinfo.id);
+                            break;
+                        }
+                        case 'invoice':{
+                            this.$router.push("/invoiceDateil");
+                            break;
+                        }
+                        default:{
+                            break;
+                        }
+                    }
+                }
+            },
+            //查询订单数量
+            getNUmberOrder(data){
+                let that=this;
+                this.$http.post('/api/product/order/mall/find?pageSize=0')
+                .then(res=>{
+                    if(res.data.status==200){
+                        return res.data.info.total;
+                    }
+                    else{
+                        Toast(res.data.msg);
+                        return 0;
+                    }
+                    console.log(res);
+                })
+                .catch(err=>{
+                    console.log(err);
+                    return 0;
+                });
             }
         },
         mounted() {
@@ -216,9 +295,9 @@
                 })
                 .then(function(response) {
                     if (response.data.info == '尚未登录') {
-                        that.$router.push({
-                            path: '/login'
-                        })
+                        // that.$router.push({
+                        //     path: '/login'
+                        // })
                     }
                     if (response.data.status == 200) {
                         that.viplevel = response.data.info.length == 0 ? '非会员' : response.data.info[0].levelName
@@ -236,24 +315,22 @@
             // buttomNav
         },
         computed: {
-            userinfo(){
-                let userinfo_session=sessionStorage.getItem('userinfo');
-                console.log(userinfo_session);
-                if(userinfo_session==null){
-                    let json={
-                        id:'',
-                        avatar:'',
-                        nickname:'',
-                        level:1
-                    };
-                    return json;
-                }
-                else{
-                    let data = JSON.parse(sessionStorage.getItem('userinfo'));
-                    return data;
-                }
-                
-            }
+            // userinfo(){
+            //     let userinfo_session=sessionStorage.getItem('userinfo');
+            //     if(userinfo_session==null){
+            //         let json={
+            //             id:'',
+            //             avatar:'',
+            //             nickname:'',
+            //             level:''
+            //         };
+            //         return json;
+            //     }
+            //     else{
+            //         let data = JSON.parse(sessionStorage.getItem('userinfo'));
+            //         return data;
+            //     }
+            // }
             // ...mapState({
             //     userinfo: function(state) {
             //         // console.log(state.userinfo);

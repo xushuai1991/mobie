@@ -1,12 +1,12 @@
 <template>
     <div class='pendpay'>
-        <div class='title'>
+        <div class='title' @click.stop='toOrderDetail(data.number,index)'>
             <span class='tip'>服务中</span>
         </div>
-        <div class='content'>
-            <div class='detail'>
+        <div class='content' @click.stop='toOrderDetail(data.number,index)'>
+            <div class='detail' v-for='(item,index) in data.orderDetails' :key='index'>
                 <div class='img-goods'>
-                    <img src="" alt="">
+                    <img :src="item.image" alt="图片丢失">
                 </div>
                 <div class='detail-goods'>
                     <h3 class='name'>FASHION</h3>
@@ -17,16 +17,16 @@
                     <p class='date'>{{item.condition2Name}}</p>
                 </div>
                 <div class='price'>
-                    <p>￥300</p>
-                    <p>x1</p>
+                    <p>￥{{item.price}}</p>
+                    <p>x{{item.saleNumber}}</p>
                 </div>
             </div>
             <div class='price-total'>
-                <p>合计：<span class='total'>￥300</span></p>
+                <p>合计：<span class='total'>￥{{totalmoney}}</span></p>
             </div>
             <div class='operation'>
                 <button class='prime follow'>追单</button>
-                <button class='apply' @click='application'>申请退款</button>
+                <button class='apply' @click.stop='application'>申请退款</button>
             </div>
         </div>
     </div>
@@ -34,6 +34,7 @@
 </template>
 <script>
 export default {
+    props:['data','index'],
     data(){
         return{
 
@@ -42,7 +43,23 @@ export default {
     methods:{
         application(){
             this.$router.push({path:''})
-        }
+        },
+        follow(){
+            let that=this;
+        },
+        //跳转订单详情
+        toOrderDetail(ordernumber,index){
+            this.$router.push('orderDeil?ordernumber='+ordernumber+'&index='+index);
+        },
+    },
+    computed:{
+        totalmoney(){
+            let total=0;
+            for(let item of this.data.orderDetails==null?[]:this.data.orderDetails){
+                total+=item.price*item.saleNumber;
+            }
+            return total;
+        },
     }
 
 }
@@ -75,6 +92,7 @@ export default {
 .img-goods{
     width: 2.2rem;
     height: 2rem;
+    font-size: .2rem;
     border-radius: 5%;
     box-shadow: 0 0 0.1rem #e9e9e9;
     border:1px solid #e9e9e9;

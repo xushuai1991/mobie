@@ -62,19 +62,22 @@ import { Indicator } from 'mint-ui';
                 imglist:[],
                 loading:false,
                 pagenum:[],
+                companyId:''
             };
         },
         created(){
-            this.$root.$on('loadclassify',()=>{
+            this.$root.$on('classification',(data)=>{
+                // console.log(11);
+                this.companyId=data.companyId;
+                
                 // 首次加载商品分类函数
                 if(this.classifylist.length==1){
-                    this.getImgall().then(completed=>{
-                        if(completed){
-                            this.getClassify();
-                        }
-                    });
-                    // this.getCommoditylist(1,true);
-                    // // this.getClassify();
+                    // this.getImgall().then(completed=>{
+                    //     if(completed){
+                    //         this.getClassify();
+                    //     }
+                    // });
+                    this.getClassify();
                 }
             });
             
@@ -184,7 +187,8 @@ import { Indicator } from 'mint-ui';
             // 获取商品分类
             getClassify(){
                 let that=this;
-                this.$http.post('/api/product/commodity/category/query?pageSize=50',{})
+                console.log(this.companyId);
+                this.$http.post('/api/product/commodity/category/query?pageSize=50',{companyId:this.companyId})
                 .then(res=>{
                     if(res.data.status==200){
                         res.data.info.list.forEach((item,index)=>{
@@ -215,7 +219,8 @@ import { Indicator } from 'mint-ui';
                 this.$http.post('/api/product/commodity/info/query?pageSize=10&page='+pagenum,
                 {
                     isOnSale:true,
-                    categoryId:this.classifyid
+                    categoryId:this.classifyid,
+                    companyId:this.companyId
                 })
                 .then(res=>{
                     that.maxpagenum=res.data.info.pages;
@@ -226,20 +231,15 @@ import { Indicator } from 'mint-ui';
                         res.data.info.list.forEach(commodity=>{
                             let json={
                                 id:commodity.id,
-                                imgurl:'',
+                                imgurl:commodity.commodityImageList.length==0?'':commodity.commodityImageList[0],
                                 name:commodity.name,
-                                url:'/detailTemplate?commodityId='+commodity.id,
+                                url:'/detailTemplate?commodityId='+commodity.id+'&companyId='+this.companyId,
                                 price:commodity.priceRule==1?commodity.originalPrice:commodity.priceRule==2?commodity.discountPrice:commodity.currentPrice,
                                 nums:commodity.totalSales
                             };
-                            for(let item of that.imglist){
-                                if(item.commodityId==commodity.id){
-                                    json.imgurl='http://'+window.location.host+'/api'+item.url;
-                                    break;
-                                }
-                            }
                             that.commoditylist.push(json);
                         });
+                        // that.commoditylist.push(res.data.info.list);
                         let length=res.data.info.list.length;
                         if(length!=0){
                             that.pagenum=length>=10?pagenum+1:pagenum;
@@ -262,23 +262,23 @@ import { Indicator } from 'mint-ui';
                 });
             },
             // 获取所有商品图片
-            getImgall(){
-                return new Promise((resolve,reject)=>{
-                    let that=this;
-                    this.$http.post('/api/product/commodity/image/queryMap',{})
-                    .then(res=>{
-                        if(res.data.status==200){
-                            this.imglist=res.data.info;
-                        }
-                        resolve(true);
-                    })
-                    .catch(err=>{
-                        console.log(err);
-                        resolve(true);
-                    });
-                });
+            // getImgall(){
+            //     return new Promise((resolve,reject)=>{
+            //         let that=this;
+            //         this.$http.post('/api/product/commodity/image/queryMap',{})
+            //         .then(res=>{
+            //             if(res.data.status==200){
+            //                 this.imglist=res.data.info;
+            //             }
+            //             resolve(true);
+            //         })
+            //         .catch(err=>{
+            //             console.log(err);
+            //             resolve(true);
+            //         });
+            //     });
                 
-            },
+            // },
             loadMore(index) {
                 this.getCommoditylist(this.pagenum,false);
                 setTimeout(() => {
@@ -346,7 +346,7 @@ import { Indicator } from 'mint-ui';
 </style>
 <style lang='less' scoped>
 .nav-bar{
-    margin-top:1.2rem;
+    margin-top:1.1rem;
     font-size:.3rem;
     padding-bottom:.1rem;
     border-bottom:1px solid #e9e9e9;

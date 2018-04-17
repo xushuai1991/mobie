@@ -1,12 +1,12 @@
 <template>
     <div class='other'>
-        <div class='title'>
-            <span class='tip'>{{data.payState==1&&data.orderState==4?'退款中':data.payState==1&&data.orderState==5?'退款完成':data.orderState==6?'订单已取消':data.serviceState==3?'已完成':data.payState==3?'已过期':''}}</span>
+        <div class='title' @click.stop='toOrderDetail(data.number,index)'>
+            <span class='tip'>{{data.payState==1&&data.orderState==4?'退款中':data.payState==1&&data.orderState==5?'退款完成':data.orderState==6?'订单已取消':data.orderState==2?'已完成':data.payState==3?'已过期':''}}</span>
         </div>
-        <div class='content'>
+        <div class='content' @click.stop='toOrderDetail(data.number,index)'>
             <div class='detail' v-for='(item,index) in data.orderDetails' :key='index'>
                 <div class='img-goods'>
-                    <img src="" alt="">
+                    <img :src="item.image" alt="">
                 </div>
                 <div class='detail-goods'>
                     <h3 class='name'>{{item.commodityName}}</h3>
@@ -17,15 +17,15 @@
                     <p class='date'>{{item.condition2Name}}</p>
                 </div>
                 <div class='price'>
-                    <p>￥300</p>
-                    <p>x2</p>
+                    <p>￥{{item.price}}</p>
+                    <p>x{{item.saleNumber}}</p>
                 </div>
             </div>
             <div class='price-total'>
-                <p>合计：<span class='total'>￥300</span></p>
+                <p>合计：<span class='total'>￥{{totalmoney}}</span></p>
             </div>
             <div class='operation' v-if='data.payState==3'>
-                <button class='prime'>关闭订单</button>
+                <button class='prime' @click.stop="cancleOrder">取消订单</button>
             </div>
         </div>
     </div>
@@ -33,11 +33,68 @@
 </template>
 <script>
 export default {
-    props:['data'],
+    props:['data','index'],
     data(){
         return{
 
         }  
+    },
+    computed:{
+        totalmoney(){
+            let total=0;
+            for(let item of this.data.orderDetails==null?[]:this.data.orderDetails){
+                total+=item.price*item.saleNumber;
+            }
+            return total;
+        }
+    },
+    methods:{
+        //跳转订单详情
+        toOrderDetail(ordernumber,index){
+            this.$router.push('orderDeil?ordernumber='+ordernumber+'&index='+index);
+        },
+        changeStatusOrder(data,msg){
+            let that=this;
+            Indicator.open('操作中');
+            this.$http.post('/api/product/order/mall/update',data)
+            .then(res=>{
+                if(res.data.status==200){
+                    Toast(msg+'成功');
+                    that.$root.$emit('loaddata',this.index);
+                }
+                else{
+                    Toast(res.data.msg);
+                }
+                Indicator.close();
+            })
+            .catch(err=>{
+                Indicator.close();
+                Toast(msg+'失败');
+            })
+        },
+        //取消订单
+        cancleOrder(){
+            // console.log(this.index);
+            MessageBox({
+                title: '',
+                message: '是否取消订单?',
+                showCancelButton: true
+            }).then((flag)=>{
+                if(flag=='confirm'){
+                    let data=[
+                        {
+                            id:this.data.id,
+                            number:this.data.number,
+                            orderState:6
+                        }
+                    ];
+                    this.changeStatusOrder(data,'取消订单');
+                }
+                else{
+                    return;
+                }
+            });
+        },
     }
 }
 </script>
@@ -82,7 +139,7 @@ export default {
     float: left;
 }
 .detail-goods .name{
-    font-size: .4rem;
+    font-size: .35rem;
     padding-top: .1rem;
     padding-bottom: .1rem;
 }
@@ -99,10 +156,10 @@ export default {
     padding-bottom: .2rem;
 }
 .price{
+    position: absolute;
     font-size: .28rem;
-    float: right;
-    margin-right: .2rem;
-    padding-top: .6rem;
+    right:.2rem;
+    top:.6rem;
 }
 .price p{
     padding-top: .1rem;

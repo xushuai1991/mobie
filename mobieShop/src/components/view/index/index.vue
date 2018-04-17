@@ -49,7 +49,7 @@ import templatePages from '@/components/view/template/templatePages.vue'
 import classifiCation from '@/components/view/classification/classification.vue'
 import shopCar from '@/components/view/userInfo/shopCar.vue'
 import userInfo from '@/components/view/userInfo/userInfo.vue'
-
+import { Toast } from 'mint-ui'; 
 
 
 export default {
@@ -57,14 +57,29 @@ export default {
         return{
             selected: '首页',
             isTrue:true,
-            templateUrl:''
+            templateUrl:'',
+            code:'',
+            companyid:''
         }
     },
     created(){
+        let url=location.search;
+        let companyid=this.getURLparms('company');
+        let code=this.getURLparms('code');
+        this.code=code;
+        this.companyid=companyid;
+        if(code!=null){
+            this.getOpenid();
+        }
+        else{
+            if(sessionStorage.getItem('openId')==null){
+                Toast('请授权后再登录商城');
+            }
+        }
         let direct=this.$route.params.direct;
-        console.log(direct==undefined);
+        // console.log(direct==undefined);
         if(direct!=undefined){
-            console.log(111);
+            // console.log(111);
             switch(direct){
                 case 'commodity':{
                     this.selected='分类';
@@ -177,7 +192,15 @@ export default {
         selected(value){
             switch(value){
                 case '分类':{
-                    this.$root.$emit('loadclassify');
+                    this.$root.$emit('classification',{companyId:this.companyid});
+                    break;
+                }
+                case '购物车':{
+                    this.$root.$emit('loadShopcar');
+                    break;
+                }
+                default:{
+                    break;
                 }
             }
         }
@@ -189,6 +212,24 @@ export default {
             if(r!=null)
             return unescape(r[2]);
             return null;
+        },
+        //获取用户openid
+        getOpenid(){
+            let that=this;
+            this.$http.get('/api/product/order/weixin/user?companyId='+this.companyid+'&code='+this.code)
+            .then(res=>{
+                if(res.data.info.code){
+                    let openid=res.data.info.openId;
+                    sessionStorage.setItem('openId',openid);
+                }
+                else{
+                    Toast(res.data.msg);
+                }
+            })
+            .catch(err=>{
+                Toast('获取openid失败');
+                console.log(err);
+            })
         }
     },
     components: {
@@ -219,6 +260,7 @@ export default {
   } */
   .tabbar-xs{
       position: fixed;
+      z-index:9999;
   }
   .tabbar-xs .iconfont{
       display: block;

@@ -119,20 +119,37 @@ export default {
             loginflag:true,
             loginquickflag:false,
             resignflag:false,
-            second:'获取验证码'
+            second:'获取验证码',
+            to:''
         }
     },
     mounted(){
         this.yzn();
     },
+    // created(){
+    //     let from=this.$route.params.from;
+    //     if(from!=null){
+    //         this.to=from;
+    //     }
+    //     console.log(params);
+    // },
     methods:{
         // 登录
         login(){
             if(this.phonejson.status&&this.pswjson.status&&this.codejson.status){
                 Indicator.open('Loading...');
                 let that=this;
+                let data='';
+                let openId=sessionStorage.getItem('openId');
+                if(openId==null){
+                    data='mobile='+this.phone+'&password='+this.psw;
+                }
+                else{
+                    data='mobile='+this.phone+'&password='+this.psw+'&openId='+openId;
+                }
+                alert(data);
                 this.$http({
-                    url: '/api/customer/account/login?mobile='+this.phone+'&password='+this.psw,
+                    url: '/api/customer/account/login?'+data,
                     method: 'POST',
                     // 设置请求头
                     headers: {
@@ -183,7 +200,16 @@ export default {
                 }
                 else{
                     let that=this;
-                    this.$http.post('/api/customer/account/quickLogin?mobile='+that.phone+'&code='+that.code)
+                    let data='';
+                    let openId=sessionStorage.getItem('openId');
+                    if(openId==null){
+                        data='mobile='+this.phone+'&code='+this.code;
+                    }
+                    else{
+                        data='mobile='+this.phone+'&code='+this.code+'&openId='+openId;
+                    }
+                    alert(data);
+                    this.$http.post('/api/customer/account/quickLogin?'+data)
                     .then(function(response){
                         Toast(response.data.msg);
                         Indicator.close();
@@ -224,12 +250,17 @@ export default {
                     Toast('请确认服务条款');
                 }
                 else{
+                    if(sessionStorage.getItem('openId')==null){
+                        Toast('请授权后再注册！');
+                        return;
+                    }
                     let that=this;
                     this.$http.post('/api/customer/account/register',
                         {
                             mobile:that.phone,
                             password:that.psw,
-                            code:that.code
+                            code:that.code,
+                            openId:sessionStorage.getItem('openId')
                         }
                     )
                     .then(function(response){
