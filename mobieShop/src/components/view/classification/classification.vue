@@ -237,12 +237,6 @@ import { Indicator } from 'mint-ui';
                                 price:commodity.priceRule==1?commodity.originalPrice:commodity.priceRule==2?commodity.discountPrice:commodity.currentPrice,
                                 nums:commodity.totalSales
                             };
-                            // for(let item of that.imglist){
-                            //     if(item.commodityId==commodity.id){
-                            //         json.imgurl='http://'+window.location.host+'/api'+item.url;
-                            //         break;
-                            //     }
-                            // }
                             that.commoditylist.push(json);
                         });
                         // that.commoditylist.push(res.data.info.list);

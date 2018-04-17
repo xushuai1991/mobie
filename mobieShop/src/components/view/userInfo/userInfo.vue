@@ -8,7 +8,12 @@
         <section class='infoBottom' style='background-image:url("static/images/background_info.png");background-repeat: no-repeat;background-size:contain;'>
             <div class="account">
                 <div class="account_info">
-                    <div class="change" v-if='userinfo.id!=""'><i class='icon iconfont icon-arrow-right-copy icon-qiehuan'></i></div>
+                    <div class="change" v-if='userinfo.id!=""'>
+                        <router-link to='accountMangagement'>
+                            <i class='icon iconfont icon-arrow-right-copy icon-qiehuan'></i>
+                        </router-link>
+                        
+                    </div>
                     <div class="portrait">
                         <div class="portrait_img">
                             <img :src="userinfo.avatar" alt="">
@@ -97,21 +102,16 @@
             <div class='opera_list'>
                 <ul>
                     <li @click='toLink("address")'>
-                        <!-- <router-link :to='{name:"addManagement",params:{name:"index"} }'> -->
                             <i class='icon iconfont icon-dingwei fontSize operaicon'></i>
                             <i class='flag on'></i>
                             <p class='name_opera'>地址</p>
-                        <!-- </router-link> -->
                     </li>
                     <li @click='toLink("kefu")'>
-                        <!-- <router-link to=''> -->
                             <i class='icon iconfont icon-kefu fontSize operaicon'></i>
                             <i class='flag on'></i>
                             <p class='name_opera'>客服</p>
-                        <!-- </router-link> -->
                     </li>
                     <li @click='toLink("coupon")'>
-                        <!-- <router-link to='Coupon'> -->
                             <i class='icon iconfont icon-youhuijuan fontSize operaicon'></i>
                             <i class='flag'></i>
                             <p class='name_opera'>优惠券</p>
