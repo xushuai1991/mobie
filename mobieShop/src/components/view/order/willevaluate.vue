@@ -58,7 +58,7 @@ export default {
                     order_withoutevaluate.push(item.commodityId);
                 }
             });
-            this.$router.push({'name':'',params:{'orderlist':order_withoutevaluate}});
+            this.$router.push({'name':'evaluate',params:{'orderlist':order_withoutevaluate}});
         },
         //跳转订单详情
         toOrderDetail(ordernumber,index){

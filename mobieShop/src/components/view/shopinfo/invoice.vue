@@ -20,7 +20,7 @@
 </script>
 <style >
    html,body,#app,.wrapper{
-       height:100%;
+       /* height:100%; */
    }
 </style>
 <style lang="less" scoped>

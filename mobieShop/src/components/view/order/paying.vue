@@ -65,6 +65,9 @@ export default {
                         // Toast(config.appId);
                         weixinPay(config);
                     }
+                    else{
+                        Toast(res.data.info.desc);
+                    }
                 }
                 else{
                     Toast(res.data.msg);
