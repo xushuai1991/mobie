@@ -434,9 +434,7 @@ import { Toast } from 'mint-ui';
     }
 </script>
 <style>
-    #app {
-        overflow: hidden;
-    }
+  
     .upImgs {
         z-index: 100;
         top: -2.1rem;

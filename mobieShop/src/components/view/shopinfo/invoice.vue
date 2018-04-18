@@ -18,11 +18,6 @@
 <script>
 
 </script>
-<style >
-   html,body,#app,.wrapper{
-       /* height:100%; */
-   }
-</style>
 <style lang="less" scoped>
  .CInvoice {
         height: 100%;
