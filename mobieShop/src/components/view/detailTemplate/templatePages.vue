@@ -83,7 +83,7 @@
                             <p class="zbd-commodityInfoNums">数量</p>
                             <div class="zbd-num">
                                 <div class="zbd-numLess">-</div>
-                                <input type="number" class="zbd-numInput">
+                                <input type="number" class="zbd-numInput" v-model="specificationNum">
                                 <div class="zbd-numPlus">+</div>
                             </div>
                             <div  class="zbd-Confirmation"><p>确认</p></div>
@@ -91,19 +91,19 @@
                         <mt-popup v-model="shareVisible" position="bottom" style='width:100%;'>
                             <div class='closeBtn' @click="btnClose">分享</div>
                         </mt-popup>
-                        <!-- <mt-popup v-model="receiveCoupons" position="bottom" style='width:100%;'>
+                        <mt-popup v-model="receiveCoupons" position="bottom" style='width:100%;'>
                             <p class='shopBxo'>领取优惠劵</p>
                             <ul class='shopBox'>
                                 <li v-for='(item,index) in coupon' :key='index'>
                                     <div class='shopFont'>
-                                        <p>{{item.couponMoney}}元</p>
-                                        <p>{{item.couponName}}</p>
-                                        <p>使用期限 {{item.starTime.split(" ")[0]}}—{{item.endTime.split(" ")[0]}}</p>
+                                        <p>{{item.couponInfo.couponMoney}}元</p>
+                                        <p>{{item.couponInfo.couponName}}</p>
+                                        <p>使用期限 {{item.couponInfo.starTime.split(" ")[0]}}—{{item.couponInfo.endTime.split(" ")[0]}}</p>
                                     </div><button @click='okcoupon(item.id)'>领取</button>
                                 </li>
                             </ul>
-                            <div class='closeBtn' @click="closeCoupon">关闭</div>
-                        </mt-popup> -->
+                            <div class='zbd_closeBtn' @click="closeCoupon">关闭</div>
+                        </mt-popup>
                 </div>
             </transition>
              <transition
@@ -232,7 +232,8 @@
                 couponShow:false,
                 shopNum:'',
                 shopCarNumShow:false,
-                commodityId:'bb561d8f-3ad8-11e8-8c86-88d7f652f92c',
+                specificationNum:'1',
+                commodityId:'',
                 customerId:'',
                 starXingXing:{
                     "icon-shoucang":true,
@@ -261,13 +262,15 @@
             console.log(isBrowse)
             if(isBrowse == true){ //后台管理浏览效果
                 this.detailTemplateUrl = sessionStorage.getItem ("detailTemplateUrl");
+                let companyId = sessionStorage.getItem ("companyId");
                 let id = this.getUrlParms("id")
                  console.log(id)//详情模板ID
                   let that=this;
-                    this.$http.post('/api/product/mall/template/queryMap',
+                    this.$http.post('/api/product/mall/template/queryMap/mall',
                         {
                             'templateID':id,
-                            'templateType':3
+                            'templateType':3,
+                            'companyId':companyId
                         }
                     )
                     .then(function(response){
@@ -301,11 +304,13 @@
                     .then(function(response){
                         console.log(response)
                         let detailTemplateId = response.data.info[0].detailTemplateId
+                        let companyId = sessionStorage.getItem ("companyId");
                         //根据详情模板ID查询模板信息
-                        that.$http.post('/api/product/mall/template/queryMap',
+                        that.$http.post('/api/product/mall/template/queryMap/mall',
                                 {
                                     'templateID':detailTemplateId,
-                                    'templateType':3
+                                    'templateType':3,
+                                    'companyId':companyId
                                 }
                             )
                             .then(function(response){
@@ -340,10 +345,12 @@
                 }else{
                     //console.log(this.comlist)
                     let that=this;
-                    this.$http.post('/api/product/mall/template/queryMap',
+                    let companyId = sessionStorage.getItem ("companyId");
+                    this.$http.post('/api/product/mall/template/queryMap/mall',
                         {
                             'templateID':id,
-                            'templateType':3
+                            'templateType':3,
+                            'companyId':companyId
                         }
                     )
                     .then(function(response){
@@ -517,6 +524,27 @@
                 },
                 closeCoupon(){
                     this.receiveCoupons = false
+                },
+                //领取优惠劵
+                okcoupon(id) {
+                    console.log(id)
+                    let url = '/api/product/coupon/customer/insert?couponId=' + id + '&number=1';
+                    this.$http({
+                        url: url,
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        data: {}
+                    }).then(response => {
+                        if (response.data.status == 200) {
+                            Toast(response.data.msg);
+                        } else {
+                            Toast(response.data.msg);
+                        }
+                    }).catch(error => {
+                        console.log(error)
+                    })
                 },
                 goToList(){
                     let that=this;
@@ -975,6 +1003,13 @@
         font-size: 0.2rem;
         color: #b8bbbf;
     }
+    .zbd_closeBtn{
+        background: -webkit-gradient(linear, left top, left bottom, from(#0CBBB9), to(#4AC6DC));
+        background: linear-gradient(to bottom, #0CBBB9 0%, #4AC6DC 100%);
+        line-height: 0.9rem;
+        font-size: 0.34rem;
+        color: #fff;
+        }
     .zbd-coupon{
         font-size:0.25rem;padding:0.1rem 0.1rem 0.3rem 0.3rem;
     }
