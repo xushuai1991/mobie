@@ -165,7 +165,7 @@ export default {
         //跳转订单详情
         toOrderDetail(ordernumber,index){
             this.$router.push('orderDeil?ordernumber='+ordernumber+'&index='+index);
-            sessionStorage.setItem('orderdetail',this.data);
+            sessionStorage.setItem('orderdetail',JSON.stringify(this.data));
         },
         //取消订单
         cancleOrder(){
