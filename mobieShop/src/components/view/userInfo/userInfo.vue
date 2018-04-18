@@ -65,28 +65,28 @@
                 <ul class="wait_for">
                     <li @click="myorder('willpay')">
                         <div class="img_wait">
-                            <i class="pay orageColor" v-if='num_orderwillpay!=0'>{{num_orderwillpay}}</i>
+                            <i class="pay orageColor" v-if='num_orderlist[0]!=0'>{{num_orderlist[0]}}</i>
                             <i class='icon iconfont icon-daifukuan fontSize'></i>
                         </div>
                         <p class="text_wait">待付款</p>
                     </li>
                     <li @click="myorder('willservice')">
                         <div class="img_wait">
-                            <i class="wait orageColor" v-if='num_orderwillservice!=0'>{{num_orderwillservice}}</i>
+                            <i class="wait orageColor" v-if='num_orderlist[1]!=0'>{{num_orderlist[1]}}</i>
                             <i class='icon iconfont icon-icondaifahuo fontSize'></i>
                         </div>
                         <p class="text_wait">待服务</p>
                     </li>
                     <li @click="myorder('inservice')">
                         <div class="img_wait ">
-                            <i class="receive orageColor" v-if='num_orderinservice!=0'>{{num_orderinservice}}</i>
+                            <i class="receive orageColor" v-if='num_orderlist[2]!=0'>{{num_orderlist[2]}}</i>
                             <i class='icon iconfont icon-ziyuan fontSize'></i>
                         </div>
                         <p class="text_wait">服务中</p>
                     </li>
                     <li @click="myorder('willevaluate')">
                         <div class="img_wait ">
-                            <i class="evaluate orageColor" v-if='num_orderwillevaluate!=0'>{{num_orderwillevaluate}}</i>
+                            <i class="evaluate orageColor" v-if='num_orderlist[3]!=0'>{{num_orderlist[3]}}</i>
                             <i class='icon iconfont icon-daipingjia fontSize'></i>
                         </div>
                         <p class="text_wait">待评价</p>
@@ -168,6 +168,7 @@
     import { Toast } from 'mint-ui';
     // import buttomNav from '@/components/common/buttomNav.vue'
     import {mapState} from 'vuex'
+    import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasdata.js'
     export default {
         prop: ['listLoading'],
         data() {
@@ -177,10 +178,11 @@
                 expiredPoints:0,
                 num_collection:0,
                 num_shopcar:0,
-                num_orderwillpay:0,
-                num_orderwillservice:0,
-                num_orderinservice:0,
-                num_orderwillevaluate:0,
+                num_orderlist:[0,0,0,0],
+                // num_orderwillpay:0,
+                // num_orderwillservice:0,
+                // num_orderinservice:0,
+                // num_orderwillevaluate:0,
                 memberId:'',
                 userinfo:{
                     id:'',
@@ -192,12 +194,26 @@
         },
         created() {
             // this.$root.$emit('header', '个人中心')
-            let userinfo_session=sessionStorage.getItem('userinfo');
-            if(userinfo_session!=null){
-                let data = JSON.parse(sessionStorage.getItem('userinfo'));
-                this.userinfo=data;
-                this.integral();
-            }
+            this.$root.$on('loadUserinfo',()=>{
+                let userinfo_location=operatelocalstorage('userinfo',null,'get',null);
+                console.log(userinfo_location);
+                if(userinfo_location!=null){
+                    let data = JSON.parse(userinfo_location);
+                    this.userinfo=data;
+                    this.integral();
+                    let data_willpay={payState:2};
+                    let data_willservice={payState:1,serviceState:1};
+                    let data_inservice={payState:1,serviceState:2};
+                    // 订单数量计算
+                    this.getNUmberOrder(data_willpay,0);
+                    this.getNUmberOrder(data_willservice,1);
+                    this.getNUmberOrder(data_inservice,2);
+                    this.getNUmberOrderEval(); 
+                    // 收藏数量
+                    this.getNumberFavorite();
+                }
+            });
+            
             
         },
         methods: {
@@ -266,23 +282,50 @@
                     }
                 }
             },
-            //查询订单数量
-            getNUmberOrder(data){
+            //查询订单数量（待付款，待服务，服务中）
+            getNUmberOrder(data,index){
                 let that=this;
-                this.$http.post('/api/product/order/mall/find?pageSize=0')
-                .then(res=>{
-                    if(res.data.status==200){
-                        return res.data.info.total;
-                    }
-                    else{
+                    this.$http.post('/api/product/order/mall/find?pageSize=0',data)
+                    .then(res=>{
+                        if(res.data.status==200){
+                            // console.log(res.data.info.size);
+                            let num=res.data.info.size
+                            that.num_orderlist[index]=num;
+                        }
+                        else{
+                            Toast(res.data.msg);
+                        }
+                        console.log(res);
+                    })
+                    .catch(err=>{
+                        console.log(err);
                         Toast(res.data.msg);
-                        return 0;
-                    }
+                    });
+                
+            },
+            //查询待评价订单数量
+            getNUmberOrderEval(){
+                let that=this;
+                this.$http.post('/api/product/order/mall/find/withoutEvaluate?pageSize=0',{})
+                .then(res=>{
+                    // that.num_orderlist[3]=
+                    console.log(res);
+                    // return 0;
+                })
+                .catch(err=>{
+                    console.log(err);
+                    // return 0;
+                })
+            },
+            // 查询总的收藏数
+            getNumberFavorite(){
+                let that=this;
+                this.$http.post('/api/product/commodity/favorite/queryPageList')
+                .then(res=>{
                     console.log(res);
                 })
                 .catch(err=>{
                     console.log(err);
-                    return 0;
                 });
             }
         },
@@ -344,6 +387,9 @@
             //         }
             //     }
             // })
+        },
+        beforeDestroy(){
+            this.$root.$off('loadUserinfo');
         }
     }
 </script>

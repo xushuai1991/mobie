@@ -216,7 +216,7 @@ import { Indicator } from 'mint-ui';
                     Indicator.open();
                 }
                 let that=this;
-                this.$http.post('/api/product/commodity/info/query?pageSize=10&page='+pagenum,
+                this.$http.post('/api/product/commodity/info/query/mall?pageSize=10&page='+pagenum,
                 {
                     isOnSale:true,
                     categoryId:this.classifyid,

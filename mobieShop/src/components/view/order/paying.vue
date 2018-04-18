@@ -46,7 +46,7 @@ export default {
         },
         pay(){
             let that=this;
-            // alert(this.orderNumber);
+            alert(this.orderNumber);
             
             this.$http.post('/api/product/order/weixin/pay',[this.orderNumber])
             .then(res=>{
@@ -64,6 +64,9 @@ export default {
                         };
                         // Toast(config.appId);
                         weixinPay(config);
+                    }
+                    else{
+                        Toast(res.data.info.desc);
                     }
                 }
                 else{

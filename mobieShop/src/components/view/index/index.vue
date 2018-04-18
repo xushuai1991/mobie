@@ -63,6 +63,7 @@ export default {
         }
     },
     created(){
+        // operatelocalstorage('userinfo',null,'get',null);
         let url=location.search;
         let companyid=this.getURLparms('company');
         let code=this.getURLparms('code');
@@ -198,6 +199,10 @@ export default {
                 }
                 case '购物车':{
                     this.$root.$emit('loadShopcar');
+                    break;
+                }
+                case '我的':{
+                    this.$root.$emit('loadUserinfo');
                     break;
                 }
                 default:{
