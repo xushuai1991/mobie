@@ -239,9 +239,12 @@
                         this.orderText = '';
                     }
                     this.list = orderStaty.orderDetails
-                    this.list.forEach((item)=>{
+                    if(this.list){
+                        this.list.forEach((item)=>{
                         item.refundShow = false
                     })
+                    }
+                    
                     // // this.list.refundShow=false
                     // console.log(this.list)
                 }).catch((error) => {

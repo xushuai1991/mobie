@@ -1,6 +1,6 @@
 <template>
     <div class='details'>
-        <div v-for='(item,indexs) in shopList' :key='indexs'>
+        <div v-for='(item,indexs) in dataArr' :key='indexs'>
             <div class='heardImg clearfloat'>
                 <div class='imgLeft'>
                     <img src='./sofa.jpg'>
@@ -12,22 +12,22 @@
                 </div>
             </div>
             <ul class='clearfloat Ulstar'>
-                <li :class="{li1:1,bg1:index%2}" v-for="(value,index) in item.list" :key="index">
+                <li :class="{li1:1,bg1:index%2}" v-for="(value,index) in item.shopList.list" :key="index">
                     <div v-for="(item,index1) in value.classs.zh" class="stu_div" :id="index" :key="index1">
                         <span class="stu_title">{{item.title}}</span>
                         <span class="stu_bgstar" :id="index1">
-                            <span class="stu_bgstar1 stu_bgstar3" :title="value.classs.title1"></span>
+                                    <span class="stu_bgstar1 stu_bgstar3" :title="value.classs.title1"></span>
                         <span class="stu_bgstar1 stu_bgstar3" :title="value.classs.title1"></span>
                         <span class="stu_bgstar1 stu_bgstar3" :title="value.classs.title1"></span>
                         <span class="stu_bgstar1 stu_bgstar3" :title="value.classs.title1"></span>
                         <span class="stu_bgstar1 stu_bgstar3" :title="value.classs.title1"></span>
                         </span>
-                        <span class="stu_bgstar2" @mousemove="pingjia($event,index1)" :title="value.classs.title1" @click="pingjia1($event,index1)" @mouseleave="pingjia2($event,index1)"></span>
+                        <span class="stu_bgstar2" @mousemove="pingjia($event,index1)" :title="value.classs.title1" @click="pingjia1($event,index1,indexs)" @mouseleave="pingjia2($event,index1)"></span>
                     </div>
                 </li>
             </ul>
             <ol class='commnet clearfloat'>
-                <li v-for='(items,markIndx) in item.textMark' :id='markIndx' :key='markIndx' @click='markTitle($event,indexs)'>{{items}}</li>
+                <li v-for='(items,markIndx) in item.textMark' :class='{ "active": items.active }' :id='items.id' :key='markIndx' @click='markTitle($event,indexs)'>{{items.text}}</li>
             </ol>
             <div class="shopCommnet">
                 <span>评价商品</span>
@@ -52,7 +52,7 @@
             </div>
         </div>
         <p>
-            <button class='saveInfo' @click="saveInfo">保存</button>
+            <button class='saveInfo' @click="saveInfo">提交</button>
         </p>
     </div>
 </template>
@@ -72,11 +72,12 @@
             return {　　
                 // 
                 isActive: '',
-                shopList: [{
+                dataArr:[],
+                shopList: {
                     name: '商品名称',
                     num: 18,
                     text: "家居保养沙发家居保养沙发家居保养沙发家居保养沙发",
-                    textMark: ['上门及时', '客服态度好', '客服态度好', '客服态度非常好'],
+                    textMark: [],
                     textMarkId: [],
                     MarkInfo: '',
                     list: [{
@@ -84,73 +85,32 @@
                             major: "数学",
                             title1: 0,
                             zh: [{
-                                    title: "形象态度",
-                                    d: 0,
-                                    lastD: 5
-                                },
-                                {
-                                    title: "服务质量",
-                                    d: 0,
-                                    lastD: 5
-                                }
-                            ],
+                                title: "服务质量",
+                                d: 0,
+                                lastD: 5
+                            }],
                             text: "好"
                         }
                     }],
                     imglist: [],
-                }, {
-                    name: '商品名称',
-                    num: 18,
-                    text: "家居保养沙发家居保养沙发家居保养沙发家居保养沙发",
-                    textMark: ['上门及时', '客服态度好', '客服态度好', '客服态度非常好'],
-                    textMarkId: [],
-                    MarkInfo: '',
-                    list: [{
-                        classs: {
-                            major: "数学",
-                            title1: 0,
-                            zh: [{
-                                    title: "形象态度",
-                                    d: 0,
-                                    lastD: 5
-                                },
-                                {
-                                    title: "服务质量",
-                                    d: 0,
-                                    lastD: 5
-                                }
-                            ],
-                            text: "好"
-                        }
-                    }],
-                    imglist: [],
-                }]　　　　
+                }　　
             }　　　　
         },
         methods: {　　
             getDataInfo() {
-                let url = '/api/product/commodity/info/queryMapByIds'; 
+                let url = '/api/product/commodity/info/queryMapByIds';
                 this.$http({
                         url: url,
                         method: 'POST',
                         // 请求体重发送的数据
-                        data: ["d9300732-3ad8-11e8-8c96-88d7f652f92c","bb561d8f-3ad8-11e8-8c86-88d7f652f92c"]
+                        data: ["d9300732-3ad8-11e8-8c96-88d7f652f92c", "bb561d8f-3ad8-11e8-8c86-88d7f652f92c"]
                     })
                     .then(res => {
-                        console.log(res)
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
-                     let Markurl = '/api/product/commodity/evaluation/label/queryByIds'; 
-                this.$http({
-                        url: Markurl,
-                        method: 'POST',
-                        // 请求体重发送的数据
-                        data: ["d9300732-3ad8-11e8-8c96-88d7f652f92c","bb561d8f-3ad8-11e8-8c86-88d7f652f92c"]
-                    })
-                    .then(res => {
-                        console.log(res)
+                        res.data.info.forEach((item,index)=>{
+                            item['shopList']= this.shopList
+                        })
+                        this.dataArr =  res.data.info
+                        console.log(this.dataArr)
                     })
                     .catch(err => {
                         console.log(err)
@@ -175,10 +135,13 @@
                     $event.target.previousElementSibling.children[0].classList.remove('stu_bgstar3');
                 }
             },
-            pingjia1($event, index1) {
+            pingjia1($event, index1,index2) {
+                let that = this;
                 let wei = $event.target.parentNode.id;
                 let b = $event.target.previousElementSibling.id;
                 this.shopList[index1].list[wei].classs.zh[b].lastD = this.shopList[index1].list[wei].classs.zh[b].d;
+                let level = this.shopList[index1].list[wei].classs.zh[b].lastD;
+                this.getMark(level,index2)
             },
             pingjia2($event, index1) {
                 let wei = $event.target.parentNode.id;
@@ -254,14 +217,14 @@
             },
             markTitle($event, indexs) { //编辑
                 if ($event.target.classList.value == 'active') {
-                    $event.target.classList.remove("active")
-                    Array.prototype.remove = function(val) {
-                        var index = this.indexOf(val);
-                        if (index > -1) {
-                            this.splice(index, 1);
-                        }
-                    };
-                    this.shopList[indexs].textMarkId.remove($event.target.id);
+                    // $event.target.classList.remove("active")
+                    // Array.prototype.remove = function(val) {
+                    //     var index = this.indexOf(val);
+                    //     if (index > -1) {
+                    //         this.splice(index, 1);
+                    //     }
+                    // };
+                    // this.shopList[indexs].textMarkId.remove($event.target.id);
                 } else {
                     $event.target.classList.add("active");
                     this.shopList[indexs].textMarkId.push($event.target.id);
@@ -283,10 +246,48 @@
                     console.log(item)
                     console.log(item.MarkInfo)
                 })
+            },
+            getMark(evele,index1) {
+                let that = this;
+                var getUserInfo = new Promise(function(resolve, reject) {
+                    let Markurl = '/api/product/commodity/evaluation/label/queryMap';
+                    that.$http({
+                            url: Markurl,
+                            method: 'POST',
+                            // 请求体重发送的数据
+                            data: {
+                                "level": evele ? evele : 5
+                            }
+                        })
+                        .then(res => {
+                            resolve(res)
+                        })
+                        .catch(err => {
+                            reject(data.err)
+                        })
+                })
+                getUserInfo.then(function(ResultJson) {
+                    let arr = [];
+                    ResultJson.data.info.forEach((item, index) => {
+                        that.shopList[index].textMarkId = []
+                        that.shopList[index].textMark = [];
+                        item.active=true
+                        arr.push(item)
+                        that.shopList[index].textMarkId.push(item.id)
+                    })
+
+                    that.shopList.forEach((item, index) => {
+                        item.textMark = arr
+                    })
+                   
+                }).catch(function(ErrMsg) {
+                    //获取数据失败时的处理逻辑
+                })
             }
         },
         created() {
-            this.getDataInfo()
+            this.getDataInfo();
+            this.getMark()
         }
     }
 </script>
