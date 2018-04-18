@@ -306,9 +306,11 @@
             //查询待评价订单数量
             getNUmberOrderEval(){
                 let that=this;
-                this.$http.post('/api/product/order/mall/find/withoutEvaluate?pageSize=0',{})
+                this.$http.post('/api/product/order/mall/find/withoutEvaluate?pageSize=1',{})
                 .then(res=>{
-                    // that.num_orderlist[3]=
+                    if(res.data.status==200){
+                        that.num_orderlist[3]=res.data.info.total;
+                    }
                     console.log(res);
                     // return 0;
                 })
@@ -322,6 +324,9 @@
                 let that=this;
                 this.$http.post('/api/product/commodity/favorite/queryPageList')
                 .then(res=>{
+                    if(res.data.status==200){
+                        this.num_collection=res.data.info.size;
+                    }
                     console.log(res);
                 })
                 .catch(err=>{

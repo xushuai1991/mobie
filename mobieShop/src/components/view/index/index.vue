@@ -50,7 +50,7 @@ import classifiCation from '@/components/view/classification/classification.vue'
 import shopCar from '@/components/view/userInfo/shopCar.vue'
 import userInfo from '@/components/view/userInfo/userInfo.vue'
 import { Toast } from 'mint-ui'; 
-
+import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasdata.js'
 
 export default {
     data(){
@@ -245,6 +245,12 @@ export default {
         shopCar,
         userInfo
     }
+    // beforeDestroy(){
+    //     let userinfo_location=operatelocalstorage('userinfo',null,'get',null);
+    //     if(userinfo_location!=null){
+    //         operatelocalstorage('userinfo',userinfo_location,'set',30);
+    //     }
+    // }
 }
 </script>
 <style> 

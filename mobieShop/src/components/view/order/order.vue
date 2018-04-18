@@ -109,40 +109,43 @@ export default {
         // this.getOrderList(3,{});
         this.$root.$emit('header','我的订单');
         this.selected=this.$route.params.type==undefined?'all':this.$route.params.type;
-        switch(this.selected){
-            //全部
-            case 'all':{
-                let data={};
-                this.getOrderList(1,data);
-                break;
-            }
-            // 待付款
-            case 'willpay':{
-                let data={payState:2};
-                this.getOrderList(1,data);
-                break;
-            }
-            //待服务
-            case 'willservice':{
-                let data={payState:1,serviceState:1};
-                this.getOrderList(1,data);
-                break;
-            }
-            //服务中
-            case 'inservice':{
-                let data={payState:1,serviceState:2};
-                this.getOrderList(1,data);
-                break;
-            }
-            //待评价
-            case 'willevaluate':{
-                this.getOrder_Willevaluate(1);
-                break;
-            }
-            default:{
-                break;
-            }
+        if(this.selected=='all'){
+            this.getOrderList(1,{});
         }
+        // switch(this.selected){
+        //     //全部
+        //     case 'all':{
+        //         let data={};
+        //         this.getOrderList(1,data);
+        //         break;
+        //     }
+        //     // 待付款
+        //     case 'willpay':{
+        //         let data={payState:2};
+        //         this.getOrderList(1,data);
+        //         break;
+        //     }
+        //     //待服务
+        //     case 'willservice':{
+        //         let data={payState:1,serviceState:1};
+        //         this.getOrderList(1,data);
+        //         break;
+        //     }
+        //     //服务中
+        //     case 'inservice':{
+        //         let data={payState:1,serviceState:2};
+        //         this.getOrderList(1,data);
+        //         break;
+        //     }
+        //     //待评价
+        //     case 'willevaluate':{
+        //         this.getOrder_Willevaluate(1);
+        //         break;
+        //     }
+        //     default:{
+        //         break;
+        //     }
+        // }
         // 对订单操作后，重新刷新对应tab下的数据
         this.$root.$on('loaddata',index=>{
             // console.log(index);
@@ -196,7 +199,6 @@ export default {
                     else{
                         this.loading1=this.dataover[0];
                     }
-                    
                     this.loading2=true;
                     this.loading3=true;
                     this.loading4=true;
@@ -325,6 +327,7 @@ export default {
             this.changeStatus(4,true);
             this.$http.post('/api/product/order/mall/find/withoutEvaluate?pageSize=5&&page='+pagenum,{})
             .then(res=>{
+                console.log(that.orderlist[4]);
                 if(res.data.status==200){
                     if(pagenum>=res.data.info.pages){
                         that.$set(that.dataover,4,true);
