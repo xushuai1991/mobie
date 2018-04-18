@@ -17,18 +17,7 @@
         </div>
         <div class="meaningless"></div>
         <div class="user_name" @click="handleClick(item)" v-for='(item,index) in userIfo' :key='index'>{{item.name}}<span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>
-        <!--<div class="true_name">真实姓名<span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>
-                                                        <div class="sex">性别<span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>
-                                                        <div class="meaningless "></div>
-                                                        <div class="contact">
-                                                            <div class="my_contact">联系方式
-                                                                <div class="check check_num"></div>
-                                                                <span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="address">地址<span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>
-                                                        <div class="meaningless "></div>
-                                                        <div class="account_safety">密码修改 <span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>!-->
+      
         <mt-popup v-model="popupVisible" position="right">
             <div class='userInfoBox'>
                 <h1>{{userName}}</h1>
@@ -49,7 +38,8 @@
     </section>
 </template>
 <script>
-import { Toast } from 'mint-ui'; 
+import { Toast } from 'mint-ui';
+import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasdata.js'
     import Exif from 'exif-js'
     export default {
         data() {
@@ -112,8 +102,13 @@ import { Toast } from 'mint-ui';
             },
             getUserInfo() {
                 let that = this;
-                let data = sessionStorage.getItem("userinfo");
+                let data = operatelocalstorage('userinfo',null,'get',null);
+                if(data==null){
+                    Toast('请登录！');
+                    return;
+                }
                 data = JSON.parse(data);
+                console.log(data);
                 let getdata = new Promise(function(rel, rej) {
                     let url = '/api/customer/account/query';
                     that.$http({
