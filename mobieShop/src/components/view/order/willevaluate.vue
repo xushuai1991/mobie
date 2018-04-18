@@ -63,6 +63,7 @@ export default {
         //跳转订单详情
         toOrderDetail(ordernumber,index){
             this.$router.push('orderDeil?ordernumber='+ordernumber+'&index='+index);
+            sessionStorage.setItem('orderdetail',this.data);
         },
     }
 }
