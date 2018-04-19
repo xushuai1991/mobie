@@ -192,7 +192,7 @@ import { Indicator } from 'mint-ui';
             // 获取商品分类
             getClassify(){
                 let that=this;
-                console.log(this.companyId);
+                // console.log(this.companyId);
                 this.$http.post('/api/product/commodity/category/query?pageSize=50',{companyId:this.companyId})
                 .then(res=>{
                     if(res.data.status==200){

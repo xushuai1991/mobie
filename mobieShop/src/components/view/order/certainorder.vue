@@ -276,15 +276,24 @@ export default {
                 this.deductionlist.push(json1);
             }
         });
-        let userinfo=JSON.parse(operatelocalstorage('userinfo',null,'get',null));
-        this.userinfo.id=userinfo.id;
-        this.userinfo.username=userinfo.nickname==null?'无昵称':userinfo.nickname;
-        this.userinfo.phone=userinfo.mobile;
-        this.userinfo.imgurl=userinfo.avatar;
-        this.userinfo.consumptionpoints=userinfo.consumptionPoints;
-        this.getDefaultaddress();
-        // console.log(userinfo);
-        this.getCouponcanuse();
+        let user_str=operatelocalstorage('userinfo',null,'get',null);
+        
+        if(user_str==null){
+            Toast('请先登录');
+        }
+        else{
+            let userinfo=JSON.parse(user_str);
+            this.userinfo.id=userinfo.id;
+            this.userinfo.username=userinfo.nickname==null?'无昵称':userinfo.nickname;
+            this.userinfo.phone=userinfo.mobile;
+            this.userinfo.imgurl=userinfo.avatar;
+            this.userinfo.consumptionpoints=userinfo.consumptionPoints;
+            this.getDefaultaddress();
+            // console.log(userinfo);
+            this.getCouponcanuse();
+        }
+        
+        
     },
     methods:{
         changeaddress(){
@@ -341,6 +350,9 @@ export default {
             let that=this;
             this.$http.post('/api/customer/address/queryMap',{customerId:this.userinfo.id})
             .then(res=>{
+                if(res.data.status==401){
+                    Toast('请先登录');
+                }
                 if(res.data.status==200){
                     for(let item of res.data.info){
                         if(item.isDefaultAddress){

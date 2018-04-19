@@ -21,7 +21,7 @@
                     <p>x{{item.saleNumber}}</p>
                 </div>
                 <!-- 服务类商品，添加预约时间功能 -->
-                <div class='appointment' v-if='false'>
+                <div class='appointment' v-if='item.commodityInfo.isService==true'>
                     <button  @click.stop="appointment(index)">预约时间</button>
                 </div>
             </div>
@@ -131,7 +131,8 @@ export default {
             this.popupVisible=true;
             this.currentindex=index;
         },
-        onValuesChange(values){
+        onValuesChange(picker,values){
+            console.log(values);
             this.datechange=values;
         },
         getdate(){
@@ -145,7 +146,9 @@ export default {
             else if(this.datechange[0]=='后天'){
                 day=new Date(day.setDate(day.getDate()+2)).format('yyyy-MM-dd');
             }
+            // console.log(this.datechange);
             let date=day+' '+this.datechange[1].substring(0,2) +':'+this.datechange[2].substring(0,2);
+            console.log(date);
             // this.data.time=date;
             // 修改服务时间
             let con1=this.data.orderDetails[this.currentindex].condition1Name;
