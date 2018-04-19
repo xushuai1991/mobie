@@ -82,11 +82,11 @@
                             </div>
                             <p class="zbd-commodityInfoNums">数量</p>
                             <div class="zbd-num">
-                                <div class="zbd-numLess">-</div>
-                                <input type="number" class="zbd-numInput" v-model="specificationNum">
-                                <div class="zbd-numPlus">+</div>
+                                <div class="zbd-numLess" :class="numLessBackground?'numLessNo':'numLessYes'" @click="lessClick">-</div>
+                                <input type="number" @change="numInputChange" class="zbd-numInput" v-model="specificationNum">
+                                <div class="zbd-numPlus" @click="plusClick">+</div>
                             </div>
-                            <div  class="zbd-Confirmation"><p>确认</p></div>
+                            <div class="zbd-Confirmation"><p>确认</p></div>
                         </mt-popup>
                         <mt-popup v-model="shareVisible" position="bottom" style='width:100%;'>
                             <div class='closeBtn' @click="btnClose">分享</div>
@@ -99,7 +99,7 @@
                                         <p>{{item.couponInfo.couponMoney}}元</p>
                                         <p>{{item.couponInfo.couponName}}</p>
                                         <p>使用期限 {{item.couponInfo.starTime.split(" ")[0]}}—{{item.couponInfo.endTime.split(" ")[0]}}</p>
-                                    </div><button @click='okcoupon(item.id)'>领取</button>
+                                    </div><button @click='okcoupon(item.couponId)'>领取</button>
                                 </li>
                             </ul>
                             <div class='zbd_closeBtn' @click="closeCoupon">关闭</div>
@@ -168,12 +168,13 @@
                             <div v-show="shopCarNumShow" style="position: absolute;
                             top: 0.04rem;
                             right: 0.2rem;
-                            width: 0.28rem;
+                                padding: 0.02rem;
+                                min-width: 0.28rem;
                             height: 0.28rem;
                             line-height: 0.28rem;
                             border-radius: 25px;
                             background: #ff2500;
-                            color: #fff;">{{ shopNum }}</div>
+                            color: #fff;">{{ shopNum>=100?"99+":shopNum }}</div>
                     </li>
                     <li @click='addShopCar'>
                         <p>加入购物车</p>
@@ -232,7 +233,8 @@
                 couponShow:false,
                 shopNum:'',
                 shopCarNumShow:false,
-                specificationNum:'1',
+                specificationNum:1,
+                numLessBackground:true,
                 commodityId:'',
                 customerId:'',
                 starXingXing:{
@@ -439,15 +441,6 @@
             });
             
             //根据商品ID 查询相关优惠券列表
-            //  this.$http.post('/api/product/coupon/commodity/find/mall',{
-            //     "commodityId":that.commodityId
-            // })
-            // .then(function(response){
-            //     console.log(response)
-            // })
-            // .catch(function(response){
-            //     console.log(response)
-            // });
             let getcouponData = new Promise(function(rel,rej){
                 let url = '/api/product/coupon/commodity/find/mall';
                 that.$http({
@@ -572,7 +565,7 @@
                     console.log(commodityId)
                     let customerId = this.customerId
                     console.log(customerId)
-                    let commodityCount = 1
+                    let commodityCount = this.specificationNum
                     console.log(commodityCount)
                      let that=this;
                     this.$http.post('/api/product/shoppingCart/insertOne',
@@ -592,6 +585,11 @@
                         }
                         );
                        }else{
+                           Toast({
+                                message:'加入购物车成功',
+                                duration:500
+                            }
+                            );
                            that.$http.post('/api/product/shoppingCart/myShoppingCart',{})
                             .then(function(response){
                                 console.log(response)
@@ -701,6 +699,38 @@
                         this.loading = false;
                         this.commentLoading = false
                     }, 2500);
+                },
+                lessClick(){
+                    if(this.specificationNum == 1){
+                        this.numLessBackground = true
+                        return false
+                    }else if(this.specificationNum > 1){
+                        this.numLessBackground = false
+                        this.specificationNum = this.specificationNum - 1
+                        if(this.specificationNum == 1){
+                            this.numLessBackground = true
+                            return false
+                        }
+                    }
+                },
+                plusClick(){
+                    if(this.specificationNum == 1){
+                        this.numLessBackground = true
+                        this.specificationNum++
+                        if(this.specificationNum > 1){
+                            this.numLessBackground = false
+                        }
+                    }else if(this.specificationNum > 1){
+                        this.numLessBackground = false
+                        this.specificationNum++
+                    }
+                },
+                numInputChange(){
+                    if(this.specificationNum == 1){
+                        this.numLessBackground = true
+                    }else if(this.specificationNum > 1){
+                        this.numLessBackground = false
+                    }
                 },
                 buyNow(){
                     localStorage.setItem('commodityInfo','11')
@@ -862,6 +892,8 @@
     margin-top: 0.2rem;}
 </style>
 <style lang="less" scoped>
+   .numLessNo{background-color: #f3f1f1;}
+   .numLessYes{background-color: #ffffff;}
     #detailTemplatePage{
         margin-top:1rem;
     }
@@ -1101,7 +1133,9 @@
     height: 0.43rem;
     margin-left: 0.1rem;
     margin-right: 0.1rem;
-    text-align: center;}
+    text-align: center;
+    -webkit-appearance: none;
+    }
     .zbd-numPlus{float: left;
     font-size: 0.35rem;
     color: #ff3b30;
