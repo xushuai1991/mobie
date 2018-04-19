@@ -198,8 +198,11 @@
             }
         },
         created() {
-            
+            if(this.getURLparms("name")){
+                this.getCarData();
+            }
             this.$root.$on('loadShopcar',()=>{
+                alert(1)
                 // 首次进入购物车页面，加载商品信息
                 if(this.list.length==0){
                     this.getCarData();
@@ -207,6 +210,13 @@
             });
         },
         methods: {
+            getURLparms(name){
+                    let reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+                    let r = location.search.substr(1).match(reg);
+                    if(r!=null)
+                    return unescape(r[2]);
+                    return null;
+                },
             addDay(dayNumber, date) {
                 date = date ? date : new Date();
                 var ms = dayNumber * (1000 * 60 * 60 * 24)

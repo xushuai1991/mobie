@@ -551,7 +551,8 @@
                                     }
                                     );
                                 }else{
-                                    that.$router.push('./shopCar')
+                                    // that.$root.$emit('loadShopcar');
+                                    that.$router.push({path:'./shopCar',query:{name:'templatePages'}})
                                 }
                             })
                             .catch(function(response){
