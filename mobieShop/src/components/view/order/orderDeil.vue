@@ -1,18 +1,18 @@
 <template>
     <div class='CmyOveroderDeil'>
         <!--<ul v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
-                                                            <li v-for="item in list">{{ item }}</li>
-                                                        </ul>!-->
+                                                                        <li v-for="item in list">{{ item }}</li>
+                                                                    </ul>!-->
         <section>
             <div class="wrap2">
                 <div class='tiemBox'>
                     <p>{{ orderState}}</p>
                     <p v-if='orderState=="等待买家支付"'>
                         <span :endTime="endTime" :callback="callback" :endText="endText">
-                                                <slot>
-                                                    {{content}}
-                                                </slot>
-                                            </span></p>
+                                                            <slot>
+                                                                {{content}}
+                                                            </slot>
+                                                        </span></p>
                     <p v-else>
                         {{orderText}}
                     </p>
@@ -51,8 +51,8 @@
                                                     数量:<input type="number" disabled :value="item.saleNumber" style='background:#fff;margint-top:0.2rem;' />
                                                 </div>
                                                 <!--<span class="mui_shopcar_del" @click="remove(index,indexs)">
-                                                                                                <i class='icon iconfont icon-lajitong'></i>
-                                                                                            </span>!-->
+                                                                                                            <i class='icon iconfont icon-lajitong'></i>
+                                                                                                        </span>!-->
                                             </li>
                                         </ul>
                                         <div class='refundDetail' v-show='refundOrder'>
@@ -81,9 +81,8 @@
                                                     数量:<input type="number" disabled :value="items.saleNumber" style='background:#fff;margint-top:0.2rem;' />
                                                 </div>
                                                 <!--<span class="mui_shopcar_del" @click="remove(index,indexs)">
-                                                                                                <i class='icon iconfont icon-lajitong'></i>
-                                                                                            </span>!-->
-                                               
+                                                                                                            <i class='icon iconfont icon-lajitong'></i>
+                                                                                                        </span>!-->
                                             </li>
                                         </ul>
                                         <!--</mt-cell-swipe>!-->
@@ -112,12 +111,12 @@
             <input type='button' class='delBtn' v-show=showBtn3 @click='delOrder(number)' value='删除订单'>
             <input type='button' class='delBtn' v-show=showBtn4 @click='delOrder(number)' value='订单退款'>
             <input type='button' class='delBtn' v-show=showBtn6 @click='delOrder(number)' value='取消退款'>
-            <input type='button'  v-show=showBtn5 @click='delOrder(number)' value='确认收货'>
+            <input type='button' v-show=showBtn5 @click='delOrder(number)' value='确认收货'>
+            <input type='button' v-show=showBtn7 @click='delOrder(number)' value='评价订单'>
         </div>
     </div>
 </template>
 <script>
-    
     import {
         Toast
     } from 'mint-ui';
@@ -132,7 +131,7 @@
                 orderStaty: '',
                 orderMoney: '',
                 actualMoney: '',
-                companyId:'',
+                companyId: '',
                 orderState: '',
                 uerName: '',
                 userPhone: '',
@@ -148,8 +147,9 @@
                 showBtn4: false, //关闭按钮，
                 showBtn5: false, //关闭按钮，
                 showBtn6: false, //关闭按钮，
+                showBtn7: false, //关闭按钮，
                 // refundShow:false,//退款显示，
-                refundOrder:false
+                refundOrder: false
             }
         },
         props: {
@@ -167,89 +167,112 @@
             }
         },
         methods: {
-            refundButton($event, indexs){
-              if($event.currentTarget.nextElementSibling.classList.value == 'hiddles'){
-                  $event.currentTarget.nextElementSibling.classList.remove("hiddles")
-              }else{
-                   $event.currentTarget.nextElementSibling.classList.add("hiddles")
-              }
+            refundButton($event, indexs) {
+                if ($event.currentTarget.nextElementSibling.classList.value == 'hiddles') {
+                    $event.currentTarget.nextElementSibling.classList.remove("hiddles")
+                } else {
+                    $event.currentTarget.nextElementSibling.classList.add("hiddles")
+                }
             },
-            goShopDateil(item){
-               this.$router.push({name:'detailTemplate',query:{commodityId:item.commodityId,companyId:item.companyId}});
+            goShopDateil(item) {
+                this.$router.push({
+                    name: 'detailTemplate',
+                    query: {
+                        commodityId: item.commodityId,
+                        companyId: item.companyId
+                    }
+                });
             },
             getDate(ordernumber) {
-                let url = '/api/product/order/mall/find';
-                this.$http({
-                    url: url,
-                    method: 'post',
-                    data: {
-                        "number": ordernumber
+                let orderdetail = sessionStorage.getItem("orderdetail");
+                let orderdetails = JSON.parse(orderdetail)
+                console.log(orderdetails)
+                // let url = '/api/product/order/mall/find';
+                // this.$http({
+                //     url: url,
+                //     method: 'post',
+                //     data: {
+                //         "number": ordernumber
+                //     }
+                // }).then((res) => {
+                //     if ( res.data.info.list.length==0 || res.data.status != 200) {
+                //         Toast('订单有问题请联系客服')
+                //         return false
+                //     }
+                let orderStaty = orderdetails;
+                console.log(orderStaty)
+                this.uerName = orderStaty.name;
+                this.userPhone = orderStaty.phone
+                this.userAdd = orderStaty.detailAddress
+                this.orderMoney = orderStaty.orderMoney
+                this.actualMoney = orderStaty.actualMoney
+                this.companyId = orderStaty.companyId
+                this.createTime = orderStaty.createTime
+                this.number = orderStaty.number
+                console.log(orderStaty)
+                if (orderStaty.payState == 1) {
+                    //卖家付款过的
+                    this.orderState = '已支付等待卖家发货'
+                    this.orderText = '亲,请耐心能等待';
+                    // if (orderStaty.orderState == 2) {
+                    //     this.showBtn4 = true, //退款
+                    //         this.showBtn5 = true; //确认收货
+                    //     this.orderState = '已支付等待卖家发货'
+                    //     this.orderText = '亲,请耐心能等待';
+                    // }
+                    // if (orderStaty.orderState == 4) {
+                    //     this.showBtn6 = true, //取消退款
+                    //         this.showBtn5 = true; //立即付款按钮
+                    //     this.orderState = '退款中...'
+                    //     this.orderText = '亲,请耐心能等待';
+                    //     this.refundOrder = true
+                    // }
+                    if(orderStaty.serviceState==1){
+                        this.orderState = '等待服务'
                     }
-                }).then((res) => {
-                   console.log(res)
-                    if ( res.data.info.list.length==0 || res.data.status != 200) {
-                        Toast('订单有问题请联系客服')
-                        return false
+                    if(orderStaty.serviceState==2){
+                        this.orderState = '服务中...'
                     }
-                    let orderStaty = res.data.info.list[0];
-                    this.uerName = orderStaty.name;
-                    this.userPhone = orderStaty.phone
-                    this.userAdd = orderStaty.detailAddress
-                    this.orderMoney = orderStaty.orderMoney
-                    this.actualMoney = orderStaty.actualMoney
-                    this.companyId = orderStaty.companyId
-                    this.createTime = orderStaty.createTime
-                    this.number = orderStaty.number
-                    console.log(orderStaty)
-                    if (orderStaty.payState == 1) {
-                        this.orderState = '已支付等待卖家发货'
-                        this.orderText = '亲,请耐心能等待';
-                    } else if (orderStaty.payState == 2) {
-                        this.orderState = '等待买家支付'
-                        this.countdowm((this.timestampToTime((new Date(res.data.info.list[0].createTime).getTime() / 1000) + (24 * 60 * 60)))) //时间戳加24小时;
-                    } else if (orderStaty.payState == 3) {
-                        this.orderState = '订单已过期'
-                        this.orderText = '订单已过期';
+                    if(orderStaty.serviceState==3){
+                        this.orderState = '服务中...'
                     }
+                    if (orderStaty.orderState == 5) {
+                        // this.showBtn3 = true; //删除订单
+                        this.orderState = '退款完成'
+                         this.orderText = '';
+                    }
+                } else if (orderStaty.payState == 2) {
+                    //卖家未付款
+                    this.orderState = '等待买家支付'
+                    this.countdowm((this.timestampToTime((new Date(orderStaty.createTime).getTime() / 1000) + (24 * 60 * 60)))) //时间戳加24小时;
                     if (orderStaty.orderState == 1) {
                         this.showBtn1 = true, //取消按钮
                         this.showBtn2 = true; //立即付款按钮
                     }
-                    if (orderStaty.orderState == 2) {
-                        this.showBtn4 = true, //取消按钮
-                        this.showBtn5 = true; //立即付款按钮
-                         this.orderState = '已支付等待卖家发货'
-                         this.orderText = '亲,请耐心能等待';
+                } else if (orderStaty.payState == 3) {
+                    //过去订单只能删除
+                    this.orderState = '订单已过期'
+                    this.orderText = '订单已过期';
+                    if (orderStaty.orderState == 1) {
+                        this.showBtn3 = true; //删除订单
                     }
-                    if (orderStaty.orderState == 4) {
-                        this.showBtn6 = true, //取消按钮
-                        this.showBtn5 = true; //立即付款按钮
-                         this.orderState = '退款中...'
-                         this.orderText = '亲,请耐心能等待';
-                         this.refundOrder = true
-                    }
-                    if (orderStaty.orderState == 5) {
-                        this.showBtn3 = true; //立即付款按钮
-                         this.orderState = '退款完成'
-                        //  this.orderText = '';
-                    }
-                    if (orderStaty.orderState == 6) {
-                        this.orderState = '交易关闭'
-                        this.showBtn3 = true
-                        this.orderText = '';
-                    }
-                    this.list = orderStaty.orderDetails
-                    if(this.list){
-                        this.list.forEach((item)=>{
+                }
+                // if (orderStaty.orderState == 6) {
+                //     this.orderState = '交易关闭'
+                //     this.showBtn3 = true
+                //     this.orderText = '';
+                // }
+                this.list = orderStaty.orderDetails
+                if (this.list) {
+                    this.list.forEach((item) => {
                         item.refundShow = false
                     })
-                    }
-                    
-                    // // this.list.refundShow=false
-                    // console.log(this.list)
-                }).catch((error) => {
-                    console.log(error)
-                })
+                }
+                // // this.list.refundShow=false
+                // console.log(this.list)
+                // }).catch((error) => {
+                //     console.log(error)
+                // })
             },
             delOrder(order) {
                 let url = '/api/product/order/mall/update';
@@ -300,13 +323,18 @@
                     console.log(err)
                 })
             },
-            playOrder(order, actualMoney,companyId) { //支付订单
+            playOrder(order, actualMoney, companyId) { //支付订单
                 let objs = {
-                    "order":order,
-                    'actualMoney':actualMoney,
-                    'companyId':companyId
+                    "order": order,
+                    'actualMoney': actualMoney,
+                    'companyId': companyId
                 }
-                this.$router.push({'name':'paying',params:{dataObj:objs}});
+                this.$router.push({
+                    'name': 'paying',
+                    params: {
+                        dataObj: objs
+                    }
+                });
             },
             copy() {
                 var clipboard = new Clipboard('.tag-read')
@@ -386,7 +414,6 @@
         },
         created() {
             this.getDate(this.urlArgs().ordernumber)
-           
         },
     }
 </script>
@@ -407,25 +434,27 @@
     }
 </style>
 <style scoped lang='less'>
-    .hiddles{
-        display:none;
+    .hiddles {
+        display: none;
     }
-    .refundDetail{
-        font-size:0.25rem;
-        text-align:right;
-        padding-right:0.2rem;
-        line-height:0.6rem;
-        button{
-            border:none;
-            padding:0.1rem 0.2rem;
-            outline: none; 
-            border-radius:0.1rem;
-            background:#fff;
-            border:1px solid #ddd;
+    .refundDetail {
+        font-size: 0.25rem;
+        text-align: right;
+        padding-right: 0.2rem;
+        line-height: 0.6rem;
+        button {
+            border: none;
+            padding: 0.1rem 0.2rem;
+            outline: none;
+            border-radius: 0.1rem;
+            background: #fff;
+            border: 1px solid #ddd;
         }
     }
-    .markOrder .delBtn{
-        background:#fff;border:1px solid #ddd; color:#000;
+    .markOrder .delBtn {
+        background: #fff;
+        border: 1px solid #ddd;
+        color: #000;
     }
     .moneyColor {
         color: #f38650;
