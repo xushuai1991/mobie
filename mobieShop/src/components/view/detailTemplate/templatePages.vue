@@ -253,7 +253,7 @@
         created(){
             this.$root.$emit('header','商品详情');
             //客户ID 
-            let customer = sessionStorage.getItem('userinfo')
+            let customer = localStorage.getItem('userinfo')
             this.customerId = JSON.parse(customer).id
 
             //console.log(this.comlist)
