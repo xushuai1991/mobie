@@ -41,7 +41,7 @@
                                 </div>
                                 <p class="text_wait">收藏 <span class="coller">{{num_collection}}</span></p>
                             </li>
-                            <li class="shopCar">
+                            <li class="shopCar" @click="toShopCar">
                                 <div class="collect">
                                     <i class='icon iconfont icon-gouwuche coloBule'></i>
                                 </div>
@@ -196,7 +196,7 @@
             // this.$root.$emit('header', '个人中心')
             this.$root.$on('loadUserinfo',()=>{
                 let userinfo_location=operatelocalstorage('userinfo',null,'get',null);
-                console.log(userinfo_location);
+                // console.log(userinfo_location);
                 if(userinfo_location!=null){
                     let data = JSON.parse(userinfo_location);
                     this.userinfo=data;
@@ -211,10 +211,10 @@
                     this.getNUmberOrderEval(); 
                     // 收藏数量
                     this.getNumberFavorite();
+                    // 购物车数量
+                    this.getNumberShopcar();
                 }
             });
-            
-            
         },
         methods: {
             integral(){
@@ -233,17 +233,6 @@
                     console.log(err)
                 })
             },
-            // 获取个人信息
-            // getinfo() {
-            //     this.$http.post('/api/customer/account/register', {
-            //         mobile: that.phone,
-            //         password: that.psw,
-            //         code: that.code
-            //     })
-            // },
-            // goback(){
-            //     this.$router.go(-1);
-            // },
             myorder(type){
                 //未登录，提示先登录
                 if(this.userinfo.id==''){
@@ -325,13 +314,36 @@
                 this.$http.post('/api/product/commodity/favorite/queryPageList')
                 .then(res=>{
                     if(res.data.status==200){
-                        this.num_collection=res.data.info.size;
+                        this.num_collection=res.data.info.total;
                     }
                     console.log(res);
                 })
                 .catch(err=>{
                     console.log(err);
                 });
+            },
+            // 查询购物车内商品数量
+            getNumberShopcar(){
+                let that=this;
+                this.$http.post('/api/product/shoppingCart/query',{customerId:this.userinfo.id})
+                .then(res=>{
+                    if(res.data.status==200){
+                        this.num_shopcar=res.data.info.total;
+                    }
+                    console.log(res);
+                })
+                .catch(err=>{
+                    console.log(err);
+                });
+            },
+            toShopCar(){
+                if(this.userinfo.id==''){
+                    Toast('请先登录！');
+                }
+                else{
+                    this.$root.$emit('switchindex','shopcar');
+                }
+                
             }
         },
         mounted() {

@@ -63,7 +63,6 @@ export default {
         }
     },
     created(){
-        // operatelocalstorage('userinfo',null,'get',null);
         let url=location.search;
         let companyid=this.getURLparms('company');
         let code=this.getURLparms('code');
@@ -79,6 +78,7 @@ export default {
             }
         }
         let direct=this.$route.params.direct;
+        
         // console.log(direct==undefined);
         if(direct!=undefined){
             // console.log(111);
@@ -91,11 +91,36 @@ export default {
                     this.selected='我的';
                     break;
                 }
+                case 'shopcar':{
+                    alert(111);
+                    this.selected='购物车';
+                    break;
+                }
                 default:{
                     break;
                 }
             }
         }
+        this.$root.$on('switchindex',data=>{
+            switch(data){
+                case 'commodity':{
+                    this.selected='分类';
+                    break;
+                }
+                case 'userinfo':{
+                    this.selected='我的';
+                    break;
+                }
+                case 'shopcar':{
+                    alert(111);
+                    this.selected='购物车';
+                    break;
+                }
+                default:{
+                    break;
+                }
+            }
+        });
         // 浏览状态（PC浏览）：根据'ID'和'商城模板类型'查询首页模板数据  。并将默认首页设置消失  isTrue = true
         let isBrowse;
         if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
@@ -244,13 +269,14 @@ export default {
         classifiCation,
         shopCar,
         userInfo
+    },
+    beforeDestroy(){
+        this.$root.$off('switchindex');
+        // let userinfo_location=operatelocalstorage('userinfo',null,'get',null);
+        // if(userinfo_location!=null){
+        //     operatelocalstorage('userinfo',userinfo_location,'set',30);
+        // }
     }
-    // beforeDestroy(){
-    //     let userinfo_location=operatelocalstorage('userinfo',null,'get',null);
-    //     if(userinfo_location!=null){
-    //         operatelocalstorage('userinfo',userinfo_location,'set',30);
-    //     }
-    // }
 }
 </script>
 <style> 
