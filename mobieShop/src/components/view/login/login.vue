@@ -91,6 +91,7 @@
 import {checkClass} from '../../../assets/javascript/checkClass.js'
 import { Toast } from 'mint-ui'
 import { Indicator } from 'mint-ui';
+import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasdata.js'
 export default {
     data(){
         return {
@@ -127,11 +128,7 @@ export default {
         this.yzn();
     },
     // created(){
-    //     let from=this.$route.params.from;
-    //     if(from!=null){
-    //         this.to=from;
-    //     }
-    //     console.log(params);
+    //     operatelocalstorage(1,1,20);
     // },
     methods:{
         // 登录
@@ -163,7 +160,11 @@ export default {
                         Toast(res.data.info);
                     } else {
                         let data=res.data.info;
-                        sessionStorage.setItem('userinfo', JSON.stringify(data));
+                        let json={
+
+                        };
+                        operatelocalstorage('userinfo',JSON.stringify(data),'set',30);
+                        // sessionStorage.setItem('userinfo', JSON.stringify(data));
                         // this.$store.commit('login',res.data.info)
                         // let userinfo = res.data
                         // sessionStorage.setItem('userinfo', JSON.stringify(data));
@@ -213,7 +214,8 @@ export default {
                         Indicator.close();
                         if(response.data.status == 200){
                             let data=response.data.info;
-                            sessionStorage.setItem('userinfo', JSON.stringify(data));
+                            operatelocalstorage('userinfo',JSON.stringify(data),'set',30);
+                            // sessionStorage.setItem('userinfo', JSON.stringify(data));
                             // that.$store.commit('login',response.data.info)
                             // this.cleardata();
                             // this.$store.commit('login',res.data)

@@ -25,6 +25,7 @@
     </div>
 </template>
 <script>
+import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasdata.js'
     export default {
         data() {
             return {
@@ -113,8 +114,9 @@
                 })
             },
             getAddInfo() {
-                let data = sessionStorage.getItem("userinfo");
+                let data = operatelocalstorage('userinfo',null,'get',null);
                 data = JSON.parse(data);
+                // console.log(data);
                 let url = '/api/customer/address/query';
                 this.$http({
                     url: url,
@@ -123,7 +125,6 @@
                         'customerId': data.id
                     }
                 }).then(res => {
-
                     this.list = res.data.info.list
                     this.listpages = res.data.info.pages;
                     // console.log(res.data.info.list.isDefaultAddress)
