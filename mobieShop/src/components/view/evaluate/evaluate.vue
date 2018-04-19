@@ -7,8 +7,9 @@
                 </div>
                 <div class='textInfo'>
                     <div class='clearfloat'>
-                        <h3 class='floatLeft'>{{item.name}}</h3> <span class='floatRight'>￥{{item.num}}</span></div>
+                        <h3 class='floatLeft'>{{item.name}}</h3> <span class='floatRight'>￥{{item.price}}</span></div>
                     <p>{{item.text}}</p>
+                    <p class='floatNum'>{{item.serviceState}}</p>
                 </div>
             </div>
             <ul class='clearfloat Ulstar'>
@@ -16,7 +17,7 @@
                     <div v-for="(item,index1) in value.classs.zh" class="stu_div" :id="index" :key="index1">
                         <span class="stu_title">{{item.title}}</span>
                         <span class="stu_bgstar" :id="index1">
-                                    <span class="stu_bgstar1 stu_bgstar3" :title="value.classs.title1"></span>
+                                <span class="stu_bgstar1 stu_bgstar3" :title="value.classs.title1"></span>
                         <span class="stu_bgstar1 stu_bgstar3" :title="value.classs.title1"></span>
                         <span class="stu_bgstar1 stu_bgstar3" :title="value.classs.title1"></span>
                         <span class="stu_bgstar1 stu_bgstar3" :title="value.classs.title1"></span>
@@ -27,11 +28,11 @@
                 </li>
             </ul>
             <ol class='commnet clearfloat'>
-                <li v-for='(items,markIndx) in item.textMark' :class='{ "active": items.active }' :id='items.id' :key='markIndx' @click='markTitle($event,indexs)'>{{items.text}}</li>
+                <li v-for='(items,markIndx) in item.shopList.textMark' :class='{ "active": items.active }' :id='items.id' :key='markIndx' @click='markTitle($event,indexs)'>{{items.text}}</li>
             </ol>
             <div class="shopCommnet">
                 <span>评价商品</span>
-                <textarea class='MarkInfo' v-model='item.MarkInfo'></textarea>
+                <textarea class='MarkInfo' v-model='item.shopList.MarkInfo'></textarea>
             </div>
             <div class='uploadimg'>
                 <p>上传凭证</p>
@@ -44,7 +45,7 @@
                             <p>（最多5张）</p>
                         </div>
                     </li>
-                    <li v-for='(item,index) in item.imglist' :key='index'>
+                    <li v-for='(item,index) in item.shopList.imglist' :key='index'>
                         <i class='icon iconfont icon-close close' @click='removeImg(index,indexs)'></i>
                         <img :src="item.imgurl" alt="图片丢失">
                     </li>
@@ -72,49 +73,44 @@
             return {　　
                 // 
                 isActive: '',
-                dataArr:[],
-                shopList: {
-                    name: '商品名称',
-                    num: 18,
-                    text: "家居保养沙发家居保养沙发家居保养沙发家居保养沙发",
-                    textMark: [],
-                    textMarkId: [],
-                    MarkInfo: '',
-                    list: [{
-                        classs: {
-                            major: "数学",
-                            title1: 0,
-                            zh: [{
-                                title: "服务质量",
-                                d: 0,
-                                lastD: 5
-                            }],
-                            text: "好"
-                        }
-                    }],
-                    imglist: [],
-                }　　
+                dataArr: [],
+                shopList: {}　　
             }　　　　
         },
         methods: {　　
             getDataInfo() {
-                let url = '/api/product/commodity/info/queryMapByIds';
-                this.$http({
-                        url: url,
-                        method: 'POST',
-                        // 请求体重发送的数据
-                        data: ["d9300732-3ad8-11e8-8c96-88d7f652f92c", "bb561d8f-3ad8-11e8-8c86-88d7f652f92c"]
-                    })
-                    .then(res => {
-                        res.data.info.forEach((item,index)=>{
-                            item['shopList']= this.shopList
-                        })
-                        this.dataArr =  res.data.info
-                        console.log(this.dataArr)
-                    })
-                    .catch(err => {
-                        console.log(err)
-                    })
+                //获取订单详情
+                let orderdetail = JSON.parse(sessionStorage.getItem("orderdetail"));
+                orderdetail.orderDetails.forEach((item, index) => {
+                    let shopList = {
+                        name: '商品名称',
+                        num: 18,
+                        text: "家居保养沙发家居保养沙发家居保养沙发家居保养沙发",
+                        textMark: [],
+                        textMarkId: [],
+                        MarkInfo: '',
+                        list: [{
+                            classs: {
+                                major: "数学",
+                                title1: 0,
+                                zh: [{
+                                    title: "服务质量",
+                                    d: 0,
+                                    lastD: 5
+                                }],
+                                text: "好"
+                            }
+                        }],
+                        imglist: [],
+                    }
+                    item['shopList'] = shopList
+                })
+                orderdetail.orderDetails.forEach((item, index) => {
+                    console.log(item)
+                    if (item.evaluation == null) {
+                        this.dataArr.push(item)
+                    }
+                })
             },
             　　
             pingjia($event, index1) {
@@ -122,10 +118,10 @@
                 let b = $event.target.previousElementSibling.id;
                 let a = parseInt($event.offsetX / 200 * 100);
                 let c = parseFloat($event.offsetX / 38);
-                this.shopList[index1].list[wei].classs.zh[b].d = Math.ceil(c);
-                this.shopList[index1].list[wei].classs.title1 = a;
+                this.dataArr[index1].shopList.list[wei].classs.zh[b].d = Math.ceil(c);
+                this.dataArr[index1].shopList.list[wei].classs.title1 = a;
                 for (let i = 0; i < 5; i++) {
-                    if (i < this.shopList[index1].list[wei].classs.zh[b].d) {
+                    if (i < this.dataArr[index1].shopList.list[wei].classs.zh[b].d) {
                         $event.target.previousElementSibling.children[i].classList.add('stu_bgstar3');
                     } else {
                         $event.target.previousElementSibling.children[i].classList.remove('stu_bgstar3');
@@ -135,19 +131,51 @@
                     $event.target.previousElementSibling.children[0].classList.remove('stu_bgstar3');
                 }
             },
-            pingjia1($event, index1,index2) {
+            pingjia1($event, index1, index2) {
                 let that = this;
                 let wei = $event.target.parentNode.id;
                 let b = $event.target.previousElementSibling.id;
-                this.shopList[index1].list[wei].classs.zh[b].lastD = this.shopList[index1].list[wei].classs.zh[b].d;
-                let level = this.shopList[index1].list[wei].classs.zh[b].lastD;
-                this.getMark(level,index2)
+                this.dataArr[index1].shopList.list[wei].classs.zh[b].lastD = this.dataArr[index1].shopList.list[wei].classs.zh[b].d;
+                let level = this.dataArr[index1].shopList.list[wei].classs.zh[b].lastD;
+                var getUserInfo = new Promise(function(resolve, reject) {
+                    let Markurl = '/api/product/commodity/evaluation/label/queryMap';
+                    that.$http({
+                            url: Markurl,
+                            method: 'POST',
+                            // 请求体重发送的数据
+                            data: {
+                                "level": level ? level : 5
+                            }
+                        })
+                        .then(res => {
+                            resolve(res)
+                        })
+                        .catch(err => {
+                            reject(err)
+                        })
+                })
+                getUserInfo.then(function(ResultJson) {
+                    let arr = [];
+                    let arrId = [];
+                    ResultJson.data.info.forEach((item, index) => {
+                        // that.dataArr[index].shopList.textMarkId = []
+                        // that.dataArr[index].shopList.textMark = [];
+                        item.active = true
+                        arr.push(item)
+                        arrId.push(item.id)
+                        // that.dataArr[index].shopList.textMarkId.push(item.id)
+                    })
+                    that.dataArr[index2].shopList.textMarkId = arrId
+                    that.dataArr[index2].shopList.textMark = arr
+                }).catch(function(ErrMsg) {
+                    //获取数据失败时的处理逻辑
+                })
             },
             pingjia2($event, index1) {
                 let wei = $event.target.parentNode.id;
                 let b = $event.target.previousElementSibling.id;
                 for (let i = 0; i < 5; i++) {
-                    if (i < this.shopList[index1].list[wei].classs.zh[b].lastD) {
+                    if (i < this.dataArr[index1].shopList.list[wei].classs.zh[b].lastD) {
                         $event.target.previousElementSibling.children[i].classList.add('stu_bgstar3');
                     } else {
                         $event.target.previousElementSibling.children[i].classList.remove('stu_bgstar3');
@@ -155,14 +183,13 @@
                 }
             },
             uploadimg(index) {
-                let length = this.shopList[index].imglist.length;
-                console.log(length)
+                let length = this.dataArr[index].shopList.imglist.length;
                 if (length >= 5) {
                     Toast('最多上传5张图片');
                     return;
                 }
                 let that = this;
-                let fileObject = document.querySelector('.imgupload').files[0];
+                let fileObject = document.querySelectorAll('.imgupload')[index].files[0];
                 if (!fileObject || !window.FileReader) {
                     return;
                 };
@@ -190,14 +217,13 @@
                     })
                     .then(res => {
                         let that = this;
-                        console.log(res)
                         Indicator.close();
                         if (res.data.status == 200) {
                             let hostName = location.hostname;
                             let port = location.port;
                             let url = res.data.info;
                             let imageUrl = 'http://' + hostName + ':' + port + '/api' + url; //  后台返
-                            that.shopList[index].imglist.push({
+                            that.dataArr[index].shopList.imglist.push({
                                 'imgurl': imageUrl
                             });
                         } else {
@@ -211,7 +237,7 @@
             },
             removeImg(index, indexs) {
                 MessageBox.confirm('确定删除图片?').then(() => {
-                    let list = this.shopList[indexs].imglist;
+                    let list = this.dataArr[indexs].shopList.imglist;
                     list.splice(index, 1);
                 });
             },
@@ -227,9 +253,9 @@
                     // this.shopList[indexs].textMarkId.remove($event.target.id);
                 } else {
                     $event.target.classList.add("active");
-                    this.shopList[indexs].textMarkId.push($event.target.id);
+                    this.dataArr[indexs].shopList.textMarkId.push($event.target.id);
                 }
-                console.log(this.shopList[indexs].textMarkId)
+                // console.log(this.dataArr[indexs].shopList.textMarkId)
                 // let wei = $event.target.parentNode.id;
                 // let b = $event.target.previousElementSibling.id;
                 // for (let i = 0; i < 5; i++) {
@@ -240,14 +266,70 @@
                 //     }
                 // }
             },
-            saveInfo() {
-                // console.log(this.shopList[0].MarkInfo)
-                this.shopList.forEach((item, index) => {
-                    console.log(item)
-                    console.log(item.MarkInfo)
-                })
+            unbind() {
+                let that = this;
+                const htmls = `确认提交信息？`;
+                MessageBox.confirm('', {
+                    message: htmls,
+                    title: '',
+                    showConfirmButton: true,
+                    showCancelButton: true,
+                    cancelButtonClass: 'cancelButton',
+                    confirmButtonClass: 'confirmButton',
+                    confirmButtonText: '提交',
+                    cancelButtonText: '不提交'
+                }).then(action => {
+                    if (action == 'confirm') {
+                        let objArr = [];
+                        this.dataArr.forEach((item, index) => {
+                            let imgArr = [];
+                            let objInfo = {
+                                "score": item.shopList.list[0].classs.zh[0].lastD,
+                                "comment": item.shopList.MarkInfo,
+                                "commodityId": item.commodityId,
+                                "labelIdList": item.shopList.textMarkId,
+                                "images": imgArr + ''
+                            }
+                            objArr.push(objInfo)
+                            item.shopList.imglist.forEach((item, index) => {
+                                imgArr.push(item.imgurl)
+                            })
+                        })
+                        let urls = '/api/product/commodity/evaluation/insert';
+                        that.$http({
+                                url: urls,
+                                method: 'POST',
+                                // 请求体重发送的数据
+                                // headers: {
+                                //     'Content-Type': 'multipart/form-data'
+                                // },
+                                data: objArr
+                            })
+                            .then(res => {
+                                let that = this;
+                                if (res.data.status == 200) {
+                                    Toast(res.data.msg);
+                                    setTimeout(function(){
+                                        that.$router.push("/order")
+                                    },800)
+                                    
+                                } else {
+                                    Toast(res.data.msg);
+                                }
+                            })
+                            .catch(err => {
+                                Indicator.close();
+                                Toast('上传失败！');
+                            })
+                    }
+                }).catch(err => {
+                    if (err == 'cancel') {}
+                });
             },
-            getMark(evele,index1) {
+            saveInfo() {
+                this.unbind();
+            },
+            getMark(evele, index1) {
                 let that = this;
                 var getUserInfo = new Promise(function(resolve, reject) {
                     let Markurl = '/api/product/commodity/evaluation/label/queryMap';
@@ -268,18 +350,20 @@
                 })
                 getUserInfo.then(function(ResultJson) {
                     let arr = [];
+                    let arrId = [];
                     ResultJson.data.info.forEach((item, index) => {
-                        that.shopList[index].textMarkId = []
-                        that.shopList[index].textMark = [];
-                        item.active=true
+                        that.dataArr[index].shopList.textMarkId = []
+                        that.dataArr[index].shopList.textMark = [];
+                        item.active = true
                         arr.push(item)
-                        that.shopList[index].textMarkId.push(item.id)
+                        arrId.push(item.id)
                     })
-
-                    that.shopList.forEach((item, index) => {
-                        item.textMark = arr
+                    // that.dataArr[index].shopList.textMarkId.push(item.id)
+                    that.dataArr.forEach((item, index) => {
+                        item.shopList.textMark = arr
+                        item.shopList.textMarkId = arrId
                     })
-                   
+                    //    that.dataArr[index1]
                 }).catch(function(ErrMsg) {
                     //获取数据失败时的处理逻辑
                 })
@@ -293,6 +377,10 @@
 </script>
 
 <style scoped lang='less'>
+    .floatNum {
+        float: right;
+        margin-right: 0.3rem;
+    }
     .saveInfo {
         border: 0;
         height: 0.6rem;

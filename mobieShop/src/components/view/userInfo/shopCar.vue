@@ -198,6 +198,7 @@
             }
         },
         created() {
+            
             this.$root.$on('loadShopcar',()=>{
                 // 首次进入购物车页面，加载商品信息
                 if(this.list.length==0){
@@ -330,6 +331,7 @@
                     }).then(response => {
                         if(response.data.status==200){
                             let data = response.data.info;
+                            console.log(data)
                             var b = data.reduce((v, k) => { //循环
                                 k['selected'] = false;
                                 var filters = v.filter((data) => {
@@ -346,6 +348,7 @@
                                 };
                                 return v
                             }, [])
+                            console.log(b)
                             that.list = (b)
                         }
                         else{
