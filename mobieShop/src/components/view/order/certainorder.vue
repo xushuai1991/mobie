@@ -145,6 +145,7 @@
 import {formatdate} from '../../../assets/javascript/formatdate.js'
 import { MessageBox } from 'mint-ui'
 import { Toast } from 'mint-ui'
+import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasdata.js'
 // import {weixinPay} from '../../../assets/javascript/weixinpay.js'
 export default {
     data(){
@@ -275,7 +276,7 @@ export default {
                 this.deductionlist.push(json1);
             }
         });
-        let userinfo=JSON.parse(sessionStorage.getItem('userinfo'));
+        let userinfo=JSON.parse(operatelocalstorage('userinfo',null,'get',null));
         this.userinfo.id=userinfo.id;
         this.userinfo.username=userinfo.nickname==null?'无昵称':userinfo.nickname;
         this.userinfo.phone=userinfo.mobile;

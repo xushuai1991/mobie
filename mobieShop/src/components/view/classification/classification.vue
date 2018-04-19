@@ -1,7 +1,7 @@
 <template >
     <div class="page-navbar" id="classification">
         <div class="page-search">
-            <mt-search  v-model="value_search" @keyup.enter.native='searchData'></mt-search>
+            <mt-search  v-model="value_search" @keyup.enter.native='getCommoditylist(1,false)'></mt-search>
         </div>
         <div class='nav-bar'>
             <ul class='list'>
@@ -48,7 +48,7 @@ import { Indicator } from 'mint-ui';
         name: 'page-navbar',
         data() {
             return {
-                value_search:'',
+                value_search:null,
                 // result:[],
                 classifyname:'全部',
                 maxpagenum:0,
@@ -65,7 +65,8 @@ import { Indicator } from 'mint-ui';
                 pagenum:[],
                 companyId:'',
                 sortingCondition:null,
-                sortingOption:null
+                sortingOption:null,
+                dataisall:false
             };
         },
         created(){
@@ -142,6 +143,7 @@ import { Indicator } from 'mint-ui';
                 document.querySelector('.list').querySelector('.icon').setAttribute('class','icon iconfont icon-sanjiaoxing-up');
                 this.classifyname=data.name;
                 this.classifyid=data.id;
+                this.value_search=null;
                 this.getCommoditylist(1,true);
             },
             hidemask(event){
@@ -172,14 +174,16 @@ import { Indicator } from 'mint-ui';
                 switch(type){
                     case 'price':{
                         // this.commoditylist.sort(isup?this.sortupprice:this.sortdownprice);
-                        this.sortingCondition='originalPrice';
-                        this.sortingOption=isup?1:2;
+                        this.sortingCondition='price';
+                        this.sortingOption=isup?1:-1;
+                        this.getCommoditylist(1,true);
                         break;
                     }
                     case 'sale':{
                         // this.commoditylist.sort(isup?this.sortupsale:this.sortdownsale);
                         this.sortingCondition='totalSales';
-                        this.sortingOption=isup?1:2;
+                        this.sortingOption=isup?1:-1;
+                        this.getCommoditylist(1,true);
                         break;
                     }
                     default:break;
@@ -223,7 +227,8 @@ import { Indicator } from 'mint-ui';
                     categoryId:this.classifyid,
                     companyId:this.companyId,
                     sortingCondition:this.sortingCondition,
-                    sortingOption:this.sortingOption
+                    sortingOption:this.sortingOption,
+                    keyword:this.value_search
                 })
                 .then(res=>{
                     that.maxpagenum=res.data.info.pages;
@@ -237,21 +242,19 @@ import { Indicator } from 'mint-ui';
                                 imgurl:commodity.commodityImageList.length==0?'':commodity.commodityImageList[0],
                                 name:commodity.name,
                                 url:'/detailTemplate?commodityId='+commodity.id,
-                                price:commodity.priceRule==1?commodity.originalPrice:commodity.priceRule==2?commodity.discountPrice:commodity.currentPrice,
+                                price:commodity.price,
                                 nums:commodity.totalSales
                             };
                             that.commoditylist.push(json);
                         });
                         // that.commoditylist.push(res.data.info.list);
                         let length=res.data.info.list.length;
-                        if(length!=0){
-                            that.pagenum=length>=10?pagenum+1:pagenum;
+                        console.log(length);
+                        if(length==10){
+                            that.pagenum=pagenum+1;
                         }
                         else{
-                            setTimeout(() => {
-                                this.$refs.loadmore.onBottomLoaded();
-                                Toast('数据已加载完');
-                            }, 1000);
+                            that.dataisall=true;
                         }
                     }
                     else{
@@ -264,78 +267,19 @@ import { Indicator } from 'mint-ui';
                     console.log(err);
                 });
             },
-            //搜索商品
-            searchData(pagenum,loading){
-                if(loading){
-                    Indicator.open();
-                }
-                let that=this;
-                this.$http.post('/api/product/commodity/info/search?pageSize=10&page='+pagenum+'&keyword'+this.value_search,{})
-                .then(res=>{
-                    that.maxpagenum=res.data.info.pages;
-                    if(pagenum==1){
-                        that.commoditylist=[];
-                    }
-                    if(res.data.status==200){
-                        res.data.info.list.forEach(commodity=>{
-                            let json={
-                                id:commodity.id,
-                                imgurl:commodity.commodityImageList.length==0?'':commodity.commodityImageList[0],
-                                name:commodity.name,
-                                url:'/detailTemplate?commodityId='+commodity.id,
-                                price:commodity.priceRule==1?commodity.originalPrice:commodity.priceRule==2?commodity.discountPrice:commodity.currentPrice,
-                                nums:commodity.totalSales
-                            };
-                            that.commoditylist.push(json);
-                        });
-                        let length=res.data.info.list.length;
-                        if(length!=0){
-                            that.pagenum=length>=10?pagenum+1:pagenum;
-                        }
-                        else{
-                            setTimeout(() => {
-                                this.$refs.loadmore.onBottomLoaded();
-                                Toast('数据已加载完');
-                            }, 1000);
-                        }
-                    }
-                    else{
-                        Toast(res.data.msg);
-                    }
-                    console.log(res);
-                })
-                .catch(err=>{
-                    console.log(err);
-                })
-            },
-            // 获取所有商品图片
-            // getImgall(){
-            //     return new Promise((resolve,reject)=>{
-            //         let that=this;
-            //         this.$http.post('/api/product/commodity/image/queryMap',{})
-            //         .then(res=>{
-            //             if(res.data.status==200){
-            //                 this.imglist=res.data.info;
-            //             }
-            //             resolve(true);
-            //         })
-            //         .catch(err=>{
-            //             console.log(err);
-            //             resolve(true);
-            //         });
-            //     });
-                
-            // },
             loadMore(index) {
-                if(this.value_search==''){
+                if(!this.dataisall){
                     this.getCommoditylist(this.pagenum,false);
+                    setTimeout(() => {
+                        this.$refs.loadmore.onBottomLoaded();
+                    }, 1000);
                 }
                 else{
-                    this.searchData(this.pagenum,false);
+                    setTimeout(() => {
+                        this.$refs.loadmore.onBottomLoaded();
+                        Toast('数据已加载完');
+                    }, 1000);
                 }
-                setTimeout(() => {
-                    this.$refs.loadmore.onBottomLoaded();
-                }, 1000);
             }
         }
     };
