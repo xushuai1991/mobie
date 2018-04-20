@@ -259,7 +259,7 @@
                             break;
                         }
                         case 'invite':{
-                            this.$router.push("/inviting?recommendedCustomerId="+userinfo.id);
+                            this.$router.push("/inviting?recommendedCustomerId="+this.userinfo.id);
                             break;
                         }
                         case 'invoice':{

@@ -142,6 +142,21 @@ export default {
             console.log(values);
             this.datechange=values;
         },
+        // 修改订单明细
+        updateOrderdetail(ordernumber,updateAppointTime){
+            let that=this;
+            this.$http.post('/api/product/order/mall/update',[{number:ordernumber,updateAppointTime:updateAppointTime}])
+            .then(res=>{
+                if(res.data.status==200){}
+                else{
+                    Toast(res.data.msg);
+                }
+                console.log(res);
+            })
+            .catch(err=>{
+                console.log(err);
+            })
+        },
         getdate(){
             let day=new Date();
             if(this.datechange[0]=='今天'){
@@ -155,17 +170,17 @@ export default {
             }
             // console.log(this.datechange);
             let date=day+' '+this.datechange[1].substring(0,2) +':'+this.datechange[2].substring(0,2);
-            console.log(date);
+            // console.log(date);
             // this.data.time=date;
             // 修改服务时间
-            let con1=this.data.orderDetails[this.currentindex].condition1Name;
-            let con2=this.data.orderDetails[this.currentindex].condition2Name;
-            if(con1.indexOf("服务时间") > 0){
-                this.data.orderDetails[this.currentindex].condition1Name='服务时间：'+date;
-            }
-            else if(con2.indexOf("服务时间") > 0){
-                this.data.orderDetails[this.currentindex].condition2Name='服务时间：'+date;                
-            }
+            // let con1=this.data.orderDetails[this.currentindex].condition1Name;
+            // let con2=this.data.orderDetails[this.currentindex].condition2Name;
+            // if(con1.indexOf("服务时间") > 0){
+            //     this.data.orderDetails[this.currentindex].condition1Name='服务时间：'+date;
+            // }
+            // else if(con2.indexOf("服务时间") > 0){
+            //     this.data.orderDetails[this.currentindex].condition2Name='服务时间：'+date;                
+            // }
             
             this.popupVisible=false;
         },
