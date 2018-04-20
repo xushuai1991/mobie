@@ -21,7 +21,7 @@
                     <p>x{{item.saleNumber}}</p>
                 </div>
                 <!-- 服务类商品，添加预约时间功能 -->
-                <div class='appointment' v-if='false'>
+                <div class='appointment' v-if='true'>
                     <button  @click.stop="appointment(index)">预约时间</button>
                 </div>
             </div>

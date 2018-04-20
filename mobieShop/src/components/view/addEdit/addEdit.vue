@@ -110,7 +110,7 @@ import { Toast } from 'mint-ui';
         },
         methods: {
             saveAddInfo() { //提交地址
-             let userId = sessionStorage.getItem("userinfo");
+             let userId = localStorage.getItem("userinfo");
               let  userIds = JSON.parse(userId).id;
                 let datainfo = {
                     "areaId": this.checkindex,
