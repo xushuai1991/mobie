@@ -45,8 +45,8 @@ import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasda
             this.$root.$emit('header','地址管理');
             this.getAddInfo();
             // let routerParams = this.$route.params;
-            this.goName = this.nameurlArgs().name
-            // console.log(this.goName)
+            this.goName = this.urlArgs().name
+            console.log(this.goName)
         },
         methods: {
             urlArgs() {
@@ -85,6 +85,7 @@ import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasda
                     .catch(error => {
                         console.log(error)
                     })
+                    console.log(this.goName);
                     this.$router.push({
                         path:'/'+this.goName,
                         name: this.goName,

@@ -23,7 +23,7 @@
                 <!-- 服务类商品，添加预约时间功能 -->
                 <div class='appointment' v-if='item.isService==true'>
                     
-                    <button  @click.stop="appointment(index)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>
+                    <button  @click.stop="appointment(item.id)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>
                     <span>服务时间：{{item.appointTime==null?'空':item.appointTime.substring(0,16)}}</span>
                 </div>
             </div>
@@ -134,7 +134,7 @@ export default {
             })
         },
         // 唤醒时间插件
-        appointment(index){
+        appointment(id){
             this.popupVisible=true;
             this.currentindex=index;
         },
@@ -143,9 +143,9 @@ export default {
             this.datechange=values;
         },
         // 修改订单明细
-        updateOrderdetail(ordernumber,updateAppointTime){
+        updateOrderdetail(id,updateAppointTime){
             let that=this;
-            this.$http.post('/api/product/order/mall/update',[{number:ordernumber,updateAppointTime:updateAppointTime}])
+            this.$http.post('/api/product/order/mall/update/orderDetail',[{id:id,updateAppointTime:updateAppointTime}])
             .then(res=>{
                 if(res.data.status==200){}
                 else{
@@ -170,6 +170,7 @@ export default {
             }
             // console.log(this.datechange);
             let date=day+' '+this.datechange[1].substring(0,2) +':'+this.datechange[2].substring(0,2);
+            this.updateOrderdetail();
             // console.log(date);
             // this.data.time=date;
             // 修改服务时间
