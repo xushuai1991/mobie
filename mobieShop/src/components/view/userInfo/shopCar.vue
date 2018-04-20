@@ -27,7 +27,7 @@
                                                     <p class="goods_identifier strlen" style="width:3rem;"></p>
                                                     <p class="goods_color">颜色：<span>红色</span></p>
                                                     <p class="goods_size">尺码：<span>尺寸</span></p>
-                                                    <p @click="open('picker1',index,indexs)" size="large">{{items.otherInfo.commodityInfo.playTime}}</p>
+                                                    <!--<p @click="open('picker1',index,indexs)" size="large">{{items.otherInfo.commodityInfo.playTime}}</p>!-->
                                                 </li>
                                                 <li class="goods_info_se">
                                                     <p class="goods_price">￥<span>{{items.otherInfo.commodityPrice}}</span></p>
