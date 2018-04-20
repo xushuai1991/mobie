@@ -44,11 +44,25 @@ import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasda
         created() {
             this.$root.$emit('header','地址管理');
             this.getAddInfo();
-            let routerParams = this.$route.params;
-            this.goName = routerParams.name
-            console.log(this.goName)
+            // let routerParams = this.$route.params;
+            this.goName = this.nameurlArgs().name
+            // console.log(this.goName)
         },
         methods: {
+            urlArgs() {
+                var args = {};
+                var query = location.search.substring(1);
+                var pairs = query.split("&");
+                for (var i = 0; i < pairs.length; i++) {
+                    var pos = pairs[i].indexOf("=");
+                    if (pos == -1) continue;
+                    var name = pairs[i].substring(0, pos);
+                    var value = pairs[i].substring(pos + 1);
+                    value = decodeURIComponent(value);
+                    args[name] = value;
+                }
+                return args;
+            },
             routeTo(value){
                 console.log(value)
                 let url = '/api/customer/account/update';
