@@ -78,7 +78,7 @@ export default {
             }
         }
         let direct=this.$route.params.direct;
-        
+        console.log(direct);
         // console.log(direct==undefined);
         if(direct!=undefined){
             // console.log(111);

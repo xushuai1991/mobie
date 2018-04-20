@@ -23,7 +23,7 @@
                 <!-- 服务类商品，添加预约时间功能 -->
                 <div class='appointment' v-if='item.isService==true'>
                     
-                    <button  @click.stop="appointment(index)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>
+                    <button  @click.stop="appointment(item.id)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>
                     <span>服务时间：{{item.appointTime==null?'空':item.appointTime.substring(0,16)}}</span>
                 </div>
             </div>
@@ -134,13 +134,28 @@ export default {
             })
         },
         // 唤醒时间插件
-        appointment(index){
+        appointment(id){
             this.popupVisible=true;
             this.currentindex=index;
         },
         onValuesChange(picker,values){
             console.log(values);
             this.datechange=values;
+        },
+        // 修改订单明细
+        updateOrderdetail(id,updateAppointTime){
+            let that=this;
+            this.$http.post('/api/product/order/mall/update/orderDetail',[{id:id,updateAppointTime:updateAppointTime}])
+            .then(res=>{
+                if(res.data.status==200){}
+                else{
+                    Toast(res.data.msg);
+                }
+                console.log(res);
+            })
+            .catch(err=>{
+                console.log(err);
+            })
         },
         getdate(){
             let day=new Date();
@@ -155,17 +170,18 @@ export default {
             }
             // console.log(this.datechange);
             let date=day+' '+this.datechange[1].substring(0,2) +':'+this.datechange[2].substring(0,2);
-            console.log(date);
+            this.updateOrderdetail();
+            // console.log(date);
             // this.data.time=date;
             // 修改服务时间
-            let con1=this.data.orderDetails[this.currentindex].condition1Name;
-            let con2=this.data.orderDetails[this.currentindex].condition2Name;
-            if(con1.indexOf("服务时间") > 0){
-                this.data.orderDetails[this.currentindex].condition1Name='服务时间：'+date;
-            }
-            else if(con2.indexOf("服务时间") > 0){
-                this.data.orderDetails[this.currentindex].condition2Name='服务时间：'+date;                
-            }
+            // let con1=this.data.orderDetails[this.currentindex].condition1Name;
+            // let con2=this.data.orderDetails[this.currentindex].condition2Name;
+            // if(con1.indexOf("服务时间") > 0){
+            //     this.data.orderDetails[this.currentindex].condition1Name='服务时间：'+date;
+            // }
+            // else if(con2.indexOf("服务时间") > 0){
+            //     this.data.orderDetails[this.currentindex].condition2Name='服务时间：'+date;                
+            // }
             
             this.popupVisible=false;
         },

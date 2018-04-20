@@ -251,7 +251,8 @@
                 else{
                     switch(direct){
                         case 'address':{
-                            this.$router.push({name:"addManagement",query:{name:"index"} });
+                            this.$router.push({name:"addManagement"});
+                            sessionStorage.setItem('from','index');
                             break;
                         }
                         case 'coupon':{
