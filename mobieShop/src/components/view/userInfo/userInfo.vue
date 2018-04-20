@@ -35,7 +35,7 @@
                             </div>
                         </div>
                         <ul class="behavior">
-                            <li>
+                            <li @click="toMycollection">
                                 <div class="collect">
                                     <i class='icon iconfont icon-xingxing coloBule'></i>
                                 </div>
@@ -251,7 +251,7 @@
                 else{
                     switch(direct){
                         case 'address':{
-                            this.$router.push({name:"addManagement",params:{name:"index"} });
+                            this.$router.push({name:"addManagement",query:{name:"index"} });
                             break;
                         }
                         case 'coupon':{
@@ -353,7 +353,14 @@
                 else{
                     this.$root.$emit('switchindex','shopcar');
                 }
-                
+            },
+            toMycollection(){
+                if(this.userinfo.id==''){
+                    Toast('请先登录！');
+                }
+                else{
+                    this.$router.push('/mycollection');
+                }
             }
         },
         mounted() {

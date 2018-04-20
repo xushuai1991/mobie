@@ -7,9 +7,9 @@
                         <img src="" alt="">
                         <div class='infor'>
                             <p class='name'>{{item.name}}</p>
-                            <P class='subname'>{{item.subame}}</P>
-                            <p class='color'>颜色：{{item.color}}</p>
-                            <p class='size'>尺码：{{item.size}}</p>
+                            <!-- <P class='subname'>{{item.subame}}</P> -->
+                            <p class='color'>{{item.condition1Name}}</p>
+                            <p class='size'>{{item.condition2Name}}</p>
                         </div>
                     </div>
                     <div class='right'>
@@ -19,7 +19,7 @@
                 </div>
             </li>
         </ul>
-        <div class='operation' v-show='showopera'>
+        <div class='operation' v-show='false'>
             <div class='refund' @click='refundmoney'>
                 <div class='icon-left'>
                     <i class='icon iconfont icon-tuikuan'></i>
@@ -46,8 +46,8 @@
             </div>
         </div>
         
-        <div class='refundoperation' v-if="!showopera">
-            <div class='selectarea' v-if='showstatus'>
+        <div class='refundoperation' v-if="true">
+            <div class='selectarea' v-if='false'>
                 <span class='main'>货物状态</span>
                 <span class='select' @click='selectstatus'>{{status}}<i class='icon iconfont icon-arrow-right-copy'></i></span>
             </div>
@@ -58,12 +58,12 @@
             <div class='refundabout'>
                 <p class='moneys-refund'>退款金额：<span style='color:#f38650;font-size:.4rem;'>￥{{moneyrefund}}</span></p>
                 <p class='moneys-extra'>最多￥{{moneyrefundmost}}，含发货邮费￥{{postage}}</p>
-                <div class='explain'>
+                <div class='explain' v-if='false'>
                     <label for="explain">退款说明：</label>
-                    <input type="text" id="explain" placeholder="选填">
+                    <input type="text" id="explain" placeholder="选填" v-model="explain">
                 </div>
             </div>
-            <div class='uploadimg'>
+            <div class='uploadimg' v-if='false'>
                 <p>上传凭证</p>
                 <ul class='imgs'>
                     <li class='upload'>
@@ -81,7 +81,7 @@
                 </ul>
             </div>
             <div class='submit'>
-                <button>提交</button>            
+                <button @click="submitData">提交</button>            
             </div>
         </div>
         <!-- 货物状态弹窗 -->
@@ -111,24 +111,24 @@ export default {
     data(){
         return{
             goodslist:[
-                {
-                    imgurl:'',
-                    name:'FASHION',
-                    subame:'这里是副标题',
-                    color:'这里是颜色',
-                    size:'这里是尺码',
-                    price_uint:'200',
-                    nums:'2'
-                },
-                {
-                    imgurl:'',
-                    name:'FASHION',
-                    subame:'这里是副标题',
-                    color:'这里是颜色',
-                    size:'这里是尺码',
-                    price_uint:'200',
-                    nums:'2'
-                }
+                // {
+                //     imgurl:'',
+                //     name:'FASHION',
+                //     subame:'这里是副标题',
+                //     condition1Name:'颜色：这里是颜色',
+                //     condition2Name:'尺码：这里是尺码',
+                //     price_uint:'200',
+                //     nums:'2'
+                // },
+                // {
+                //     imgurl:'',
+                //     name:'FASHION',
+                //     subame:'这里是副标题',
+                //     color:'这里是颜色',
+                //     size:'这里是尺码',
+                //     price_uint:'200',
+                //     nums:'2'
+                // }
             ],
             status:'请选择',
             reasonrefund:'请选择',
@@ -138,8 +138,10 @@ export default {
             refundreason:['拍错了信息填写错误','不想买了','未收到货','和商家协商一致','收到商品破损','其他'],
             showopera:true,
             showstatus:true,
-            postage:0.5,
-            imglist:[{'imgurl':''},{},{}]
+            postage:0,
+            imglist:[{'imgurl':''},{},{}],
+            dataorder:null,
+            explain:''
         }
     },
     computed:{
@@ -155,7 +157,27 @@ export default {
         }
     },
     created(){
+        // console.log(location.hostname);
         this.$root.$emit('header','申请退款');
+        let orderdetail=sessionStorage.getItem('orderdetail');
+        if(orderdetail!=null){
+            let detail=JSON.parse(orderdetail);
+            this.dataorder=detail;
+            this.goodslist=[];
+            detail.orderDetails.forEach(item=>{
+                let json={
+                    imgurl:item.image,
+                    name:item.name,
+                    condition1Name:item.condition1Name,
+                    condition2Name:item.condition2Name,
+                    price_uint:item.price,
+                    nums:item.saleNumber
+                };
+                this.goodslist.push(json);
+            });
+            console.log(detail);
+            // detail.forEach();
+        }
     },
     methods:{
         refundmoney(){
@@ -201,21 +223,22 @@ export default {
             Indicator.open('上传中。。。');
             let that=this;
             this.$http({
-            //     url: '/api/zuul/sms/file/fileUpload',
-            //     method: 'POST',
-            //     // 请求体重发送的数据
-            //     headers: { 'Content-Type': 'multipart/form-data'},
-            //     data:file
-            // })
-            // .then(res=>{
-            //     Indicator.close();
-            //     if(res.data.status==200){
-            //         let url=res.info;
-            //         this.imglist.push({'imgurl':url});
-            //     }
-            //     else{
-            //         Toast(res.data.msg);
-            //     }
+                url: '/api/zuul/sms/file/fileUpload',
+                method: 'POST',
+                // 请求体重发送的数据
+                headers: { 'Content-Type': 'multipart/form-data'},
+                data:file
+            })
+            .then(res=>{
+                Indicator.close();
+                if(res.data.status==200){
+                    let url=res.data.info;
+                    let imgurl=location.hostname+'/api/'+url;
+                    this.imglist.push({'imgurl':url});
+                }
+                else{
+                    Toast(res.data.msg);
+                }
             })
             .catch(err=>{
                 Indicator.close();
@@ -229,14 +252,45 @@ export default {
             MessageBox.confirm('确定删除图片?').then(() => {
                 let list=this.imglist;
                 list.splice(index,1);
-            });
+            }).catch(()=>{});
+        },
+        submitData(){
+            let that=this;
+            this.$http.post('/api/product/order/mall/refund',
+            {
+                orderNumber:that.dataorder.number,
+                refundMoney:that.moneyrefund,
+                refundExplanation:that.reasonrefund=='请选择'?'':that.reasonrefund
+            })
+            .then(res=>{
+                if(res.data.status==401){
+                    Toast('请先登录！');
+                    return;
+                }
+                if(res.data.status==200){
+                    Toast({
+                        message: '申请已提交！正在跳转...',
+                        iconClass: 'icon icon-success',
+                        duration: 500
+                    });
+                    that.$router.push('/order');
+                }
+                else{
+                    Toast(res.data.msg);
+                }
+                console.log(res);
+            })
+            .catch(err=>{
+                console.log(err);
+                Toast('申请提交失败！');
+            })
         }
     }
 }
 </script>
 <style lang="less" scoped>
 .applyrefund-xs{
-    margin-top:.8rem;
+    margin-top:.9rem;
     background-color: #f5f5f5;
     .goods-xs li{
         margin-bottom: .2rem;

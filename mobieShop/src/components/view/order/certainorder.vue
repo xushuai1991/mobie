@@ -297,7 +297,7 @@ export default {
     },
     methods:{
         changeaddress(){
-            this.$router.push({'name':'addManagement',params:{'name':'ordercertain'}});
+            this.$router.push({'name':'addManagement',query:{'name':'ordercertain'}});
         },
         selectpaytype(e){
             let classname=e.target.getAttribute('class');
