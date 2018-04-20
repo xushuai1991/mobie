@@ -214,7 +214,7 @@ export default {
                         Indicator.close();
                         if(response.data.status == 200){
                             let data=response.data.info;
-                            operatelocalstorage('userinfo',JSON.stringify(data),'set',30);
+                            operatelocalstorage('userinfo',JSON.stringify(data),'set',300);
                             // sessionStorage.setItem('userinfo', JSON.stringify(data));
                             // that.$store.commit('login',response.data.info)
                             // this.cleardata();

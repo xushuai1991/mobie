@@ -21,16 +21,19 @@
                     <p>x{{item.saleNumber}}</p>
                 </div>
                 <!-- 服务类商品，添加预约时间功能 -->
-                <div class='appointment' v-if='true'>
-                    <button  @click.stop="appointment(index)">预约时间</button>
+                <div class='appointment' v-if='item.isService==true'>
+                    
+                    <button  @click.stop="appointment(index)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>
+                    <span>服务时间：{{item.appointTime==null?'空':item.appointTime.substring(0,16)}}</span>
                 </div>
             </div>
             <div class='price-total'>
-                <p>合计：<span class='total'>￥{{totalmoney}}</span></p>
+                <p>合计：<span class='total'>￥{{data.actualMoney}}</span></p>
             </div>
             <div class='operation'>
                 <button class='prime pay' @click.stop="pay">付款</button>
                 <button class='cancle' @click.stop="cancleOrder">取消订单</button>
+                <button class='apply' @click.stop='application'>申请退款</button>
             </div>
         </div>
         <mt-popup v-model="popupVisible" position="bottom" class="popup">
@@ -89,6 +92,10 @@ export default {
         // console.log(date_dead,date_remain_ts,date_remain_h,date_remain_m,date_remain_s);
     },
     methods:{
+        application(){
+            this.$router.push({path:'applyRefund'})
+            sessionStorage.setItem('orderdetail',JSON.stringify(this.data));
+        },
         //剩余时间
         getRemianTime(){
             // console.log(111);
@@ -131,7 +138,8 @@ export default {
             this.popupVisible=true;
             this.currentindex=index;
         },
-        onValuesChange(values){
+        onValuesChange(picker,values){
+            console.log(values);
             this.datechange=values;
         },
         getdate(){
@@ -145,7 +153,9 @@ export default {
             else if(this.datechange[0]=='后天'){
                 day=new Date(day.setDate(day.getDate()+2)).format('yyyy-MM-dd');
             }
+            // console.log(this.datechange);
             let date=day+' '+this.datechange[1].substring(0,2) +':'+this.datechange[2].substring(0,2);
+            console.log(date);
             // this.data.time=date;
             // 修改服务时间
             let con1=this.data.orderDetails[this.currentindex].condition1Name;
@@ -197,13 +207,13 @@ export default {
         }
     },
     computed:{
-        totalmoney(){
-            let total=0;
-            for(let item of this.data.orderDetails==null?[]:this.data.orderDetails){
-                total+=item.price*item.saleNumber;
-            }
-            return total;
-        }
+        // totalmoney(){
+        //     let total=0;
+        //     for(let item of this.data.orderDetails==null?[]:this.data.orderDetails){
+        //         total+=item.price*item.saleNumber;
+        //     }
+        //     return total;
+        // }
     }
 }
 </script>
@@ -234,10 +244,19 @@ export default {
     position: relative;
 }
 .appointment{
-    text-align: right;
-    margin:1.8rem 0 .2rem 0;
+    /* text-align: right; */
+    margin-top:1.8rem;
     /* position: absolute; */
     width:100%;
+    overflow: hidden;
+}
+.appointment span{
+    width: 5rem;
+    text-align: left;
+    font-size: .3rem;
+    float: left;
+    margin-top: .2rem;
+    margin-left: .3rem;
 }
 .appointment button{
     /* position: absolute;
@@ -250,6 +269,7 @@ export default {
     padding:.1rem .2rem;
     margin-right:.2rem;
     border-radius: .1rem;
+    float: right;
 }
 .img-goods{
     width: 2.2rem;

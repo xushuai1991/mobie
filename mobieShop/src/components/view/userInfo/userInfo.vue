@@ -35,7 +35,7 @@
                             </div>
                         </div>
                         <ul class="behavior">
-                            <li>
+                            <li @click="toMycollection">
                                 <div class="collect">
                                     <i class='icon iconfont icon-xingxing coloBule'></i>
                                 </div>
@@ -197,6 +197,8 @@
             this.$root.$on('loadUserinfo',()=>{
                 let userinfo_location=operatelocalstorage('userinfo',null,'get',null);
                 // console.log(userinfo_location);
+                // 收藏数量
+                this.getNumberFavorite();
                 if(userinfo_location!=null){
                     let data = JSON.parse(userinfo_location);
                     this.userinfo=data;
@@ -209,8 +211,7 @@
                     this.getNUmberOrder(data_willservice,1);
                     this.getNUmberOrder(data_inservice,2);
                     this.getNUmberOrderEval(); 
-                    // 收藏数量
-                    this.getNumberFavorite();
+                    
                     // 购物车数量
                     this.getNumberShopcar();
                 }
@@ -250,7 +251,7 @@
                 else{
                     switch(direct){
                         case 'address':{
-                            this.$router.push({name:"addManagement",params:{name:"index"} });
+                            this.$router.push({name:"addManagement",query:{name:"index"} });
                             break;
                         }
                         case 'coupon':{
@@ -313,6 +314,15 @@
                 let that=this;
                 this.$http.post('/api/product/commodity/favorite/queryPageList')
                 .then(res=>{
+                    if(res.data.status==401){
+                        localStorage.removeItem('userinfo');
+                        this.userinfo={
+                            id:'',
+                            avatar:'',
+                            nickname:'',
+                            level:''
+                        };
+                    }
                     if(res.data.status==200){
                         this.num_collection=res.data.info.total;
                     }
@@ -343,7 +353,14 @@
                 else{
                     this.$root.$emit('switchindex','shopcar');
                 }
-                
+            },
+            toMycollection(){
+                if(this.userinfo.id==''){
+                    Toast('请先登录！');
+                }
+                else{
+                    this.$router.push('/mycollection');
+                }
             }
         },
         mounted() {

@@ -3,28 +3,43 @@
         <ul class='collection-xs'>
             <li v-for="(item,index) in collectionlist" :key="index">
                 <p class='Coupon'>
-                    <span>领券<i class='icon iconfont icon-arrow-right-copy'></i></span>
+                    <span @click="getcoupon(item.commodityId)">领券<i class='icon iconfont icon-arrow-right-copy'></i></span>
                 </p>
                 <div class='goods'>
                     <div class='left'>
                         <img src="" alt="">
-                        <div class='infor'>
-                            <p class='name'>{{item.name}}</p>
-                            <P class='subname'>{{item.subame}}</P>
-                            <p class='color'>颜色：{{item.color}}</p>
-                            <p class='size'>尺码：{{item.size}}</p>
+                        <div class='infor' style="margin-left:.2rem;">
+                            <p class='name'>{{item.commodityInfo.name}}</p>
+                            <!-- <P class='subname'>{{item.commodityInfo.name}}</P> -->
+                            <p class='color'>销量：{{item.commodityInfo.totalSales}}</p>
+                            <p class='size'>价格：{{item.commodityInfo.price}}</p>
                         </div>
                     </div>
-                    <div class='right'>
-                        <p class='price'>￥{{item.price_uint}}</p>
-                        <p class='num'>x{{item.nums}}</p>
-                    </div>
+                    <!-- <div class='right'>
+                        <p class='price'>￥{{item.commodityInfo.price}}</p>
+                        <p class='num'>x{{item.commodityInfo.totalSales}}</p>
+                    </div> -->
                 </div>
             </li>
         </ul>
+        <mt-popup v-model="popupVisible" position="bottom" style='width:100%;'>
+            <div class='shopBoxS'>{{ShopName}}</div>
+            <p class='shopBxo'>领取优惠劵</p>
+            <ul class='shopBox'>
+                <li v-for='(item,index) in coupon' :key='index'>
+                    <div class='shopFont'>
+                        <p>{{item.couponMoney}}元</p>
+                        <p>{{item.couponName}}</p>
+                        <p>使用期限 {{item.starTime.split(" ")[0]}}—{{item.endTime.split(" ")[0]}}</p>
+                    </div><button @click='okcoupon(item.id)'>领取</button>
+                </li>
+            </ul>
+            <div class='closeBtn' @click="btnClose">关闭</div>
+        </mt-popup>
     </div>
 </template>
 <script>
+import { Toast } from 'mint-ui';
 export default {
     data(){
         return{
@@ -47,11 +62,81 @@ export default {
                     price_uint:'200',
                     nums:'2'
                 }
-            ]
+            ],
+            popupVisible:false,
+            coupon:[]
         }
     },
     created(){
         this.$root.$emit('header','我的收藏');
+        this.getData(1);
+    },
+    methods:{
+        getData(pagenum){
+            let that=this;
+            this.$http.post('/api/product/commodity/favorite/queryPageList?pageSize=10&pag='+pagenum,{})
+            .then(res=>{
+                if(res.data.status==200){
+                    that.collectionlist=res.data.info.list;
+                }
+                else{
+                    Toast(res.data.msg);
+                }
+                console.log(res);
+            })
+            .catch(err=>{
+                console.log(err);
+            });
+        },
+        //领取优惠劵
+        okcoupon(id) {
+            let userInfo = sessionStorage.getItem("userinfo");
+            let userInfoId = JSON.parse(userInfo).id
+            let url = '/api/product/coupon/customer/insert?couponId=' + id + '&number=1';
+            this.$http({
+                url: url,
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data: {}
+            }).then(response => {
+                if (response.data.status == 200) {
+                    Toast(response.data.msg);
+                } else {
+                    Toast(response.data.msg);
+                }
+            }).catch(error => {
+                console.log(error)
+            })
+        },
+        //获取优惠劵
+        getcoupon(commodityid) {
+            let that = this;
+            this.$http.post('/api/product/coupon/commodity/find/mall',{commodityId:commodityid})
+            .then(res=>{
+                if(res.data.status==200){
+                    res.data.info.list.forEach(item=>{
+                        let json={
+                            id:item.couponInfo.id,
+                            couponMoney:item.couponInfo.couponMoney,
+                            couponName:item.couponInfo.couponName,
+                            starTime:item.couponInfo.starTime,
+                            endTime:item.couponInfo.endTime
+                        };
+                        that.coupon.push(json);
+                    });
+                    that.popupVisible=true;
+                }
+                else{
+                    Toast(res.data.msg);
+                }
+                console.log(res);
+            })
+            .catch(err=>{
+                console.log(err);
+            })
+        },
     }
 }
 </script>
@@ -121,6 +206,70 @@ export default {
                 right:.2rem;
             }
         }
+    }
+    .shopBox {
+        margin-bottom: 0.4rem;
+        font-size: 0.2rem;
+        button {
+            position: absolute;
+            right: 0;
+            top: 0.2rem;
+            border: none;
+            padding: 0.15rem;
+            background: linear-gradient(to bottom, #0CBBB9 0%, #4AC6DC 100%);
+            color: #fff;
+            margin-right: 0.2rem;
+            font-size: 0.25rem;
+            border-radius: 5px;
+        }
+        li {
+            position: relative;
+            height: 0.5rem;
+            width: 90%;
+            margin-left: 5%;
+            border-bottom: 1px solid #ddd;
+            margin-top: 0.2rem;
+            margin-bottom: 0.2rem;
+        }
+        li:last-child {
+            border-bottom: none;
+        }
+    }
+    .shopFont {
+        float: left;
+        padding-left: 0.2rem;
+    }
+    .shopFont p {
+        font-size: 0.2rem;
+        line-height: 0.4rem;
+        text-align: left;
+    }
+    .shopFont p:nth-child(1) {
+        font-size: 0.25rem;
+        color: #0CBBB9;
+    }
+    .shopFont p:nth-child(3) {
+        font-size: 0.2rem;
+        color: #b8bbbf;
+    }
+    .shopBoxS {
+        font-size: 0.35rem;
+        padding-top: 0.2rem;
+        padding-bottom: 0.1rem;
+    }
+    .shopBxo {
+        font-size: 0.3rem;
+        padding-top: 0.1rem;
+    }
+    .shopBox li {
+        height: 1.26rem;
+        line-height: 1.26rem;
+    }
+    .closeBtn {
+        background: linear-gradient(to bottom, #0CBBB9 0%, #4AC6DC 100%);
+        line-height: 1rem;
+        font-size: 0.4rem;
+        color: #fff;
     }
 }
 
