@@ -46,7 +46,8 @@ import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasda
             this.getAddInfo();
             // let routerParams = this.$route.params;
             this.goName = this.urlArgs().name
-            console.log(this.goName)
+            sessionStorage.setItem('goAdd',this.goName)
+            // console.log(this.goName)
         },
         methods: {
             urlArgs() {
@@ -85,7 +86,7 @@ import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasda
                     .catch(error => {
                         console.log(error)
                     })
-                    console.log(this.goName);
+                    let goAdd = sessionStorage.setItem("goAdd")
                     this.$router.push({
                         path:'/'+this.goName,
                         name: this.goName,
