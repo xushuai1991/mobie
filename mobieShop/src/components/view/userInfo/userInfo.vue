@@ -204,12 +204,12 @@
                     this.userinfo=data;
                     this.integral();
                     let data_willpay={payState:2};
-                    let data_willservice={payState:1,serviceState:1};
-                    let data_inservice={payState:1,serviceState:2};
+                    // let data_willservice={payState:1,serviceState:1};
+                    // let data_inservice={payState:1,serviceState:2};
                     // 订单数量计算
                     this.getNUmberOrder(data_willpay,0);
-                    this.getNUmberOrder(data_willservice,1);
-                    this.getNUmberOrder(data_inservice,2);
+                    this.getNumberOrderService(1,1);
+                    this.getNumberOrderService(2,2);
                     this.getNUmberOrderEval(); 
                     
                     // 购物车数量
@@ -276,23 +276,41 @@
             //查询订单数量（待付款，待服务，服务中）
             getNUmberOrder(data,index){
                 let that=this;
-                    this.$http.post('/api/product/order/mall/find?pageSize=0',data)
-                    .then(res=>{
-                        if(res.data.status==200){
-                            // console.log(res.data.info.size);
-                            let num=res.data.info.size
-                            that.num_orderlist[index]=num;
-                        }
-                        else{
-                            Toast(res.data.msg);
-                        }
-                        console.log(res);
-                    })
-                    .catch(err=>{
-                        console.log(err);
+                this.$http.post('/api/product/order/mall/find?pageSize=0',data)
+                .then(res=>{
+                    if(res.data.status==200){
+                        // console.log(res.data.info.size);
+                        let num=res.data.info.size
+                        that.num_orderlist[index]=num;
+                    }
+                    else{
                         Toast(res.data.msg);
-                    });
+                    }
+                    console.log(res);
+                })
+                .catch(err=>{
+                    console.log(err);
+                });
                 
+            },
+            // 查询服务状态订单数量
+            getNumberOrderService(status,index){
+                let that=this;
+                this.$http.post('/api/product/order/mall/find/status?pageSize=0&orderStatus='+status)
+                .then(res=>{
+                    if(res.data.status==200){
+                        // console.log(res.data.info.size);
+                        let num=res.data.info.size
+                        that.num_orderlist[index]=num;
+                    }
+                    else{
+                        Toast(res.data.msg);
+                    }
+                    console.log(res);
+                })
+                .catch(err=>{
+                    console.log(err);
+                });
             },
             //查询待评价订单数量
             getNUmberOrderEval(){

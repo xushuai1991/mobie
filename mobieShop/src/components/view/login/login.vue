@@ -163,7 +163,7 @@ export default {
                         let json={
 
                         };
-                        operatelocalstorage('userinfo',JSON.stringify(data),'set',30);
+                        operatelocalstorage('userinfo',JSON.stringify(data),'set',300);
                         // sessionStorage.setItem('userinfo', JSON.stringify(data));
                         // this.$store.commit('login',res.data.info)
                         // let userinfo = res.data
