@@ -123,10 +123,11 @@ import { Toast } from 'mint-ui';
                     "consigneeMobilePhone": this.useriphone,
                     "customerId": userIds
                 }
-                console.log(JSON.parse(userId))
-                 let routerParams = this.$route.params;
-                 console.log(routerParams);
-                let userifno = routerParams.dataObj;
+                // let userifno = ;
+                // console.log(JSON.parse(userId))
+                //  let routerParams = this.$route.params;
+                //  console.log(routerParams);
+                let userifno = JSON.parse(sessionStorage.getItem("addManagement")).val;
                
                console.log(userifno)
                 if (!this.username) {
@@ -146,7 +147,7 @@ import { Toast } from 'mint-ui';
                     return false
                 }
             //    console.log(routerParams.name =='addManagement')
-                if(false){
+                if(JSON.parse(sessionStorage.getItem("addManagement")).goadd){
                      let datainfo2 = {
                     "areaId": this.checkindex,
                     "provinceId": this.checkindex1,
@@ -379,8 +380,10 @@ import { Toast } from 'mint-ui';
             }
         },
         created() {
-            let routerParams = this.$route.params;
-            let userifno = routerParams.dataObj;
+            // let routerParams = this.$route.params;
+            
+            let userifno = JSON.parse(sessionStorage.getItem("addManagement")).val;
+
             if (userifno) {
                 console.log(userifno)
                 this.username = userifno.consigneeName

@@ -19,7 +19,7 @@
                         </div>
                         <div id="zbd-preferences" class="clear">
                             <p>已选<span>唯润俏枝头</span></p>
-                            <p @click="showServer">其他规格&ensp;></p>
+                            <p @click="showServer">选择规格&ensp;></p>
                         </div>  
                         <div id="zbd-productDescription" class="clear">
                             <p >包邮<span>上海市满60.00元包邮</span></p>
@@ -80,13 +80,27 @@
                                  <div class='commodityInfoCloseBtn' @click="btnClose">&times;</div>
                                  <div class="commodityInfoLine"></div>
                             </div>
+                            <div id="zbd-commoditySpecification" style="    height: 5rem;
+    overflow-y: auto;" class="clear">
+                                <ul>
+                                    <li>规格1</li>
+                                    <li>规格2</li>
+                                    <li>规格3</li>
+                                    <li>规格1</li>
+                                    <li>规格2</li>
+                                    <li>规格3</li>
+                                    <li>规格1</li>
+                                    <li>规格2</li>
+                                </ul>
+                            </div>
+                            <div style="position: relative;"> <div class="commodityInfoLine"></div></div>
                             <p class="zbd-commodityInfoNums">数量</p>
-                            <div class="zbd-num">
+                            <div class="zbd-num" >
                                 <div class="zbd-numLess" :class="numLessBackground?'numLessNo':'numLessYes'" @click="lessClick">-</div>
                                 <input type="number" @change="numInputChange" class="zbd-numInput" v-model="specificationNum">
                                 <div class="zbd-numPlus" @click="plusClick">+</div>
                             </div>
-                            <div class="zbd-Confirmation"><p>确认</p></div>
+                            <div class="zbd-Confirmation" @click="confirmPurchaseClick"><p>确认</p></div>
                         </mt-popup>
                         <mt-popup v-model="shareVisible" position="bottom" style='width:100%;'>
                             <div class='closeBtn' @click="btnClose">分享</div>
@@ -180,9 +194,7 @@
                         <p>加入购物车</p>
                     </li>
                     <li @click='buyNow'>
-                        <router-link to='ordercertain'>
                             <p>立即购买</p>
-                        </router-link>
                     </li>
                 </ul>
             </div>
@@ -247,7 +259,8 @@
                 isStar:false,
                 starId:'',
                 commentList:['1','2','3','4','5','6','7','8','9','10'],
-                commentLoading:false
+                commentLoading:false,
+                confirmPurchase:false
             };
         },
         created(){
@@ -561,59 +574,62 @@
                 },
                 addShopCar(){
                     //this.shopNum++;
-                   
-                    let commodityId = this.commodityId
-                    console.log(commodityId)
-                    let customerId = this.customerId
-                    console.log(customerId)
-                    let commodityCount = this.specificationNum
-                    console.log(commodityCount)
-                     let that=this;
-                    this.$http.post('/api/product/shoppingCart/insertOne',
-                        {
-                            'commodityId':commodityId,
-                            'customerId':customerId,
-                            'commodityCount':commodityCount
-                        }
-                    )
-                    .then(function(response){
-                        console.log(response)
-                        if(response.data.status == 401){
-                        that.shopCarNumShow = false
-                        Toast({
-                            message:'尚未登录',
-                            duration:1000
-                        }
-                        );
-                       }else{
-                           Toast({
-                                message:'加入购物车成功',
-                                duration:500
+                    if(this.confirmPurchase == false){
+                        this.popupVisible = true
+                    }else{
+                        let commodityId = this.commodityId
+                        console.log(commodityId)
+                        let customerId = this.customerId
+                        console.log(customerId)
+                        let commodityCount = this.specificationNum
+                        console.log(commodityCount)
+                        let that=this;
+                        this.$http.post('/api/product/shoppingCart/insertOne',
+                            {
+                                'commodityId':commodityId,
+                                'customerId':customerId,
+                                'commodityCount':commodityCount
+                            }
+                        )
+                        .then(function(response){
+                            console.log(response)
+                            if(response.data.status == 401){
+                            that.shopCarNumShow = false
+                            Toast({
+                                message:'尚未登录',
+                                duration:1000
                             }
                             );
-                           that.$http.post('/api/product/shoppingCart/myShoppingCart',{})
-                            .then(function(response){
-                                console.log(response)
-                                if(response.data.info.length == 0){
-                                    that.shopCarNumShow = false
-                                }else{
-                                    that.shopCarNumShow = true
-                                    let num = null;
-                                    response.data.info.forEach((element,i) => {
-                                        console.log(element.commodityCount)
-                                        num += element.commodityCount
-                                    });
-                                    that.shopNum =num
+                        }else{
+                            Toast({
+                                    message:'加入购物车成功',
+                                    duration:500
                                 }
-                            })
-                            .catch(function(response){
-                                console.log(response)
-                            })
-                       }
-                    })
-                    .catch(function(response){
-                        console.log(response)
-                    })
+                                );
+                            that.$http.post('/api/product/shoppingCart/myShoppingCart',{})
+                                .then(function(response){
+                                    console.log(response)
+                                    if(response.data.info.length == 0){
+                                        that.shopCarNumShow = false
+                                    }else{
+                                        that.shopCarNumShow = true
+                                        let num = null;
+                                        response.data.info.forEach((element,i) => {
+                                            console.log(element.commodityCount)
+                                            num += element.commodityCount
+                                        });
+                                        that.shopNum =num
+                                    }
+                                })
+                                .catch(function(response){
+                                    console.log(response)
+                                })
+                        }
+                        })
+                        .catch(function(response){
+                            console.log(response)
+                        })
+                    }
                 },
                 collectionStar(){
                     if(this.isStar == false){
@@ -734,8 +750,26 @@
                         this.numLessBackground = false
                     }
                 },
+                confirmPurchaseClick(){
+                    let type="^[0-9]*[1-9][0-9]*$"; 
+                    let r=new RegExp(type); 
+                    let flag=r.test(this.specificationNum);
+                    if(!flag){
+                    　　alert("数量应为正整数");
+                    　　return false;
+                    }else{
+                        this.popupVisible = false
+                        this.confirmPurchase = true
+                    }
+                },
                 buyNow(){
-                    localStorage.setItem('commodityInfo','11')
+                    if(this.confirmPurchase == false){
+                        this.popupVisible = true
+                    }else{
+                        
+                         localStorage.setItem('commodityInfo','11')
+                         this.$router.push('./ordercertain')
+                    }
                 }
         },
         components: {
@@ -1121,7 +1155,8 @@
     height: 0.6rem;
     line-height: 0.6rem;
     padding-left: 0.4rem;
-    margin-top: 0.18rem;}
+    margin-top: 0.18rem;
+     margin-bottom: 0.18rem;}
     .zbd-numLess{float: left;
     font-size: 0.5rem;
     color: #ff3b30;

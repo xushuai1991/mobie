@@ -120,6 +120,11 @@ export default new Router({
                     component: resolve => require(['../components/view/shopinfo/invoice.vue'], resolve)
                 },
                 {
+                    path: '/invoiceInfo', // 发票
+                    name: 'invoiceInfo',
+                    component: resolve => require(['../components/view/shopinfo/invoiceInfo.vue'], resolve)
+                },
+                {
                     path: '/Inviting', // 受邀码
                     name: 'Inviting',
                     component: resolve => require(['../components/view/Inviting/Inviting.vue'], resolve)

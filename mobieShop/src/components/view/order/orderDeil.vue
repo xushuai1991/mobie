@@ -525,6 +525,9 @@
         created() {
             this.getDate(this.urlArgs().ordernumber)
         },
+        // beforeUpdate(){
+        //     this.getDate(this.urlArgs().ordernumber)
+        // }
     }
 </script>
 <style lang='less'>
