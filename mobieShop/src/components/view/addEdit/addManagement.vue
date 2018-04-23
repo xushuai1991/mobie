@@ -6,8 +6,8 @@
                     <div class='header'>
                         <p class='userName'><span v-text='item.consigneeName'></span><span v-text='item.consigneeMobilePhone'>15800000000</span></p>
                         <p class='p2'><i class='icon iconfont icon-dizhi1'></i><span>
-                        {{item.area.regionName+'区'+item.province.regionName+item.city.regionName+item.region.regionName+item.address}}
-                        </span></p>
+                            {{item.area.regionName+'区'+item.province.regionName+item.city.regionName+item.region.regionName+item.address}}
+                            </span></p>
                     </div>
                     <div class='footer'>
                         <span><input type='checkbox' v-model='item.isDefaultAddress' @change='routeTo(item)'>设为默认</span>
@@ -25,7 +25,15 @@
     </div>
 </template>
 <script>
-import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasdata.js'
+    import {
+        Toast
+    } from 'mint-ui';
+    import {
+        MessageBox
+    } from 'mint-ui';
+    import {
+        operatelocalstorage
+    } from '../../../assets/javascript/localstorage_hasdata.js'
     export default {
         data() {
             return {
@@ -38,15 +46,13 @@ import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasda
                 moveTranslate: 0,
                 listpages: '',
                 newlist: 0,
-                goName:''
+                goName: ''
             }
         },
         created() {
-            this.$root.$emit('header','地址管理');
+            this.$root.$emit('header', '地址管理');
             this.getAddInfo();
             // let routerParams = this.$route.params;
-            this.goName = this.urlArgs().name
-            sessionStorage.setItem('goAdd',this.goName)
             // console.log(this.goName)
         },
         methods: {
@@ -64,15 +70,15 @@ import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasda
                 }
                 return args;
             },
-            routeTo(value){
+            routeTo(value) {
                 console.log(value)
                 let url = '/api/customer/account/update';
                 this.$http({
                         url: url,
                         method: 'post',
                         data: {
-                            id:value.customerId,
-                            defaultAddressId:value.id
+                            id: value.customerId,
+                            defaultAddressId: value.id
                         }
                     })
                     .then(response => {
@@ -81,56 +87,76 @@ import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasda
                         //     this.$toast(response.data.info.msg);
                         //     this.$router.push('./addManagement')
                         // }
-
                     })
                     .catch(error => {
                         console.log(error)
                     })
-                    let goAdd = sessionStorage.setItem("goAdd")
-                    this.$router.push({
-                        path:'/'+this.goName,
-                        name: this.goName,
-                        params: { 
-                            direct: 'userinfo', 
-                            dataObj:value
-                        }
-                    });
-            },
-            addAdd(){//新增地址
+                this.goName = sessionStorage.getItem("from")
                 this.$router.push({
-                        path:'/addEdit',
-                        name: 'addEdit',
-                        params: { 
-                            name: 'addManagement'
-                        }
-                    });
-            },
-            editAdd(val){//编辑地址
-                this.$router.push({
-                        path:'/addEdit',
-                        name: 'addEdit',
-                        params: { 
-                            name: 'addManagement', 
-                            dataObj:val
-                        }
-                    });
-            },
-            delAdd(id,index){//删除地址
-            let url = '/api/customer/address/removeByIds';
-            this.$http({
-                    url: url,
-                    method: 'post',
-                    data:[id]
-                }).then(res => {
-                    if(res.data.msg=='删除成功'){
-                         this.list.splice(index,1);
+                    path: '/' + this.goName,
+                    name: this.goName,
+                    params: {
+                        direct: 'userinfo',
+                        dataObj: value
                     }
-                }).catch(error => {
-                    console.log(error)
-                })
+                });
+            },
+            addAdd() { //新增地址
+                this.$router.push({
+                    path: '/addEdit',
+                    name: 'addEdit',
+                    params: {
+                        name: 'addManagement'
+                    }
+                });
+            },
+            editAdd(val) { //编辑地址
+                this.$router.push({
+                    path: '/addEdit',
+                    name: 'addEdit',
+                });
+                sessionStorage.setItem("addManagement", JSON.stringify({
+                    val: val,
+                    goadd: 'addManagement'
+                }))
+            },
+            unbind(id, index) {
+                let that = this;
+                const htmls = `是否删除此信息？`;
+                MessageBox.confirm('', {
+                    message: htmls,
+                    title: '',
+                    showConfirmButton: true,
+                    showCancelButton: true,
+                    cancelButtonClass: 'cancelButton',
+                    confirmButtonClass: 'confirmButton',
+                    confirmButtonText: '删除',
+                    cancelButtonText: '不删除'
+                }).then(action => {
+                    if (action == 'confirm') {
+                        let url = '/api/customer/address/removeByIds';
+                        that.$http({
+                            url: url,
+                            method: 'post',
+                            data: [id]
+                        }).then(res => {
+                            if (res.data.msg == '删除成功') {
+                                that.list.splice(index, 1);
+                                Toast("删除成功")
+                            }
+                        }).catch(error => {
+                            console.log(error)
+                        })
+                    }
+                }).catch(err => {
+                    if (err == 'cancel') {}
+                });
+            },
+            delAdd(id, index) { //删除地址
+                this.unbind(id, index)
             },
             getAddInfo() {
-                let data = operatelocalstorage('userinfo',null,'get',null);
+                let data = operatelocalstorage('userinfo', null, 'get', null);
                 data = JSON.parse(data);
                 // console.log(data);
                 let url = '/api/customer/address/query';
@@ -144,7 +170,6 @@ import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasda
                     this.list = res.data.info.list
                     this.listpages = res.data.info.pages;
                     // console.log(res.data.info.list.isDefaultAddress)
-                    
                 }).catch(error => {
                     console.log(error)
                 })

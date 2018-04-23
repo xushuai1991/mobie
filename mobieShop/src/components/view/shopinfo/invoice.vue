@@ -1,26 +1,103 @@
 
 <template>
     <section class='CInvoice'>
-        <ul>
-            <li>
+        <ul class="mui-table-view" v-infinite-scroll="loadMore" infinite-scroll-disabled="moreLoading" infinite-scroll-distance="0" infinite-scroll-immediate-check="false">
+            <li class="mui-table-view-cell" v-for='(item,index) in list' :key='index' @click='goinvoicInfo(item)'>
                 <div class='radioBox'></div>
                 <div class='boxCompany'>
-                    <h2>增值税电子普通发票</h2>
-                    <p>付款方：上海天之蓝网络科技有限公司</p>
-                    <p>到家服务</p>
-                    <p>发票金额 <span>￥2600</span></p>
-                    <p>开票时间 <span>2018-03-04</span></p>
+                    <h2>{{item.category==11?'个人普通发票':item.category==21?'单位普通发票':"单位专用发票"}}</h2>
+                    <p>付款方：{{item.title}}</p>
+                    <p>{{item.remark }}</p>
+                    <p>发票金额 <span>￥{{item.orderInfo.paidMoney}}</span></p>
+                    <p>开票时间 <span>{{item.finishTime}}</span></p>
                 </div>
+                <li class="more_loading" v-show="!queryLoading">
+                    <mt-spinner type="snake" color="#00ccff" :size="20" v-show="moreLoading&&!allLoaded"></mt-spinner>
+                    <span v-show="allLoaded">已全部加载</span>
+                </li>
             </li>
         </ul>
+
     </section>
 </template>
 <script>
 
+    import {
+        MessageBox
+    } from 'mint-ui';
+    import {
+        Popup
+    } from 'mint-ui'
+    export default {
+        data() {
+            return {
+                selected: '1',
+                queryLoading: false,
+                moreLoading: false,
+                allLoaded: false,
+                totalNum: 0,
+                pageSize: 10,
+                pageNum: 0,
+                list: []
+            }
+        },
+        computed: {
+            params() {
+                return {
+                    pageSize: this.pageSize
+                }
+            }
+        },
+        created() {
+            this.loadMore();
+        },
+        methods: {
+            goinvoicInfo(item){
+                this.$router.push({
+                    "name":"invoiceInfo"
+                ,params:{"val":item}})
+                sessionStorage.setItem("invoiceInfo",JSON.stringify(item))
+            },
+            loadMore() {
+                if (this.allLoaded) {
+                    this.moreLoading = true;
+                    return;
+                }
+                if (this.queryLoading) {
+                    return;
+                }
+                this.moreLoading = !this.queryLoading;
+                this.pageNum++;
+                console.log(this.pageNum)
+                this.$http({
+                    url: "/api/product/order/invoice/query?page=" + this.pageNum + "&pageSize=" + this.pageSize,
+                    method: "post",
+                    data: {}
+                }).then((res) => {
+                    console.log(res.data.info)
+                    if (res.data.info && res.data.info.list) {
+                        res.data.info.list.forEach((item, i) => {
+                            console.log(item)
+                            if (item) {
+                                this.list = this.list.concat(item);
+                            }
+                        })
+                        console.log(this.list.length)
+                        if (this.list.length <= 0) {
+                            this.loadMore();
+                        }
+                        console.log(this.list)
+                        this.allLoaded = this.list.length == res.data.info.total;
+                    }
+                    this.moreLoading = this.allLoaded;
+                });
+            }
+        }
+    }
 </script>
 <style lang="less" scoped>
- .CInvoice {
-        height: 100%;
+    .CInvoice {
+        min-height: 14rem;
         background: #4ab6f7;
     }
     .CInvoice {
@@ -59,10 +136,7 @@
         width: 90%;
         background: #fff;
         margin: auto;
-        background-image: -webkit-gradient( linear, 
-        50% 0, 
-        0 100%, 
-        from(transparent), //起点的颜色
+        background-image: -webkit-gradient( linear, 50% 0, 0 100%, from(transparent), //起点的颜色
         color-stop(.7, transparent), //中间某一个点必须达到这个颜色，表示变化过程  .5b表示这个渐变范围长度的总长的50%
         color-stop(.7, #4ab6f7), //同上
         to(#4ab6f7)), //结束段的颜色
