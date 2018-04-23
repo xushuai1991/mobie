@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div class="wrapper" style="z-index:9999;">
         <mt-header fixed  :title="title">
             <router-link to="" slot="left">
                 <mt-button icon="back" @click="goback" ></mt-button>

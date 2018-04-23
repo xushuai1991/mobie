@@ -91,7 +91,7 @@
                         </div>
                         <p class="text_wait">待评价</p>
                     </li>
-                    <li>
+                    <li @click="toLink('customer')">
                         <div class="img_wait ">
                             <i class='icon iconfont icon-shouhou fontSize'></i>
                         </div>
@@ -265,6 +265,10 @@
                         }
                         case 'invoice':{
                             this.$router.push("/invoiceDateil");
+                            break;
+                        }
+                        case 'customer':{
+                            this.$router.push("/Customer");
                             break;
                         }
                         default:{

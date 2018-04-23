@@ -58,7 +58,7 @@ export default {
             //         order_withoutevaluate.push(item.commodityId);
             //     }
             // });
-            // sessionStorage.setItem('orderdetail',JSON.stringify(this.data));
+            sessionStorage.setItem('orderdetail',JSON.stringify(this.data));
             this.$router.push({'name':'evaluate'});
             
             // this.$router.push({'name':'evaluate',params:{'orderlist':order_withoutevaluate}});
