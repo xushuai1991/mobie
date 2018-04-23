@@ -77,27 +77,28 @@
                                 <span v-show='dataovered[1]'>已全部加载</span>
                             </p>
                         </mt-tab-container-item>
-                        <!-- <mt-tab-container-item id="used">
+                        <mt-tab-container-item id="used">
                             <ul class='score_all_list' 
                                 v-infinite-scroll="loadMore3"
-                                :infinite-scroll-disabled="loading2"
+                                infinite-scroll-disabled="loading2"
                                 infinite-scroll-distance="0">
-                                <li v-for='(item,index) in list_score' :key='index'>
-                                    <p class='tips' v-if='item.tip_show'>{{item.name?item.name:''}}</p>
-                                    <div class='left' v-if='!item.tip_show'>
-                                        <p>{{item.from}}</p>
-                                        <p>{{item.date}}</p>
+                                <li v-for='(item,index) in list_score[2]' :key='index'>
+                                    <!-- <p class='tips' v-if='item.tip_show'>{{item.name?item.name:''}}</p> -->
+                                    <div class='left'>
+                                        <p>{{item.channel==0?'注册':item.channel==1?'首次填写信息':item.channel==2?'完善个人信息':item.channel==3?'下单':item.channel==4?'绑定微信':item.channel==5?'转发':item.channel==6?'引客购买':item.channel==7?'指定商品购买消费':item.channel==8?'兑换活动':item.channel==9?'兑换优惠券':item.channel==10?'指定营销活动抵扣金额消费':''}}</p>
+                                        <p>{{item.createTime.substring(0,10)}}</p>
                                     </div>
-                                    <div class='right' v-if='!item.tip_show'>
-                                        <span>{{item.type=='add'?'+':'-'}}{{item.num}}</span>
+                                    <div class='right'>
+                                        <span>{{item.status==0?'+':'-'}}{{item.increasedPoints}}{{item.status==1?'(过期)':''}}</span>
                                     </div>
                                 </li>
                             </ul>
                             <p  class="page-infinite-loading">
-                                <mt-spinner type="fading-circle"></mt-spinner>
-                                加载中...
+                                <mt-spinner type="fading-circle" v-show='!dataovered[2]'></mt-spinner>
+                                <span v-show='!dataovered[2]'>加载中...{{dataovered[2]}}</span>    
+                                <span v-show='dataovered[2]'>已全部加载</span>
                             </p>
-                        </mt-tab-container-item> -->
+                        </mt-tab-container-item>
                     </mt-tab-container>
                 </mt-tab-container-item>
                 <mt-tab-container-item id="等级规划" class='level_tabcontainer'>
@@ -213,8 +214,8 @@ export default {
             scores:'300',
             level_name:'非会员',
             loading0:true,
+            loading1:true,
             loading2:true,
-            loading3:true,
             type:'积分记录',
             type_score:'all',
             list_score:[[],[],[]],
@@ -241,6 +242,7 @@ export default {
                     if(this.list_score[0].length==0){
                         this.getScoreLog(1);
                     }
+                    break;
                 }
                 case 'get':{
                     this.loading0=true;
@@ -249,6 +251,19 @@ export default {
                     if(this.list_score[1].length==0){
                         this.getScoreLog(1);
                     }
+                    break;
+                }
+                case 'used':{
+                    this.loading0=true;
+                    this.loading1=true;
+                    this.loading2=this.dataovered[2];
+                    if(this.list_score[2].length==0){
+                        this.getScoreLog(1);
+                    }
+                    break;
+                }
+                default:{
+                    break;
                 }
             }
         }
@@ -308,7 +323,7 @@ export default {
                 if(res.data.status==200){
                     let length=res.data.info.list.length;
                     if(length<20){
-                        that.dataovered[index]=true;
+                        that.$set(that.dataovered,index,true);
                     }
                     else if(length==20){
                         that.pagenum[index]+=1;
@@ -364,6 +379,7 @@ export default {
         },
         // 载入全部
         loadMore1(){
+            console.log(111);
             if(this.dataovered[0]){
                 Toast('数据已加载完');
             }
@@ -373,6 +389,7 @@ export default {
         },
         // 载入获取积分的记录
         loadMore2(){
+            console.log(222);
             if(this.dataovered[1]){
                 Toast('数据已加载完');
             }
@@ -381,7 +398,15 @@ export default {
             }
         },
         // 载入使用的积分记录
-        loadMore3(){},
+        loadMore3(){
+            console.log(33);
+            if(this.dataovered[2]){
+                Toast('数据已加载完');
+            }
+            else{
+                this.getScoreLog(this.pagenum[2]);
+            }
+        },
         // 获取会员计算方式
         getVIPs(){
             let that=this;
