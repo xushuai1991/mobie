@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class='price-total'>
-                <p>合计：<span class='total'>￥{{totalmoney}}</span></p>
+                <p>合计：<span class='total'>￥{{data.actualMoney}}</span></p>
             </div>
             <div class='operation'>
                 <button class='prime follow'>追单</button>
@@ -42,7 +42,8 @@ export default {
     },
     methods:{
         application(){
-            this.$router.push({path:''})
+            this.$router.push({path:'applyRefund'})
+            sessionStorage.setItem('orderdetail',JSON.stringify(this.data));
         },
         follow(){
             let that=this;
@@ -54,13 +55,13 @@ export default {
         },
     },
     computed:{
-        totalmoney(){
-            let total=0;
-            for(let item of this.data.orderDetails==null?[]:this.data.orderDetails){
-                total+=item.price*item.saleNumber;
-            }
-            return total;
-        },
+        // totalmoney(){
+        //     let total=0;
+        //     for(let item of this.data.orderDetails==null?[]:this.data.orderDetails){
+        //         total+=item.price*item.saleNumber;
+        //     }
+        //     return total;
+        // },
     }
 
 }

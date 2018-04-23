@@ -35,7 +35,7 @@
                             </div>
                         </div>
                         <ul class="behavior">
-                            <li>
+                            <li @click="toMycollection">
                                 <div class="collect">
                                     <i class='icon iconfont icon-xingxing coloBule'></i>
                                 </div>
@@ -197,20 +197,21 @@
             this.$root.$on('loadUserinfo',()=>{
                 let userinfo_location=operatelocalstorage('userinfo',null,'get',null);
                 // console.log(userinfo_location);
+                // 收藏数量
+                this.getNumberFavorite();
                 if(userinfo_location!=null){
                     let data = JSON.parse(userinfo_location);
                     this.userinfo=data;
                     this.integral();
                     let data_willpay={payState:2};
-                    let data_willservice={payState:1,serviceState:1};
-                    let data_inservice={payState:1,serviceState:2};
+                    // let data_willservice={payState:1,serviceState:1};
+                    // let data_inservice={payState:1,serviceState:2};
                     // 订单数量计算
                     this.getNUmberOrder(data_willpay,0);
-                    this.getNUmberOrder(data_willservice,1);
-                    this.getNUmberOrder(data_inservice,2);
+                    this.getNumberOrderService(1,1);
+                    this.getNumberOrderService(2,2);
                     this.getNUmberOrderEval(); 
-                    // 收藏数量
-                    this.getNumberFavorite();
+                    
                     // 购物车数量
                     this.getNumberShopcar();
                 }
@@ -250,7 +251,8 @@
                 else{
                     switch(direct){
                         case 'address':{
-                            this.$router.push({name:"addManagement",params:{name:"index"} });
+                            this.$router.push({name:"addManagement"});
+                            sessionStorage.setItem('from','index');
                             break;
                         }
                         case 'coupon':{
@@ -258,7 +260,7 @@
                             break;
                         }
                         case 'invite':{
-                            this.$router.push("/inviting?recommendedCustomerId="+userinfo.id);
+                            this.$router.push("/inviting?recommendedCustomerId="+this.userinfo.id);
                             break;
                         }
                         case 'invoice':{
@@ -274,23 +276,41 @@
             //查询订单数量（待付款，待服务，服务中）
             getNUmberOrder(data,index){
                 let that=this;
-                    this.$http.post('/api/product/order/mall/find?pageSize=0',data)
-                    .then(res=>{
-                        if(res.data.status==200){
-                            // console.log(res.data.info.size);
-                            let num=res.data.info.size
-                            that.num_orderlist[index]=num;
-                        }
-                        else{
-                            Toast(res.data.msg);
-                        }
-                        console.log(res);
-                    })
-                    .catch(err=>{
-                        console.log(err);
+                this.$http.post('/api/product/order/mall/find?pageSize=0',data)
+                .then(res=>{
+                    if(res.data.status==200){
+                        // console.log(res.data.info.size);
+                        let num=res.data.info.size
+                        that.num_orderlist[index]=num;
+                    }
+                    else{
                         Toast(res.data.msg);
-                    });
+                    }
+                    console.log(res);
+                })
+                .catch(err=>{
+                    console.log(err);
+                });
                 
+            },
+            // 查询服务状态订单数量
+            getNumberOrderService(status,index){
+                let that=this;
+                this.$http.post('/api/product/order/mall/find/status?pageSize=0&orderStatus='+status)
+                .then(res=>{
+                    if(res.data.status==200){
+                        // console.log(res.data.info.size);
+                        let num=res.data.info.size
+                        that.num_orderlist[index]=num;
+                    }
+                    else{
+                        Toast(res.data.msg);
+                    }
+                    console.log(res);
+                })
+                .catch(err=>{
+                    console.log(err);
+                });
             },
             //查询待评价订单数量
             getNUmberOrderEval(){
@@ -313,6 +333,15 @@
                 let that=this;
                 this.$http.post('/api/product/commodity/favorite/queryPageList')
                 .then(res=>{
+                    if(res.data.status==401){
+                        localStorage.removeItem('userinfo');
+                        this.userinfo={
+                            id:'',
+                            avatar:'',
+                            nickname:'',
+                            level:''
+                        };
+                    }
                     if(res.data.status==200){
                         this.num_collection=res.data.info.total;
                     }
@@ -343,7 +372,14 @@
                 else{
                     this.$root.$emit('switchindex','shopcar');
                 }
-                
+            },
+            toMycollection(){
+                if(this.userinfo.id==''){
+                    Toast('请先登录！');
+                }
+                else{
+                    this.$router.push('/mycollection');
+                }
             }
         },
         mounted() {

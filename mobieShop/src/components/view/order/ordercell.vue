@@ -1,18 +1,17 @@
 <template>
-    <div class='pendpay' >
+    <div class='ordercell' >
         <div class='title' @click.stop='toOrderDetail(data.number,index)'>
-            <span class='tip'>待付款</span>
-            <span class='time-remain'>还剩{{date_ramian}}</span>
+            <span class='tip'>{{status}}</span>
+            <span class='time-remain' v-if='data.payState==2'>还剩{{date_ramian}}</span>
             <!-- <div class='time-remain'></div> -->
         </div>
         <div class='content' @click.stop='toOrderDetail(data.number,index)'>
-            <div class='detail' v-for='(item,index) in data.orderDetails' :key='index'>
+            <div :class='{"detail":true,"grey":(type=="unservice"&item.serviceState!=1)||(type=="inservice"&item.serviceState!=2)}' v-for='(item,index) in data.orderDetails' :key='index' >
                 <div class='img-goods'>
                     <img :src="item.image" alt="图片丢失">
                 </div>
                 <div class='detail-goods'>
                     <h3 class='name'>{{item.commodityName}}</h3>
-                    <!-- <P class='name-sub'>休闲舒适 潮男标配 SM1212</P> -->
                     <P class='area'>{{item.condition1Name}}</P>
                     <p class='date'>{{item.condition2Name}}</p>
                 </div>
@@ -22,7 +21,6 @@
                 </div>
                 <!-- 服务类商品，添加预约时间功能 -->
                 <div class='appointment' v-if='item.isService==true'>
-                    
                     <button  @click.stop="appointment(item.id)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>
                     <span>服务时间：{{item.appointTime==null?'空':item.appointTime.substring(0,16)}}{{((item.updateAppointTimeIsActive&&item.updateAppointTime!=null)||item.updateAppointTime==null)?'':'('+'已修改'+')'}}</span>
                 </div>
@@ -31,8 +29,10 @@
                 <p>合计：<span class='total'>￥{{data.actualMoney}}</span></p>
             </div>
             <div class='operation'>
-                <button class='prime pay' @click.stop="pay">付款</button>
-                <button class='cancle' @click.stop="cancleOrder">取消订单</button>
+                <button class='prime pay' @click.stop="pay" v-if='data.payState==2'>付款</button>
+                <button class='cancle' @click.stop="cancleOrder" v-if='data.payState==2||data.payState==3'>取消订单</button>
+                <button class='prime follow' v-if='data.payState==1&data.serviceState==2'>追单</button>
+                <button class='apply' @click.stop='application' v-if='data.payState==1'>申请退款</button>
             </div>
         </div>
         <mt-popup v-model="popupVisible" position="bottom" class="popup">
@@ -43,9 +43,7 @@
                 </p>
             </mt-picker>
         </mt-popup>
-        
     </div>
-
 </template>
 <script>
 import {formatdate} from '../../../assets/javascript/formatdate.js'
@@ -53,7 +51,7 @@ import { Toast } from 'mint-ui';
 import { Indicator } from 'mint-ui';
 import { MessageBox } from 'mint-ui';
 export default {
-    props:['data','index'],
+    props:['data','index','type'],
     data(){
         return{
             date_ramian:'',
@@ -81,14 +79,15 @@ export default {
                 }
             ],
             currentid:'',
-            datechange:''
+            datechange:'',
+            // status:''
         }  
     },
+    
     created(){
         let date_create=new Date(this.data.createTime);
         this.date_dead=new Date(date_create.getTime() + 24*60*60*1000);
         this.countDown();
-        // console.log(date_dead,date_remain_ts,date_remain_h,date_remain_m,date_remain_s);
     },
     methods:{
         //剩余时间
@@ -192,7 +191,7 @@ export default {
         //跳转订单详情
         toOrderDetail(ordernumber,index){
             this.$router.push('orderDeil?ordernumber='+ordernumber+'&index='+index);
-            sessionStorage.setItem('orderdetail',JSON.stringify(this.data));
+            // sessionStorage.setItem('orderdetail',JSON.stringify(this.data));
         },
         //取消订单
         cancleOrder(){
@@ -220,10 +219,24 @@ export default {
         },
         //付款
         pay(){
-            console.log('付款。。。');
-        }
+            this.$router.push('paying?number='+this.data.number);
+            // console.log('付款。。。');
+        },
+        // 申请退款
+        application(){
+            this.$router.push({path:'applyRefund'})
+            sessionStorage.setItem('orderdetail',JSON.stringify(this.data));
+        },
     },
     computed:{
+        status(){
+            if(this.data.payState==2){
+                return '未支付';
+            }
+            else{
+                return this.data.orderState==1?"未完成":this.data.orderState==2?"已完成":this.data.orderState==3?"异常订单":this.data.orderState==4?"退款中":this.data.orderState==5?"退款完成":this.data.orderState==6?'已取消':"";
+            }
+        }
         // totalmoney(){
         //     let total=0;
         //     for(let item of this.data.orderDetails==null?[]:this.data.orderDetails){
@@ -235,10 +248,13 @@ export default {
 }
 </script>
 <style scoped>
-.pendpay{
+.ordercell{
     margin-bottom: 0.2rem;
     background-color: #fff;
     overflow: hidden;
+}
+.grey{
+    background-color: #f5f5f5;
 }
 .title{
     font-size: 0.26rem;

@@ -12,11 +12,11 @@
             <mt-tab-container-item id="all">
                 <ul  v-infinite-scroll="loadMore"  infinite-scroll-disabled="loading1" :infinite-scroll-immediate-check='false'  class='orderlist'>
                     <li v-for="(item,index) in orderlist[0]" :key="index">
-                        <pendpay :data='item' index='0' v-if="item.payState!=1&&item.orderState==1"></pendpay>
+                        <ordercell :data='item' index='0'></ordercell>
+                        <!-- <pendpay :data='item' index='0' v-if="item.payState!=1&&item.orderState==1"></pendpay>
                         <inservice :data='item' index='0' v-if='item.payState==1&&item.orderState==1&&item.serviceState==2'></inservice>
                         <willservice :data='item' index='0' v-if='item.payState==1&&item.orderState==1&&item.serviceState==1'></willservice>
-                        <!-- <willevaluate :data='item'></willevaluate> -->
-                        <other :data='item' index='0' v-if='(item.payState==1&&item.orderState==4)||(item.payState==1&&item.orderState==5)||(item.orderState==6)||(item.orderState==3)||(item.payState==3)'></other>
+                        <other :data='item' index='0' v-if='(item.payState==1&&item.orderState==4)||(item.payState==1&&item.orderState==5)||(item.orderState==6)||(item.orderState==3)||(item.payState==3)'></other> -->
                     </li>
                 </ul>
                 <p v-show="!loading1" class="page-infinite-loading">
@@ -29,7 +29,7 @@
             <mt-tab-container-item id="willpay">
                 <ul v-infinite-scroll="loadMore1" infinite-scroll-disabled="loading2" :infinite-scroll-immediate-check='false' class='orderlist'>
                     <li v-for="(item,index) in orderlist[1]" :key="index">
-                        <pendpay :data='item' index='1'></pendpay>
+                        <ordercell :data='item' index='1'></ordercell>
                     </li>
                 </ul>
                 <p v-show="!loading2" class="page-infinite-loading">
@@ -42,7 +42,7 @@
             <mt-tab-container-item id="willservice">
                 <ul v-infinite-scroll="loadMore2" infinite-scroll-disabled="loading3" infinite-scroll-immediate-check='false'  class='orderlist'>
                     <li v-for="item in orderlist[2]" :key="item">
-                        <willservice :data='item' index='2'></willservice>
+                        <ordercell :data='item' index='2' :type='type_service[0]'></ordercell>
                     </li>
                 </ul>
                 <p v-show="!loading3" class="page-infinite-loading">
@@ -55,7 +55,7 @@
             <mt-tab-container-item id="inservice">
                 <ul v-infinite-scroll="loadMore3" infinite-scroll-disabled="loading4" infinite-scroll-immediate-check='false'  class='orderlist'>
                     <li v-for="item in orderlist[3]" :key="item">
-                        <inservice :data='item' index='3'></inservice>
+                        <ordercell :data='item' index='3' :type='type_service[1]'></ordercell>
                     </li>
                 </ul>
                 <p v-show="!loading4" class="page-infinite-loading">
@@ -81,15 +81,16 @@
     </div>
 </template>
 <script>
-import pendpay from './pendpay.vue'
-import inservice from './inservice.vue'
+// import pendpay from './pendpay.vue'
+// import inservice from './inservice.vue'
 import willevaluate from './willevaluate.vue'
-import willservice from './willservice.vue'
-import other from './other.vue'
+// import willservice from './willservice.vue'
+// import other from './other.vue'
+import ordercell from './ordercell.vue'
 import { Indicator } from 'mint-ui';
 import { Toast } from 'mint-ui'; 
 export default {
-    components:{pendpay,inservice,willevaluate,willservice,other},
+    components:{willevaluate,ordercell},
     data() {
         return {
             test:true,
@@ -103,6 +104,7 @@ export default {
             loading:false,
             dataover:[false,false,false,false,false],//数据是否加载完
             pagenumlist:[1,1,1,1,1],
+            type_service:['unservice','inservice']
         };
     },
     created(){
@@ -112,40 +114,7 @@ export default {
         if(this.selected=='all'){
             this.getOrderList(1,{});
         }
-        // switch(this.selected){
-        //     //全部
-        //     case 'all':{
-        //         let data={};
-        //         this.getOrderList(1,data);
-        //         break;
-        //     }
-        //     // 待付款
-        //     case 'willpay':{
-        //         let data={payState:2};
-        //         this.getOrderList(1,data);
-        //         break;
-        //     }
-        //     //待服务
-        //     case 'willservice':{
-        //         let data={payState:1,serviceState:1};
-        //         this.getOrderList(1,data);
-        //         break;
-        //     }
-        //     //服务中
-        //     case 'inservice':{
-        //         let data={payState:1,serviceState:2};
-        //         this.getOrderList(1,data);
-        //         break;
-        //     }
-        //     //待评价
-        //     case 'willevaluate':{
-        //         this.getOrder_Willevaluate(1);
-        //         break;
-        //     }
-        //     default:{
-        //         break;
-        //     }
-        // }
+      
         // 对订单操作后，重新刷新对应tab下的数据
         this.$root.$on('loaddata',index=>{
             // console.log(index);
@@ -224,8 +193,8 @@ export default {
                 //待服务
                 case 'willservice':{
                     if(this.orderlist[2].length==0){
-                        let data={payState:1,serviceState:1};
-                        this.getOrderList(1,data);
+                        // let data={orderStatus:1};
+                        this.getOrderListService(1,1);
                     }
                     else{
                         this.loading3=this.dataover[2];
@@ -239,8 +208,8 @@ export default {
                 //服务中
                 case 'inservice':{
                     if(this.orderlist[3].length==0){
-                        let data={payState:1,serviceState:2};
-                        this.getOrderList(1,data);
+                        // let data={orderStatus:2};
+                        this.getOrderListService(1,2);
                     }
                     else{
                         this.loading4=this.dataover[3];
@@ -361,6 +330,51 @@ export default {
                 Toast('查询失败');
             });
         },
+        // 查询服务状态的订单
+        getOrderListService(pagenum,status){
+            let that=this;
+            let index=this.selected=='all'?0:this.selected=='willpay'?1:this.selected=='willservice'?2:this.selected=='inservice'?3:4;
+            if(pagenum==1){
+                Indicator.open();
+                this.orderlist[index]=[];
+            }
+            this.changeStatus(index,true);
+            this.$http.post('/api/product/order/mall/find/status?pageSize=5&pageNo='+pagenum+'&orderStatus='+status)
+            .then(res=>{
+                console.log(that.orderlist[index]);
+                if(res.data.status==200){
+                    if(pagenum>=res.data.info.pages){
+                        that.$set(that.dataover,index,true);
+                    }
+                    that.pagenumlist[index]=res.data.info.list.length==5?pagenum+1:pagenum;
+                    res.data.info.list.forEach(item=>{
+                        that.orderlist[index].push(item);
+                    });
+                }
+                else{
+                    Toast(res.data.msg);
+                }
+                if(!that.dataover[index]){
+                    that.changeStatus(index,false);
+                }
+                else{
+                    Toast('数据已加载完');
+                }
+                Indicator.close();
+                console.log(res);
+            })
+            .catch(err=>{
+                if(!that.dataover[index]){
+                    that.changeStatus(index,false);
+                }
+                else{
+                    Toast('数据已加载完');
+                }
+                console.log(err);
+                Indicator.close();
+                Toast('查询失败');
+            })
+        },
         // 改变触发状态
         changeStatus(index,flag){
             switch(index){
@@ -415,13 +429,13 @@ export default {
         //加载待服务订单
         loadMore2(){
             console.log(222);
-            let data={payState:1,serviceState:1};
-            this.getOrderList(this.pagenumlist[2],data);
+            // let data={orderStatus:1};
+            this.getOrderListService(this.pagenumlist[2],1);
         },
         //加载服务中的订单
         loadMore3(){
-            let data={payState:1,serviceState:2};
-            this.getOrderList(this.pagenumlist[3],data);
+            // let data={orderStatus:2};
+            this.getOrderListService(this.pagenumlist[3],2);
         },
         //加载未评价订单
         loadMore4(){

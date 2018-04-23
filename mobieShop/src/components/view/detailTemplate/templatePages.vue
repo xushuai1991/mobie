@@ -641,6 +641,7 @@
                         .then(function(response){
                             console.log(response)
                             if(response.data.status == 401){
+                                localStorage.removeItem('userinfo');
                                 Toast({
                                     message:'尚未登录',
                                     duration:1000

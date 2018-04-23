@@ -145,6 +145,7 @@
 import {formatdate} from '../../../assets/javascript/formatdate.js'
 import { MessageBox } from 'mint-ui'
 import { Toast } from 'mint-ui'
+import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasdata.js'
 // import {weixinPay} from '../../../assets/javascript/weixinpay.js'
 export default {
     data(){
@@ -275,19 +276,29 @@ export default {
                 this.deductionlist.push(json1);
             }
         });
-        let userinfo=JSON.parse(sessionStorage.getItem('userinfo'));
-        this.userinfo.id=userinfo.id;
-        this.userinfo.username=userinfo.nickname==null?'无昵称':userinfo.nickname;
-        this.userinfo.phone=userinfo.mobile;
-        this.userinfo.imgurl=userinfo.avatar;
-        this.userinfo.consumptionpoints=userinfo.consumptionPoints;
-        this.getDefaultaddress();
-        // console.log(userinfo);
-        this.getCouponcanuse();
+        let user_str=operatelocalstorage('userinfo',null,'get',null);
+        
+        if(user_str==null){
+            Toast('请先登录');
+        }
+        else{
+            let userinfo=JSON.parse(user_str);
+            this.userinfo.id=userinfo.id;
+            this.userinfo.username=userinfo.nickname==null?'无昵称':userinfo.nickname;
+            this.userinfo.phone=userinfo.mobile;
+            this.userinfo.imgurl=userinfo.avatar;
+            this.userinfo.consumptionpoints=userinfo.consumptionPoints;
+            this.getDefaultaddress();
+            // console.log(userinfo);
+            this.getCouponcanuse();
+        }
+        
+        
     },
     methods:{
         changeaddress(){
-            this.$router.push({'name':'addManagement',params:{'name':'ordercertain'}});
+            this.$router.push({'name':'addManagement'});
+            sessionStorage.setItem('from','ordercertain');
         },
         selectpaytype(e){
             let classname=e.target.getAttribute('class');
@@ -340,6 +351,9 @@ export default {
             let that=this;
             this.$http.post('/api/customer/address/queryMap',{customerId:this.userinfo.id})
             .then(res=>{
+                if(res.data.status==401){
+                    Toast('请先登录');
+                }
                 if(res.data.status==200){
                     for(let item of res.data.info){
                         if(item.isDefaultAddress){

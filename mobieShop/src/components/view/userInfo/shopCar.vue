@@ -27,7 +27,7 @@
                                                     <p class="goods_identifier strlen" style="width:3rem;"></p>
                                                     <p class="goods_color">颜色：<span>红色</span></p>
                                                     <p class="goods_size">尺码：<span>尺寸</span></p>
-                                                    <p @click="open('picker1',index,indexs)" size="large">{{items.otherInfo.commodityInfo.playTime}}</p>
+                                                    <!--<p @click="open('picker1',index,indexs)" size="large">{{items.otherInfo.commodityInfo.playTime}}</p>!-->
                                                 </li>
                                                 <li class="goods_info_se">
                                                     <p class="goods_price">￥<span>{{items.otherInfo.commodityPrice}}</span></p>
@@ -202,7 +202,6 @@
                 this.getCarData();
             }
             this.$root.$on('loadShopcar',()=>{
-                alert(1)
                 // 首次进入购物车页面，加载商品信息
                 if(this.list.length==0){
                     this.getCarData();
@@ -339,6 +338,7 @@
                         // },
                         data: {}
                     }).then(response => {
+                        
                         if(response.data.status==200){
                             let data = response.data.info;
                             console.log(data)
@@ -362,7 +362,13 @@
                             that.list = (b)
                         }
                         else{
-                            Toast(response.data.msg);
+                            if(response.data.status==401){
+                                localStorage.removeItem('userinfo');
+                                Toast('请先登录');
+                            }
+                            else{
+                                Toast(response.data.msg);
+                            }
                         }
                         console.log(that.list)
                     }).catch(error => {

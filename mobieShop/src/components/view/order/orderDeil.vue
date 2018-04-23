@@ -1,18 +1,18 @@
 <template>
     <div class='CmyOveroderDeil'>
         <!--<ul v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
-                                                                        <li v-for="item in list">{{ item }}</li>
-                                                                    </ul>!-->
+                                                                                                    <li v-for="item in list">{{ item }}</li>
+                                                                                                </ul>!-->
         <section>
             <div class="wrap2">
                 <div class='tiemBox'>
                     <p>{{ orderState}}</p>
                     <p v-if='orderState=="等待买家支付"'>
                         <span :endTime="endTime" :callback="callback" :endText="endText">
-                                                            <slot>
-                                                                {{content}}
-                                                            </slot>
-                                                        </span></p>
+                                                                                        <slot>
+                                                                                            {{content}}
+                                                                                        </slot>
+                                                                                    </span></p>
                     <p v-else>
                         {{orderText}}
                     </p>
@@ -35,8 +35,8 @@
                                     <div class="goods_title type-pay" style='height:5px;'>
                                     </div>
                                     <div class="goodsBox">
-                                        <ul class="goods_detail" style=' margin-top:0.2rem;' @click='goShopDateil(item)'>
-                                            <li class="goods_img" style="margin-left:0px;">
+                                        <ul class="goods_detail" style=' margin-top:0.2rem;'>
+                                            <li class="goods_img" style="margin-left:0px;" @click='goShopDateil(item)'>
                                                 <img :src="item.commodityImageUrl">
                                             </li>
                                             <li class="goods_info">
@@ -44,6 +44,13 @@
                                                 <p class="goods_identifier strlen" style="width:2.5rem;padding-right:0.2rem;"><span></span></p>
                                                 <p class="goods_color">颜色：<span>红色</span></p>
                                                 <p class="goods_size">尺码：<span>尺寸</span></p>
+                                                <div>
+                                                    <p>{{item.appointTime==null?'预约时间':item.appointTime}}</p>
+                                                    <p>{{item.appointTime!=null?'修改时间':item.updateAppointTime==null?'':item.updateAppointTime}}</p>
+                                                </div>
+                                                <div class='appointment' v-if='true'>
+                                                    <button @click.stop="appointment(index,item.id,item.appointTime)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>
+                                                </div>
                                             </li>
                                             <li class="goods_info_se">
                                                 <p class="goods_price">￥<span>{{item.price}}</span></p>
@@ -51,8 +58,8 @@
                                                     数量:<input type="number" disabled :value="item.saleNumber" style='background:#fff;margint-top:0.2rem;' />
                                                 </div>
                                                 <!--<span class="mui_shopcar_del" @click="remove(index,indexs)">
-                                                                                                            <i class='icon iconfont icon-lajitong'></i>
-                                                                                                        </span>!-->
+                                                                                                                                        <i class='icon iconfont icon-lajitong'></i>
+                                                                                                                                    </span>!-->
                                             </li>
                                         </ul>
                                         <div class='refundDetail' v-show='refundOrder'>
@@ -81,8 +88,8 @@
                                                     数量:<input type="number" disabled :value="items.saleNumber" style='background:#fff;margint-top:0.2rem;' />
                                                 </div>
                                                 <!--<span class="mui_shopcar_del" @click="remove(index,indexs)">
-                                                                                                            <i class='icon iconfont icon-lajitong'></i>
-                                                                                                        </span>!-->
+                                                                                                                                        <i class='icon iconfont icon-lajitong'></i>
+                                                                                                                                    </span>!-->
                                             </li>
                                         </ul>
                                         <!--</mt-cell-swipe>!-->
@@ -114,6 +121,14 @@
             <input type='button' v-show=showBtn5 @click='delOrder(number)' value='确认收货'>
             <input type='button' v-show=showBtn7 @click='delOrder(number)' value='评价订单'>
         </div>
+        <mt-popup v-model="popupVisible" position="bottom" class="popup">
+            <mt-picker :slots="dates" @change='onValuesChange' :showToolbar='true'>
+                <p class='btn-group'>
+                    <button class='cancle' @click.stop='cancledate'>取消</button>
+                    <button class='certain' @click.stop="getdate">确定</button>
+                </p>
+            </mt-picker>
+        </mt-popup>
     </div>
 </template>
 <script>
@@ -124,9 +139,44 @@
     import {
         MessageBox
     } from 'mint-ui';
+    import {
+        formatdate
+    } from '../../../assets/javascript/formatdate.js'
     export default {
         data() {
             return {
+                // pIndex:'',
+                // pIndex2:'',
+                // value: null,
+                // value1: null,
+                // startDate: new Date(),
+                // endDate: this.addDay(2),
+                popupVisible: false,
+                currentindex: '',
+                id: '',
+                orstate: '',
+                datechange: '',
+                dates: [{
+                        values: ['今天', '明天', '后天'],
+                        className: 'slot1',
+                        textAlign: 'left'
+                    },
+                    {
+                        flex: 1,
+                        values: ['00点', '01点', '02点', '03点', '04点', '05点',
+                            '06点', '07点', '08点', '09点', '10点', '11点',
+                            '12点', '13点', '14点', '15点', '16点', '17点',
+                            '18点', '19点', '20点', '21点', '22点', '23点'
+                        ],
+                        className: 'slot2',
+                        textAlign: 'center'
+                    },
+                    {
+                        values: ['00分', '10分', '20分', '30分', '40分', '50分', ],
+                        className: 'slot3',
+                        textAlign: 'right'
+                    }
+                ],
                 content: '',
                 orderStaty: '',
                 orderMoney: '',
@@ -167,6 +217,63 @@
             }
         },
         methods: {
+            getdate() {
+                let day = new Date();
+                if (this.datechange[0] == '今天') {
+                    // day = day.format('yyyy-MM-dd');
+                    day = day.format('yyyy-MM-dd hh:mm');
+                } else if (this.datechange[0] == '明天') {
+                    day = new Date(day.setDate(day.getDate() + 1)).format('yyyy-MM-dd hh:mm');
+                } else if (this.datechange[0] == '后天') {
+                    day = new Date(day.setDate(day.getDate() + 2)).format('yyyy-MM-dd hh:mm');
+                }
+                let date = day + ' ' + this.datechange[1].substring(0, 2) + ':' + this.datechange[2].substring(0, 2);
+                console.log(day)
+                var dates = new Date(day.replace(/-/g, '/'));
+                let time3 = Date.parse(dates);
+                console.log(time3)
+                if (this.orstate == null) {
+                    let url = '/api/product/order/mall/update/orderDetail';
+                    this.$http({
+                        url: url,
+                        method: "POST",
+                        data: [{
+                            appointTime: time3,
+                            id: this.id
+                        }]
+                    }).then((res) => {
+                        console.log(res)
+                    }).catch((err) => {
+                    })
+                } else {
+                    let url = '/api/product/order/mall/update/orderDetail';
+                    this.$http({
+                        url: url,
+                        method: "POST",
+                        data: [{
+                            updateAppointTime: day,
+                            id: this.id
+                        }]
+                    }).then((res) => {
+                        console.log(res)
+                    }).catch((err) => {
+                    })
+                }
+                this.popupVisible = false;
+            },
+            cancledate() {
+                this.popupVisible = false;
+            },
+            appointment(index, id, orstate) {
+                this.popupVisible = true;
+                this.currentindex = index;
+                this.id = id;
+                this.orstate = orstate;
+            },
+            onValuesChange(aa, values) {
+                this.datechange = values;
+                console.log(this.datechange)
+            },
             refundButton($event, indexs) {
                 if ($event.currentTarget.nextElementSibling.classList.value == 'hiddles') {
                     $event.currentTarget.nextElementSibling.classList.remove("hiddles")
@@ -184,95 +291,95 @@
                 });
             },
             getDate(ordernumber) {
-                let orderdetail = sessionStorage.getItem("orderdetail");
-                let orderdetails = JSON.parse(orderdetail)
-                console.log(orderdetails)
-                // let url = '/api/product/order/mall/find';
-                // this.$http({
-                //     url: url,
-                //     method: 'post',
-                //     data: {
-                //         "number": ordernumber
-                //     }
-                // }).then((res) => {
-                //     if ( res.data.info.list.length==0 || res.data.status != 200) {
-                //         Toast('订单有问题请联系客服')
-                //         return false
-                //     }
-                let orderStaty = orderdetails;
-                console.log(orderStaty)
-                this.uerName = orderStaty.name;
-                this.userPhone = orderStaty.phone
-                this.userAdd = orderStaty.detailAddress
-                this.orderMoney = orderStaty.orderMoney
-                this.actualMoney = orderStaty.actualMoney
-                this.companyId = orderStaty.companyId
-                this.createTime = orderStaty.createTime
-                this.number = orderStaty.number
-                console.log(orderStaty)
-                if (orderStaty.payState == 1) {
-                    //卖家付款过的
-                    this.orderState = '已支付等待卖家发货'
-                    this.orderText = '亲,请耐心能等待';
-                    // if (orderStaty.orderState == 2) {
-                    //     this.showBtn4 = true, //退款
-                    //         this.showBtn5 = true; //确认收货
-                    //     this.orderState = '已支付等待卖家发货'
-                    //     this.orderText = '亲,请耐心能等待';
+                // let orderdetail = sessionStorage.getItem("orderdetail");
+                // let orderdetails = JSON.parse(orderdetail)
+                // console.log(ordernumber)
+                let url = '/api/product/order/mall/find';
+                this.$http({
+                    url: url,
+                    method: 'post',
+                    data: {
+                        "number": ordernumber
+                    }
+                }).then((res) => {
+                    if (res.data.info.list.length == 0 || res.data.status != 200) {
+                        Toast('订单有问题请联系客服')
+                        return false
+                    }
+                    let orderStaty = res.data.info.list[0];
+                    console.log(orderStaty)
+                    this.uerName = orderStaty.name;
+                    this.userPhone = orderStaty.phone
+                    this.userAdd = orderStaty.detailAddress
+                    this.orderMoney = orderStaty.orderMoney
+                    this.actualMoney = orderStaty.actualMoney
+                    this.companyId = orderStaty.companyId
+                    this.createTime = orderStaty.createTime
+                    this.number = orderStaty.number
+                    console.log(orderStaty)
+                    if (orderStaty.payState == 1) {
+                        //卖家付款过的
+                        this.orderState = '已支付等待卖家发货'
+                        this.orderText = '亲,请耐心能等待';
+                        // if (orderStaty.orderState == 2) {
+                        //     this.showBtn4 = true, //退款
+                        //         this.showBtn5 = true; //确认收货
+                        //     this.orderState = '已支付等待卖家发货'
+                        //     this.orderText = '亲,请耐心能等待';
+                        // }
+                        // if (orderStaty.orderState == 4) {
+                        //     this.showBtn6 = true, //取消退款
+                        //         this.showBtn5 = true; //立即付款按钮
+                        //     this.orderState = '退款中...'
+                        //     this.orderText = '亲,请耐心能等待';
+                        //     this.refundOrder = true
+                        // }
+                        if (orderStaty.serviceState == 1) {
+                            this.orderState = '等待服务'
+                        }
+                        if (orderStaty.serviceState == 2) {
+                            this.orderState = '服务中...'
+                        }
+                        if (orderStaty.serviceState == 3) {
+                            this.orderState = '服务中...'
+                        }
+                        if (orderStaty.orderState == 5) {
+                            // this.showBtn3 = true; //删除订单
+                            this.orderState = '退款完成'
+                            this.orderText = '';
+                        }
+                    } else if (orderStaty.payState == 2) {
+                        //卖家未付款
+                        this.orderState = '等待买家支付'
+                        this.countdowm((this.timestampToTime((new Date(orderStaty.createTime).getTime() / 1000) + (24 * 60 * 60)))) //时间戳加24小时;
+                        if (orderStaty.orderState == 1) {
+                            this.showBtn1 = true, //取消按钮
+                                this.showBtn2 = true; //立即付款按钮
+                        }
+                    } else if (orderStaty.payState == 3) {
+                        //过去订单只能删除
+                        this.orderState = '订单已过期'
+                        this.orderText = '订单已过期';
+                        if (orderStaty.orderState == 1) {
+                            this.showBtn3 = true; //删除订单
+                        }
+                    }
+                    // if (orderStaty.orderState == 6) {
+                    //     this.orderState = '交易关闭'
+                    //     this.showBtn3 = true
+                    //     this.orderText = '';
                     // }
-                    // if (orderStaty.orderState == 4) {
-                    //     this.showBtn6 = true, //取消退款
-                    //         this.showBtn5 = true; //立即付款按钮
-                    //     this.orderState = '退款中...'
-                    //     this.orderText = '亲,请耐心能等待';
-                    //     this.refundOrder = true
-                    // }
-                    if(orderStaty.serviceState==1){
-                        this.orderState = '等待服务'
+                    this.list = orderStaty.orderDetails
+                    if (this.list) {
+                        this.list.forEach((item) => {
+                            item.refundShow = false
+                        })
                     }
-                    if(orderStaty.serviceState==2){
-                        this.orderState = '服务中...'
-                    }
-                    if(orderStaty.serviceState==3){
-                        this.orderState = '服务中...'
-                    }
-                    if (orderStaty.orderState == 5) {
-                        // this.showBtn3 = true; //删除订单
-                        this.orderState = '退款完成'
-                         this.orderText = '';
-                    }
-                } else if (orderStaty.payState == 2) {
-                    //卖家未付款
-                    this.orderState = '等待买家支付'
-                    this.countdowm((this.timestampToTime((new Date(orderStaty.createTime).getTime() / 1000) + (24 * 60 * 60)))) //时间戳加24小时;
-                    if (orderStaty.orderState == 1) {
-                        this.showBtn1 = true, //取消按钮
-                        this.showBtn2 = true; //立即付款按钮
-                    }
-                } else if (orderStaty.payState == 3) {
-                    //过去订单只能删除
-                    this.orderState = '订单已过期'
-                    this.orderText = '订单已过期';
-                    if (orderStaty.orderState == 1) {
-                        this.showBtn3 = true; //删除订单
-                    }
-                }
-                // if (orderStaty.orderState == 6) {
-                //     this.orderState = '交易关闭'
-                //     this.showBtn3 = true
-                //     this.orderText = '';
-                // }
-                this.list = orderStaty.orderDetails
-                if (this.list) {
-                    this.list.forEach((item) => {
-                        item.refundShow = false
-                    })
-                }
-                // // this.list.refundShow=false
-                // console.log(this.list)
-                // }).catch((error) => {
-                //     console.log(error)
-                // })
+                    // this.list.refundShow=false
+                    // console.log(this.list)
+                }).catch((error) => {
+                    console.log(error)
+                })
             },
             delOrder(order) {
                 let url = '/api/product/order/mall/update';
@@ -395,6 +502,9 @@
                 let h = date.getHours() + ':';
                 let m = date.getMinutes() + ':';
                 let s = date.getSeconds();
+                h < 10 ? "0" + h : h;
+                m < 10 ? "0" + m : m;
+                s < 10 ? "0" + s : s;
                 return Y + M + D + h + m + s;
             },
             urlArgs() {
@@ -415,9 +525,12 @@
         created() {
             this.getDate(this.urlArgs().ordernumber)
         },
+        // beforeUpdate(){
+        //     this.getDate(this.urlArgs().ordernumber)
+        // }
     }
 </script>
-<style>
+<style lang='less'>
     .CmyOveroderDeil .mint-cell-value {
         width: 100%;
     }
@@ -432,8 +545,43 @@
         border-bottom: none;
         padding-bottom: 0.2rem;
     }
+    .CmyOveroderDeil .popup {
+        width: 100%;
+        .btn-group {
+            padding: .2rem 0;
+            line-height: 0;
+            border-bottom: 1px solid #eaeaea;
+            text-align: center;
+        }
+        .btn-group button {
+            background: none;
+            border: none;
+            color: #46c5d9;
+            font-size: .3rem;
+            padding: 0 1.5rem;
+            outline: none;
+        }
+    }
 </style>
 <style scoped lang='less'>
+    .appointment {
+        text-align: right;
+        position: absolute;
+        width: 56%;
+        bottom: 0;
+    }
+    .appointment button {
+        /* position: absolute;
+                            bottom:.2rem;
+                            right:.2rem; */
+        background-color: #26a2ff;
+        outline: none;
+        border: 0;
+        color: #fff;
+        padding: .1rem .2rem;
+        margin-right: .2rem;
+        border-radius: .1rem;
+    }
     .hiddles {
         display: none;
     }
@@ -725,9 +873,7 @@
     .goods_info p {
         text-indent: 0.2rem;
     }
-    .goods_info p:first-child {
-        font-size: .3rem;
-    }
+    .goods_info p:first-child {}
     .goods_info_se {
         text-align: right;
         line-height: 1.5rem;

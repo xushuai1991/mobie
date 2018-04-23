@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class='price-total'>
-                <p>合计：<span class='total'>￥{{totalmoney}}</span></p>
+                <p>合计：<span class='total'>￥{{onValuesChange}}</span></p>
             </div>
             <div class='operation' v-if='data.payState==3'>
                 <button class='prime' @click.stop="cancleOrder">取消订单</button>
@@ -40,13 +40,13 @@ export default {
         }  
     },
     computed:{
-        totalmoney(){
-            let total=0;
-            for(let item of this.data.orderDetails==null?[]:this.data.orderDetails){
-                total+=item.price*item.saleNumber;
-            }
-            return total;
-        }
+        // totalmoney(){
+        //     let total=0;
+        //     for(let item of this.data.orderDetails==null?[]:this.data.orderDetails){
+        //         total+=item.price*item.saleNumber;
+        //     }
+        //     return total;
+        // }
     },
     methods:{
         //跳转订单详情

@@ -25,11 +25,11 @@
                 </div>
             </div>
             <div class='price-total'>
-                <p>合计：<span class='total'>￥{{totalmoney}}</span></p>
+                <p>合计：<span class='total'>￥{{data.actualMoney}}</span></p>
             </div>
             <div class='operation'>
                 <!-- <button class='prime appoint' @click='appointment'>预约时间</button> -->
-                <button class='apply'>申请退款</button>
+                <button class='apply' @click.stop='application'>申请退款</button>
             </div>
         </div>
         <mt-popup v-model="popupVisible" position="bottom" class="popup">
@@ -76,14 +76,14 @@ export default {
         }  
     },
     computed:{
-        totalmoney(){
-            let total=0;
-            // console.log(this.data);
-           for(let item of this.data.orderDetails==null?[]:this.data.orderDetails){
-                total+=item.price*item.saleNumber;
-            }
-            return total;
-        }
+        // totalmoney(){
+        //     let total=0;
+        //     // console.log(this.data);
+        //    for(let item of this.data.orderDetails==null?[]:this.data.orderDetails){
+        //         total+=item.price*item.saleNumber;
+        //     }
+        //     return total;
+        // }
     },
     methods:{
         appointment(index){
@@ -114,6 +114,11 @@ export default {
         //跳转订单详情
         toOrderDetail(ordernumber,index){
             this.$router.push('orderDeil?ordernumber='+ordernumber+'&index='+index);
+            sessionStorage.setItem('orderdetail',JSON.stringify(this.data));
+        },
+        //申请退款
+        application(){
+            this.$router.push({path:'applyRefund'})
             sessionStorage.setItem('orderdetail',JSON.stringify(this.data));
         },
     }

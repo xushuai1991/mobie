@@ -19,7 +19,7 @@
                 </div>
             </div>
             <div class='price-total'>
-                <p>合计：<span class='total'>￥{{totalmoney}}</span></p>
+                <p>合计：<span class='total'>￥{{onValuesChange}}</span></p>
             </div>
             <div class='operation'>
                 <button class='prime evaluate' @click.stop='evaluate'>评价</button>
@@ -42,13 +42,13 @@ export default {
         // console.log(this.data);
     },
     computed:{
-        totalmoney(){
-            let total=0;
-            for(let item of this.data.orderDetails==null?[]:this.data.orderDetails){
-                total+=item.price*item.saleNumber;
-            }
-            return total;
-        }
+        // totalmoney(){
+        //     let total=0;
+        //     for(let item of this.data.orderDetails==null?[]:this.data.orderDetails){
+        //         total+=item.price*item.saleNumber;
+        //     }
+        //     return total;
+        // }
     },
     methods:{
         evaluate(){
@@ -58,7 +58,7 @@ export default {
             //         order_withoutevaluate.push(item.commodityId);
             //     }
             // });
-            sessionStorage.setItem('orderdetail',JSON.stringify(this.data));
+            // sessionStorage.setItem('orderdetail',JSON.stringify(this.data));
             this.$router.push({'name':'evaluate'});
             
             // this.$router.push({'name':'evaluate',params:{'orderlist':order_withoutevaluate}});
@@ -67,7 +67,7 @@ export default {
         //跳转订单详情
         toOrderDetail(ordernumber,index){
             this.$router.push('orderDeil?ordernumber='+ordernumber+'&index='+index);
-            sessionStorage.setItem('orderdetail',JSON.stringify(this.data));
+            // sessionStorage.setItem('orderdetail',JSON.stringify(this.data));
         },
     }
 }
