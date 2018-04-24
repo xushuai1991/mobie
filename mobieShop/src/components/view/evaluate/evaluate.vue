@@ -7,7 +7,7 @@
                 </div>
                 <div class='textInfo'>
                     <div class='clearfloat'>
-                        <h3 class='floatLeft'>{{item.name}}</h3> <span class='floatRight'>￥{{item.price}}</span></div>
+                        <h3 class='floatLeft'>{{item.commodityName}}</h3> <span class='floatRight'>￥{{item.price}}</span></div>
                     <p>{{item.text}}</p>
                     <p class='floatNum'>{{item.serviceState}}</p>
                 </div>
@@ -82,6 +82,7 @@
                 //获取订单详情
                 let orderdetail = JSON.parse(sessionStorage.getItem("orderdetail"));
                 orderdetail.orderDetails.forEach((item, index) => {
+                    console.log(item)
                     let shopList = {
                         name: '商品名称',
                         num: 18,
@@ -103,14 +104,14 @@
                         }],
                         imglist: [],
                     }
-                    item['shopList'] = shopList
+                    item['shopList'] = shopList;
                 })
                 orderdetail.orderDetails.forEach((item, index) => {
-                    console.log(item)
                     if (item.evaluation == null) {
                         this.dataArr.push(item)
                     }
                 })
+                
             },
             　　
             pingjia($event, index1) {
@@ -358,12 +359,11 @@
                         arr.push(item)
                         arrId.push(item.id)
                     })
-                    // that.dataArr[index].shopList.textMarkId.push(item.id)
+                    
                     that.dataArr.forEach((item, index) => {
                         item.shopList.textMark = arr
                         item.shopList.textMarkId = arrId
                     })
-                    //    that.dataArr[index1]
                 }).catch(function(ErrMsg) {
                     //获取数据失败时的处理逻辑
                 })
@@ -371,8 +371,9 @@
         },
         created() {
             this.getDataInfo();
-            this.getMark()
-        }
+            this.getMark();
+        },
+        
     }
 </script>
 

@@ -2,10 +2,10 @@
     <div class='addEdit'>
         <mt-field label="用户名：" placeholder="请输入用户名" v-model="username"></mt-field>
         <mt-field label="手机号：" placeholder="请输入手机号" v-model="useriphone"></mt-field>
-        <mt-field label="大区：" placeholder="请输入大区" v-model="largeAre"><span @click='LargeArea'>选择区域</span></mt-field>
-        <mt-field label="省市区：" placeholder="请输入省市区" v-model="newCity">
+        <mt-field label="大区：" placeholder="请输入大区" v-model="largeAre" disabled><span @click='LargeArea'>选择区域</span></mt-field>
+        <mt-field label="省市区：" placeholder="请输入省市区" v-model="newCity" disabled>
             <!-- <span class="location" @click='getDetailedAddress'><i class='icon iconfont icon-dizhi1'></i> 定位</span>!--></mt-field>
-        <mt-field label="街道：" placeholder="请输入街道" v-model="street"></mt-field>
+        <mt-field label="街道：" placeholder="请输入街道" v-model="street" disabled></mt-field>
         <mt-field label="详情地址：" placeholder="请输入详情地址" v-model="details"></mt-field>
         <mt-checklist title="" class="morz" v-model="value" align="right" :options="options">
         </mt-checklist>
@@ -127,9 +127,13 @@ import { Toast } from 'mint-ui';
                 // console.log(JSON.parse(userId))
                 //  let routerParams = this.$route.params;
                 //  console.log(routerParams);
-                let userifno = JSON.parse(sessionStorage.getItem("addManagement")).val;
+                // let userifno = JSON.parse(sessionStorage.getItem("addManagement")).val;
+                  let userifno = JSON.parse(sessionStorage.getItem("addManagement")) ;
+                  userifno==null?null:userifno.val
+                //  userifno == null?null:userifno.val
+                //  console.log(userifno.val)
                
-               console.log(userifno)
+            //    console.log(userifno)
                 if (!this.username) {
                     this.$toast('用户不能为空');
                     return false
@@ -147,7 +151,11 @@ import { Toast } from 'mint-ui';
                     return false
                 }
             //    console.log(routerParams.name =='addManagement')
-                if(JSON.parse(sessionStorage.getItem("addManagement")).goadd){
+            let addManagementGood = JSON.parse(sessionStorage.getItem("addManagement")) ;
+            addManagementGood ==null?null:addManagementGood.goadd
+                 console.log(addManagementGood)
+                if(addManagementGood){
+                    console.log(userifno)
                      let datainfo2 = {
                     "areaId": this.checkindex,
                     "provinceId": this.checkindex1,
@@ -157,9 +165,10 @@ import { Toast } from 'mint-ui';
                     "address": this.details,
                     "consigneeName": this.username,
                     "consigneeMobilePhone": this.useriphone,
-                    "customerId": userifno?userifno.customerId:userIds,
-                    'id':userifno?userifno.id:""
+                    "customerId": userifno.val.customerId,
+                    'id':userifno.val.id
                 }
+                console.log(datainfo2)
                     let url = '/api/customer/address/update?useAsDefault=' + (this.value == true ? true : false);
                     this.$http({
                             url: url,
@@ -173,6 +182,7 @@ import { Toast } from 'mint-ui';
                         .then(response => {
                             console.log(response)
                             if (response.data.msg = '修改成功') {
+                                sessionStorage.removeItem("addManagement")
                                 this.$toast(response.data.msg);
                                 this.$router.push('./addManagement')
                             }
@@ -193,6 +203,7 @@ import { Toast } from 'mint-ui';
                         })
                         .then(response => {
                             if (response.data.info.msg = '新增成功') {
+                                sessionStorage.removeItem("addManagement")
                                 this.$toast(response.data.info.msg);
                                 this.$router.push('./addManagement')
                             }
