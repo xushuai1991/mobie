@@ -413,7 +413,8 @@
                     } else if (orderStaty.payState == 2) {
                         //卖家未付款
                         this.orderState = '等待买家支付'
-                        this.countdowm((this.timestampToTime((new Date(orderStaty.createTime).getTime() / 1000) + (24 * 60 * 60)))) //时间戳加24小时;
+                        // alert(orderStaty.createTime.replace(/\-/g,'/'))
+                        this.countdowm((this.timestampToTime((new Date(orderStaty.createTime.replace(/\-/g,'/')).getTime() / 1000) + (24 * 60 * 60)))) //时间戳加24小时;
                         if (orderStaty.orderState == 1) {
                             this.showBtn1 = true, //取消按钮
                                 this.showBtn2 = true; //立即付款按钮
@@ -587,7 +588,7 @@
                             objs.push({
                                 number: number,
                                 orderState: 6,
-                                payState: 3,
+                                // payState: 3,
                                 actualMoney: actualMoney
                             })
                         }
@@ -777,7 +778,7 @@
     }
     .tiemBox {
         height: 1.02rem;
-        background: #0cbbb9;
+        background: #26a2ff;
         font-size: 0.25rem;
         line-height: 0.4rem;
         padding-top: 0.2rem;
@@ -833,7 +834,7 @@
         }
     }
     .markOrder input {
-        background: #28c0c9;
+        background: #26a2ff;
         padding: 0.1rem 0.2rem;
         color: #fff;
         margin-right: 0.2rem;
@@ -885,7 +886,7 @@
         border-top: 1px solid #ddd;
     }
     .orderFooter input {
-        background: #0cbbb9;
+        background: #26a2ff;
         color: #fff;
         padding: 0.08rem 0.15rem;
         border-radius: 0.1rem;

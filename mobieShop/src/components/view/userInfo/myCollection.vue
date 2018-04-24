@@ -150,7 +150,7 @@ export default {
     }
     .Coupon{
         font-size:.3rem;
-        color:#0cbbb9;
+        color:#26a2ff;
         padding: .3rem .2rem;
         text-align: right;
         border-bottom:1px solid #cdcdcd;

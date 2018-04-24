@@ -110,6 +110,11 @@ import { Toast } from 'mint-ui';
         },
         methods: {
             saveAddInfo() { //提交地址
+            var myreg=/^[1][3,4,5,7,8][0-9]{9}$/; 
+            if(!myreg.test(this.useriphone)){
+                Toast('请填写正确的手机号');
+                return false;
+            }
              let userId = localStorage.getItem("userinfo");
               let  userIds = JSON.parse(userId).id;
                 let datainfo = {

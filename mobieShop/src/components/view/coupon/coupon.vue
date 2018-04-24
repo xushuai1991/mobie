@@ -148,7 +148,7 @@ export default {
     width:50%;
 }
 .coupon_left p.on{
-    border-bottom: #0cbbb9 solid .02rem;
+    border-bottom: #26a2ff solid .02rem;
 }
 .coupon_left{
     /* width:50%; */
@@ -163,7 +163,7 @@ export default {
 }
 .border_color{
     width: 50%;
-    border-bottom: #0cbbb9 solid .02rem;
+    border-bottom: #26a2ff solid .02rem;
 }
 .pre_coupon{
     position: absolute;
