@@ -505,12 +505,13 @@
                     'actualMoney': actualMoney,
                     'companyId': companyId
                 }
-                this.$router.push({
-                    'name': 'paying',
-                    params: {
-                        dataObj: objs
-                    }
-                });
+                this.$router.push('paying?number='+order+'&money='+actualMoney);
+                // this.$router.push({
+                //     'name': 'paying',
+                //     params: {
+                //         dataObj: objs
+                //     }
+                // });
             },
             copy() {
                 var clipboard = new Clipboard('.tag-read')

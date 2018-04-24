@@ -95,7 +95,6 @@ export default {
                     break;
                 }
                 case 'shopcar':{
-                    alert(111);
                     this.selected='购物车';
                     break;
                 }
@@ -115,7 +114,6 @@ export default {
                     break;
                 }
                 case 'shopcar':{
-                    alert(111);
                     this.selected='购物车';
                     break;
                 }

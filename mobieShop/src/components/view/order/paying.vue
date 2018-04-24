@@ -1,11 +1,11 @@
 <template>
     <div class='paying-xs'>
-        <p class='orderid'>{{id}}</p>
+        <p class='orderid'>订单号：{{orderNumber}}</p>
         <p class='money'>￥{{money}}</p>
-        <p class='cheques'>
+        <!-- <p class='cheques'>
             <span style='float:left;color:#787878;'>收款人</span>
             <span style='float:right;'>{{cheques}}</span>
-        </p>
+        </p> -->
         <button class='pay' @click="pay">立即支付</button>
     </div>
 </template>
@@ -15,7 +15,7 @@ import { Toast } from 'mint-ui';
 export default {
     data(){
         return{
-            money:'20.00',
+            money:'0',
             id:'XX眼镜',
             cheques:'禾目',
             code:'',
@@ -26,6 +26,8 @@ export default {
         this.$root.$emit('header','确认交易');
         let url=location.search;
         let number=this.getQueryString('number');
+        let money=this.getQueryString('money');
+        this.money=money;
         this.orderNumber=number!=null?number:'';
         // let number=this.$route.params.number;
         // if(number==undefined){
@@ -46,7 +48,7 @@ export default {
         },
         pay(){
             let that=this;
-            alert(this.orderNumber);
+            // alert(this.orderNumber);
             
             this.$http.post('/api/product/order/weixin/pay',[this.orderNumber])
             .then(res=>{
@@ -83,14 +85,14 @@ export default {
 </script>
 <style scoped lang='less'>
 .paying-xs{
-    margin-top:1rem;
+    margin-top:2rem;
     padding-top:.5rem;
     color: black;
     .orderid{
         font-size: .35rem;
     }
     .money{
-        padding:.3rem 0;
+        padding:.5rem 0;
     }
     .cheques{
         padding:.3rem;
@@ -107,7 +109,7 @@ export default {
         padding: .3rem;
         background-color:rgb(70,193,24);
         color:#fff;
-        margin-top:.5rem;
+        margin-top:1rem;
     }
 }
 </style>

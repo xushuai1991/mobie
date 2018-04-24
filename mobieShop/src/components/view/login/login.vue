@@ -23,7 +23,6 @@
                 <p class='error'>{{codejson.msg}}</p>
                 <div id='codeimg' class='codeimg' @click='yzn'>{{codehas}}</div>
             </div>
-            
             <p class='opera_quick'>
                 <mt-button type="default" class='btn-login' @click="login">登录<i class='icon iconfont icon-xiangyoujiantou'></i></mt-button>
                 <router-link to='' class='quicklogin' @click.native='switch_quick'>快速登录</router-link>
@@ -121,7 +120,8 @@ export default {
             loginquickflag:false,
             resignflag:false,
             second:'获取验证码',
-            to:''
+            to:'',
+            clientHeight:0
         }
     },
     mounted(){
@@ -132,11 +132,23 @@ export default {
     // },
     methods:{
         test(e){
+            Toast(document.body.clientHeight.toString());
+            // if(this.clientHeight==0){
+            //     this.clientHeight=document.body.clientHeight;
+            //     Toast(document.body.clientHeight.toString());
+            // }
+            // else{
+            //     Toast(this.clientHeight.toString());
+            //     document.body.clientHeight=this.clientHeight;
+            // }
+            
+            // console.log(document.body.scrollHeight);
+            // Toast(document.body.scrollHeight.toString());
             //  document.removeEventListener('touchend',docTouchend,false);
-            setTimeout(function(){
-                // Toast(111);
-                e.target.scrollIntoViewIfNeeded();
-            },1000);
+            // setTimeout(function(){
+            //     Toast(document.body.clientHeight.toString());
+            //     // e.target.scrollIntoView();
+            // },500);
             // let height=document.body.scrollHeight;
             // setTimeout(function(){  
             //     document.body.scrollTop = height; 
@@ -417,9 +429,9 @@ export default {
     top:.5rem;
 }
 .contain{
-    height:fit-content;
+    /* height:fit-content; */
     /* height:13.4rem; */
-    /* height:100vh; */
+    height:110vh;
     /* overflow:scroll; */
 }
 .form{

@@ -221,7 +221,7 @@ export default {
         },
         //付款
         pay(){
-            this.$router.push('paying?number='+this.data.number);
+            this.$router.push('paying?number='+this.data.number+'&money='+this.data.actualMoney);
             // console.log('付款。。。');
         },
         // 申请退款
