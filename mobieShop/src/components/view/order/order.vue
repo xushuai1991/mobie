@@ -12,7 +12,7 @@
             <mt-tab-container-item id="all">
                 <ul  v-infinite-scroll="loadMore"  infinite-scroll-disabled="loading1" :infinite-scroll-immediate-check='false'  class='orderlist'>
                     <li v-for="(item,index) in orderlist[0]" :key="index">
-                        <ordercell :data='item' index='0'></ordercell>
+                        <ordercell :data='item' index='0' :indexorder='index'></ordercell>
                         <!-- <pendpay :data='item' index='0' v-if="item.payState!=1&&item.orderState==1"></pendpay>
                         <inservice :data='item' index='0' v-if='item.payState==1&&item.orderState==1&&item.serviceState==2'></inservice>
                         <willservice :data='item' index='0' v-if='item.payState==1&&item.orderState==1&&item.serviceState==1'></willservice>
