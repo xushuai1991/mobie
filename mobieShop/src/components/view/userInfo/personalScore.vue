@@ -2,7 +2,7 @@
   <section class='personalscores' style='background-image:url("static/images/background_scores.png")'>
       <header class='userinfo' >
           <div class='info_main'>
-              <div class='portrait'><img :src="portrait_img" alt=""></div>
+              <div class='portrait'><img :src="userinfo.avatar" alt=""></div>
               <div class='name_about'>
                   <p class='name'>{{userinfo.nickname==null?'&nbsp;':userinfo.nickname}}</p>
                   <p class='exp'>经验值 {{userinfo.experience}}</p>
@@ -11,7 +11,7 @@
           <div class='info_other'>
               <div class='scores'>
                   <p class='title'>积分</p>
-                  <p class='content'>{{userinfo.consumptionPoints}}</p>
+                  <p class='content'>{{point}}</p>
               </div>
               <div class='level'>
                   <p class='title'>等级</p>
@@ -222,7 +222,8 @@ export default {
             list_vipsocre:[],
             userinfo:'',
             pagenum:[1,1,1],
-            dataovered:[false,false,false]
+            dataovered:[false,false,false],
+            point:0
         }
     },
     created(){
@@ -231,6 +232,7 @@ export default {
         this.userinfo=JSON.parse(userinfo);
         this.getVIPs();
         this.getScoreLog(1);
+        this.integral();
     },
     watch:{
         type_score(value){
@@ -287,6 +289,22 @@ export default {
         });
     },
     methods:{
+        // 查询会员总积分
+        integral(){
+            let that = this
+            this.$http.post(
+                '/api/customer/consumption/points/find?pageSize=1',
+            ).then(res => { 
+                if(res.data.status == 200){
+                    console.log(res)
+                    that.point = res.data.info.list[0].effectivePoints
+                }else{
+                    Toast(res.data.msg);
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+        },
         // 查询积分记录
         getScoreLog(pagenum){
             let data={};

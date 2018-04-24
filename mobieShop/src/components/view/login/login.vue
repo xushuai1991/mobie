@@ -9,17 +9,17 @@
         <div class='form login' v-show='loginflag'>
             <div class="phone">
                 <i class='icon iconfont icon-shouji'></i>
-                <input type="tel" placeholder="手机号码" v-model="phone" key='phone_login' @change='checkphone()'>
+                <input type="number" placeholder="手机号码" v-model="phone" key='phone_login' @change='checkphone()' @focus="test">
                 <p class='error'>{{phonejson.msg}}</p>
             </div>
             <div class="psw">
                 <i class='icon iconfont icon-16suo'></i>
-                <input type="password" placeholder="密码" v-model="psw" @change='checkpsw()'>
+                <input type="password" placeholder="密码" v-model="psw" @change='checkpsw()' @focus="test">
                 <p class='error'>{{pswjson.msg}}</p>
             </div>
             <div class="verificationcode">
                 <i class='icon iconfont icon-key'></i>
-                <input type="text" class='codeinput' placeholder="验证码" v-model="code" @change='checkcode()'>
+                <input type="text" class='codeinput' placeholder="验证码" v-model="code" @change='checkcode()' @focus="test">
                 <p class='error'>{{codejson.msg}}</p>
                 <div id='codeimg' class='codeimg' @click='yzn'>{{codehas}}</div>
             </div>
@@ -131,6 +131,17 @@ export default {
     //     operatelocalstorage(1,1,20);
     // },
     methods:{
+        test(e){
+            //  document.removeEventListener('touchend',docTouchend,false);
+            setTimeout(function(){
+                // Toast(111);
+                e.target.scrollIntoViewIfNeeded();
+            },1000);
+            // let height=document.body.scrollHeight;
+            // setTimeout(function(){  
+            //     document.body.scrollTop = height; 
+            // },1000);
+        },
         // 登录
         login(){
             if(this.phonejson.status&&this.pswjson.status&&this.codejson.status){
@@ -406,10 +417,10 @@ export default {
     top:.5rem;
 }
 .contain{
-    /* height:fit-content; */
-    height:13.4rem;
-    /* max-height: 13.4rem; */
-    /* background: url(/static/images/bgimg.png) no-repeat round; */
+    height:fit-content;
+    /* height:13.4rem; */
+    /* height:100vh; */
+    /* overflow:scroll; */
 }
 .form{
     background-color: rgba(255,255,255,.9);

@@ -2,12 +2,6 @@ import axios from 'axios'
 let weixinPay=function(config){
     
     let onBridgeReady=function(){
-        alert(config.appId);
-        alert(config.timeStamp);
-        alert(config.nonceStr);
-        alert(config.package);
-        alert(config.signType);
-        alert(config.paySign);
         
         WeixinJSBridge.invoke(
             'getBrandWCPayRequest',
@@ -20,7 +14,6 @@ let weixinPay=function(config){
                 "paySign":config.paySign //微信签名 
             },
             (res)=>{
-                alert(res.err_msg);
                 if (res.err_msg == "get_brand_wcpay_request:ok") {
                     alert('支付成功');
                     window.location.reload();

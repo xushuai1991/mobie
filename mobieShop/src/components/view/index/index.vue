@@ -1,5 +1,5 @@
 <template>
-    <div class="page-tabbar "> 
+    <div class="page-tabbar ">
         <div class="page-wrap" style='-webkit-overflow-scrolling : touch;'>
             <mt-tab-container class="page-tabbar-container" v-model="selected">
                 <mt-tab-container-item id="首页">
@@ -40,7 +40,6 @@
                 我的
             </mt-tab-item>
         </mt-tabbar>
-        
     </div>
 </template>
 <script>
@@ -63,6 +62,10 @@ export default {
         }
     },
     created(){
+        let select_session=sessionStorage.getItem('select_index');
+        if(select_session!=null){
+            this.selected=select_session;
+        }
         let url=location.search;
         let companyid=this.getURLparms('company');
         let code=this.getURLparms('code');
@@ -178,7 +181,8 @@ export default {
                 that.isTrue = false
             }else{
                 if(response.data.info == "尚未登录"){
-                that.$router.push({ path: '/login' })
+                    // alert(111);
+                // that.$router.push({ path: '/login' })
                 }
                 let comlists = JSON.parse(response.data.info[0].comlist)
                 //  console.log(comlists)
@@ -202,7 +206,7 @@ export default {
                 that.isTrue = false
                 }else{
                 if(response.data.info == "尚未登录"){
-                    that.$router.push({ path: '/login' })
+                    // that.$router.push({ path: '/login' })
                     }
                     let comlists = JSON.parse(response.data.info[0].comlist)
                 //  console.log(comlists)
@@ -234,6 +238,7 @@ export default {
                     break;
                 }
             }
+            sessionStorage.setItem('select_index',value);
         }
     },
     methods:{

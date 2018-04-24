@@ -113,17 +113,17 @@
             </mt-popup>
             
         </div> -->
-        <div class='invoice'>
+        <!-- <div class='invoice'>
             <p>
                 <span class='tip'>我要开发票</span>
                 <i class='icon iconfont icon-arrow-right-copy' style='position:absolute;right:.2rem;'  @click='makeinvoice'></i>   
             </p>
             
-        </div>
+        </div> -->
         <div class='type-pay'>
             <p>
                 <span class='typepay'>
-                    <img src="static/images/bgimg.png" alt="">
+                    <img src="static/images/weixin.jpg" alt="">
                     <span class='type'>微信支付</span>
                 </span>
                 <span class='select'>
