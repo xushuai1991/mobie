@@ -13,12 +13,12 @@
                         <keep-alive v-for='(item,index) in bannerArr1' :key='index'>
                         <components :templateData='item.componentsData' :is='item.componentsName'  :type='item.componentsName'></components>
                         </keep-alive>
-                        <productDetail :zbdCommodityInfo="commodityInfo"></productDetail>
+                        <productDetail :zbdCommodityInfo="commodityInfo" :evaluationTotals="evaluationTotal"></productDetail>
                         <div class="zbd-coupon" v-show="couponShow">
                             <img @click="getcoupon" src="./coupon.png">
                         </div>
                         <div id="zbd-preferences" class="clear">
-                            <p>已选<span>唯润俏枝头</span></p>
+                            <p>已选<span>{{ commodityInfo.name }}</span></p>
                             <p @click="showServer">选择规格&ensp;></p>
                         </div>  
                         <div id="zbd-productDescription" class="clear">
@@ -76,7 +76,7 @@
                         <mt-popup v-model="popupVisible" position="bottom" style='width:100%;font-size:0.28rem;'>
                             <div id="zbd-commodityInformation" class="clear">
                                 <div class="zbd_commodityImg"><img src="./test.jpg"></div>
-                                 <div class="zbd_commodityInfo" ><p>￥299</p><p>唯润俏枝头</p></div>
+                                 <div class="zbd_commodityInfo" ><p>￥{{ commodityInfo.price }}</p><p>{{ commodityInfo.name }}</p><p>库存量：{{ commodityInfo.displayQuantity<1?0:commodityInfo.displayQuantity }}</p></div>
                                  <div class='commodityInfoCloseBtn' @click="btnClose">&times;</div>
                                  <div class="commodityInfoLine"></div>
                             </div>
@@ -260,7 +260,8 @@
                 starId:'',
                 commentList:['1','2','3','4','5','6','7','8','9','10'],
                 commentLoading:false,
-                confirmPurchase:false
+                confirmPurchase:false,
+                evaluationTotal:''
             };
         },
         created(){
@@ -448,6 +449,7 @@
             })
             .then(function(response){
                 console.log(response)
+                that.evaluationTotal = response.data.info.total
             })
             .catch(function(response){
                 console.log(response)
@@ -641,7 +643,6 @@
                         .then(function(response){
                             console.log(response)
                             if(response.data.status == 401){
-                                localStorage.removeItem('userinfo');
                                 Toast({
                                     message:'尚未登录',
                                     duration:1000
@@ -757,6 +758,8 @@
                     if(!flag){
                     　　alert("数量应为正整数");
                     　　return false;
+                    }else if(this.commodityInfo.displayQuantity<1){
+                        alert("库存不足");
                     }else{
                         this.popupVisible = false
                         this.confirmPurchase = true
@@ -766,8 +769,11 @@
                     if(this.confirmPurchase == false){
                         this.popupVisible = true
                     }else{
-                        
-                         localStorage.setItem('commodityInfo','11')
+                         let commodityInfo = [];
+                         let commodityInfos = this.commodityInfo
+                         commodityInfos.nums = this.specificationNum
+                         commodityInfo.push(commodityInfos)
+                         localStorage.setItem('commodityInfo',JSON.stringify(commodityInfo))
                          this.$router.push('./ordercertain')
                     }
                 }
@@ -1139,6 +1145,7 @@
     text-align: left;}
     .zbd_commodityInfo p:nth-child(1){margin-top: 0.2rem;}
     .zbd_commodityInfo p:nth-child(2){margin-top: 0.1rem;}
+    .zbd_commodityInfo p:nth-child(3){margin-top: 0.1rem;}
     .commodityInfoCloseBtn{width: 0.7rem;
     float: right;
     color: #7b7b7b;

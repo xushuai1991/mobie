@@ -2,24 +2,24 @@
     <div id="zbd-productParameters" class="clear">
         <div class="productDetail">
             <div class="productsTitle">
-                <p>净润家</p>
+                <p>{{ zbdCommodityInfo.name }}</p>
             </div>
             <div class="productsDescription">
-                <p>家居保养沙发保养保养保养</p>
+                <!-- <p>家居保养沙发保养保养保养</p> -->
             </div>
             <p class="productDetailRMB">RMB</p>
         </div>
         <div class="productReview">
-            <div class="productsTitleNum">
-                <p class="commentsNum">102+</p>
+            <div class="productsTitleNum" @click="dsad">
+                <p class="commentsNum">{{ evaluationTotals>1000?"999+":evaluationTotals }}</p>
                 <p class="commentsNumTitle">用户评价</p>
             </div>
         </div>
         <div class="commodityPrice">
-            <p style="">299</p>
+            <p style="">{{ zbdCommodityInfo.price }}</p>
         </div>
         <div class="commodityStocks">
-            <p style="">已交易：<span>325</span><span style="color:#292929">（库存量：256）</span></p>
+            <p style="">已交易：<span>{{ zbdCommodityInfo.totalSales }}</span><span style="color:#292929">（库存量：{{ zbdCommodityInfo.displayQuantity<1?0:zbdCommodityInfo.displayQuantity }}）</span></p>
         </div>
     </div>
 </template>
@@ -29,7 +29,7 @@
         SwipeItem
     } from 'mint-ui';
     export default {
-        props:['zbdCommodityInfo'],
+        props:['zbdCommodityInfo','evaluationTotals'],
         data() {
             return {
             };
@@ -38,7 +38,9 @@
             console.log(this.zbdCommodityInfo+'111111')
         },
         methods:{
-            
+            dsad(){
+                console.log(this.zbdCommodityInfo)
+            }
         }
     };
 </script>
