@@ -126,6 +126,7 @@ export default {
     },
     mounted(){
         this.yzn();
+        
     },
     // created(){
     //     operatelocalstorage(1,1,20);

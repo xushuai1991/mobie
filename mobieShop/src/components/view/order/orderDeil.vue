@@ -19,7 +19,7 @@
                 </div>
                 <div class='userInfo'>
                     <div class='userImg'>
-                        <img src='./../homepage/recommend/recommendImage/1.jpg'>
+                        <img :src='userImg'>
                     </div>
                     <div class='infoNmae'>
                         <p><span>{{uerName}}</span> <span>{{userPhone}}</span></p>
@@ -37,7 +37,7 @@
                                     <div class="goodsBox">
                                         <ul class="goods_detail" style=' margin-top:0.2rem;'>
                                             <li class="goods_img" style="margin-left:0px;" @click='goShopDateil(item)'>
-                                                <img :src="item.commodityImageUrl">
+                                                <img :src="item.image">
                                             </li>
                                             <li class="goods_info">
                                                 <p class="brandDesc">{{item.commodityBrand}}</p>
@@ -159,6 +159,7 @@
                 id: '',
                 orstate: '',
                 datechange: '',
+                userImg:'',
                 dates: [{
                         values: ['今天', '明天', '后天'],
                         className: 'slot1',
@@ -431,6 +432,7 @@
                     //     this.orderText = '';
                     // }
                     this.list = orderStaty.orderDetails
+                    console.log(this.list)
                     if (this.list) {
                         this.list.forEach((item) => {
                             item.refundShow = false
@@ -657,6 +659,8 @@
             }
         },
         created() {
+            let userImg = JSON.parse(localStorage.getItem("userinfo"));
+            this.userImg =  JSON.parse(userImg.data).avatar
             this.getDate(this.urlArgs().ordernumber)
             this.serverState = this.urlArgs().index;
             console.log(this.serverState)
