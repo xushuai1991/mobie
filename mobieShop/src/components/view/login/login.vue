@@ -133,7 +133,17 @@ export default {
     // },
     methods:{
         test(e){
-            Toast(document.body.clientHeight.toString());
+            // if(/Android [4-6]/.test(navigator.appVersion)) {
+            //     window.addEventListener("resize", function() {
+            //         if(document.activeElement.tagName=="INPUT" || document.activeElement.tagName=="TEXTAREA") {
+            //             window.setTimeout(function() {
+            //                 document.activeElement.scrollIntoViewIfNeeded();
+            //             },0);
+            //         }
+            //     })
+            // }
+           
+            // Toast(document.body.clientHeight.toString());
             // if(this.clientHeight==0){
             //     this.clientHeight=document.body.clientHeight;
             //     Toast(document.body.clientHeight.toString());
