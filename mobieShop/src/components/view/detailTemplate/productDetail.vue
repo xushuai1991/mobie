@@ -5,7 +5,7 @@
                 <p>{{ zbdCommodityInfo.name }}</p>
             </div>
             <div class="productsDescription">
-                <!-- <p>家居保养沙发保养保养保养</p> -->
+                <p>{{ zbdCommodityInfo.description==null?'商品':zbdCommodityInfo.description }}</p>
             </div>
             <p class="productDetailRMB">RMB</p>
         </div>
