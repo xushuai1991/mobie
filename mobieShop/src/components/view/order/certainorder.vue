@@ -343,7 +343,7 @@
                     if (isNaN(value)) {
                         Toast('请输入数字');
                     } else {
-                        this.goodslist[index].nums = value;
+                        this.goodslist[index].nums =Math.abs(value);
                     }
                 }).catch(() => {});
             },
