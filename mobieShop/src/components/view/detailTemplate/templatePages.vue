@@ -21,7 +21,7 @@
                             <p>已选<span>{{ commodityInfo.name }}</span></p>
                             <p @click="showServer">选择规格&ensp;></p>
                         </div>  
-                        <div id="zbd-productDescription" class="clear">
+                        <!--<div id="zbd-productDescription" class="clear">
                             <p >包邮<span>上海市满60.00元包邮</span></p>
                             <p >产地<span>唐山市</span></p>
                         </div>
@@ -33,11 +33,11 @@
                         </div>
                         <div id="zbd-Tips" class="clear">
                             <p class="clear"><span>温馨提示</span><i class="icon iconfont icon-xiajiantou"></i></p>
-                            <!-- transform: rotate(180deg); -->
-                        </div>
-                        <div id="zbd-TipsContent">
+                             transform: rotate(180deg);
+                        </div> -->
+                        <!-- <div id="zbd-TipsContent">
                             <span>温馨提示：</span>1.该商品为原产地（厂家）发货，每日1该商品为原产地（厂家）发货，每日1该商品为原产地（厂家）发货，每日1该商品为原产地（厂家）发货，每日1该商品为原产地（厂家）发货，每日1
-                        </div>
+                        </div> -->
                         <div id="zbd-commodityInfoTitle">商品信息</div>
                         <keep-alive v-for='(item,index) in detailImgArr1' :key='index'>
                         <components :templateData='item.componentsData' :is='item.componentsName'  :type='item.componentsName'></components>
@@ -47,27 +47,27 @@
                             <p class="zbd-reviewsTitle">顾客评价</p>
                             <div class="zbd-customerReviewContent">
                                 <div class="commentHeaderInfo clear">
-                                    <span class="commentNickname">用户昵称</span>
-                                    <span class="commentStar">
-                                        <!-- <img v-for="(item,index) in 3" :key="index" src="./../evaluate/star.png">
-                                        <img v-for="(item,index) in 2" :key="index" src="./../evaluate/star1.png"> -->
+                                    <span class="commentNickname">{{ nickname }}</span>
+                                    <span class="commentStar" v-show="evaluationStarShow">
+                                        <img v-for="(item,index) in starLevel" :key="index" src="./../evaluate/star.png">
+                                        <img v-for="(item,index) in (5-starLevel)" :key="index" src="./../evaluate/star1.png">
                                     </span>
-                                    <span class="userCommentTime">2016-7-7</span>
+                                    <span class="userCommentTime">{{ (evaluationListOne.createTime+'').split(" ")[0] }}</span>
                                 </div>
                                 <div class="commentContent">
-                                    <p class="userCommentContent">我只想说，特别的好！！！！！！！！！说点什么好呢，凑足十个字！</p>
-                                    <ul class="clear userCommentImg">
-                                        <!-- <li v-for="(item,index) in 2" :key="index">
-                                            <img src="./test.jpg">
-                                        </li> -->
+                                    <p class="userCommentContent">{{ evaluationListOne.comment==''?'该用户未填写评论文字':evaluationListOne.comment }}</p>
+                                    <ul class="clear userCommentImg" v-show="evaluationListOne.images==''?false:true">
+                                        <li v-for='(item,index) in (evaluationListOne.images+"").replace(/\"/g,"").replace(/\[|]/g,"").split(",")' :key="index">
+                                            <img :src='item'>
+                                        </li>
                                     </ul>
-                                    <div class="merchantReply">
+                                    <div class="merchantReply" v-show="evaluationListOne.reply == null?false:true">
                                         <span class="merchantReplyTitle">商家回复：</span>
-                                        <span class="merchantReplyTime">2016-7-4</span>
-                                        <p class="merchantReplyContent">谢谢光顾！欢迎下次再来！谢谢光顾！欢迎下次再来！谢谢光顾！欢迎下次再来！</p>
+                                        <span class="merchantReplyTime">{{ evaluationListOne.replyTime == null?"":(evaluationListOne.replyTime+'').split(" ")[0] }}</span>
+                                        <p class="merchantReplyContent">{{ evaluationListOne.reply == null?'':evaluationListOne.reply}}</p>
                                     </div>
                                     <div class="seeAllReview">
-                                        <p class="clear"><span style="text-align: center;">查看全部<span>48</span>条评论</span>&ensp;<i class='icon iconfont icon-arrow-right'></i></p>
+                                        <p class="clear"><span style="text-align: center;">查看全部<span>{{ evaluationTotal }}</span>条评论</span>&ensp;<i class='icon iconfont icon-arrow-right' @click="productDetailBtn2"></i></p>
                                     </div>
                                 </div>
                             </div>
@@ -127,10 +127,10 @@
             <div v-if="show2" class="commentDetail">
                             <div class="userAvatarList">
                                 <ul class="clear">
-                                    <!-- <li v-for="(item,index) in 13" :key="index">
-                                        <img src="./test.jpg" >
-                                    </li> -->
-                                    <li style="line-height: 0.5rem;background-color: #fff;font-size: 0.45rem;">...</li>
+                                    <li v-for="(item,index) in evaluationList" :key="index" v-if="(index<13)">
+                                        <img :src="item.customerAccount.avatar">
+                                    </li>
+                                    <li v-show="evaluationList.length > 13?true:false" style="line-height: 0.5rem;background-color: #fff;font-size: 0.45rem;">...</li>
                                 </ul>
                             </div>
                             <div class="userReviewList">
@@ -138,26 +138,26 @@
                                     infinite-scroll-disabled="loading"
                                     infinite-scroll-distance="2"
                                 >
-                                    <li v-for="(item,index) in commentList" :key="index">
+                                    <li v-for="(item,indexs) in evaluationList" :key="indexs">
                                         <div class="commentHeaderInfo clear">
-                                            <span class="commentNickname" >用户昵称</span>
-                                            <span class="commentStar">
-                                                <!-- <img v-for="(item,index) in 3" :key="index" style="width: 0.3rem;height: 0.3rem;" src="./../evaluate/star.png">
-                                                <img v-for="(item,index) in 2" :key="index" style="width: 0.3rem;height: 0.3rem;" src="./../evaluate/star1.png"> -->
+                                            <span class="commentNickname">{{ item.customerAccount.nickname==null?'匿名买家':item.customerAccount.nickname }}</span>
+                                            <span class="commentStar" v-show="item.commodityEvaluationLabels.length ==0?false:true">
+                                                <img v-for="item in item.commodityEvaluationLabels.length ==0?starLevel:item.commodityEvaluationLabels[0].level"  style="width: 0.3rem;height: 0.3rem;" src="./../evaluate/star.png">
+                                                <img v-for="item in item.commodityEvaluationLabels.length ==0?starLevel:(5-item.commodityEvaluationLabels[0].level)"  style="width: 0.3rem;height: 0.3rem;" src="./../evaluate/star1.png">
                                             </span>
-                                            <span class="userCommentTime">2016-7-7</span>
+                                            <span class="userCommentTime">{{ (item.createTime+'').split(" ")[0] }}</span>
                                         </div>
                                         <div class="commentContent">
-                                            <p class="userCommentContent">{{ item }}我只想说，特别的好！！！！！！！！！说点什么好呢，凑足十个字！</p>
-                                            <ul class="clear userCommentImg">
-                                                <!-- <li v-for="(item,index) in 2" :key="index">
-                                                    <img src="./test.jpg">
-                                                </li> -->
+                                            <p class="userCommentContent">{{ item.comment==''?'该用户未填写评论文字':item.comment }}</p>
+                                            <ul class="clear userCommentImg" v-show="item.images==''?false:true">
+                                                <li v-for='(item,index) in (item.images+"").replace(/\"/g,"").replace(/\[|]/g,"").split(",")' :key="index">
+                                                    <img :src='item'>
+                                                </li>
                                             </ul>
-                                            <div class="merchantReply">
+                                            <div class="merchantReply" v-show="item.reply == null?false:true">
                                                 <span class="merchantReplyTitle">商家回复：</span>
-                                                <span class="merchantReplyTime">2016-7-4</span>
-                                                <p class="merchantReplyContent">谢谢光顾！欢迎下次再来！谢谢光顾！欢迎下次再来！谢谢光顾！欢迎下次再来！</p>
+                                                <span class="merchantReplyTime">{{ item.replyTime == null?"":(item.replyTime+'').split(" ")[0] }}</span>
+                                                <p class="merchantReplyContent">{{ item.reply == null?'':item.reply}}</p>
                                             </div>
                                         </div>
                                     </li>
@@ -258,10 +258,16 @@
                 },
                 isStar:false,
                 starId:'',
-                commentList:['1','2','3','4','5','6','7','8','9','10'],
                 commentLoading:false,
                 confirmPurchase:false,
-                evaluationTotal:''
+                evaluationList:'',
+                evaluationListOne:'',
+                evaluationStarShow:false,
+                starLevel:'',
+                nickname:'',
+                evaluationTotal:'',
+                evaluationNum:'1',
+                stopLoadMore:true
             };
         },
         created(){
@@ -394,10 +400,10 @@
             let that=this;
             this.$http.post('/api/product/shoppingCart/myShoppingCart',{})
             .then(function(response){
-                console.log(response)
+               // console.log(response)
                 if(response.data.status == 401){
                     that.shopCarNumShow = false
-                    console.log(that.shopCarNumShow)
+                   // console.log(that.shopCarNumShow)
                 }else{
                     if(response.data.info.length == 0){
                         that.shopCarNumShow = false
@@ -405,7 +411,7 @@
                         that.shopCarNumShow = true
                         let num = null;
                         response.data.info.forEach((element,i) => {
-                            console.log(element.commodityCount)
+                         //  console.log(element.commodityCount)
                             num += element.commodityCount
                         });
                         that.shopNum =num
@@ -419,7 +425,7 @@
             //查询产品是否收藏
             this.$http.post('/api/product/commodity/favorite/queryOne?commodityId='+that.commodityId)
             .then(function(response){
-                console.log(response)
+               // console.log(response)
                 if(response.data.status == 201){
                     Toast({
                         message:response.data.msg,
@@ -449,6 +455,25 @@
             })
             .then(function(response){
                 console.log(response)
+                that.evaluationList = response.data.info.list
+                that.evaluationListOne = that.evaluationList[0]
+                console.log(that.evaluationListOne)
+                if(that.evaluationListOne.commodityEvaluationLabels.length == 0){
+                    that.evaluationStarShow = false
+                }else{
+                    that.evaluationStarShow = true
+                    let levels = 0;
+                    that.evaluationListOne.commodityEvaluationLabels.forEach((i,d)=>{
+                        levels += (i.level-0)
+                    })
+                    console.log(levels)
+                   that.starLevel = Math.round(levels / that.evaluationListOne.commodityEvaluationLabels.length)
+                }
+                if(that.evaluationListOne.customerAccount.nickname == null){
+                    that.nickname = '匿名买家'
+                }else{
+                    that.nickname = that.evaluationListOne.customerAccount.nickname
+                }
                 that.evaluationTotal = response.data.info.total
             })
             .catch(function(response){
@@ -471,9 +496,9 @@
                 })
             });
             getcouponData.then(function(result){
-                console.log(result)
+               // console.log(result)
                 that.coupon = result.data.info.list
-                console.log(that.coupon)
+              //  console.log(that.coupon)
                 if(that.coupon.length == 0){
                     that.couponShow = false
                 }else{
@@ -708,16 +733,45 @@
                 },
                 loadMore() {
                     //评论滚动到底部自动加载
+                    let that = this;
                     this.loading = true;
                     this.commentLoading = true
                     setTimeout(() => {
-                        let last = this.commentList[this.commentList.length - 1];
-                        for (let i = 1; i <= 2; i++) {
-                        this.commentList.push(last + i);
+                        if(that.stopLoadMore == true){
+                            this.evaluationNum++
+                            //根据商品ID 查询相关的评论列表
+                            this.$http.post('/api/product/commodity/evaluation/query?page='+this.evaluationNum+'&pageSize=10',{
+                                "commodityId":that.commodityId
+                            })
+                            .then(function(response){
+                            console.log(response)
+                            if(response.data.info.list.length == 0){
+                                // Toast({
+                                //         message:"没有更多了",
+                                //         duration:500
+                                //     }
+                                //     );
+                                that.stopLoadMore = false
+                            }else{
+                                 that.evaluationList = that.evaluationList.concat(response.data.info.list)
+                            }
+                            
+                            })
+                            .catch(function(response){
+                                console.log(response)
+                            });
+                            this.loading = false;
+                            this.commentLoading = false
+                        }else if(that.stopLoadMore == false){
+                            // Toast({
+                            //         message:"没有更多了",
+                            //         duration:500
+                            //     }
+                            //     );
+                            this.loading = false;
+                            this.commentLoading = false
                         }
-                        this.loading = false;
-                        this.commentLoading = false
-                    }, 2500);
+                    }, 2000);
                 },
                 lessClick(){
                     if(this.specificationNum == 1){
@@ -832,12 +886,12 @@
 .productDetailBtn1{padding: 0.2rem 0.5rem;
     display: inline-block;
     border-radius: 5px 0 0 5px;
-    border: 1px solid #cccc;
+    border: 0.02rem solid #cccccc;
     font-size: 0.28rem;}
 .productDetailBtn2{ padding: 0.2rem 0.5rem;
     display: inline-block;
     border-radius: 0 5px 5px 0;
-    border: 1px solid #cccc;
+    border: 1px solid #cccccc;
     border-left: none;
     font-size: 0.28rem;}
 .productDetailIcon{
@@ -856,7 +910,7 @@
     margin-bottom: 1.3rem;
 }
 #detailTemplatePage .userAvatarList{
-    border: 1px solid #cccc;
+    border: 1px solid #cccccc;
 }
 #detailTemplatePage .userAvatarList ul{
     margin-top: 0.2rem;margin-left: 0.2rem;
@@ -868,7 +922,7 @@
     margin-right: 0.2rem;
     margin-bottom: 0.2rem;
     border-radius: 50%;
-    background-color: #cccc;
+    background-color: #cccccc;
 }
 #detailTemplatePage .userAvatarList ul li img{
     width: 100%;
@@ -876,12 +930,12 @@
     border-radius: 50%;
 }
 #detailTemplatePage .userReviewList{
-    border: 1px solid #cccc;
+    border: 1px solid #cccccc;
     border-top: none;border-bottom: none;
 }
 #detailTemplatePage .userReviewList li{
     padding: 0.2rem 0.2rem;
-                border-bottom: 1px solid #cccc;
+                border-bottom: 1px solid #cccccc;
 }
 #detailTemplatePage .commentHeaderInfo{
     height: 0.5rem;
@@ -899,6 +953,7 @@
     height: 0.5rem;
     float: left;
         padding-top: 0.07rem;
+            margin-left: 0.1rem;
 }
 #detailTemplatePage .userCommentTime{
         display: inline-block;
@@ -913,7 +968,7 @@
     margin-top: 0.1rem;
     margin-right: 0.1rem;
     width: 1rem;
-    border: 1px solid #cccc;
+    border: 0.01rem solid #cccccc;
     height: 1rem;}
 #detailTemplatePage .userCommentImg li img{width:100%;height:100%;}
 #detailTemplatePage .merchantReply{
@@ -997,7 +1052,7 @@
     right: -0.46rem;
     }
     .detailBottom li:nth-child(4),.detailBottom li:nth-child(5){
-        width:2.21rem;
+        width:2.2rem;
         border:0.01rem solid #6ab4ff;
     }
     .detailBottom li:nth-child(4){
@@ -1119,15 +1174,15 @@
     #zbd-Tips{font-size: 0.3rem;text-align:left;padding: 0.2rem 0.1rem 0rem 0.3rem;border-top:0.12rem solid #efefef;}
     #zbd-Tips p{padding-top: 0.1rem;padding-bottom: 0.3rem;}
     #zbd-Tips i{font-size: 0.4rem;color: #b1b1b1;float:right;transition: transform .3s;transform: rotate(0deg);}
-    #zbd-TipsContent{font-size: 0.25rem;text-align:left;height: 0.1rem;line-height: 0.5rem;overflow: hidden;padding:0.2rem 0.2rem 0.4rem 0.3rem;border-bottom: 0.12rem solid #efefef;border-top:0.02rem solid #efefef;}
-    #zbd-commodityInfoTitle{font-size:0.32rem;padding:0.32rem 0.1rem 0.32rem 0.3rem;}
+    #zbd-TipsContent{font-size: 0.25rem;text-align:left;height: 0.1rem;line-height: 0.5rem;overflow: hidden;padding:0.2rem 0.2rem 0.4rem 0.3rem;border-top:0.02rem solid #efefef;}
+    #zbd-commodityInfoTitle{font-size:0.32rem;padding:0.32rem 0.1rem 0.32rem 0.3rem;border-top: 0.12rem solid #efefef;}
     #zbd-customerReviews{font-size:0.25rem;text-align:left;border-top:0.12rem solid #efefef;}
     .zbd-reviewsTitle{text-align: center;padding-top: 0.3rem;padding-bottom: 0.1rem;font-size: 0.3rem;}
     .zbd-customerReviewContent{margin:0.3rem 0.1rem 0rem 0.1rem;-webkit-box-shadow: 0px 0px 2px #f4f4f4;box-shadow: 0px 0px 0.2rem #f4f4f4;}
     .commentNickname{text-align: center;}
     .commentStar img{width: 0.3rem;height: 0.3rem;}
     .userCommentImg{padding-left: 0.2rem;padding-right: 0.2rem;}
-    .seeAllReview{padding: 0.2rem 0.1rem 0.2rem 0.2rem;}
+    .seeAllReview{padding: 0.3rem 0.1rem 0.2rem 0.2rem;}
     .seeAllReview i{float:right;padding-right:0.1rem;    font-size: 0.25rem;}
     #zbd-commodityInformation{margin-top: 0.1rem;position: relative;height: 1.8rem;}
     .zbd_commodityImg{width: 2rem;

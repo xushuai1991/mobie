@@ -273,7 +273,7 @@
             },
             //领取优惠劵
             okcoupon(id) {
-                let userInfo = sessionStorage.getItem("userinfo");
+                let userInfo = localStorage.getItem("userinfo");
                 let userInfoId = JSON.parse(userInfo).id
                 let url = '/api/product/coupon/customer/insert?couponId=' + id + '&number=1';
                 this.$http({
