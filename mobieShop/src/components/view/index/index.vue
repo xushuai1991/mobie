@@ -181,7 +181,6 @@ export default {
                 that.isTrue = false
             }else{
                 if(response.data.info == "尚未登录"){
-                    // alert(111);
                 // that.$router.push({ path: '/login' })
                 }
                 let comlists = JSON.parse(response.data.info[0].comlist)

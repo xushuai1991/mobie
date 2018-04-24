@@ -1,18 +1,18 @@
 <template>
     <div class='CmyOveroderDeil'>
         <!--<ul v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
-                                                                                                    <li v-for="item in list">{{ item }}</li>
-                                                                                                </ul>!-->
+                                                                                                                    <li v-for="item in list">{{ item }}</li>
+                                                                                                                </ul>!-->
         <section>
             <div class="wrap2">
                 <div class='tiemBox'>
                     <p>{{ orderState}}</p>
                     <p v-if='orderState=="等待买家支付"'>
                         <span :endTime="endTime" :callback="callback" :endText="endText">
-                                                                                        <slot>
-                                                                                            {{content}}
-                                                                                        </slot>
-                                                                                    </span></p>
+                                                                                                        <slot>
+                                                                                                            {{content}}
+                                                                                                        </slot>
+                                                                                                    </span></p>
                     <p v-else>
                         {{orderText}}
                     </p>
@@ -30,7 +30,7 @@
                     <ul class="mui-table-view" infinite-scroll-immediate-check="false">
                         <!--li数据遍历循环部分-->
                         <li class="mui-table-view-cell" v-for="(item,index) in list" :key="index">
-                            <div class="cart">
+                            <div class="cart" :class='{"gray":(serverState==2&&item.serviceState!=1)||(serverState==3&&item.serviceState!=2)||(serverState==4&&item.serviceState!=3)}' :value=item.serviceState>
                                 <div class="goods">
                                     <div class="goods_title type-pay" style='height:5px;'>
                                     </div>
@@ -44,13 +44,6 @@
                                                 <p class="goods_identifier strlen" style="width:2.5rem;padding-right:0.2rem;"><span></span></p>
                                                 <p class="goods_color">颜色：<span>红色</span></p>
                                                 <p class="goods_size">尺码：<span>尺寸</span></p>
-                                                <div>
-                                                    <p>{{item.appointTime==null?'预约时间':item.appointTime}}</p>
-                                                    <p>{{item.appointTime!=null?'修改时间':item.updateAppointTime==null?'':item.updateAppointTime}}</p>
-                                                </div>
-                                                <div class='appointment' v-if='true'>
-                                                    <button @click.stop="appointment(index,item.id,item.appointTime)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>
-                                                </div>
                                             </li>
                                             <li class="goods_info_se">
                                                 <p class="goods_price">￥<span>{{item.price}}</span></p>
@@ -58,8 +51,8 @@
                                                     数量:<input type="number" disabled :value="item.saleNumber" style='background:#fff;margint-top:0.2rem;' />
                                                 </div>
                                                 <!--<span class="mui_shopcar_del" @click="remove(index,indexs)">
-                                                                                                                                        <i class='icon iconfont icon-lajitong'></i>
-                                                                                                                                    </span>!-->
+                                                                                                                                                        <i class='icon iconfont icon-lajitong'></i>
+                                                                                                                                                    </span>!-->
                                             </li>
                                         </ul>
                                         <div class='refundDetail' v-show='refundOrder'>
@@ -70,6 +63,15 @@
                                             </div>
                                         </div>
                                         <!--</mt-cell-swipe>!-->
+                                    </div>
+                                    <div v-show='timeShow'>
+                                        <div class='edmitTime' v-if='item.isService'>
+                                            <p v-if='item.updateAppointTime'>{{item.updateAppointTime}}(已申请)</p>
+                                            <p v-else>{{item.appointTime==null?'预约时间':item.appointTime}}</p>
+                                        </div>
+                                        <div class='appointment' v-if='item.isService'>
+                                            <button @click.stop="appointment(index,item.id,item.appointTime)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>
+                                        </div>
                                     </div>
                                     <div class="goodsBox" v-for="(items,indexs) in item.orderDetailList" :key="indexs">
                                         <ul class="goods_detail" style=' margin-top:0.2rem;'>
@@ -88,8 +90,8 @@
                                                     数量:<input type="number" disabled :value="items.saleNumber" style='background:#fff;margint-top:0.2rem;' />
                                                 </div>
                                                 <!--<span class="mui_shopcar_del" @click="remove(index,indexs)">
-                                                                                                                                        <i class='icon iconfont icon-lajitong'></i>
-                                                                                                                                    </span>!-->
+                                                                                                                                                        <i class='icon iconfont icon-lajitong'></i>
+                                                                                                                                                    </span>!-->
                                             </li>
                                         </ul>
                                         <!--</mt-cell-swipe>!-->
@@ -116,10 +118,11 @@
             <input type='button' class='delBtn' v-show=showBtn1 @click='clearOrder(number,actualMoney)' value='取消订单'>
             <input type='button' v-show=showBtn2 value='立即付款' @click='playOrder(number,actualMoney,companyId)'>
             <input type='button' class='delBtn' v-show=showBtn3 @click='delOrder(number)' value='删除订单'>
-            <input type='button' class='delBtn' v-show=showBtn4 @click='delOrder(number)' value='订单退款'>
-            <input type='button' class='delBtn' v-show=showBtn6 @click='delOrder(number)' value='取消退款'>
-            <input type='button' v-show=showBtn5 @click='delOrder(number)' value='确认收货'>
-            <input type='button' v-show=showBtn7 @click='delOrder(number)' value='评价订单'>
+            <input type='button' class='delBtn' v-show=showBtn4 @click='applectoinMoney(datas.data.info.list[0])' value='申请退款'>
+            <input type='button' class='delBtn' v-show=showBtn6 @click='CloseOrder(number)' value='取消退款'>
+            <input type='button' v-show=showBtn5 @click='OkOrder(number)' value='确认收货'>
+            <input type='button' v-show=showBtn8 @click='opInt(datas.data.info.list[0].id,actualMoney)' value='申请开票'>
+            <input type='button' v-show=showBtn7 @click='comment(datas.data.info.list[0])' value='评价订单'>
         </div>
         <mt-popup v-model="popupVisible" position="bottom" class="popup">
             <mt-picker :slots="dates" @change='onValuesChange' :showToolbar='true'>
@@ -184,13 +187,16 @@
                 companyId: '',
                 orderState: '',
                 uerName: '',
+                serverState: '',
                 userPhone: '',
                 userAdd: '',
                 orderText: '',
                 createTime: '',
                 number: '',
                 copyBtn: null,
+                datas: '',
                 list: [],
+                timeShow: false, //服务时间
                 showBtn1: false, //取消按钮
                 showBtn2: false, //立即付款按钮
                 showBtn3: false, //关闭按钮，
@@ -198,6 +204,7 @@
                 showBtn5: false, //关闭按钮，
                 showBtn6: false, //关闭按钮，
                 showBtn7: false, //关闭按钮，
+                showBtn8: false, //申请开票，
                 // refundShow:false,//退款显示，
                 refundOrder: false
             }
@@ -228,10 +235,8 @@
                     day = new Date(day.setDate(day.getDate() + 2)).format('yyyy-MM-dd hh:mm');
                 }
                 let date = day + ' ' + this.datechange[1].substring(0, 2) + ':' + this.datechange[2].substring(0, 2);
-                console.log(day)
                 var dates = new Date(day.replace(/-/g, '/'));
                 let time3 = Date.parse(dates);
-                console.log(time3)
                 if (this.orstate == null) {
                     let url = '/api/product/order/mall/update/orderDetail';
                     this.$http({
@@ -242,27 +247,42 @@
                             id: this.id
                         }]
                     }).then((res) => {
-                        console.log(res)
-                    }).catch((err) => {
-                    })
+                        this.getDate(this.urlArgs().ordernumber)
+                    }).catch((err) => {})
                 } else {
                     let url = '/api/product/order/mall/update/orderDetail';
                     this.$http({
                         url: url,
                         method: "POST",
                         data: [{
-                            updateAppointTime: day,
+                            updateAppointTime: time3,
                             id: this.id
                         }]
                     }).then((res) => {
-                        console.log(res)
-                    }).catch((err) => {
-                    })
+                        this.getDate(this.urlArgs().ordernumber)
+                    }).catch((err) => {})
                 }
                 this.popupVisible = false;
             },
             cancledate() {
                 this.popupVisible = false;
+            },
+            CloseOrder(onb) {
+                let url = '/api/product/order/mall/refund/cancel';
+                this.$http({
+                    url: url,
+                    method: "POST",
+                    data: {
+                        orderNumber: onb
+                    }
+                }).then((res) => {
+                    // this.getDate(this.urlArgs().ordernumber)
+                    Toast()
+                }).catch((err) => {})
+            },
+            opInt(id,mony){
+                console.log(id,mony)
+                this.$router.push({path:'/invoice',query:{orderid:id,totalprice:mony}})
             },
             appointment(index, id, orstate) {
                 this.popupVisible = true;
@@ -272,7 +292,6 @@
             },
             onValuesChange(aa, values) {
                 this.datechange = values;
-                console.log(this.datechange)
             },
             refundButton($event, indexs) {
                 if ($event.currentTarget.nextElementSibling.classList.value == 'hiddles') {
@@ -290,6 +309,35 @@
                     }
                 });
             },
+            comment(item){
+               let orderdetail = sessionStorage.setItem('orderdetail', JSON.stringify(item));
+               this.$router.push("/evaluate")
+            },
+            OkOrder(order) { //
+                this.unbind('/api/product/order/mall/update', order, "actualMoney", '确认收货')
+                // let url = '/api/product/order/mall/update';
+                // this.$http({
+                //     url: url,
+                //     method: 'post',
+                //     data: [{
+                //         number: order,
+                //         orderState: 2
+                //     }]
+                // }).then((res) => {
+                //     if (res.data.status == 200) {
+                //         Toast('确认订单')
+                //         this.$router.push({
+                //             // path:"./order",
+                //             name: 'order',
+                //             params: {
+                //                 index: 1
+                //             }
+                //         });
+                //     }
+                // }).catch((err) => {
+                //     console.log(err)
+                // })
+            },
             getDate(ordernumber) {
                 // let orderdetail = sessionStorage.getItem("orderdetail");
                 // let orderdetails = JSON.parse(orderdetail)
@@ -306,6 +354,7 @@
                         Toast('订单有问题请联系客服')
                         return false
                     }
+                    this.datas = res
                     let orderStaty = res.data.info.list[0];
                     console.log(orderStaty)
                     this.uerName = orderStaty.name;
@@ -316,36 +365,48 @@
                     this.companyId = orderStaty.companyId
                     this.createTime = orderStaty.createTime
                     this.number = orderStaty.number
-                    console.log(orderStaty)
                     if (orderStaty.payState == 1) {
                         //卖家付款过的
                         this.orderState = '已支付等待卖家发货'
                         this.orderText = '亲,请耐心能等待';
-                        // if (orderStaty.orderState == 2) {
-                        //     this.showBtn4 = true, //退款
-                        //         this.showBtn5 = true; //确认收货
-                        //     this.orderState = '已支付等待卖家发货'
-                        //     this.orderText = '亲,请耐心能等待';
+                        this.showBtn4 = true; //退款
+                        this.showBtn5 = true; //立即付款按钮
+                        if (orderStaty.orderState == 2) {
+                            this.showBtn4 = true, //退款
+                                this.showBtn5 = false; //确认收货
+                            this.showBtn7 = true; //评价
+                            this.orderState = '已经完成'
+                            this.orderText = '亲，请确认';
+                        }
+                        if (orderStaty.orderState == 4) {
+                            this.showBtn6 = true, //取消退款
+                                this.showBtn5 = true; //立即付款按钮
+                            this.orderState = '退款中...'
+                            this.orderText = '亲,请耐心能等待';
+                            this.refundOrder = true
+                        }
+                        // if (orderStaty.serviceState == 1) {
+                        //     this.orderState = '等待服务'
                         // }
-                        // if (orderStaty.orderState == 4) {
-                        //     this.showBtn6 = true, //取消退款
-                        //         this.showBtn5 = true; //立即付款按钮
-                        //     this.orderState = '退款中...'
-                        //     this.orderText = '亲,请耐心能等待';
-                        //     this.refundOrder = true
+                        // if (orderStaty.serviceState == 2) {
+                        //     this.orderState = '服务中...'
                         // }
-                        if (orderStaty.serviceState == 1) {
-                            this.orderState = '等待服务'
-                        }
-                        if (orderStaty.serviceState == 2) {
-                            this.orderState = '服务中...'
-                        }
-                        if (orderStaty.serviceState == 3) {
-                            this.orderState = '服务中...'
-                        }
+                        // if (orderStaty.serviceState == 3) {
+                        //     this.orderState = '服务中...'
+                        // }
                         if (orderStaty.orderState == 5) {
-                            // this.showBtn3 = true; //删除订单
+                            this.showBtn3 = true; //删除订单
+                            this.showBtn8 = true; //申请退款
+                            this.showBtn4 = false; //退款
+                            this.showBtn5 = false; //立即付款按钮
                             this.orderState = '退款完成'
+                            this.orderText = '';
+                        }
+                        if (orderStaty.orderState == 6) {
+                            this.showBtn3 = true; //删除订单
+                            this.showBtn4 = false; //退款
+                            this.showBtn5 = false; //立即付款按钮
+                            this.orderState = '订单已取消'
                             this.orderText = '';
                         }
                     } else if (orderStaty.payState == 2) {
@@ -381,54 +442,62 @@
                     console.log(error)
                 })
             },
-            delOrder(order) {
-                let url = '/api/product/order/mall/update';
-                this.$http({
-                    url: url,
-                    method: 'post',
-                    data: [{
-                        number: order,
-                        isActive: false
-                    }]
-                }).then((res) => {
-                    if (res.data.status == 200) {
-                        Toast('删除订单成功')
-                        this.$router.push({
-                            // path:"./order",
-                            name: 'order',
-                            params: {
-                                index: 1
-                            }
-                        });
-                    }
-                }).catch((err) => {
-                    console.log(err)
-                })
+            applectoinMoney(item) {
+                // console.log(item)
+                let orderdetail = sessionStorage.setItem('orderdetail', JSON.stringify(item));
+                this.$router.push("/applyRefund")
+            },
+            delOrder(order) { //删除订单
+                this.unbind('/api/product/order/mall/update', order, 'actualMoney', '删除订单')
+                // let url = '/api/product/order/mall/update';
+                // this.$http({
+                //     url: url,
+                //     method: 'post',
+                //     data: [{
+                //         number: order,
+                //         isActive: false
+                //     }]
+                // }).then((res) => {
+                //     if (res.data.status == 200) {
+                //         Toast('删除订单成功')
+                //         this.$router.push({
+                //             // path:"./order",
+                //             name: 'order',
+                //             params: {
+                //                 index: this.serverState
+                //             }
+                //         });
+                //     }
+                // }).catch((err) => {
+                //     console.log(err)
+                // })
             },
             clearOrder(order, actualMoney) { //取消订单
-                let url = '/api/product/order/mall/update';
-                this.$http({
-                    url: url,
-                    method: 'post',
-                    data: [{
-                        number: order,
-                        orderState: 6,
-                        actualMoney: actualMoney
-                    }]
-                }).then((res) => {
-                    if (res.data.status == 200) {
-                        Toast('取消订单成功')
-                        this.$router.push({
-                            // path:"./order",
-                            name: 'order',
-                            params: {
-                                index: 1
-                            }
-                        });
-                    }
-                }).catch((err) => {
-                    console.log(err)
-                })
+                console.log(actualMoney)
+                this.unbind('/api/product/order/mall/update', order, actualMoney, '取消订单')
+                // let url = '/api/product/order/mall/update';
+                // this.$http({
+                //     url: url,
+                //     method: 'post',
+                //     data: [{
+                //         number: order,
+                //         orderState: 6,
+                //         actualMoney: actualMoney
+                //     }]
+                // }).then((res) => {
+                //     if (res.data.status == 200) {
+                //         Toast('取消订单成功')
+                //         this.$router.push({
+                //             // path:"./order",
+                //             name: 'order',
+                //             params: {
+                //                 index: 1
+                //             }
+                //         });
+                //     }
+                // }).catch((err) => {
+                //     console.log(err)
+                // })
             },
             playOrder(order, actualMoney, companyId) { //支付订单
                 let objs = {
@@ -494,6 +563,70 @@
                 //   this.orderStaty = 3
                 //   console.log(this.orderState)
             },
+            unbind(url, number, actualMoney, stateText) {
+                let that = this;
+                const htmls = `是否确认信息`;
+                MessageBox.confirm('', {
+                    message: htmls,
+                    title: '',
+                    showConfirmButton: true,
+                    showCancelButton: true,
+                    cancelButtonClass: 'cancelButton',
+                    confirmButtonClass: 'confirmButton',
+                    confirmButtonText: '确认',
+                    cancelButtonText: '不确认'
+                }).then(action => {
+                    let orderUlr = url + ""
+                    if (action == 'confirm') {
+                        
+                        let objs = []
+                        if (stateText == '取消订单') {
+                            objs.push({
+                                number: number,
+                                orderState: 6,
+                                payState: 3,
+                                actualMoney: actualMoney
+                            })
+                        }
+                        if (stateText == '删除订单') {
+                            objs.push({
+                                number: number
+                            })
+                        }
+                       console.log(stateText)
+                        if (stateText == '确认收货') {
+                            console.log(objs)
+                            objs.push({
+                                number: number,
+                                orderState: 2
+                            })
+                            
+                        }
+                        
+                        that.$http({
+                                url: orderUlr,
+                                method: "post",
+                                data: objs
+                            })
+                            .then(res => {
+                                if (res.data.status == 200) {
+                                    Toast(res.data.msg);
+                                    this.$router.push({
+                                        // path:"./order",
+                                        name: 'order',
+                                        params: {
+                                            index: this.serverState
+                                        }
+                                    });
+                                }
+                            }).catch(error => {
+                                console.log(error)
+                            })
+                    }
+                }).catch(err => {
+                    if (err == 'cancel') {}
+                });
+            },
             timestampToTime(timestamp) { //转成时间
                 var date = new Date(timestamp * 1000); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
                 let Y = date.getFullYear() + '-';
@@ -524,6 +657,8 @@
         },
         created() {
             this.getDate(this.urlArgs().ordernumber)
+            this.serverState = this.urlArgs().index;
+            console.log(this.serverState)
         },
         // beforeUpdate(){
         //     this.getDate(this.urlArgs().ordernumber)
@@ -531,6 +666,15 @@
     }
 </script>
 <style lang='less'>
+    .gray {
+        background: #e0e0e0;
+    }
+    .edmitTime {
+        font-size: 0.3rem;
+        text-align: left;
+        padding-left: 0.4rem;
+        line-height: 0.6rem;
+    }
     .CmyOveroderDeil .mint-cell-value {
         width: 100%;
     }
@@ -566,14 +710,20 @@
 <style scoped lang='less'>
     .appointment {
         text-align: right;
-        position: absolute;
+        position: relative;
         width: 56%;
         bottom: 0;
     }
+    .edmitTime {
+        position: relative;
+    }
     .appointment button {
-        /* position: absolute;
-                            bottom:.2rem;
-                            right:.2rem; */
+        top: -0.6rem;
+        float: right;
+        position: absolute;
+        right: -3.2rem;
+        /*   bottom:.2rem;
+                                            right:.2rem; */
         background-color: #26a2ff;
         outline: none;
         border: 0;
@@ -757,7 +907,6 @@
     }
     .goods {
         width: 100%;
-        background: white;
         position: relative;
     }
     .cart {
@@ -790,7 +939,6 @@
     }
     .goods {
         width: 100%;
-        background: white;
         position: relative;
     }
     .goods_title {
@@ -841,7 +989,6 @@
     }
     .goods_detail {
         position: relative;
-        background: white;
         width: 100%;
         height: 2.7rem;
         display: flex;

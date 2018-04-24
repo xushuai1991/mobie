@@ -102,6 +102,7 @@
                 });
             },
             addAdd() { //新增地址
+            sessionStorage.removeItem("addManagement")
                 this.$router.push({
                     path: '/addEdit',
                     name: 'addEdit',
