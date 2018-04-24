@@ -2,10 +2,10 @@
     <div class='addEdit'>
         <mt-field label="用户名：" placeholder="请输入用户名" v-model="username"></mt-field>
         <mt-field label="手机号：" placeholder="请输入手机号" v-model="useriphone"></mt-field>
-        <mt-field label="大区：" placeholder="请输入大区" v-model="largeAre" style='color:#000;' disabled><span @click='LargeArea'>选择区域</span></mt-field>
-        <mt-field label="省市区：" placeholder="请输入省市区" v-model="newCity" style='color:#000;' disabled>
+        <mt-field label="大区：" placeholder="请输入大区" v-model="largeAre" style='color:#000;' readonly="readonly"><span @click='LargeArea'>选择区域</span></mt-field>
+        <mt-field label="省市区：" placeholder="请输入省市区" v-model="newCity" style='color:#000;' readonly="readonly">
             <!-- <span class="location" @click='getDetailedAddress'><i class='icon iconfont icon-dizhi1'></i> 定位</span>!--></mt-field>
-        <mt-field label="街道：" placeholder="请输入街道" v-model="street" style='color:#000;' disabled></mt-field>
+        <mt-field label="街道：" placeholder="请输入街道" v-model="street" style='color:#000;' readonly="readonly"></mt-field>
         <mt-field label="详情地址：" placeholder="请输入详情地址" v-model="details"></mt-field>
         <mt-checklist title="" class="morz" v-model="value" align="right" :options="options">
         </mt-checklist>
