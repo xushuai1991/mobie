@@ -127,6 +127,7 @@ import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasda
                     })
                 })
                 getdata.then(function(result) {
+                    console.log(result)
                     that.uerserInfo = (result)
                     that.headerImage = that.uerserInfo.data.info.list[0].avatar
                 }).catch(function(errmsg) {
@@ -143,7 +144,7 @@ import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasda
                 }
                 if (this.userName == '性别') {
                     dataInfo = {
-                        gender: this.value
+                        gender: this.value-0
                     }
                 }
                 if (this.userName == '联系方式') {
@@ -253,6 +254,7 @@ import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasda
                 this.imgPreview(this.picValue);
             },
             imgPreview(file) {
+                console.log(file)
                 let self = this;
                 let Orientation;
                 //去获取拍照时的信息，解决拍出来的照片旋转问题 
@@ -271,14 +273,15 @@ import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasda
                         let result = this.result;
                         let img = new Image();
                         img.src = result;
+                        
                         //判断图片是否大于100K,是就直接上传，反之压缩图片 
                         if (this.result.length <= (100 * 1024)) {
                             self.headerImage = this.result;
-                            self.postImg();
+                            
+                            self.postImg(self.headerImage);
                         } else {
                             img.onload = function() {
                                 let data = self.compress(img, Orientation);
-                                console.log(data)
                                 self.headerImage = data;
                                 self.postImg(data);
                             }
