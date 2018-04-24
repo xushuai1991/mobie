@@ -27,72 +27,76 @@
             <mt-tab-container v-model="type">
                 <mt-tab-container-item id="积分记录">
                     <mt-navbar v-model="type_score" class='navbar_select'>
-                        <mt-tab-item id="全部">全部</mt-tab-item>
-                        <mt-tab-item id="获取">获取</mt-tab-item>
-                        <mt-tab-item id="使用">使用</mt-tab-item>
+                        <mt-tab-item id="all">全部</mt-tab-item>
+                        <mt-tab-item id="get">获取</mt-tab-item>
+                        <mt-tab-item id="used">使用</mt-tab-item>
                     </mt-navbar>
                     <mt-tab-container v-model="type_score" class='scorelist'>
-                        <mt-tab-container-item id="全部">
+                        <mt-tab-container-item id="all">
                             <ul class='score_all_list' 
-                                v-infinite-scroll="loadMore"
-                                infinite-scroll-disabled="loading"
-                                infinite-scroll-distance="10">
-                                <li v-for='(item,index) in list_score' :key='index'>
-                                    <p class='tips' v-if='item.tip_show'>{{item.name?item.name:''}}</p>
-                                    <div class='left' v-if='!item.tip_show'>
-                                        <p>{{item.from}}</p>
-                                        <p>{{item.date}}</p>
+                                v-infinite-scroll="loadMore1"
+                                infinite-scroll-disabled="loading0"
+                                infinite-scroll-distance="0"
+                                infinite-scroll-immediate-check='false'>
+                                <li v-for='(item,index) in list_score[0]' :key='index'>
+                                    <!-- <p class='tips' v-if='item.tip_show'>{{item.name?item.name:''}}</p> -->
+                                    <div class='left'>
+                                        <p>{{item.channel==0?'注册':item.channel==1?'首次填写信息':item.channel==2?'完善个人信息':item.channel==3?'下单':item.channel==4?'绑定微信':item.channel==5?'转发':item.channel==6?'引客购买':item.channel==7?'指定商品购买消费':item.channel==8?'兑换活动':item.channel==9?'兑换优惠券':item.channel==10?'指定营销活动抵扣金额消费':''}}</p>
+                                        <p>{{item.createTime.substring(0,10)}}</p>
                                     </div>
-                                    <div class='right' v-if='!item.tip_show'>
-                                        <span>{{item.type=='add'?'+':'-'}}{{item.num}}</span>
+                                    <div class='right'>
+                                        <span>{{item.status==0?'+':'-'}}{{item.increasedPoints}}{{item.status==1?'(过期)':''}}</span>
                                     </div>
                                 </li>
                             </ul>
-                            <p v-show="loading" class="page-infinite-loading">
-                                <mt-spinner type="fading-circle"></mt-spinner>
-                                加载中...
+                            <p class="page-infinite-loading">
+                                <mt-spinner type="fading-circle" v-show='!dataovered[0]'></mt-spinner>
+                                <span v-show='!dataovered[0]'>加载中...</span>    
+                                <span v-show='dataovered[0]'>已全部加载</span>
                             </p>
                         </mt-tab-container-item>
-                        <mt-tab-container-item id="获取">
+                        <mt-tab-container-item id="get">
                             <ul class='score_get_list' 
-                                v-infinite-scroll="loadMore"
-                                infinite-scroll-disabled="loading"
-                                infinite-scroll-distance="10">
-                                <li v-for='(item,index) in list_score' :key='index'>
-                                    <p class='tips' v-if='item.tip_show'>{{item.name?item.name:''}}</p>
-                                    <div class='left' v-if='!item.tip_show'>
-                                        <p>{{item.from}}</p>
-                                        <p>{{item.date}}</p>
+                                v-infinite-scroll="loadMore2"
+                                infinite-scroll-disabled="loading1"
+                                infinite-scroll-distance="0">
+                                <li v-for='(item,index) in list_score[1]' :key='index'>
+                                    <!-- <p class='tips' v-if='item.tip_show'>{{item.name?item.name:''}}</p> -->
+                                    <div class='left'>
+                                        <p>{{item.channel==0?'注册':item.channel==1?'首次填写信息':item.channel==2?'完善个人信息':item.channel==3?'下单':item.channel==4?'绑定微信':item.channel==5?'转发':item.channel==6?'引客购买':item.channel==7?'指定商品购买消费':item.channel==8?'兑换活动':item.channel==9?'兑换优惠券':item.channel==10?'指定营销活动抵扣金额消费':''}}</p>
+                                        <p>{{item.createTime.substring(0,10)}}</p>
                                     </div>
-                                    <div class='right' v-if='!item.tip_show'>
-                                        <span>{{item.type=='add'?'+':'-'}}{{item.num}}</span>
+                                    <div class='right'>
+                                        <span>{{item.status==0?'+':'-'}}{{item.increasedPoints}}{{item.status==1?'(过期)':''}}</span>
                                     </div>
                                 </li>
                             </ul>
-                            <p v-show="loading" class="page-infinite-loading">
-                                <mt-spinner type="fading-circle"></mt-spinner>
-                                加载中...
+                            <p  class="page-infinite-loading">
+                                <mt-spinner type="fading-circle" v-show='!dataovered[1]'></mt-spinner>
+                                <span v-show='!dataovered[1]'>加载中...</span>    
+                                <span v-show='dataovered[1]'>已全部加载</span>
                             </p>
                         </mt-tab-container-item>
-                        <mt-tab-container-item id="使用">
+                        <mt-tab-container-item id="used">
                             <ul class='score_all_list' 
-                                v-infinite-scroll="loadMore"
-                                infinite-scroll-disabled="loading"
-                                infinite-scroll-distance="10">
-                                <li v-for='(item,index) in list_score' :key='index'>
-                                    <p class='tips' v-if='item.tip_show'>{{item.name?item.name:''}}</p>
-                                    <div class='left' v-if='!item.tip_show'>
-                                        <p>{{item.from}}</p>
-                                        <p>{{item.date}}</p>
+                                v-infinite-scroll="loadMore3"
+                                infinite-scroll-disabled="loading2"
+                                infinite-scroll-distance="0">
+                                <li v-for='(item,index) in list_score[2]' :key='index'>
+                                    <!-- <p class='tips' v-if='item.tip_show'>{{item.name?item.name:''}}</p> -->
+                                    <div class='left'>
+                                        <p>{{item.channel==0?'注册':item.channel==1?'首次填写信息':item.channel==2?'完善个人信息':item.channel==3?'下单':item.channel==4?'绑定微信':item.channel==5?'转发':item.channel==6?'引客购买':item.channel==7?'指定商品购买消费':item.channel==8?'兑换活动':item.channel==9?'兑换优惠券':item.channel==10?'指定营销活动抵扣金额消费':''}}</p>
+                                        <p>{{item.createTime.substring(0,10)}}</p>
                                     </div>
-                                    <div class='right' v-if='!item.tip_show'>
-                                        <span>{{item.type=='add'?'+':'-'}}{{item.num}}</span>
+                                    <div class='right'>
+                                        <span>{{item.status==0?'+':'-'}}{{item.increasedPoints}}{{item.status==1?'(过期)':''}}</span>
                                     </div>
                                 </li>
                             </ul>
-                            <p v-show="loading" class="page-infinite-loading">
-                                <mt-spinner type="fading-circle"></mt-spinner>
-                                加载中...
+                            <p  class="page-infinite-loading">
+                                <mt-spinner type="fading-circle" v-show='!dataovered[2]'></mt-spinner>
+                                <span v-show='!dataovered[2]'>加载中...{{dataovered[2]}}</span>    
+                                <span v-show='dataovered[2]'>已全部加载</span>
                             </p>
                         </mt-tab-container-item>
                     </mt-tab-container>
@@ -198,8 +202,9 @@
 </template>
 <script>
 import { InfiniteScroll } from 'mint-ui';
-import { mapState } from 'vuex'
 import { Toast } from 'mint-ui';
+import { Indicator } from 'mint-ui';
+import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasdata.js'
 export default {
     data(){
         return{
@@ -208,122 +213,64 @@ export default {
             experience:'300',
             scores:'300',
             level_name:'非会员',
-            loading:false,
+            loading0:true,
+            loading1:true,
+            loading2:true,
             type:'积分记录',
-            type_score:'全部',
-            list_score:[
-                {
-                    from:'',
-                    date:'',
-                    type:'',
-                    num:'',
-                    name:'本月',
-                    tip_show:true
-                },
-                {
-                    from:'转发有礼',
-                    date:'2018-3-8',
-                    type:'delete',
-                    num:'300',
-                    tip_show:false
-                },
-                {
-                    from:'转发有礼',
-                    date:'2018-3-8',
-                    type:'add',
-                    num:'300',
-                    tip_show:false
-                },
-                {
-                    from:'转发有礼',
-                    date:'2018-3-8',
-                    type:'add',
-                    num:'300',
-                    tip_show:false
-                },
-                {
-                    from:'转发有礼',
-                    date:'2018-3-8',
-                    type:'add',
-                    num:'300',
-                    tip_show:false
-                },
-                {
-                    from:'转发有礼',
-                    date:'2018-3-8',
-                    type:'add',
-                    num:'300',
-                    tip_show:false
-                },
-                 {
-                    from:'',
-                    date:'',
-                    type:'',
-                    num:'',
-                    name:'2月',
-                    tip_show:true
-                },
-                {
-                    from:'转发有礼',
-                    date:'2018-3-8',
-                    type:'add',
-                    num:'300',
-                    tip_show:false
-                },
-                {
-                    from:'转发有礼',
-                    date:'2018-3-8',
-                    type:'add',
-                    num:'300',
-                    tip_show:false
-                },
-                {
-                    from:'转发有礼',
-                    date:'2018-3-8',
-                    type:'add',
-                    num:'300',
-                    tip_show:false
-                },
-                {
-                    from:'转发有礼',
-                    date:'2018-3-8',
-                    type:'add',
-                    num:'300',
-                    tip_show:false
-                },
-                {
-                    from:'转发有礼',
-                    date:'2018-3-8',
-                    type:'add',
-                    num:'300',
-                    tip_show:false
-                },
-                {
-                    from:'转发有礼',
-                    date:'2018-3-8',
-                    type:'add',
-                    num:'300',
-                    tip_show:false
-                },
-                {
-                    from:'转发有礼',
-                    date:'2018-3-8',
-                    type:'add',
-                    num:'300',
-                    tip_show:false
-                }
-
-            ],
-            list_vipsocre:[]
+            type_score:'all',
+            list_score:[[],[],[]],
+            list_vipsocre:[],
+            userinfo:'',
+            pagenum:[1,1,1],
+            dataovered:[false,false,false]
         }
     },
     created(){
         this.$root.$emit('header','积分管理');
+        let userinfo=operatelocalstorage('userinfo',null,'get',null);
+        this.userinfo=JSON.parse(userinfo);
         this.getVIPs();
+        this.getScoreLog(1);
+    },
+    watch:{
+        type_score(value){
+            switch(value){
+                case 'all':{
+                    this.loading0=this.dataovered[0];
+                    this.loading1=true;
+                    this.loading2=true;
+                    if(this.list_score[0].length==0){
+                        this.getScoreLog(1);
+                    }
+                    break;
+                }
+                case 'get':{
+                    this.loading0=true;
+                    this.loading1=this.dataovered[1];
+                    this.loading2=true;
+                    if(this.list_score[1].length==0){
+                        this.getScoreLog(1);
+                    }
+                    break;
+                }
+                case 'used':{
+                    this.loading0=true;
+                    this.loading1=true;
+                    this.loading2=this.dataovered[2];
+                    if(this.list_score[2].length==0){
+                        this.getScoreLog(1);
+                    }
+                    break;
+                }
+                default:{
+                    break;
+                }
+            }
+        }
     },
     mounted(){
         let that=this;
-        console.log(this.userinfo);
+        // console.log(this.userinfo);
         this.$http.post('/api/customer/customerLevelComputing/query',{
             level:that.userinfo.level
         })
@@ -340,9 +287,125 @@ export default {
         });
     },
     methods:{
-        loadMore(){
-            this.loading = true;
+        // 查询积分记录
+        getScoreLog(pagenum){
+            let data={};
+            let index=this.type_score=='all'?0:this.type_score=='get'?1:2;
+            if(pagenum==1){
+                Indicator.open();
+            }
+            switch(this.type_score){
+                case 'all':{
+                    data={
+                        customerId:this.userinfo.id
+                    };
+                    break;
+                }
+                case 'get':{
+                    data={
+                        customerId:this.userinfo.id,
+                        status:0
+                    }
+                    break;
+                }
+                case 'used':{
+                    data={
+                        customerId:this.userinfo.id,
+                        status:2
+                    }
+                    break;
+                }
+            }
+            this.changeStatus(index,true);
+            let that=this;
+            this.$http.post('/api/customer/consumption/points/find?pageSize=20&pageNo='+pagenum,data)
+            .then(res=>{
+                if(res.data.status==200){
+                    let length=res.data.info.list.length;
+                    if(length<20){
+                        that.$set(that.dataovered,index,true);
+                    }
+                    else if(length==20){
+                        that.pagenum[index]+=1;
+                    }
+                    res.data.info.list.forEach(item=>{
+                        // that.$set(that.list_score,index,);
+                        that.list_score[index].push(item);
+                    });
+                }
+                else{
+                    Toast(res.data.msg);
+                }
+                if(!that.dataovered[index]){
+                    that.changeStatus(index,false);
+                }
+                else{
+                    Toast('数据已加载完');
+                }
+                Indicator.close();
+                console.log(res);
+            })
+            .catch(err=>{
+                if(!that.dataovered[index]){
+                    that.changeStatus(index,false);
+                }
+                else{
+                    Toast('数据已加载完');
+                }
+                console.log(err);
+                Indicator.close();
+                Toast('数据载入出错！');
+            })
+        },
+        // 改变触发状态
+        changeStatus(index,flag){
+            switch(index){
+                case 0:{
+                    this.loading0=flag;
+                    break;
+                }
+                case 1:{
+                    this.loading1=flag;
+                    break;
+                }
+                case 2:{
+                    this.loading2=flag;
+                    break;
+                }
+                default:{
+                    break;
+                }
+            }
+        },
+        // 载入全部
+        loadMore1(){
             console.log(111);
+            if(this.dataovered[0]){
+                Toast('数据已加载完');
+            }
+            else{
+                this.getScoreLog(this.pagenum[0]);
+            }
+        },
+        // 载入获取积分的记录
+        loadMore2(){
+            console.log(222);
+            if(this.dataovered[1]){
+                Toast('数据已加载完');
+            }
+            else{
+                this.getScoreLog(this.pagenum[1]);
+            }
+        },
+        // 载入使用的积分记录
+        loadMore3(){
+            console.log(33);
+            if(this.dataovered[2]){
+                Toast('数据已加载完');
+            }
+            else{
+                this.getScoreLog(this.pagenum[2]);
+            }
         },
         // 获取会员计算方式
         getVIPs(){
@@ -363,20 +426,20 @@ export default {
             })
         }
     },
-    computed:{
-        ...mapState({
-            userinfo:function(state){
-                if(JSON.stringify(state.userinfo.userinfo)=='{}'){
-                    let data=JSON.parse(sessionStorage.getItem('userinfo'));
-                    this.$store.commit('login',data)
-                    return data;
-                }
-                else{
-                    return state.userinfo.userinfo
-                }
-            }
-        })
-    }
+    // computed:{
+    //     ...mapState({
+    //         userinfo:function(state){
+    //             if(JSON.stringify(state.userinfo.userinfo)=='{}'){
+    //                 let data=JSON.parse(sessionStorage.getItem('userinfo'));
+    //                 this.$store.commit('login',data)
+    //                 return data;
+    //             }
+    //             else{
+    //                 return state.userinfo.userinfo
+    //             }
+    //         }
+    //     })
+    // }
 }
 </script>
 

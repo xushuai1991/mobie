@@ -114,7 +114,6 @@ export default {
         if(this.selected=='all'){
             this.getOrderList(1,{});
         }
-      
         // 对订单操作后，重新刷新对应tab下的数据
         this.$root.$on('loaddata',index=>{
             // console.log(index);
@@ -424,7 +423,6 @@ export default {
             else{
                 this.getOrderList(this.pagenumlist[1],data);
             }
-            
         },
         //加载待服务订单
         loadMore2(){

@@ -22,7 +22,7 @@
                 <!-- 服务类商品，添加预约时间功能 -->
                 <div class='appointment' v-if='item.isService==true'>
                     <button  @click.stop="appointment(item.id)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>
-                    <span>服务时间：{{item.appointTime==null?'空':item.appointTime.substring(0,16)}}{{((item.updateAppointTimeIsActive&&item.updateAppointTime!=null)||item.updateAppointTime==null)?'':'('+'已修改'+')'}}</span>
+                    <span>服务时间：{{item.appointTime==null?'空':item.appointTime.substring(0,16)}}{{((item.updateAppointTimeIsActive&&item.updateAppointTime!=null)||item.updateAppointTime==null)?'':'('+'已申请'+')'}}</span>
                 </div>
             </div>
             <div class='price-total'>
@@ -31,8 +31,10 @@
             <div class='operation'>
                 <button class='prime pay' @click.stop="pay" v-if='data.payState==2'>付款</button>
                 <button class='cancle' @click.stop="cancleOrder" v-if='data.payState==2||data.payState==3'>取消订单</button>
-                <button class='prime follow' v-if='data.payState==1&data.serviceState==2'>追单</button>
+                <button class='prime follow' v-if='type=="inservice"'>追单</button>
                 <button class='apply' @click.stop='application' v-if='data.payState==1'>申请退款</button>
+                <button class='invoice' @click.stop='invoice(data.id,data.actualMoney)' v-if='data.payState==1'>申请发票</button>
+                
             </div>
         </div>
         <mt-popup v-model="popupVisible" position="bottom" class="popup">
@@ -227,6 +229,10 @@ export default {
             this.$router.push({path:'applyRefund'})
             sessionStorage.setItem('orderdetail',JSON.stringify(this.data));
         },
+        // 申请开发票
+        invoice(orderid,totalprice){
+            this.$router.push('/invoice?orderid='+orderid+'&totalprice='+totalprice);
+        }
     },
     computed:{
         status(){
