@@ -359,7 +359,7 @@
                     this.commodityId = commodityId
                     //根据商品ID 查询相关的商品信息(根据商品取模板ID)
                     this.$http.post('/api/product/commodity/info/queryMap/mall',{
-                        "companyId":1,
+                        "companyId":companyId,
                         "id":commodityId
 
                     })
