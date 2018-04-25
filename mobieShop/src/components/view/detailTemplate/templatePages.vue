@@ -18,7 +18,7 @@
                             <img @click="getcoupon" src="./coupon.png">
                         </div>
                         <div id="zbd-preferences" class="clear">
-                            <p>已选<span>{{ commodityInfo.name }}</span></p>
+                            <p>已选<span>{{ commodityInfo.name }}</span>&ensp;{{ specificationNum }}件</p>
                             <p @click="showServer">选择规格&ensp;></p>
                         </div>  
                         <!--<div id="zbd-productDescription" class="clear">
@@ -43,7 +43,8 @@
                         <components :templateData='item.componentsData' :is='item.componentsName'  :type='item.componentsName'></components>
                         </keep-alive>
                         
-                        <div id="zbd-customerReviews" class="clear">
+                        <div v-show="evaluationListNoShow">暂无评论</div>
+                        <div id="zbd-customerReviews" class="clear" v-show="evaluationListShows">
                             <p class="zbd-reviewsTitle">顾客评价</p>
                             <div class="zbd-customerReviewContent">
                                 <div class="commentHeaderInfo clear">
@@ -56,7 +57,7 @@
                                 </div>
                                 <div class="commentContent">
                                     <p class="userCommentContent">{{ evaluationListOne.comment==''?'该用户未填写评论文字':evaluationListOne.comment }}</p>
-                                    <ul class="clear userCommentImg" v-show="evaluationListOne.images==''?false:true">
+                                    <ul class="clear userCommentImg" v-show="evaluationListOne.images=='[]'?false:true">
                                         <li v-for='(item,index) in (evaluationListOne.images+"").replace(/\"/g,"").replace(/\[|]/g,"").split(",")' :key="index">
                                             <img :src='item'>
                                         </li>
@@ -104,6 +105,35 @@
                         </mt-popup>
                         <mt-popup v-model="shareVisible" position="bottom" style='width:100%;'>
                             <div class='closeBtn' @click="btnClose">分享</div>
+                            <div class="invite-bottom">
+                                <p class="bottom-title">分享到</p>
+                                <ul class="invite-bottom-share">
+                                    <li>
+                                        <div class="imgDiv imgDiv1" @click='shareTo("wechat")'>
+                                            <p class="icon iconfont icon-ai-weixin"></p>
+                                        </div>
+                                        <p>微信</p> 
+                                    </li>
+                                    <li>
+                                        <div class="imgDiv imgDiv2" @click='shareTo("qq")'>
+                                            <p class="icon iconfont icon-iconfonticon6"></p>
+                                        </div>
+                                        <p>QQ</p> 
+                                    </li>
+                                    <li>
+                                        <div class="imgDiv imgDiv3" @click='shareTo("")'>
+                                            <p class="icon iconfont icon-friends"></p>
+                                        </div>
+                                        <p>朋友圈</p> 
+                                    </li>
+                                    <li>
+                                        <div class="imgDiv imgDiv4" @click='shareTo("qzone")'>
+                                            <p class="icon iconfont icon-qqkongjian"></p>
+                                        </div>
+                                        <p>QQ空间</p> 
+                                    </li>
+                                </ul>
+                            </div>
                         </mt-popup>
                         <mt-popup v-model="receiveCoupons" position="bottom" style='width:100%;'>
                             <p class='shopBxo'>领取优惠劵</p>
@@ -125,6 +155,8 @@
                 enter-active-class="animated fadeInLeft"
             >
             <div v-if="show2" class="commentDetail">
+                <div v-show="evaluationListNoShow">暂无评论</div>
+                <div v-show="evaluationListShows">
                             <div class="userAvatarList">
                                 <ul class="clear">
                                     <li v-for="(item,index) in evaluationList" :key="index" v-if="(index<13)">
@@ -135,7 +167,7 @@
                             </div>
                             <div class="userReviewList">
                                 <ul v-infinite-scroll="loadMore"
-                                    infinite-scroll-disabled="loading"
+                                    infinite-scroll-disabled="isloading" 
                                     infinite-scroll-distance="2"
                                 >
                                     <li v-for="(item,indexs) in evaluationList" :key="indexs">
@@ -149,7 +181,7 @@
                                         </div>
                                         <div class="commentContent">
                                             <p class="userCommentContent">{{ item.comment==''?'该用户未填写评论文字':item.comment }}</p>
-                                            <ul class="clear userCommentImg" v-show="item.images==''?false:true">
+                                            <ul class="clear userCommentImg" v-show="item.images=='[]'?false:true">
                                                 <li v-for='(item,index) in (item.images+"").replace(/\"/g,"").replace(/\[|]/g,"").split(",")' :key="index">
                                                     <img :src='item'>
                                                 </li>
@@ -163,6 +195,7 @@
                                     </li>
                                 </ul>
                             </div>
+                        </div>
                             <mt-spinner v-show="commentLoading" :type="2" :size="25" color="#26a2ff"></mt-spinner>
                         </div>
             </transition>
@@ -258,12 +291,15 @@
                 },
                 isStar:false,
                 starId:'',
+                isloading:'loading',
                 commentLoading:false,
                 confirmPurchase:false,
                 evaluationList:'',
                 evaluationListOne:'',
                 evaluationStarShow:false,
                 starLevel:'',
+                evaluationListShows:true,
+                evaluationListNoShow:false,
                 nickname:'',
                 evaluationTotal:'',
                 evaluationNum:'1',
@@ -272,9 +308,7 @@
         },
         created(){
             this.$root.$emit('header','商品详情');
-            //客户ID 
-            let customer = localStorage.getItem('userinfo')
-            this.customerId = JSON.parse(customer).id
+           
 
             //console.log(this.comlist)
             ///////////////////////（详情模板）/////////////////////////////
@@ -318,7 +352,7 @@
                     let companyId = this.getURLparms("companyId");
                     this.commodityId = commodityId
                     //根据商品ID 查询相关的商品信息(根据商品取模板ID)
-                    this.$http.post('/api/product/commodity/info/queryMap',{
+                    this.$http.post('/api/product/commodity/info/queryMap/mall',{
                         "companyId":1,
                         "id":commodityId
 
@@ -405,6 +439,7 @@
                     that.shopCarNumShow = false
                    // console.log(that.shopCarNumShow)
                 }else{
+                    console.log(response.data.info+'2222')
                     if(response.data.info.length == 0){
                         that.shopCarNumShow = false
                     }else if(response.data.info.length > 0){
@@ -450,12 +485,19 @@
             });
 
             //根据商品ID 查询相关的评论列表
-            this.$http.post('/api/product/commodity/evaluation/query?page=1&pageSize=10',{
+            this.$http.post('/api/product/commodity/evaluation/query/mall?page=1&pageSize=10',{
                 "commodityId":that.commodityId
             })
             .then(function(response){
                 console.log(response)
                 that.evaluationList = response.data.info.list
+                if(that.evaluationList.length == 0){
+                    that.evaluationListShows = false
+                    that.evaluationListNoShow = true
+                    that.isloading = true
+                    return false
+                }
+                that.isloading = 'loading'
                 that.evaluationListOne = that.evaluationList[0]
                 console.log(that.evaluationListOne)
                 if(that.evaluationListOne.commodityEvaluationLabels.length == 0){
@@ -542,11 +584,26 @@
                     this.productDetailBacks.productDetailBack2 = false
                 },
                 btnClose() {
-                    this.popupVisible = false;
-                    this.shareVisible = false;
+                    let type="^[0-9]*[1-9][0-9]*$"; 
+                    let r=new RegExp(type); 
+                    let flag=r.test(this.specificationNum);
+                    if(!flag){
+                    　　//alert("数量应为正整数");
+                    　　this.confirmPurchase = false
+                        this.popupVisible = false
+                    }else if(this.commodityInfo.displayQuantity<this.specificationNum){
+                        //alert("库存不足");
+                        this.confirmPurchase = false
+                        this.popupVisible = false
+                    }else{
+                        this.popupVisible = false
+                        this.confirmPurchase = true
+                        this.shareVisible = false;
+                    }
                 },
                 showServer(name) {
                     this.popupVisible = true;
+                    this.specificationNum = 1
                 },
                 showShare(name){
                     this.shareVisible = true;
@@ -606,6 +663,17 @@
                     }else{
                         let commodityId = this.commodityId
                         console.log(commodityId)
+                         //客户ID 
+                        let customer = localStorage.getItem('userinfo')
+                        if(JSON.parse(customer).id == null){
+                             Toast({
+                                message:'尚未登录',
+                                duration:1000
+                            }
+                            );
+                            return false
+                        }
+                        this.customerId = JSON.parse(customer).id
                         let customerId = this.customerId
                         console.log(customerId)
                         let commodityCount = this.specificationNum
@@ -740,7 +808,7 @@
                         if(that.stopLoadMore == true){
                             this.evaluationNum++
                             //根据商品ID 查询相关的评论列表
-                            this.$http.post('/api/product/commodity/evaluation/query?page='+this.evaluationNum+'&pageSize=10',{
+                            this.$http.post('/api/product/commodity/evaluation/query/mall?page='+this.evaluationNum+'&pageSize=10',{
                                 "commodityId":that.commodityId
                             })
                             .then(function(response){
@@ -812,7 +880,7 @@
                     if(!flag){
                     　　alert("数量应为正整数");
                     　　return false;
-                    }else if(this.commodityInfo.displayQuantity<1){
+                    }else if(this.commodityInfo.displayQuantity<this.specificationNum){
                         alert("库存不足");
                     }else{
                         this.popupVisible = false
