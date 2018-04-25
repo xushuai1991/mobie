@@ -227,6 +227,7 @@ import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasda
                     // }
                 }
                 if (name.name == '地址') {
+                    sessionStorage.setItem("from",'accountMangagement')
                     this.$router.push({
                         path: '/addManagement',
                         name: 'addManagement',

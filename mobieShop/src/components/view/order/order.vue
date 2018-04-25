@@ -269,6 +269,7 @@ export default {
                 }
                 else{
                     Toast('数据已加载完');
+
                 }
                 Indicator.close();
             })
@@ -279,6 +280,7 @@ export default {
                 else{
                     Toast('数据已加载完');
                 }
+                that.changeStatus(index,true);
                 console.log(err);
                 Indicator.close();
                 Toast('查询失败');
