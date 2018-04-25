@@ -518,7 +518,7 @@
         height: .7rem;
         line-height: .7rem;
         text-align: center;
-        background: linear-gradient(to bottom, #0CBBB9 0%, #4AC6DC 100%);
+        background: #26a2ff;
         color: white;
         font-size: .3rem;
         margin-top: .15rem;

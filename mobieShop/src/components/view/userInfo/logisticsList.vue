@@ -111,7 +111,7 @@ export default {
             overflow: hidden;
             border-bottom: 1px solid #e9e9e9;
             .status{
-                color:#31b1b0;
+                color:#26a2ff;
                 padding-top: .16rem;
                 float: left;
             }
@@ -120,7 +120,7 @@ export default {
                 color: #787878;
                 padding: .1rem .2rem;
                 background-color: #fff;
-                border:1px solid #31b1b0;
+                border:1px solid #26a2ff;
                 border-radius: 5px;
                 outline: none;
                 float: right;

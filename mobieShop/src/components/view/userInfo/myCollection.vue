@@ -222,7 +222,7 @@ export default {
             top: 0.2rem;
             border: none;
             padding: 0.15rem;
-            background: linear-gradient(to bottom, #0CBBB9 0%, #4AC6DC 100%);
+            background: #26a2ff;
             color: #fff;
             margin-right: 0.2rem;
             font-size: 0.25rem;
@@ -272,7 +272,7 @@ export default {
         line-height: 1.26rem;
     }
     .closeBtn {
-        background: linear-gradient(to bottom, #0CBBB9 0%, #4AC6DC 100%);
+        background: #26a2ff;
         line-height: 1rem;
         font-size: 0.4rem;
         color: #fff;

@@ -120,7 +120,7 @@ export default {
             }
         }
         li:nth-child(1){
-            color:#31b1b0;
+            color:#26a2ff;
         }
         li::before{
             width:10px;
@@ -137,7 +137,7 @@ export default {
             width:15px;
             height:15px;
             left: -.04rem;
-            background-color: #31b1b0;
+            background-color: #26a2ff;
         }
     }
     .logistics-pass::before{
@@ -160,7 +160,7 @@ export default {
             height:.6rem;
             right:.4rem;
             border-radius: 5px;
-            color:#31b1b0;
+            color:#26a2ff;
             background-color: #fff; 
             border: 1px solid #b9b9b9;;
             outline: none;

@@ -455,7 +455,7 @@
         background-color: black;
     }
     .coloBule {
-        color: #31b1b0;
+        color: #26a2ff;
         font-weight: 700;
         font-size: 0.4rem;
     }
@@ -675,7 +675,7 @@
         color: white;
         text-align: center;
         line-height: .9rem;
-        background: linear-gradient(to bottom, #0CBBB9 0%, #4AC6DC 100%);
+        background: #26a2ff;
     }
     .shade {
         display: none;

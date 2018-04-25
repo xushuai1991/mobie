@@ -1223,7 +1223,7 @@
             top: 0.2rem;
             border: none;
             padding: 0.15rem;
-            background: linear-gradient(to bottom, #0CBBB9 0%, #4AC6DC 100%);
+            background: #26a2ff;
             color: #fff;
             margin-right: 0.2rem;
             font-size: 0.25rem;
@@ -1264,8 +1264,8 @@
         color: #b8bbbf;
     }
     .zbd_closeBtn{
-        background: -webkit-gradient(linear, left top, left bottom, from(#0CBBB9), to(#4AC6DC));
-        background: linear-gradient(to bottom, #0CBBB9 0%, #4AC6DC 100%);
+        background: #26a2ff;
+        background: #26a2ff;
         line-height: 0.9rem;
         font-size: 0.34rem;
         color: #fff;
@@ -1379,8 +1379,8 @@
     .zbd-Confirmation{height: 0.8rem;
     line-height: 0.8rem;}
     .zbd-Confirmation p{
-        background: -webkit-gradient(linear, left top, left bottom, from(#0CBBB9), to(#4AC6DC));
-        background: linear-gradient(to bottom, #0CBBB9 0%, #4AC6DC 100%);
+        background: #26a2ff;
+        background: #26a2ff;
         line-height: 0.9rem;
         font-size: 0.34rem;
         color: #fff;}

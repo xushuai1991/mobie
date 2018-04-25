@@ -318,7 +318,7 @@ import { Indicator } from 'mint-ui';
         .mint-searchbar-inner .mintui-search {
             font-size: 0.4rem;
             padding: 0 0.2rem;
-            // color:#0dbbb9;
+            // color:#26a2ff;
         }
         .mint-searchbar-cancel{
             color:#787878;
@@ -360,13 +360,13 @@ import { Indicator } from 'mint-ui';
             }
         }
         li.active{
-            color:#0dbbb9;
+            color:#26a2ff;
         }
         li.active::after{
             content:'';
             width:50%;
             height:2px;
-            background-color:#0dbbb9;
+            background-color:#26a2ff;
             display: block;
             margin:0 auto;
             margin-top:.1rem;

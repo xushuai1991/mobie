@@ -393,7 +393,7 @@ export default {
             float: left;
             i{
                 font-size: .4rem;
-                color: #0dbbb9;
+                color: #26a2ff;
                 top:.22rem;
                 position: absolute;
             }
