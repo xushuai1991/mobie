@@ -104,7 +104,7 @@
                             <div class="zbd-Confirmation" @click="confirmPurchaseClick"><p>确认</p></div>
                         </mt-popup>
                         <mt-popup v-model="shareVisible" position="bottom" style='width:100%;'>
-                            <div class='closeBtn' @click="btnClose">分享</div>
+                            <div class='zbd_closeBtns' @click="btnClose">&times;</div>
                             <div class="invite-bottom">
                                 <p class="bottom-title">分享到</p>
                                 <ul class="invite-bottom-share">
@@ -1223,6 +1223,7 @@
         font-size: 0.34rem;
         color: #fff;
         }
+        .zbd_closeBtns{width: 0.7rem;color: #7b7b7b;font-size: 0.54rem;position: absolute;right: 0rem;top: 0.2rem;}
     .zbd-coupon{
         font-size:0.25rem;padding:0.1rem 0.1rem 0.3rem 0.3rem;
     }
@@ -1350,5 +1351,70 @@
             height: 3.32rem;
             opacity: .5;
         }
-   
+        .invite-bottom{
+    margin-top:.6rem;
+    padding:0.2rem;
+    background: #fff;
+    padding-top:.5rem;
+    p.bottom-title{
+        font-size: .3rem;
+        opacity: 0.8;
+    }
+    p.bottom-title::before{
+        display:inline-block;
+        content:'';
+        width: 2.5rem;
+        background:#eee;
+        height: 0.04rem;
+        vertical-align:40%;
+        margin-right:0.5rem;
+    }
+    p.bottom-title::after{
+        display:inline-block;
+        content:'';
+        width: 2.5rem;
+        height: 0.04rem;
+        background:#eee;
+        vertical-align:40%;
+        margin-left:0.5rem;
+    }
+    .invite-bottom-share{
+        padding-top:0.35rem;
+        display:flex;
+        justify-content: space-around;
+        li{
+            border-radius:50%;
+            .imgDiv{
+                width:1rem;
+                height:1rem;
+                line-height: 1rem;
+                border-radius:50%;
+                margin:0.3rem auto 0.3rem;
+                p{
+                    color:#fff;
+                    font-size:0.7rem;
+                }
+            }
+            .imgDiv1{
+                background:green;
+                p{
+                    font-size:0.55rem;
+                }
+            }
+            .imgDiv2{
+                background:#409EFF;
+            }
+            .imgDiv3{
+                background:#32D561;
+            }
+            .imgDiv4{
+                background:#FCBF01;
+            }
+            p{
+                font-size: 0.25rem;
+                opacity: 0.8;
+            }
+        }
+    }
+}
 </style>
