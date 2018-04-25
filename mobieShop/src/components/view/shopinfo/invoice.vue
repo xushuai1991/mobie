@@ -102,7 +102,7 @@
     }
     .CInvoice {
         font-size: 0.2rem;
-        margin-top: 0.8rem;
+        // margin-top: 0.8rem;
         .radioBox {
             width: 100%;
             height: 0.2rem;

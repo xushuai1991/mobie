@@ -134,7 +134,7 @@ export default {
     /* display: flex; */
     /* justify-content: space-around; */
     /* flex-wrap: nowrap; */
-    margin-top:.8rem;
+    /* margin-top:.8rem; */
 }
 .whole_coupon,.limit_coupon{
     width: 100%;

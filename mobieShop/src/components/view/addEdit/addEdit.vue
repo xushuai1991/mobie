@@ -461,7 +461,7 @@ import { Toast } from 'mint-ui';
         color: #f38650;
     }
     .addEdit {
-        margin-top: 0.8rem;
+        // margin-top: 0.8rem;
         font-size: 0.2rem;
         text-align: left;
         .mint-checklist-label {

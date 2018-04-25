@@ -466,7 +466,7 @@ export default {
     width: 100%;
     background-size: contain;
     background-repeat: no-repeat;
-    margin-top: .8rem;
+    // margin-top: .8rem;
 }
 .personalscores .userinfo{
     height: 3.75rem;

@@ -1,10 +1,10 @@
 <template>
     <div class="wrapper">
-        <mt-header fixed  title="个人中心">
+        <!-- <mt-header fixed  title="个人中心"> -->
             <!-- <router-link to="" slot="left">
                 <mt-button icon="back" @click="goback" ></mt-button>
             </router-link> -->
-        </mt-header>
+        <!-- </mt-header> -->
         <section class='infoBottom' style='background-image:url("static/images/background_info.png");background-repeat: no-repeat;background-size:contain;'>
             <div class="account">
                 <div class="account_info">
@@ -489,7 +489,7 @@
         right: .2rem;
     }
     .infoBottom {
-        margin-top: .8rem;
+        /* margin-top: .8rem; */
         /* padding-bottom:1rem; */
     }
     .portrait {

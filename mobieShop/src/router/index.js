@@ -300,7 +300,10 @@ export default new Router({
         {
             path: '/detailTemplate', // 详情模板
             name: 'detailTemplate',
-            component: resolve => require(['../components/view/detailTemplate/templatePages.vue'], resolve)
+            component: resolve => require(['../components/view/detailTemplate/templatePages.vue'], resolve),
+            meta: {
+                title: '商品详情'
+            },
         },
     ]
 })

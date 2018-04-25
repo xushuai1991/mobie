@@ -142,7 +142,7 @@ export default {
 </script>
 <style scoped lang="less">
 .contain-xs{
-    margin-top:.8rem;
+    // margin-top:.8rem;
     background-color: #f5f5f5;
     .collection-xs li{
         margin-bottom: .2rem;

@@ -1076,7 +1076,7 @@
    .numLessNo{background-color: #f3f1f1;}
    .numLessYes{background-color: #ffffff;}
     #detailTemplatePage{
-        margin-top:1rem;
+        // margin-top:1rem;
     }
     .clear:after {
         content: "";
