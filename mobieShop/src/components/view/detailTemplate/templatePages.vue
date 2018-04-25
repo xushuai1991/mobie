@@ -43,7 +43,7 @@
                         <components :templateData='item.componentsData' :is='item.componentsName'  :type='item.componentsName'></components>
                         </keep-alive>
                         
-                        <div v-show="evaluationListNoShow">暂无评论</div>
+                        <div v-show="evaluationListNoShow" style="color: #bfbfbf;font-size: .26rem;text-align: center;">暂无评论！</div>
                         <div id="zbd-customerReviews" class="clear" v-show="evaluationListShows">
                             <p class="zbd-reviewsTitle">顾客评价</p>
                             <div class="zbd-customerReviewContent">
@@ -57,7 +57,7 @@
                                 </div>
                                 <div class="commentContent">
                                     <p class="userCommentContent">{{ evaluationListOne.comment==''?'该用户未填写评论文字':evaluationListOne.comment }}</p>
-                                    <ul class="clear userCommentImg" v-show="evaluationListOne.images=='[]'?false:true">
+                                    <ul class="clear userCommentImg" v-show="evaluationListOne.images==''?false:true">
                                         <li v-for='(item,index) in (evaluationListOne.images+"").replace(/\"/g,"").replace(/\[|]/g,"").split(",")' :key="index">
                                             <img :src='item'>
                                         </li>
@@ -76,13 +76,13 @@
                         
                         <mt-popup v-model="popupVisible" position="bottom" style='width:100%;font-size:0.28rem;'>
                             <div id="zbd-commodityInformation" class="clear">
-                                <div class="zbd_commodityImg"><img src="./test.jpg"></div>
+                              
+                                <div class="zbd_commodityImg"><img :src="commodityImageOne"></div>
                                  <div class="zbd_commodityInfo" ><p>￥{{ commodityInfo.price }}</p><p>{{ commodityInfo.name }}</p><p>库存量：{{ commodityInfo.displayQuantity<1?0:commodityInfo.displayQuantity }}</p></div>
                                  <div class='commodityInfoCloseBtn' @click="btnClose">&times;</div>
                                  <div class="commodityInfoLine"></div>
                             </div>
-                            <div id="zbd-commoditySpecification" style="    height: 5rem;
-    overflow-y: auto;" class="clear">
+                            <div id="zbd-commoditySpecification" style="height: 5rem;overflow-y: auto;" class="clear">
                                 <ul>
                                     <li>规格1</li>
                                     <li>规格2</li>
@@ -155,7 +155,10 @@
                 enter-active-class="animated fadeInLeft"
             >
             <div v-if="show2" class="commentDetail">
-                <div v-show="evaluationListNoShow">暂无评论</div>
+                <div class="zbd-evalua" v-show="evaluationListNoShow">
+                    <p><img src="/static/images/nodata.png"></p>
+                    <p>暂无评论！</p>
+                </div>
                 <div v-show="evaluationListShows">
                             <div class="userAvatarList">
                                 <ul class="clear">
@@ -181,7 +184,7 @@
                                         </div>
                                         <div class="commentContent">
                                             <p class="userCommentContent">{{ item.comment==''?'该用户未填写评论文字':item.comment }}</p>
-                                            <ul class="clear userCommentImg" v-show="item.images=='[]'?false:true">
+                                            <ul class="clear userCommentImg" v-show="item.images==''?false:true">
                                                 <li v-for='(item,index) in (item.images+"").replace(/\"/g,"").replace(/\[|]/g,"").split(",")' :key="index">
                                                     <img :src='item'>
                                                 </li>
@@ -302,12 +305,16 @@
                 nickname:'',
                 evaluationTotal:'',
                 evaluationNum:'1',
-                stopLoadMore:true
+                stopLoadMore:true,
+                commodityImageOne:'',
+                hostName:'',
+                port:''
             };
         },
         created(){
             this.$root.$emit('header','商品详情');
-           
+            this.hostName = location.hostname;
+            this.port = location.port;
 
             //console.log(this.comlist)
             ///////////////////////（详情模板）/////////////////////////////
@@ -393,6 +400,11 @@
                         //商品信息的调用及渲染
                         that.commodityInfo = response.data.info[0]
                         console.log(that.commodityInfo)
+                        if(that.commodityInfo.commodityImageList.length == 0){
+                            that.commodityImageOne = '/static/images/nodata.png'
+                        }else{
+                            that.commodityImageOne = "http://101.89.175.155:8887"+that.commodityInfo.commodityImageList[0].url
+                        }
                     })
                     .catch(function(response){
                         console.log(response)
@@ -600,7 +612,7 @@
                 },
                 showServer(name) {
                     this.popupVisible = true;
-                    this.specificationNum = 1
+                   // this.specificationNum = 1
                 },
                 showShare(name){
                     this.shareVisible = true;
@@ -958,7 +970,7 @@
 .productDetailBtn1{padding: 0.2rem 0.5rem;
     display: inline-block;
     border-radius: 5px 0 0 5px;
-    border: 0.02rem solid #cccccc;
+    border: 0.01rem solid #cccccc;
     font-size: 0.28rem;}
 .productDetailBtn2{ padding: 0.2rem 0.5rem;
     display: inline-block;
@@ -1258,6 +1270,7 @@
     .seeAllReview i{float:right;padding-right:0.1rem;    font-size: 0.25rem;}
     #zbd-commodityInformation{margin-top: 0.1rem;position: relative;height: 1.8rem;}
     .zbd_commodityImg{width: 2rem;
+    height: 2rem;
     border: 1px solid #ddd;
     border-radius: 0.05rem;
     position: absolute;
@@ -1265,6 +1278,7 @@
     left: 0.3rem;
     background-color: #fff;}
     .zbd_commodityImg img{width: 1.9rem;
+        height: 1.97rem;
     padding-top: 0.02rem;}
     .zbd_commodityInfo{width: 4rem;
     float: left;
@@ -1322,4 +1336,19 @@
         line-height: 0.9rem;
         font-size: 0.34rem;
         color: #fff;}
+        .zbd-evalua{
+            padding-top: 2.5rem;
+        }
+        .zbd-evalua p{
+            color: #bfbfbf;
+            font-size: .26rem;
+            text-align: center;
+        }
+        .zbd-evalua p img{
+            display: inline-block;
+            width: 2.9rem;
+            height: 3.32rem;
+            opacity: .5;
+        }
+   
 </style>
