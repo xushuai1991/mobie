@@ -144,6 +144,7 @@ export default {
             if(winheight - viewheight > 50){
                 document.body.style.height=this.clientHeight+80+'px';
             }
+            console.log(e.target);
             e.target.scrollIntoViewIfNeeded();
         },
         blur_input(e){
