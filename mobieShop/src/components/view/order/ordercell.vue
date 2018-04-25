@@ -171,7 +171,7 @@ export default {
                     }
                     else{
                         msg='申请提交成功！';
-                        dom.querySelector('span').innerHTML=dom.querySelector('span').innerHTML+'(已申请)';
+                        dom.querySelector('span').innerHTML=dom.querySelector('span').innerHTML.substring(0,21)+'(已申请)';
                     }
                     Toast(msg);
                 }
@@ -188,19 +188,24 @@ export default {
         },
         getdate(){
             let day=new Date();
+            let day2=new Date();
             if(this.datechange[0]=='今天'){
-                day=day.format('yyyy-MM-dd');
+                day=day.format('yyyy/MM/dd');
+                day2=day2.format('yyyy-MM-dd');
             }
             else if(this.datechange[0]=='明天'){
-                day=new Date(day.setDate(day.getDate()+1)).format('yyyy-MM-dd');
+                day=new Date(day.setDate(day.getDate()+1)).format('yyyy/MM/dd');
+                day2=new Date(day2.setDate(day2.getDate()+1)).format('yyyy-MM-dd');
             }
             else if(this.datechange[0]=='后天'){
-                day=new Date(day.setDate(day.getDate()+2)).format('yyyy-MM-dd');
+                day=new Date(day.setDate(day.getDate()+2)).format('yyyy/MM/dd');
+                day2=new Date(day2.setDate(day2.getDate()+2)).format('yyyy-MM-dd');                
             }
             // console.log(this.datechange);
             let date=day+' '+this.datechange[1].substring(0,2) +':'+this.datechange[2].substring(0,2);
+            let date2=day2+' '+this.datechange[1].substring(0,2) +':'+this.datechange[2].substring(0,2);
             let timestampToTime=Date.parse(new Date(date));
-            this.updateOrderdetail(this.currentid,timestampToTime,date);
+            this.updateOrderdetail(this.currentid,timestampToTime,date2);
             // console.log(date);
             // this.data.time=date;
             // 修改服务时间
