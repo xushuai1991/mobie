@@ -13,14 +13,13 @@
                                     <div class="goods_title type-pay">
                                         <input type="checkbox" class='CinputBox' v-model="item.shopselected" @change="checkShop(index)" /><span>{{item.listgoods[0].otherInfo.company.companyName}}</span>
                                         <div class="checks" @click='showServer(item.shopname,item.listgoods[0].otherInfo.company.companyId)'>领券</div>
-                                        
                                         <p></p>
                                     </div>
                                     <div class="goodsBox list-item" v-for="(items,indexs) in item.listgoods" :key="indexs" data-type="0">
                                         <div class="list-box" @touchstart.capture="touchStart" @touchmove.capture="touchmove" @touchend.capture="touchEnd" @click="skip">
                                             <ul class="goods_detail" style='overflow: hidden; margin-top:0.2rem;'>
                                                 <li class="goods_img" style="margin-left:0px;">
-                                                    <img :src='items.otherInfo.commodityImageUrl?items.otherInfo.commodityImageUrl:"./test.jpg"' >
+                                                    <img :src='items.otherInfo.commodityImageUrl?"http://"+hostName+":"+port+"/api"+items.otherInfo.commodityImageUrl:"./test.jpg"'>
                                                 </li>
                                                 <li class="goods_info">
                                                     <p class="brandDesc">{{items.otherInfo.commodityName}}</p>
@@ -38,8 +37,8 @@
                                                     </div>
                                                 </li>
                                                 <!-- <span class="mui_shopcar_del" @click="remove(index,indexs)">
-                                                                                                                                    <i class='icon iconfont icon-lajitong'></i>
-                                                                                                                                </span>!-->
+                                                                                                                                        <i class='icon iconfont icon-lajitong'></i>
+                                                                                                                                    </span>!-->
                                             </ul>
                                             <div class="delete" @click="deleteSection(index,indexs,items.id)" :data-index="index">删除</div>
                                         </div>
@@ -112,8 +111,8 @@
     export default {
         data() {
             return {
-                pIndex:'',
-                pIndex2:'',
+                pIndex: '',
+                pIndex2: '',
                 value: null,
                 value1: null,
                 startDate: new Date(),
@@ -198,41 +197,42 @@
             }
         },
         created() {
-            if(this.getURLparms("name")){
+            if (this.getURLparms("name")) {
                 this.getCarData();
             }
-            this.$root.$on('loadShopcar',()=>{
+            this.$root.$on('loadShopcar', () => {
                 // 首次进入购物车页面，加载商品信息
-                if(this.list.length==0){
+                if (this.list.length == 0) {
                     this.getCarData();
                 }
             });
+            this.hostName = location.hostname;
+            this.port = location.port;
         },
         methods: {
-            getURLparms(name){
-                    let reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
-                    let r = location.search.substr(1).match(reg);
-                    if(r!=null)
+            getURLparms(name) {
+                let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                let r = location.search.substr(1).match(reg);
+                if (r != null)
                     return unescape(r[2]);
-                    return null;
-                },
+                return null;
+            },
             addDay(dayNumber, date) {
                 date = date ? date : new Date();
                 var ms = dayNumber * (1000 * 60 * 60 * 24)
                 var newDate = new Date(date.getTime() + ms);
                 return newDate;
             },
-            open(picker,index,index2) {
-                this.startDate=new Date(),
-                this.pIndex = index
+            open(picker, index, index2) {
+                this.startDate = new Date(),
+                    this.pIndex = index
                 this.pIndex1 = index2
                 this.$refs[picker].open();
-                
             },
             handleChange(value) {
                 this.date1 = value;
                 this.timestampToTime(this.date1)
-                this.list[this.pIndex].listgoods[this.pIndex1]['otherInfo']['commodityInfo'].playTime= this.timestampToTime(this.date1)
+                this.list[this.pIndex].listgoods[this.pIndex1]['otherInfo']['commodityInfo'].playTime = this.timestampToTime(this.date1)
                 //this.show = true;
                 // Toast({
                 //     message: '已选择 ' + value.toString(),
@@ -240,7 +240,7 @@
                 // });
             },
             timestampToTime(timestamp) {
-                var date = new Date(timestamp ); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
+                var date = new Date(timestamp); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
                 let Y = date.getFullYear() + '-';
                 let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
                 let D = date.getDate() + ' ';
@@ -338,8 +338,7 @@
                         // },
                         data: {}
                     }).then(response => {
-                        
-                        if(response.data.status==200){
+                        if (response.data.status == 200) {
                             let data = response.data.info;
                             console.log(data)
                             var b = data.reduce((v, k) => { //循环
@@ -360,13 +359,11 @@
                             }, [])
                             console.log(b)
                             that.list = (b)
-                        }
-                        else{
-                            if(response.data.status==401){
+                        } else {
+                            if (response.data.status == 401) {
                                 localStorage.removeItem('userinfo');
                                 Toast('请先登录');
-                            }
-                            else{
+                            } else {
                                 Toast(response.data.msg);
                             }
                         }
@@ -627,7 +624,7 @@
                 }
             },
         },
-        beforeDestroy(){
+        beforeDestroy() {
             this.$root.$off('loadShopcar');
         }
     }
