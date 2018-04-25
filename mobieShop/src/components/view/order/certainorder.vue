@@ -233,7 +233,7 @@
                     coupmoney += this.couponlist[item].money;
                 });
                 price = price - deductionmoney - coupmoney;
-                return price;
+                return price<0?0:price;
             }
         },
         watch: {

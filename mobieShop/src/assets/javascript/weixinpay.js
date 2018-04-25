@@ -1,5 +1,5 @@
 import axios from 'axios'
-let weixinPay=function(config){
+let weixinPay=function(config,ordernumber,_this){
     
     let onBridgeReady=function(){
         
@@ -16,7 +16,9 @@ let weixinPay=function(config){
             (res)=>{
                 if (res.err_msg == "get_brand_wcpay_request:ok") {
                     alert('支付成功');
-                    window.location.reload();
+                    _this.$router.push('orderDeil?ordernumber='+ordernumber+'&index=0');
+                    // this.$router.push('/');
+                    // window.location.reload();
                 }
                 if (res.err_msg == "get_brand_wcpay_request:cancel") {
                     alert('取消支付');

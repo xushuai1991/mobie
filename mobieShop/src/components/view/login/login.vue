@@ -133,6 +133,14 @@ export default {
     // },
     methods:{
         test(e){
+            if(this.clientHeight<window.innerHeight){
+                this.clientHeight=window.innerHeight;
+            }
+            else{
+                document.body.clientHeight=this.clientHeight;
+            }
+            e.target.scrollIntoView();
+            Toast(window.innerHeight.toString());
             // if(/Android [4-6]/.test(navigator.appVersion)) {
             //     window.addEventListener("resize", function() {
             //         if(document.activeElement.tagName=="INPUT" || document.activeElement.tagName=="TEXTAREA") {
