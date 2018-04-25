@@ -50,6 +50,7 @@ export default {
     text-align: center;
     overflow: hidden;
     font-size: 0.2rem;
-    margin-bottom: 0.1rem;
+    padding-bottom: 0.1rem;
+    padding-top: 0.1rem;
     }
 </style>
