@@ -9,17 +9,17 @@
         <div class='form login' v-show='loginflag'>
             <div class="phone">
                 <i class='icon iconfont icon-shouji'></i>
-                <input type="number" placeholder="手机号码" v-model="phone" key='phone_login' @change='checkphone()' @focus="test">
+                <input type="number" placeholder="手机号码" v-model="phone" key='phone_login' @change='checkphone()' @focus="focus_input" @blur="blur_input">
                 <p class='error'>{{phonejson.msg}}</p>
             </div>
             <div class="psw">
                 <i class='icon iconfont icon-16suo'></i>
-                <input type="password" placeholder="密码" v-model="psw" @change='checkpsw()' @focus="test">
+                <input type="password" placeholder="密码" v-model="psw" @change='checkpsw()' @focus="focus_input" @blur="blur_input">
                 <p class='error'>{{pswjson.msg}}</p>
             </div>
             <div class="verificationcode">
                 <i class='icon iconfont icon-key'></i>
-                <input type="text" class='codeinput' placeholder="验证码" v-model="code" @change='checkcode()' @focus="test">
+                <input type="text" class='codeinput' placeholder="验证码" v-model="code" @change='checkcode()' @focus="focus_input" @blur="blur_input">
                 <p class='error'>{{codejson.msg}}</p>
                 <div id='codeimg' class='codeimg' @click='yzn'>{{codehas}}</div>
             </div>
@@ -36,12 +36,12 @@
         <div class='form loginquick' v-show='loginquickflag'>
             <div class="phone">
                 <i class='icon iconfont icon-shouji'></i>
-                <input type="tel" placeholder="手机号码" v-model="phone" @change='checkphone()'>
+                <input type="tel" placeholder="手机号码" v-model="phone" @change='checkphone()' @focus="focus_input" @blur="blur_input">
                 <p class='error'>{{phonejson.msg}}</p>
             </div>
             <div class="verificationcode">
                 <i class='icon iconfont icon-key'></i>
-                <input type="text" class='codeinput' placeholder="验证码" v-model="code">
+                <input type="text" class='codeinput' placeholder="验证码" v-model="code" @focus="focus_input" @blur="blur_input">
                 <p class='error'></p>
                 <router-link to='' style='position:absolute;font-size:.3rem;top:.6rem;right:.2rem;'  @click.native='getcode(2)'>{{second}}</router-link>
             </div>
@@ -55,23 +55,23 @@
         <div class='form login' v-show='resignflag'>
             <div class="phone">
                 <i class='icon iconfont icon-shouji'></i>
-                <input type="tel" placeholder="手机号码" v-model="phone" key='phone_login' @change='checkphone()'>
+                <input type="tel" placeholder="手机号码" v-model="phone" key='phone_login' @change='checkphone()' @focus="focus_input" @blur="blur_input">
                 <p class='error'>{{phonejson.msg}}</p>
             </div>
             <div class="verificationcode">
                 <i class='icon iconfont icon-key'></i>
-                <input type="text" class='codeinput' placeholder="验证码" v-model="code">
+                <input type="text" class='codeinput' placeholder="验证码" v-model="code" @focus="focus_input" @blur="blur_input">
                 <p class='error'></p>
                 <router-link to='' style='position:absolute;font-size:.3rem;top:.6rem;right:.2rem;'  @click.native='getcode(1)'>{{second}}</router-link>
             </div>
             <div class="psw">
                 <i class='icon iconfont icon-16suo'></i>
-                <input type="password" placeholder="密码" v-model="psw" @change='checkpsw()'>
+                <input type="password" placeholder="密码" v-model="psw" @change='checkpsw()' @focus="focus_input" @blur="blur_input">
                 <p class='error'>{{pswjson.msg}}</p>
             </div>
             <div class="psw">
                 <i class='icon iconfont icon-16suo'></i>
-                <input type="password" placeholder="确认密码" v-model="pswtwice" @change='pswcertain()'>
+                <input type="password" placeholder="确认密码" v-model="pswtwice" @change='pswcertain()' @focus="focus_input" @blur="blur_input">
                 <p class='error'>{{pswcertainjson.msg}}</p>
             </div>
             
@@ -132,28 +132,22 @@ export default {
     //     operatelocalstorage(1,1,20);
     // },
     methods:{
-        test(e){
-            Toast(document.body.clientHeight.toString());
-            // if(this.clientHeight==0){
-            //     this.clientHeight=document.body.clientHeight;
-            //     Toast(document.body.clientHeight.toString());
-            // }
-            // else{
-            //     Toast(this.clientHeight.toString());
-            //     document.body.clientHeight=this.clientHeight;
-            // }
-            
-            // console.log(document.body.scrollHeight);
-            // Toast(document.body.scrollHeight.toString());
-            //  document.removeEventListener('touchend',docTouchend,false);
-            // setTimeout(function(){
-            //     Toast(document.body.clientHeight.toString());
-            //     // e.target.scrollIntoView();
-            // },500);
-            // let height=document.body.scrollHeight;
-            // setTimeout(function(){  
-            //     document.body.scrollTop = height; 
-            // },1000);
+        focus_input(e){
+            if(this.clientHeight==0){
+                this.clientHeight=document.body.clientHeight;
+            }
+            // Toast(document.body.clientHeight.toString());
+            document.body.style.height=this.clientHeight+'px';
+            let viewheight=window.innerHeight;//可视区域高度
+            let winheight=document.body.clientHeight;//页面高度 
+            // let _height=winheight - viewheight;
+            if(winheight - viewheight > 50){
+                document.body.style.height=this.clientHeight+80+'px';
+            }
+            e.target.scrollIntoViewIfNeeded();
+        },
+        blur_input(e){
+            document.body.style.height=this.clientHeight+'px';
         },
         // 登录
         login(){

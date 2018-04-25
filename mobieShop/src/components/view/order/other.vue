@@ -6,7 +6,7 @@
         <div class='content' @click.stop='toOrderDetail(data.number,index)'>
             <div class='detail' v-for='(item,index) in data.orderDetails' :key='index'>
                 <div class='img-goods'>
-                    <img :src="item.image" alt="">
+                    <img :src='"http://"+hostName+":"+port+"/api"+item.image' alt="">
                 </div>
                 <div class='detail-goods'>
                     <h3 class='name'>{{item.commodityName}}</h3>
@@ -47,6 +47,10 @@ export default {
         //     }
         //     return total;
         // }
+    },
+    created(){
+        this.hostName = location.hostname;
+        this.port = location.port;
     },
     methods:{
         //跳转订单详情

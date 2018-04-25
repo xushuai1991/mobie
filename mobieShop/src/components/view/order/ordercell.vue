@@ -8,7 +8,7 @@
         <div class='content' @click.stop='toOrderDetail(data.number,index)'>
             <div :class='{"detail":true,"grey":(type=="unservice"&item.serviceState!=1)||(type=="inservice"&item.serviceState!=2)}' v-for='(item,index) in data.orderDetails' :key='index' >
                 <div class='img-goods'>
-                    <img :src="item.image" alt="图片丢失">
+                    <img :src='"http://"+hostName+":"+port+"/api"+item.image' alt="图片丢失">
                 </div>
                 <div class='detail-goods'>
                     <h3 class='name'>{{item.commodityName}}</h3>
@@ -21,8 +21,10 @@
                 </div>
                 <!-- 服务类商品，添加预约时间功能 -->
                 <div class='appointment' v-if='item.isService==true'>
-                    <button  @click.stop="appointment(item.id)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>
+                    <button  @click.stop="appointment(item.id,index)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>
                     <span>服务时间：{{item.appointTime==null?'空':item.appointTime.substring(0,16)}}{{((item.updateAppointTimeIsActive&&item.updateAppointTime!=null)||item.updateAppointTime==null)?'':'('+'已申请'+')'}}</span>
+                    <!-- <span>服务时间：{{date_service[index]}}</span> -->
+                    <!-- <p>{{date_service[index]}}</p> -->
                 </div>
             </div>
             <div class='price-total'>
@@ -53,7 +55,7 @@ import { Toast } from 'mint-ui';
 import { Indicator } from 'mint-ui';
 import { MessageBox } from 'mint-ui';
 export default {
-    props:['data','index','type'],
+    props:['data','index','type','indexorder'],
     data(){
         return{
             date_ramian:'',
@@ -82,19 +84,22 @@ export default {
             ],
             currentid:'',
             datechange:'',
+            type_appoint:'',
+            index_appoint:''
             // status:''
         }  
     },
-    
     created(){
-        let date_create=new Date(this.data.createTime);
+        this.hostName = location.hostname;
+        this.port = location.port;
+        let date=this.data.createTime.replace(/\-/g,'/');
+        let date_create=new Date(date);
         this.date_dead=new Date(date_create.getTime() + 24*60*60*1000);
         this.countDown();
     },
     methods:{
         //剩余时间
         getRemianTime(){
-            // console.log(111);
             //当前时间
             let date_current=new Date();
             // 当前离截止时间的时间
@@ -102,7 +107,9 @@ export default {
             let date_remain_h=Math.floor(date_remain_ts/1000/60/60%24);;
             let date_remain_m=Math.floor(date_remain_ts/1000/60%60);
             // let date_remain_s=Math.floor(date_remain_ts/1000%60);
-            this.date_ramian=   date_remain_h+'小时'+date_remain_m+'分'
+            // alert(date_remain_h);
+            // alert(date_remain_m);
+            this.date_ramian= date_remain_h+'小时'+date_remain_m+'分'
         },
         //倒计时
         countDown(){
@@ -130,22 +137,43 @@ export default {
             })
         },
         // 唤醒时间插件
-        appointment(id){
+        appointment(id,index){
+            this.index_appoint=index;
             this.popupVisible=true;
             this.currentid=id;
+            console.log(this.data.orderDetails[this.index_appoint].appointTime);
         },
         onValuesChange(picker,values){
             console.log(values);
             this.datechange=values;
         },
         // 修改订单明细
-        updateOrderdetail(id,updateAppointTime){
+        updateOrderdetail(id,updateAppointTime,date){
+            let data=[];
+            if(this.data.orderDetails[this.index_appoint].appointTime==null){
+                data=[{id:id,appointTime:updateAppointTime,updateAppointTime:null,updateAppointTimeIsActive:false}];
+            }
+            else{
+                data=[{id:id,updateAppointTime:updateAppointTime}];
+            }
             Indicator.open('修改申请提交中...');
             let that=this;
-            this.$http.post('/api/product/order/mall/update/orderDetail',[{id:id,updateAppointTime:updateAppointTime}])
+            this.$http.post('/api/product/order/mall/update/orderDetail',data)
             .then(res=>{
                 if(res.data.status==200){
-                    Toast('申请提交成功！');
+                    let msg='';
+                    let dom=document.querySelectorAll('.orderlist')[that.index].querySelectorAll('li')[that.indexorder].querySelectorAll('.detail')[that.index_appoint].querySelector('.appointment');
+                    if(this.data.orderDetails[this.index_appoint].appointTime==null){
+                        msg='预约时间成功！';
+                        that.data.orderDetails[that.index_appoint].appointTime=date;
+                        dom.querySelector('span').innerHTML='服务时间：'+date;
+                        dom.querySelector('button').innerHTML='修改时间';
+                    }
+                    else{
+                        msg='申请提交成功！';
+                        dom.querySelector('span').innerHTML=dom.querySelector('span').innerHTML+'(已申请)';
+                    }
+                    Toast(msg);
                 }
                 else{
                     Toast(res.data.msg);
@@ -171,8 +199,8 @@ export default {
             }
             // console.log(this.datechange);
             let date=day+' '+this.datechange[1].substring(0,2) +':'+this.datechange[2].substring(0,2);
-            date=Date.parse(new Date(date));
-            this.updateOrderdetail(this.currentid,date);
+            let timestampToTime=Date.parse(new Date(date));
+            this.updateOrderdetail(this.currentid,timestampToTime,date);
             // console.log(date);
             // this.data.time=date;
             // 修改服务时间
@@ -237,7 +265,7 @@ export default {
     computed:{
         status(){
             if(this.data.payState==2){
-                return '未支付';
+                return this.data.orderState==6?'已取消':'未支付';
             }
             else{
                 return this.data.orderState==1?"未完成":this.data.orderState==2?"已完成":this.data.orderState==3?"异常订单":this.data.orderState==4?"退款中":this.data.orderState==5?"退款完成":this.data.orderState==6?'已取消':"";

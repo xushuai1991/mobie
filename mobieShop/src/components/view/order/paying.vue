@@ -65,7 +65,7 @@ export default {
                             paySign:data.paySign
                         };
                         // Toast(config.appId);
-                        weixinPay(config);
+                        weixinPay(config,that.orderNumber,that);
                     }
                     else{
                         Toast(res.data.info.desc);

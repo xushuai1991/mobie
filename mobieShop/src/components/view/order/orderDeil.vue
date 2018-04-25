@@ -37,7 +37,8 @@
                                     <div class="goodsBox">
                                         <ul class="goods_detail" style=' margin-top:0.2rem;'>
                                             <li class="goods_img" style="margin-left:0px;" @click='goShopDateil(item)'>
-                                                <img :src="item.image">
+                                 
+                                                <img :src='"http://"+hostName+":"+port+"/api"+item.image'>
                                             </li>
                                             <li class="goods_info">
                                                 <p class="brandDesc">{{item.commodityBrand}}</p>
@@ -64,7 +65,7 @@
                                         </div>
                                         <!--</mt-cell-swipe>!-->
                                     </div>
-                                    <div v-show='timeShow'>
+                                    <div v-show='item.isService'>
                                         <div class='edmitTime' v-if='item.isService'>
                                             <p v-if='item.updateAppointTime'>{{item.updateAppointTime}}(已申请)</p>
                                             <p v-else>{{item.appointTime==null?'预约时间':item.appointTime}}</p>
@@ -76,7 +77,7 @@
                                     <div class="goodsBox" v-for="(items,indexs) in item.orderDetailList" :key="indexs">
                                         <ul class="goods_detail" style=' margin-top:0.2rem;'>
                                             <li class="goods_img" style="margin-left:0px;">
-                                                <img :src="items.img">
+                                                <img :src='"http://"+hostName+":"+port+"/api"+item.image'>
                                             </li>
                                             <li class="goods_info">
                                                 <p class="brandDesc">套餐:{{items.commodityBrand}}</p>
@@ -413,7 +414,8 @@
                     } else if (orderStaty.payState == 2) {
                         //卖家未付款
                         this.orderState = '等待买家支付'
-                        this.countdowm((this.timestampToTime((new Date(orderStaty.createTime).getTime() / 1000) + (24 * 60 * 60)))) //时间戳加24小时;
+                        // alert(orderStaty.createTime.replace(/\-/g,'/'))
+                        this.countdowm((this.timestampToTime((new Date(orderStaty.createTime.replace(/\-/g,'/')).getTime() / 1000) + (24 * 60 * 60)))) //时间戳加24小时;
                         if (orderStaty.orderState == 1) {
                             this.showBtn1 = true, //取消按钮
                                 this.showBtn2 = true; //立即付款按钮
@@ -530,10 +532,12 @@
                 })
             },
             countdowm(timestamp) {
+                // alert(timestamp)
                 let self = this;
                 let timer = setInterval(function() {
                     let nowTime = new Date();
-                    let endTime = new Date(timestamp);
+                    let endTime = new Date(timestamp.replace(/\-/g,'/'));
+                    
                     let t = endTime.getTime() - nowTime.getTime();
                     if (t > 0) {
                         let day = Math.floor(t / 86400000);
@@ -587,7 +591,7 @@
                             objs.push({
                                 number: number,
                                 orderState: 6,
-                                payState: 3,
+                                // payState: 3,
                                 actualMoney: actualMoney
                             })
                         }
@@ -659,6 +663,10 @@
             }
         },
         created() {
+                       this.hostName = location.hostname;
+                       this.port = location.port;
+                            // let url = res.data.info;
+                            // let imageUrl = 'http://' + hostName + ':' + port + '/api' + url; //  后台返!-->
             let userImg = JSON.parse(localStorage.getItem("userinfo"));
             this.userImg =  JSON.parse(userImg.data).avatar
             this.getDate(this.urlArgs().ordernumber)
@@ -777,7 +785,7 @@
     }
     .tiemBox {
         height: 1.02rem;
-        background: #0cbbb9;
+        background: #26a2ff;
         font-size: 0.25rem;
         line-height: 0.4rem;
         padding-top: 0.2rem;
@@ -833,7 +841,7 @@
         }
     }
     .markOrder input {
-        background: #28c0c9;
+        background: #26a2ff;
         padding: 0.1rem 0.2rem;
         color: #fff;
         margin-right: 0.2rem;
@@ -885,7 +893,7 @@
         border-top: 1px solid #ddd;
     }
     .orderFooter input {
-        background: #0cbbb9;
+        background: #26a2ff;
         color: #fff;
         padding: 0.08rem 0.15rem;
         border-radius: 0.1rem;

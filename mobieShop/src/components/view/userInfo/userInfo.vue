@@ -59,7 +59,7 @@
             </div>
             <div class="order">
                 <div class="my_order">我的订单
-                    <div class="check">查看全部订单</div>
+                    <div class="check" @click="myorder('all')">查看全部订单</div>
                     <p ><i class='icon iconfont icon-arrow-right-copy fontSize' @click="myorder('all')"></i></p>
                 </div>
                 <ul class="wait_for">

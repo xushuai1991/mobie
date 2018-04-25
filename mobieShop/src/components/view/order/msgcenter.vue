@@ -1,5 +1,5 @@
 <template>
-    <div class='contain'>
+    <div class='Ccontain'>
 
         <ul class='list-msg'>
             <li>
@@ -75,6 +75,9 @@ export default {
 </script>
 
 <style scoped>
+.Ccontain{
+    margin-top:0.8rem;
+}
 .list-msg{
     /* padding:0 .2rem; */
     text-align: left;

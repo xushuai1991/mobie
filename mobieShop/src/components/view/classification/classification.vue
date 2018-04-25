@@ -193,7 +193,7 @@ import { Indicator } from 'mint-ui';
             getClassify(){
                 let that=this;
                 // console.log(this.companyId);
-                this.$http.post('/api/product/commodity/category/query?pageSize=50',{companyId:this.companyId})
+                this.$http.post('/api/product/commodity/category/query/mall?pageSize=50',{companyId:this.companyId})
                 .then(res=>{
                     if(res.data.status==200){
                         res.data.info.list.forEach((item,index)=>{
