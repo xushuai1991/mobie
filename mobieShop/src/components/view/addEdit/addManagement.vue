@@ -92,7 +92,6 @@
                         console.log(error)
                     })
                 this.goName = sessionStorage.getItem("from")
-                alert(this.goName)
                 this.$router.push({
                     path: '/' + this.goName,
                     name: this.goName,
