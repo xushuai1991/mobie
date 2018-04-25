@@ -316,7 +316,8 @@
                 stopLoadMore:true,
                 commodityImageOne:'',
                 hostName:'',
-                port:''
+                port:'',
+                isFunctionBtn:''
             };
         },
         created(){
@@ -615,7 +616,7 @@
                         this.popupVisible = false
                     }else{
                         this.popupVisible = false
-                        this.confirmPurchase = true
+                        this.confirmPurchase = false
                         this.shareVisible = false;
                     }
                 },
@@ -676,6 +677,7 @@
                             })
                 },
                 addShopCar(){
+                    this.isFunctionBtn = "0"
                     //this.shopNum++;
                     if(this.confirmPurchase == false){
                         this.popupVisible = true
@@ -919,9 +921,17 @@
                     }else{
                         this.popupVisible = false
                         this.confirmPurchase = true
+                        if(this.isFunctionBtn == "0"){
+                            this.addShopCar()
+                            this.confirmPurchase = false
+                        }else if(this.isFunctionBtn == "1"){
+                            this.buyNow()
+                            this.confirmPurchase = false
+                        }
                     }
                 },
                 buyNow(){
+                    this.isFunctionBtn = "1"
                     if(this.confirmPurchase == false){
                         this.popupVisible = true
                     }else{
