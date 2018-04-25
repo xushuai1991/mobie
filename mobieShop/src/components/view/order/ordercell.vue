@@ -348,6 +348,11 @@ export default {
     margin-left:.2rem;
     float: left;
 }
+.img-goods img{
+    width: 100%;
+    height: 100%;
+    border-radius: 5%;
+}
 .detail-goods{
     width: 3.8rem;
     margin-left: .3rem;

@@ -256,7 +256,8 @@ export default {
                     sessionStorage.setItem('openId',openid);
                 }
                 else{
-                    Toast(res.data.msg);
+                    // Toast(res.data.msg);
+                    Toast('xxx');
                 }
             })
             .catch(err=>{
