@@ -7,7 +7,7 @@
                 </p>
                 <div class='goods'>
                     <div class='left'>
-                        <img src="" alt="">
+                        <img :src='item.commodityImageList ? "http://"+hostName+":"+port+"/api"+item.commodityImageList[0] : ""' alt="暂无图片">
                         <div class='infor' style="margin-left:.2rem;">
                             <p class='name'>{{item.commodityInfo.name}}</p>
                             <!-- <P class='subname'>{{item.commodityInfo.name}}</P> -->
@@ -22,9 +22,10 @@
                 </div>
             </li>
         </ul>
+        
         <mt-popup v-model="popupVisible" position="bottom" style='width:100%;'>
             <div class='shopBoxS'>{{ShopName}}</div>
-            <p class='shopBxo'>领取优惠劵</p>
+            <!--<p class='shopBxo'>领取优惠劵</p>!-->
             <ul class='shopBox'>
                 <li v-for='(item,index) in coupon' :key='index'>
                     <div class='shopFont'>
@@ -43,6 +44,7 @@ import { Toast } from 'mint-ui';
 export default {
     data(){
         return{
+            ShopName:'领取优惠劵',
             collectionlist:[
                 {
                     imgurl:'',
@@ -72,12 +74,16 @@ export default {
         this.getData(1);
     },
     methods:{
+        btnClose(){
+            this.popupVisible=false
+        },
         getData(pagenum){
             let that=this;
             this.$http.post('/api/product/commodity/favorite/queryPageList?pageSize=10&pag='+pagenum,{})
             .then(res=>{
                 if(res.data.status==200){
                     that.collectionlist=res.data.info.list;
+                    console.log(that.collectionlist)
                 }
                 else{
                     Toast(res.data.msg);

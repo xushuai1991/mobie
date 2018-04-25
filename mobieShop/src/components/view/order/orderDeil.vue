@@ -292,7 +292,15 @@
                 })
             },
             appointment(index, id, orstate) {
-               
+                var d = new Date();
+                var hour = d.getHours();
+                let arrTime = [];
+                for (let i = 0; i <= 24; i++) {
+                    if (i > hour) {
+                        arrTime.push(i+"点")
+                    }
+                }
+                this.dates[1].values = arrTime
                 this.popupVisible = true;
                 this.currentindex = index;
                 this.id = id;

@@ -216,7 +216,7 @@
                             return false
                         }
                         obj = {
-                            "orderId": "2bb97bc7-46ba-11e8-880b-88d7f652f92c",
+                            "orderId": this.urlArgs().orderid,
                             category: this.invoicetype,
                             title: this.compname,
                             taxIdentity: this.taxpayernum,
@@ -229,7 +229,7 @@
                             return false
                         }
                         obj = {
-                            "orderId": "2bb97bc7-46ba-11e8-880b-88d7f652f92c",
+                            "orderId": this.urlArgs().orderid,
                             category: this.invoicetype,
                             title: this.company,
                             taxIdentity: this.paragraph,

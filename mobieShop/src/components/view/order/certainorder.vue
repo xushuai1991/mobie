@@ -16,7 +16,7 @@
                 <li v-for='(item,index) in goodslist' :key='index'>
                     <div v-if='item.childlist.length==0'>
                         <div class='img-goods'>
-                            <img :src="item.imgurl" alt="">
+                            <img :src='"http://"+hostName+":"+port+"/api"+item.imgurl' alt="">
                         </div>
                         <div class='msg'>
                             <p class='name'>{{item.name}}</p>
@@ -95,46 +95,46 @@
             </ul>
         </div>
         <!-- <div class='service-time'>
-                <p>
-                    <span class='tip' >可预约服务时间</span>
-                    <span class='data'>{{servicedate}}</span>
-                    <i class='icon iconfont icon-arrow-right-copy' style='position:absolute;right:.2rem;' @click="popupVisible = true"></i>   
-                </p>
-                
-                <mt-popup v-model="popupVisible" position="bottom" class="popup">
-                    <mt-picker :slots="dates" @change='onValuesChange'  :showToolbar='true'>
-                        <p class='btn-group'>
-                            <button class='cancle' @click='cancledate'>取消</button>
-                            <button class='certain' @click="getdate">确定</button>
-                        </p>
-                        
-                    </mt-picker>
-                </mt-popup>
-                
-            </div> -->
+                    <p>
+                        <span class='tip' >可预约服务时间</span>
+                        <span class='data'>{{servicedate}}</span>
+                        <i class='icon iconfont icon-arrow-right-copy' style='position:absolute;right:.2rem;' @click="popupVisible = true"></i>   
+                    </p>
+                    
+                    <mt-popup v-model="popupVisible" position="bottom" class="popup">
+                        <mt-picker :slots="dates" @change='onValuesChange'  :showToolbar='true'>
+                            <p class='btn-group'>
+                                <button class='cancle' @click='cancledate'>取消</button>
+                                <button class='certain' @click="getdate">确定</button>
+                            </p>
+                            
+                        </mt-picker>
+                    </mt-popup>
+                    
+                </div> -->
         <!-- <div class='invoice'>
-                <p>
-                    <span class='tip'>我要开发票</span>
-                    <i class='icon iconfont icon-arrow-right-copy' style='position:absolute;right:.2rem;'  @click='makeinvoice'></i>   
-                </p>
-                
-            </div> -->
+                    <p>
+                        <span class='tip'>我要开发票</span>
+                        <i class='icon iconfont icon-arrow-right-copy' style='position:absolute;right:.2rem;'  @click='makeinvoice'></i>   
+                    </p>
+                    
+                </div> -->
         <div class='type-pay'>
             <p>
                 <span class='typepay'>
-                        <img src="static/images/weixin.jpg" alt="">
-                        <span class='type'>微信支付</span>
+                            <img src="static/images/weixin.jpg" alt="">
+                            <span class='type'>微信支付</span>
                 </span>
                 <span class='select'>
-                        <input type="checkbox" v-model='checked'>
-                        <span class='check checked' @click="selectpaytype($event)"></span>
+                            <input type="checkbox" v-model='checked'>
+                            <span class='check checked' @click="selectpaytype($event)"></span>
                 </span>
             </p>
         </div>
         <div class='submitorder'>
             <span class='msgs'>
-                    <p>共1件产品</p>
-                    <p>合计：<span class='price'>￥{{finalprice}}</span></p>
+                        <p>共1件产品</p>
+                        <p>合计：<span class='price'>￥{{finalprice}}</span></p>
             </span>
             <button class='submit' @click='submitorder'>提交订单</button>
         </div>
@@ -233,7 +233,7 @@
                     coupmoney += this.couponlist[item].money;
                 });
                 price = price - deductionmoney - coupmoney;
-                return price<0?0:price;
+                return price < 0 ? 0 : price;
             }
         },
         watch: {
@@ -253,6 +253,8 @@
             }
         },
         created: function() {
+            this.hostName = location.hostname;
+            this.port = location.port;
             this.$root.$emit('header', '确认订单');
             // 订单内的商品数据
             // let data=JSON.parse(localStorage.getItem('shopCar'))[0].listgoods;
@@ -343,7 +345,7 @@
                     if (isNaN(value)) {
                         Toast('请输入数字');
                     } else {
-                        this.goodslist[index].nums =Math.abs(value);
+                        this.goodslist[index].nums = Math.abs(value);
                     }
                 }).catch(() => {});
             },
@@ -405,22 +407,23 @@
                     .then(res => {
                         console.log(res)
                         if (res.data.status == 200) {
-
                             let carId = JSON.parse(localStorage.getItem('commodityInfo'))
-                            let cartIdList = [];
-                            carId.forEach((item, i) => {
-                                cartIdList.push(item.cartIdList[0])
-                            })
-                            let url = '/api/product/shoppingCart/remove';
-                            that.$http({
-                                url: url,
-                                method: 'post',
-                                data:cartIdList
-                            }).then((res) => {
-                                console.log(res)
-                            }).catch((err) => {
-                                console.log(err)
-                            })
+                            if (carId) {
+                                let cartIdList = [];
+                                carId.forEach((item, i) => {
+                                    cartIdList.push(item.cartIdList[0])
+                                })
+                                let url = '/api/product/shoppingCart/remove';
+                                that.$http({
+                                    url: url,
+                                    method: 'post',
+                                    data: cartIdList
+                                }).then((res) => {
+                                    console.log(res)
+                                }).catch((err) => {
+                                    console.log(err)
+                                })
+                            }
                             let number = res.data.info.number;
                             // Toast('订单生成成功！');
                             this.$router.push('paying?number=' + number + '&money=' + this.finalprice);
@@ -792,7 +795,7 @@
         background-color: #f1f1f1;
     }
     /* .submitorder .msg{
-    } */
+        } */
     .submitorder .msgs p:first-child {
         font-size: .2rem;
         color: #787878;
