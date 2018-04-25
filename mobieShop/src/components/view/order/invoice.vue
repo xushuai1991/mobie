@@ -14,7 +14,7 @@
             <mt-popup v-model="popupVisible" position="bottom" class="popup">
                 <mt-radio title="发票抬头" align="right" v-model="invoicetype" :options="options">
                 </mt-radio>
-                <button class='close' @click='closepopup'>关闭</button>
+                <button class='close' @click='closepopup'>确认</button>
             </mt-popup>
         </div>
         <div class='area width_all'>
