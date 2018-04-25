@@ -73,7 +73,7 @@ export default {
     },
     created(){
         this.$root.$emit('header','我的优惠券');
-        let userinfo=JSON.parse(sessionStorage.getItem('userinfo'));
+        let userinfo=JSON.parse(localStorage.getItem('userinfo'));
         this.userinfo=userinfo;
         // console.log(JSON.parse(userinfo_str));
         this.getCouponlist();

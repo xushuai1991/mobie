@@ -66,10 +66,15 @@ import { Indicator } from 'mint-ui';
                 companyId:'',
                 sortingCondition:null,
                 sortingOption:null,
-                dataisall:false
+                dataisall:false,
+                hostName:'',
+                port:''
             };
         },
         created(){
+            this.hostName = location.hostname;
+            this.port = location.port;
+            // console.log(location.hostname);
             this.$root.$on('classification',(data)=>{
                 // console.log(11);
                 this.companyId=data.companyId;
@@ -236,10 +241,11 @@ import { Indicator } from 'mint-ui';
                         that.commoditylist=[];
                     }
                     if(res.data.status==200){
+                        
                         res.data.info.list.forEach(commodity=>{
                             let json={
                                 id:commodity.id,
-                                imgurl:commodity.commodityImageList.length==0?'':commodity.commodityImageList[0],
+                                imgurl:commodity.commodityImageList.length==0?'':"http://"+that.hostName+":"+that.port+"/api"+commodity.commodityImageList[0].url,
                                 name:commodity.name,
                                 url:'/detailTemplate?commodityId='+commodity.id,
                                 price:commodity.price,
