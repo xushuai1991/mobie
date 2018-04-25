@@ -43,7 +43,7 @@
                 let id = this.getUrlParms("id")
                  console.log(id)
                   let that=this;
-                    this.$http.post('/api/product/mall/template/queryMap',
+                    this.$http.post('/api/product/mall/template/queryMap/mall',
                         {
                             'templateID':id,
                             'templateType':2
@@ -64,7 +64,7 @@
                 //console.log(this.comlist)
               // let templateId = sessionStorage.getItem ("eventTemplateID");
                 let that=this;
-                this.$http.post('/api/product/mall/template/queryMap',
+                this.$http.post('/api/product/mall/template/queryMap/mall',
                     {
                         'templateID':id,
                         'templateType':2

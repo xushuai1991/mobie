@@ -167,7 +167,7 @@
                             </div>
                             <div class="userReviewList">
                                 <ul v-infinite-scroll="loadMore"
-                                    infinite-scroll-disabled="isloading" 
+                                    infinite-scroll-disabled="loading" 
                                     infinite-scroll-distance="2"
                                 >
                                     <li v-for="(item,indexs) in evaluationList" :key="indexs">
@@ -291,7 +291,6 @@
                 },
                 isStar:false,
                 starId:'',
-                isloading:'loading',
                 commentLoading:false,
                 confirmPurchase:false,
                 evaluationList:'',
@@ -494,10 +493,8 @@
                 if(that.evaluationList.length == 0){
                     that.evaluationListShows = false
                     that.evaluationListNoShow = true
-                    that.isloading = true
                     return false
                 }
-                that.isloading = 'loading'
                 that.evaluationListOne = that.evaluationList[0]
                 console.log(that.evaluationListOne)
                 if(that.evaluationListOne.commodityEvaluationLabels.length == 0){

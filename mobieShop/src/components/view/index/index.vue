@@ -139,7 +139,7 @@ export default {
             ).then(function(response){
             //console.log(response)
             id = response.data.msg
-            that.$http.post('/api/product/mall/template/queryMap',
+            that.$http.post('/api/product/mall/template/queryMap/mall',
                 {
                     'templateID':id,
                     'templateType':1
@@ -167,9 +167,9 @@ export default {
         if(ids == null){
             //地址没有参数，直接查看手机端
             let that=this;
-            this.$http.post('/api/product/mall/template/queryMap',
+            this.$http.post('/api/product/mall/template/queryMap/mall',
                 {
-                'templateType':1,
+                    'templateType':1,
                     'isEnabled':true
                 }
             )
@@ -192,7 +192,7 @@ export default {
         }else{
             // 后台复制地址，手机查看
                 let that=this;
-                that.$http.post('/api/product/mall/template/queryMap',
+                that.$http.post('/api/product/mall/template/queryMap/mall',
                 {
                     'templateID':ids,
                     'templateType':1
