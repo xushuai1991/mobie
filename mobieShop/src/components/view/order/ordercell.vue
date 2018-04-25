@@ -90,6 +90,15 @@ export default {
         }  
     },
     created(){
+        var d = new Date();
+                var hour = d.getHours();
+                let arrTime = [];
+                for (let i = 0; i <= 24; i++) {
+                    if (i > hour) {
+                        arrTime.push(i+"点")
+                    }
+                }
+                this.dates[1].values = arrTime
         this.hostName = location.hostname;
         this.port = location.port;
         let date=this.data.createTime.replace(/\-/g,'/');
@@ -144,6 +153,23 @@ export default {
             console.log(this.data.orderDetails[this.index_appoint].appointTime);
         },
         onValuesChange(picker,values){
+            var d = new Date();
+                var hour = d.getHours();
+                let arrTime = [];
+                for (let i = 0; i <= 24; i++) {
+                    if (i > hour) {
+                        arrTime.push((i<=0?'0'+i:i)+"点")
+                    }
+                }
+                if (values[0] == "今天") {
+                   this.dates[1].values = arrTime
+                }else{
+                    this.dates[1].values = ['00点', '01点', '02点', '03点', '04点', '05点',
+                            '06点', '07点', '08点', '09点', '10点', '11点',
+                            '12点', '13点', '14点', '15点', '16点', '17点',
+                            '18点', '19点', '20点', '21点', '22点', '23点'
+                        ]
+                }
             console.log(values);
             this.datechange=values;
         },
