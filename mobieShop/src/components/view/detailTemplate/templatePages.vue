@@ -10,9 +10,16 @@
                 enter-active-class="animated fadeInLeft"
             >
                 <div v-if="show1" class="proDetail">
-                        <keep-alive v-for='(item,index) in bannerArr1' :key='index'>
+                        <div class="page-swipe">
+                            <mt-swipe :auto="4000">
+                                <mt-swipe-item v-for='(item,index) in bannerArr2' :key='index'>
+                                        <img :src="'http://101.89.175.155:8887'+item.url" class="bannerImg">
+                                </mt-swipe-item>
+                            </mt-swipe>
+                        </div>
+                        <!-- <keep-alive v-for='(item,index) in bannerArr1' :key='index'>
                         <components :templateData='item.componentsData' :is='item.componentsName'  :type='item.componentsName'></components>
-                        </keep-alive>
+                        </keep-alive> -->
                         <productDetail :zbdCommodityInfo="commodityInfo" :evaluationTotals="evaluationTotal"></productDetail>
                         <div class="zbd-coupon" v-show="couponShow">
                             <img @click="getcoupon" src="./coupon.png">
@@ -261,6 +268,7 @@
                 value: '',
                 comlist:'',
                 bannerArr1:'',
+                bannerArr2:'',
                 detailImgArr1:'',
                 detailTemplateUrl:'',
                 show1:true,
@@ -400,6 +408,7 @@
                         //商品信息的调用及渲染
                         that.commodityInfo = response.data.info[0]
                         console.log(that.commodityInfo)
+                        that.bannerArr2 = that.commodityInfo.commodityImageList
                         if(that.commodityInfo.commodityImageList.length == 0){
                             that.commodityImageOne = '/static/images/nodata.png'
                         }else{
@@ -914,7 +923,32 @@
                          localStorage.setItem('commodityInfo',JSON.stringify(commodityInfo))
                          this.$router.push('./ordercertain')
                     }
-                }
+                },
+                shareTo(stype){
+                    let totalSrc = window.location.href
+                    var ftit = '绿城';
+                    var flink = '';
+                    var lk = 'http://'+window.location.host+'/static/images/logo.png';
+                    // console.log(lk)
+                    //获取网页中内容的第一张图片
+                    flink = document.getElementById('sharePic').getAttribute('src')
+                    //如果是上传的图片则进行绝对路径拼接
+                    if(flink.indexOf('/uploads/') != -1) {
+                        lk = 'http://'+window.location.host+flink;
+                    }
+                    //qq空间接口的传参
+                    if(stype=='qzone'){
+                        window.open('http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url='+document.location.href+'?sharesource=qzone&title='+ftit+'&pics='+totalSrc+'&desc=绿城');
+                    }
+                    //qq好友接口的传参
+                    if(stype == 'qq'){
+                        window.open('http://connect.qq.com/widget/shareqq/index.html?url='+document.location.href+'?sharesource=qzone&title='+ftit+'&pics='+totalSrc+'&desc=绿城');
+                    }
+                    //生成二维码给微信扫描分享
+                    if(stype == 'wechat'){
+                        window.open('http://192.168.199.102/customer/resource/qrCode.png?content=http://localhost:8080/inviting');
+                    }
+                },
         },
         components: {
             imageAds,
@@ -1075,6 +1109,10 @@
 <style lang="less" scoped>
    .numLessNo{background-color: #f3f1f1;}
    .numLessYes{background-color: #ffffff;}
+    .bannerImg{
+        width:100%;
+        height: 100%;
+    }
     #detailTemplatePage{
         margin-top:1rem;
     }
