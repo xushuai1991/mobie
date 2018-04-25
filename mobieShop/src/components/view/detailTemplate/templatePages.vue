@@ -644,9 +644,10 @@
                                         duration:1000
                                     }
                                     );
+                                    that.$router.push('./login')
                                 }else{
-                                    // that.$root.$emit('loadShopcar');
-                                    that.$router.push({path:'./shopCar',query:{name:'templatePages'}})
+                                    that.$router.push({name:'index',params:{direct:"shopcar"}});
+                                    //that.$router.push({path:'./shopCar',query:{name:'templatePages'}})
                                 }
                             })
                             .catch(function(response){
@@ -662,65 +663,70 @@
                         console.log(commodityId)
                          //客户ID 
                         let customer = localStorage.getItem('userinfo')
-                        if(JSON.parse(customer).id == null){
+                        let customerData = JSON.parse(JSON.parse(customer).data);
+                        console.log(customerData.id)
+                        this.customerId = customerData.id
+                        if(customerData.id == null){
                              Toast({
                                 message:'尚未登录',
                                 duration:1000
                             }
                             );
+                            this.$router.push('./login')
                             return false
-                        }
-                        this.customerId = JSON.parse(customer).id
-                        let customerId = this.customerId
-                        console.log(customerId)
-                        let commodityCount = this.specificationNum
-                        console.log(commodityCount)
-                        let that=this;
-                        this.$http.post('/api/product/shoppingCart/insertOne',
-                            {
-                                'commodityId':commodityId,
-                                'customerId':customerId,
-                                'commodityCount':commodityCount
-                            }
-                        )
-                        .then(function(response){
-                            console.log(response)
-                            if(response.data.status == 401){
-                            that.shopCarNumShow = false
-                            Toast({
-                                message:'尚未登录',
-                                duration:1000
-                            }
-                            );
                         }else{
-                            Toast({
-                                    message:'加入购物车成功',
-                                    duration:500
+                            let customerId = this.customerId
+                            console.log(customerId)
+                            let commodityCount = this.specificationNum
+                            console.log(commodityCount)
+                            let that=this;
+                            this.$http.post('/api/product/shoppingCart/insertOne',
+                                {
+                                    'commodityId':commodityId,
+                                    'customerId':customerId,
+                                    'commodityCount':commodityCount
                                 }
-                                );
-                            that.$http.post('/api/product/shoppingCart/myShoppingCart',{})
-                                .then(function(response){
-                                    console.log(response)
-                                    if(response.data.info.length == 0){
-                                        that.shopCarNumShow = false
-                                    }else{
-                                        that.shopCarNumShow = true
-                                        let num = null;
-                                        response.data.info.forEach((element,i) => {
-                                            console.log(element.commodityCount)
-                                            num += element.commodityCount
-                                        });
-                                        that.shopNum =num
+                            )
+                            .then(function(response){
+                                console.log(response)
+                                if(response.data.status == 401){
+                                    that.shopCarNumShow = false
+                                    Toast({
+                                        message:'尚未登录',
+                                        duration:1000
                                     }
-                                })
-                                .catch(function(response){
-                                    console.log(response)
-                                })
+                                    );
+                                    that.$router.push('./login')
+                                }else{
+                                    Toast({
+                                            message:'加入购物车成功',
+                                            duration:500
+                                        }
+                                        );
+                                    that.$http.post('/api/product/shoppingCart/myShoppingCart',{})
+                                        .then(function(response){
+                                            console.log(response)
+                                            if(response.data.info.length == 0){
+                                                that.shopCarNumShow = false
+                                            }else{
+                                                that.shopCarNumShow = true
+                                                let num = null;
+                                                response.data.info.forEach((element,i) => {
+                                                    console.log(element.commodityCount)
+                                                    num += element.commodityCount
+                                                });
+                                                that.shopNum =num
+                                            }
+                                        })
+                                        .catch(function(response){
+                                            console.log(response)
+                                        })
+                                }
+                            })
+                            .catch(function(response){
+                                console.log(response)
+                            })
                         }
-                        })
-                        .catch(function(response){
-                            console.log(response)
-                        })
                     }
                 },
                 collectionStar(){
@@ -738,6 +744,7 @@
                                     duration:1000
                                 }
                                 );
+                                that.$router.push('./login')
                             }else if(response.data.status == 203){
                                 Toast({
                                     message:response.data.msg,
