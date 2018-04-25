@@ -62,6 +62,7 @@ export default {
         }
     },
     created(){
+        // document.title='xxx';
         let select_session=sessionStorage.getItem('select_index');
         if(select_session!=null){
             this.selected=select_session;
@@ -219,16 +220,23 @@ export default {
     watch:{
         selected(value){
             switch(value){
+                case '首页':{
+                    window.document.title ='首页';
+                    break;
+                }
                 case '分类':{
                     this.$root.$emit('classification',{companyId:this.companyid});
+                    window.document.title ='商品列表';
                     break;
                 }
                 case '购物车':{
                     this.$root.$emit('loadShopcar');
+                    window.document.title ='购物车';
                     break;
                 }
                 case '我的':{
                     this.$root.$emit('loadUserinfo');
+                    window.document.title ='个人中心';
                     break;
                 }
                 default:{

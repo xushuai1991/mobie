@@ -16,7 +16,7 @@
                     </div>
                     <div class="portrait">
                         <div class="portrait_img">
-                            <img :src="userinfo.avatar" alt="">
+                            <img :src="userinfo.avatar" v-if='!userinfo.avatar==""' alt="图片缺失" style='font-size:.2rem;'>
                             <p class='vip'>{{viplevel}}</p>
                             <i :class="{'icon':true,'iconfont':true,'icon--huangguan':false}" style='color:#fdd23e;position:absolute;right:.2rem;top:-.15rem;transform:rotate(25deg);'></i>
                         </div>

@@ -15,6 +15,10 @@ Vue.use(BaiduMap, {
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
+router.beforeEach((to, from, next) => {
+    window.document.title = to.meta.title;
+    next()
+  })
 Vue.use(Mint)
     /* eslint-disable no-new */
 new Vue({
