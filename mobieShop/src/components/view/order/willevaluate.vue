@@ -6,7 +6,7 @@
         <div class='content' @click.stop='toOrderDetail(data.number,index)'>
             <div :class='{"detail":true,"haseval":item.evaluation!=null}' v-for='(item,index) in data.orderDetails' :key='index'>
                 <div class='img-goods'>
-                    <img :src="item.image" alt="图片丢失">
+                    <img :src='"http://"+hostName+":"+port+"/api"+item.image' alt="图片丢失">
                 </div>
                 <div class='detail-goods'>
                     <h3 class='name'>{{item.commodityName}}</h3>
@@ -39,6 +39,8 @@ export default {
         }  
     },
     created(){
+         this.hostName = location.hostname;
+        this.port = location.port;
         // console.log(this.data);
     },
     computed:{

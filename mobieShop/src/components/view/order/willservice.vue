@@ -6,7 +6,7 @@
         <div class='content' @click.stop='toOrderDetail(data.number,index)'>
             <div class='detail' v-for='(item,index) in data.orderDetails' :key='index'>
                 <div class='img-goods'>
-                    <img :src="item.image" alt="图片丢失">
+                    <img :src='"http://"+hostName+":"+port+"/api"+item.image' alt="图片丢失">
                 </div>
                 <div class='detail-goods'>
                     <h3 class='name'>FASHION</h3>
@@ -74,6 +74,10 @@ export default {
             ],
             datechange:''
         }  
+    },
+    created(){
+        this.hostName = location.hostname;
+        this.port = location.port;
     },
     computed:{
         // totalmoney(){
