@@ -241,7 +241,6 @@ import { Indicator } from 'mint-ui';
                         that.commoditylist=[];
                     }
                     if(res.data.status==200){
-                        
                         res.data.info.list.forEach(commodity=>{
                             let json={
                                 id:commodity.id,

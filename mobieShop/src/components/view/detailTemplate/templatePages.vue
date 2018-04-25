@@ -1114,7 +1114,7 @@
         height: 100%;
     }
     #detailTemplatePage{
-        margin-top:1rem;
+        // margin-top:1rem;
     }
     .clear:after {
         content: "";
