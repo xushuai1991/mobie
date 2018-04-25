@@ -11,7 +11,7 @@
         </div>
         <div class="productReview">
             <div class="productsTitleNum" @click="dsad">
-                <p class="commentsNum">{{ evaluationTotals>1000?"999+":evaluationTotals }}</p>
+                <p class="commentsNum">{{ evaluationTotals>1000?"999+":evaluationTotals==''?'0':evaluationTotals }}</p>
                 <p class="commentsNumTitle">用户评价</p>
             </div>
         </div>

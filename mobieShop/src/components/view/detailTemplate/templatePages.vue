@@ -684,6 +684,15 @@
                         console.log(commodityId)
                          //客户ID 
                         let customer = localStorage.getItem('userinfo')
+                        if(JSON.parse(JSON.parse(customer).data) ==null){
+                            Toast({
+                                message:'尚未登录',
+                                duration:1000
+                            }
+                            );
+                            this.$router.push('./login')
+                            return false
+                        }
                         let customerData = JSON.parse(JSON.parse(customer).data);
                         console.log(customerData.id)
                         this.customerId = customerData.id
