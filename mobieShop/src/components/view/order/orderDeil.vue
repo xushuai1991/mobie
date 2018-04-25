@@ -1,18 +1,18 @@
 <template>
     <div class='CmyOveroderDeil'>
         <!--<ul v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
-                                                                                                                    <li v-for="item in list">{{ item }}</li>
-                                                                                                                </ul>!-->
+                                                                                                                            <li v-for="item in list">{{ item }}</li>
+                                                                                                                        </ul>!-->
         <section>
             <div class="wrap2">
                 <div class='tiemBox'>
                     <p>{{ orderState}}</p>
                     <p v-if='orderState=="等待买家支付"'>
                         <span :endTime="endTime" :callback="callback" :endText="endText">
-                                                                                                        <slot>
-                                                                                                            {{content}}
-                                                                                                        </slot>
-                                                                                                    </span></p>
+                                                                                                                <slot>
+                                                                                                                    {{content}}
+                                                                                                                </slot>
+                                                                                                            </span></p>
                     <p v-else>
                         {{orderText}}
                     </p>
@@ -37,7 +37,6 @@
                                     <div class="goodsBox">
                                         <ul class="goods_detail" style=' margin-top:0.2rem;'>
                                             <li class="goods_img" style="margin-left:0px;" @click='goShopDateil(item)'>
-                                 
                                                 <img :src='"http://"+hostName+":"+port+"/api"+item.image'>
                                             </li>
                                             <li class="goods_info">
@@ -52,8 +51,8 @@
                                                     数量:<input type="number" disabled :value="item.saleNumber" style='background:#fff;margint-top:0.2rem;' />
                                                 </div>
                                                 <!--<span class="mui_shopcar_del" @click="remove(index,indexs)">
-                                                                                                                                                        <i class='icon iconfont icon-lajitong'></i>
-                                                                                                                                                    </span>!-->
+                                                                                                                                                                <i class='icon iconfont icon-lajitong'></i>
+                                                                                                                                                            </span>!-->
                                             </li>
                                         </ul>
                                         <div class='refundDetail' v-show='refundOrder'>
@@ -91,8 +90,8 @@
                                                     数量:<input type="number" disabled :value="items.saleNumber" style='background:#fff;margint-top:0.2rem;' />
                                                 </div>
                                                 <!--<span class="mui_shopcar_del" @click="remove(index,indexs)">
-                                                                                                                                                        <i class='icon iconfont icon-lajitong'></i>
-                                                                                                                                                    </span>!-->
+                                                                                                                                                                <i class='icon iconfont icon-lajitong'></i>
+                                                                                                                                                            </span>!-->
                                             </li>
                                         </ul>
                                         <!--</mt-cell-swipe>!-->
@@ -160,7 +159,7 @@
                 id: '',
                 orstate: '',
                 datechange: '',
-                userImg:'',
+                userImg: '',
                 dates: [{
                         values: ['今天', '明天', '后天'],
                         className: 'slot1',
@@ -282,17 +281,41 @@
                     Toast()
                 }).catch((err) => {})
             },
-            opInt(id,mony){
-                console.log(id,mony)
-                this.$router.push({path:'/invoice',query:{orderid:id,totalprice:mony}})
+            opInt(id, mony) {
+                console.log(id, mony)
+                this.$router.push({
+                    path: '/invoice',
+                    query: {
+                        orderid: id,
+                        totalprice: mony
+                    }
+                })
             },
             appointment(index, id, orstate) {
+               
                 this.popupVisible = true;
                 this.currentindex = index;
                 this.id = id;
                 this.orstate = orstate;
             },
             onValuesChange(aa, values) {
+                var d = new Date();
+                var hour = d.getHours();
+                let arrTime = [];
+                for (let i = 0; i <= 24; i++) {
+                    if (i > hour) {
+                        arrTime.push((i<=0?'0'+i:i)+"点")
+                    }
+                }
+                if (values[0] == "今天") {
+                   this.dates[1].values = arrTime
+                }else{
+                    this.dates[1].values = ['00点', '01点', '02点', '03点', '04点', '05点',
+                            '06点', '07点', '08点', '09点', '10点', '11点',
+                            '12点', '13点', '14点', '15点', '16点', '17点',
+                            '18点', '19点', '20点', '21点', '22点', '23点'
+                        ]
+                }
                 this.datechange = values;
             },
             refundButton($event, indexs) {
@@ -311,9 +334,9 @@
                     }
                 });
             },
-            comment(item){
-               let orderdetail = sessionStorage.setItem('orderdetail', JSON.stringify(item));
-               this.$router.push("/evaluate")
+            comment(item) {
+                let orderdetail = sessionStorage.setItem('orderdetail', JSON.stringify(item));
+                this.$router.push("/evaluate")
             },
             OkOrder(order) { //
                 this.unbind('/api/product/order/mall/update', order, "actualMoney", '确认收货')
@@ -415,7 +438,7 @@
                         //卖家未付款
                         this.orderState = '等待买家支付'
                         // alert(orderStaty.createTime.replace(/\-/g,'/'))
-                        this.countdowm((this.timestampToTime((new Date(orderStaty.createTime.replace(/\-/g,'/')).getTime() / 1000) + (24 * 60 * 60)))) //时间戳加24小时;
+                        this.countdowm((this.timestampToTime((new Date(orderStaty.createTime.replace(/\-/g, '/')).getTime() / 1000) + (24 * 60 * 60)))) //时间戳加24小时;
                         if (orderStaty.orderState == 1) {
                             this.showBtn1 = true, //取消按钮
                                 this.showBtn2 = true; //立即付款按钮
@@ -509,7 +532,7 @@
                     'actualMoney': actualMoney,
                     'companyId': companyId
                 }
-                this.$router.push('paying?number='+order+'&money='+actualMoney);
+                this.$router.push('paying?number=' + order + '&money=' + actualMoney);
                 // this.$router.push({
                 //     'name': 'paying',
                 //     params: {
@@ -536,8 +559,7 @@
                 let self = this;
                 let timer = setInterval(function() {
                     let nowTime = new Date();
-                    let endTime = new Date(timestamp.replace(/\-/g,'/'));
-                    
+                    let endTime = new Date(timestamp.replace(/\-/g, '/'));
                     let t = endTime.getTime() - nowTime.getTime();
                     if (t > 0) {
                         let day = Math.floor(t / 86400000);
@@ -585,7 +607,6 @@
                 }).then(action => {
                     let orderUlr = url + ""
                     if (action == 'confirm') {
-                        
                         let objs = []
                         if (stateText == '取消订单') {
                             objs.push({
@@ -600,16 +621,14 @@
                                 number: number
                             })
                         }
-                       console.log(stateText)
+                        console.log(stateText)
                         if (stateText == '确认收货') {
                             console.log(objs)
                             objs.push({
                                 number: number,
                                 orderState: 2
                             })
-                            
                         }
-                        
                         that.$http({
                                 url: orderUlr,
                                 method: "post",
@@ -663,12 +682,12 @@
             }
         },
         created() {
-                       this.hostName = location.hostname;
-                       this.port = location.port;
-                            // let url = res.data.info;
-                            // let imageUrl = 'http://' + hostName + ':' + port + '/api' + url; //  后台返!-->
+            this.hostName = location.hostname;
+            this.port = location.port;
+            // let url = res.data.info;
+            // let imageUrl = 'http://' + hostName + ':' + port + '/api' + url; //  后台返!-->
             let userImg = JSON.parse(localStorage.getItem("userinfo"));
-            this.userImg =  JSON.parse(userImg.data).avatar
+            this.userImg = JSON.parse(userImg.data).avatar
             this.getDate(this.urlArgs().ordernumber)
             this.serverState = this.urlArgs().index;
             console.log(this.serverState)
@@ -736,7 +755,7 @@
         position: absolute;
         right: -3.2rem;
         /*   bottom:.2rem;
-                                            right:.2rem; */
+                                                    right:.2rem; */
         background-color: #26a2ff;
         outline: none;
         border: 0;
