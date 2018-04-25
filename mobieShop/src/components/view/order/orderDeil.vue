@@ -37,7 +37,8 @@
                                     <div class="goodsBox">
                                         <ul class="goods_detail" style=' margin-top:0.2rem;'>
                                             <li class="goods_img" style="margin-left:0px;" @click='goShopDateil(item)'>
-                                                <img :src="item.image">
+                                 
+                                                <img :src='"http://"+hostName+":"+port+"/api"+item.image'>
                                             </li>
                                             <li class="goods_info">
                                                 <p class="brandDesc">{{item.commodityBrand}}</p>
@@ -64,7 +65,7 @@
                                         </div>
                                         <!--</mt-cell-swipe>!-->
                                     </div>
-                                    <div v-show='timeShow'>
+                                    <div v-show='item.isService'>
                                         <div class='edmitTime' v-if='item.isService'>
                                             <p v-if='item.updateAppointTime'>{{item.updateAppointTime}}(已申请)</p>
                                             <p v-else>{{item.appointTime==null?'预约时间':item.appointTime}}</p>
@@ -76,7 +77,7 @@
                                     <div class="goodsBox" v-for="(items,indexs) in item.orderDetailList" :key="indexs">
                                         <ul class="goods_detail" style=' margin-top:0.2rem;'>
                                             <li class="goods_img" style="margin-left:0px;">
-                                                <img :src="items.img">
+                                                <img :src='"http://"+hostName+":"+port+"/api"+item.image'>
                                             </li>
                                             <li class="goods_info">
                                                 <p class="brandDesc">套餐:{{items.commodityBrand}}</p>
@@ -531,10 +532,12 @@
                 })
             },
             countdowm(timestamp) {
+                // alert(timestamp)
                 let self = this;
                 let timer = setInterval(function() {
                     let nowTime = new Date();
-                    let endTime = new Date(timestamp);
+                    let endTime = new Date(timestamp.replace(/\-/g,'/'));
+                    
                     let t = endTime.getTime() - nowTime.getTime();
                     if (t > 0) {
                         let day = Math.floor(t / 86400000);
@@ -660,6 +663,10 @@
             }
         },
         created() {
+                       this.hostName = location.hostname;
+                       this.port = location.port;
+                            // let url = res.data.info;
+                            // let imageUrl = 'http://' + hostName + ':' + port + '/api' + url; //  后台返!-->
             let userImg = JSON.parse(localStorage.getItem("userinfo"));
             this.userImg =  JSON.parse(userImg.data).avatar
             this.getDate(this.urlArgs().ordernumber)

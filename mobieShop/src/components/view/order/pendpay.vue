@@ -8,7 +8,7 @@
         <div class='content' @click.stop='toOrderDetail(data.number,index)'>
             <div class='detail' v-for='(item,index) in data.orderDetails' :key='index'>
                 <div class='img-goods'>
-                    <img :src="item.image" alt="图片丢失">
+                    <img :src='"http://"+hostName+":"+port+"/api"+item.image' alt="图片丢失">
                 </div>
                 <div class='detail-goods'>
                     <h3 class='name'>{{item.commodityName}}</h3>
@@ -85,6 +85,8 @@ export default {
         }  
     },
     created(){
+         this.hostName = location.hostname;
+        this.port = location.port;
         let date_create=new Date(this.data.createTime);
         this.date_dead=new Date(date_create.getTime() + 24*60*60*1000);
         this.countDown();

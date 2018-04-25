@@ -92,6 +92,7 @@
                         console.log(error)
                     })
                 this.goName = sessionStorage.getItem("from")
+                alert(this.goName)
                 this.$router.push({
                     path: '/' + this.goName,
                     name: this.goName,
@@ -179,7 +180,6 @@
                 this.bottomStatus = status;
             },
             loadBottom() {
-                alert(111);
                 setTimeout(() => {
                     let lastValue = this.list.length;
                     console.log(lastValue)
