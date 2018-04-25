@@ -456,9 +456,9 @@ export default {
 </style>
 <style  lang="less" >
 .order-xs{
-    margin-top: 2rem;
+    // margin-top: 2rem;
     .mint-navbar{
-        margin-top: .8rem;
+        // margin-top: .8rem;
     }
     .mint-tab-container{
         /* margin-top: 1rem; */

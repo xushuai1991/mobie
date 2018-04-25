@@ -265,7 +265,7 @@
         }
     }
     .addManage {
-        margin-top: 0.8rem;
+        // margin-top: 0.8rem;
         font-size: 0.25rem;
         padding: 0.2rem;
         background: #fff;

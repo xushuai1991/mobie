@@ -522,7 +522,7 @@ import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasda
         font-size: 0.2rem;
     }
     .accountMangagement {
-        margin-top: 0.8rem;
+        // margin-top: 0.8rem;
         text-align: left;
         div {
             position: relative;

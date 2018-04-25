@@ -72,10 +72,10 @@ export default {
 <style lang='less'>
 .Ccustomer{
   .mint-navbar.is-fixed{
-    top:.8rem;
+    // top:.8rem;
   }
   .mint-tab-container{
-    top: 1rem;
+    top: .2rem;
   }
 }
 
@@ -83,6 +83,6 @@ export default {
 
 <style lang='less'scoped>
 .Ccustomer{
-    margin-top:0.8rem;
+    // margin-top:0.8rem;
 }
 </style>

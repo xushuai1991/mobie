@@ -62,7 +62,7 @@
 <style lang="less" scoped>
     .CInvoice {
         font-size: 0.3rem;
-        margin-top:1rem;
+        // margin-top:1rem;
         h1{
             line-height:0.8rem;
             font-size:0.4rem;

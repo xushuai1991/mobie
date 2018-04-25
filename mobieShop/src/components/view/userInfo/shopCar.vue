@@ -1,7 +1,7 @@
 <template>
     <div class='Cmycar'>
-        <mt-header fixed title="购物车">
-        </mt-header>
+        <!-- <mt-header fixed title="购物车">
+        </mt-header> -->
         <section>
             <div class="wrap2">
                 <div class="goods_list">
@@ -755,7 +755,7 @@
         left: -0.7rem;
     }
     .wrap2 {
-        margin-top: 0.8rem;
+        // margin-top: 0.8rem;
         .CinputBox {
             position: absolute;
             left: 0.4rem;
