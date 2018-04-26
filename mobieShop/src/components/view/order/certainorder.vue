@@ -16,7 +16,7 @@
                 <li v-for='(item,index) in goodslist' :key='index'>
                     <div v-if='item.childlist.length==0'>
                         <div class='img-goods'>
-                            <img :src='"http://"+hostName+":"+port+"/api"+item.imgurl' alt="">
+                            <img style='width:100%; height:100%;' :src='"http://"+hostName+":"+port+"/api"+item.imgurl' alt="">
                         </div>
                         <div class='msg'>
                             <p class='name'>{{item.name}}</p>
@@ -261,10 +261,11 @@
             let data = JSON.parse(localStorage.getItem('commodityInfo'));
             // console.log(data);
             data.forEach(item => {
+                console.log(item)
                 let json = {
                     id: item.id,
                     name: item.name,
-                    imgurl: item.commodityImageList.length > 0 ? item.commodityImageList[0] : '',
+                    imgurl: item.commodityImageList.length > 0 ? item.commodityImageList[0].url : '',
                     conditionname1: '',
                     conditionvalue1: '',
                     conditionname2: '',
@@ -408,7 +409,7 @@
                         console.log(res)
                         if (res.data.status == 200) {
                             let carId = JSON.parse(localStorage.getItem('commodityInfo'))
-                            if (carId) {
+                            if (carId!==null&&carId=='') {
                                 let cartIdList = [];
                                 carId.forEach((item, i) => {
                                     cartIdList.push(item.cartIdList[0])

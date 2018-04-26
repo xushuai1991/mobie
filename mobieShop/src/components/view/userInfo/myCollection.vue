@@ -7,7 +7,7 @@
                 </p>
                 <div class='goods'>
                     <div class='left'>
-                        <img :src='item.commodityImageList ? "http://"+hostName+":"+port+"/api"+item.commodityImageList[0] : ""' alt="暂无图片">
+                        <img style='width:100%;height:100%;':src='item.commodityImageList ? "http://"+hostName+":"+port+"/api"+item.commodityImageList[0].url : ""' alt="暂无图片">
                         <div class='infor' style="margin-left:.2rem;">
                             <p class='name'>{{item.commodityInfo.name}}</p>
                             <!-- <P class='subname'>{{item.commodityInfo.name}}</P> -->
