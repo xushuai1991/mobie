@@ -16,7 +16,7 @@
                 <li v-for='(item,index) in goodslist' :key='index'>
                     <div v-if='item.childlist.length==0'>
                         <div class='img-goods'>
-                            <img :src='"http://"+hostName+":"+port+"/api"+item.imgurl' alt="">
+                            <img style='width:100%; height:100%;' :src='"http://"+hostName+":"+port+"/api"+item.imgurl' alt="">
                         </div>
                         <div class='msg'>
                             <p class='name'>{{item.name}}</p>
@@ -126,8 +126,9 @@
                             <span class='type'>微信支付</span>
                 </span>
                 <span class='select'>
-                            <input type="checkbox" v-model='checked'>
-                            <span class='check checked' @click="selectpaytype($event)"></span>
+                    
+                    <input type="checkbox" v-model='checked'>
+                    <span class='check checked' @click="selectpaytype($event)"></span>
                 </span>
             </p>
         </div>
@@ -261,10 +262,11 @@
             let data = JSON.parse(localStorage.getItem('commodityInfo'));
             // console.log(data);
             data.forEach(item => {
+                console.log(item)
                 let json = {
                     id: item.id,
                     name: item.name,
-                    imgurl: item.commodityImageList.length > 0 ? item.commodityImageList[0] : '',
+                    imgurl: item.commodityImageList.length > 0 ? item.commodityImageList[0].url : '',
                     conditionname1: '',
                     conditionvalue1: '',
                     conditionname2: '',
@@ -378,8 +380,13 @@
             // 获取可用优惠券
             getCouponcanuse() {
                 let that = this;
+                let idlist=[];
+                this.goodslist.forEach(item=>{
+                    idlist.push(item.id);
+                });
                 let data = {
-                    amount: 200
+                    amount: this.totalprice,
+                    couponCustomerList:idlist
                 };
                 this.$http.post('/api/product/coupon/customer/display', data)
                     .then(res => {
@@ -408,7 +415,7 @@
                         console.log(res)
                         if (res.data.status == 200) {
                             let carId = JSON.parse(localStorage.getItem('commodityInfo'))
-                            if (carId) {
+                            if (carId!==null&&carId=='') {
                                 let cartIdList = [];
                                 carId.forEach((item, i) => {
                                     cartIdList.push(item.cartIdList[0])
@@ -502,11 +509,11 @@
 
 <style scoped lang='less'>
     .contain {
-        margin-top: 0.8rem;
+        // margin-top: 0.8rem;
         font-size: .28rem;
         text-align: left;
         background-color: #e9e9e9;
-        margin-top: 40px;
+        // margin-top: 40px;
     }
     .msg-customer {
         padding: .4rem .2rem;
@@ -812,8 +819,8 @@
         width: 3rem;
         height: .8rem;
         margin-top: -0.75rem;
-        background: linear-gradient(180deg, #11bcbc, #46c5d9);
-        border: 1px solid #31B1B0;
+        background: #26a2ff;
+        border: 1px solid #26a2ff;
         border-radius: .5rem;
         color: #fff;
         outline: none;

@@ -1,7 +1,7 @@
 <template>
     <div class='Cmycar'>
         <!-- <mt-header fixed title="购物车">
-        </mt-header> -->
+                </mt-header> -->
         <section>
             <div class="wrap2">
                 <div class="goods_list">
@@ -19,6 +19,7 @@
                                         <div class="list-box" @touchstart.capture="touchStart" @touchmove.capture="touchmove" @touchend.capture="touchEnd" @click="skip">
                                             <ul class="goods_detail" style='overflow: hidden; margin-top:0.2rem;'>
                                                 <li class="goods_img" style="margin-left:0px;">
+                                                    <input type="checkbox" v-model="items.selected" v-on:change="checkGoods(index,indexs)" style='position: relative;top:-2.4rem;margin-left:0.2rem;'>
                                                     <img :src='items.otherInfo.commodityImageUrl?"http://"+hostName+":"+port+"/api"+items.otherInfo.commodityImageUrl:"./test.jpg"'>
                                                 </li>
                                                 <li class="goods_info">
@@ -37,8 +38,8 @@
                                                     </div>
                                                 </li>
                                                 <!-- <span class="mui_shopcar_del" @click="remove(index,indexs)">
-                                                                                                                                        <i class='icon iconfont icon-lajitong'></i>
-                                                                                                                                    </span>!-->
+                                                                                                                                                <i class='icon iconfont icon-lajitong'></i>
+                                                                                                                                            </span>!-->
                                             </ul>
                                             <div class="delete" @click="deleteSection(index,indexs,items.id)" :data-index="index">删除</div>
                                         </div>
@@ -61,7 +62,7 @@
                     <input type="checkbox" v-model="selectAll" style='position: relative; top: 0.02rem;'> 全选 (<span class="shopNum">{{nums}}</span>)
                 </li>
                 <li class="all_price">
-                    合计: <span>￥<i class="price_all" >{{total.toFixed(1)}}</i></span>
+                    合计: <span>￥<i class="price_all" >{{total.toFixed(2)}}</i></span>
                 </li>
                 <li class="pay">
                     <p @click='Submit'>结算</p>
@@ -147,9 +148,7 @@
                 pageSize: this.pageSize
             }
         },
-        changes(val) {
-            console.log(val)
-        },
+        changes(val) {},
         computed: { //计算属性的方法
             selectAll: {
                 get() { //获取到每个checkbox的属性
@@ -260,7 +259,8 @@
                         // dataObj: item
                     }
                 });
-                localStorage.setItem("shopCar", JSON.stringify([item]))
+                console.log(items)
+                localStorage.setItem("shopCar", JSON.stringify([items]))
                 let commodityInfo = [];
                 items.listgoods.forEach((item, index) => {
                     let cartIdList = [];
@@ -315,10 +315,7 @@
                 })
                 getdata.then(function(result) {
                     that.coupon = result.data.info.list
-                    console.log(that.coupon)
-                }).catch(function(errmsg) {
-                    console.log(errmsg)
-                })
+                }).catch(function(errmsg) {})
             },
             getCarData() {
                 // let userInfo = sessionStorage.getItem("userinfo");
@@ -340,7 +337,6 @@
                     }).then(response => {
                         if (response.data.status == 200) {
                             let data = response.data.info;
-                            console.log(data)
                             var b = data.reduce((v, k) => { //循环
                                 k['selected'] = false;
                                 var filters = v.filter((data) => {
@@ -367,16 +363,11 @@
                                 Toast(response.data.msg);
                             }
                         }
-                        console.log(that.list)
                     }).catch(error => {
                         rej(error)
                     })
                 })
-                getdata.then(function(result) {
-                    console.log(result)
-                }).catch(function(errmsg) {
-                    console.log(errmsg)
-                })
+                getdata.then(function(result) {}).catch(function(errmsg) {})
             },
             //无限加载函数
             checkShop(pID) { //商品的全选和反宣
@@ -400,8 +391,6 @@
                     return false;
                 }
                 self.commodityCount++;
-                console.log(self.commodityCount)
-                console.log(shopId)
                 let url = '/api/product/shoppingCart/update';
                 this.$http({
                         url: url,
@@ -425,7 +414,6 @@
                     return false
                 }
                 self.commodityCount--;
-                console.log(self.commodityCount)
                 let url = '/api/product/shoppingCart/update';
                 this.$http({
                         url: url,
@@ -477,6 +465,19 @@
                 }).catch(err => {
                     if (err == 'cancel') {}
                 });
+            },
+            checkGoods(pID, id) {
+                var self = this.list[pID];
+                console.log(self.shopselected)
+                if (self.listgoods[id].selected) {
+                    self.listgoods.filter(function(item) {
+                        return item.selected == true;
+                    }).length  == self.listgoods.length ? self.shopselected = true : self.shopselected = false;
+                } else {
+                    self.listgoods.filter(function(item) {
+                        return item.selected == true;
+                    }).length  == self.listgoods.length ? self.shopselected = true : self.shopselected = false;
+                }
             },
             Submit() {
                 var TotalPrice = this.OrderTotal.toFixed(1); //存放要支付的总价
@@ -551,7 +552,6 @@
                 this.popupVisible2 = false;
             },
             showServer(name, companyId) {
-                console.log(companyId)
                 this.ShopName = name;
                 this.popupVisible = true;
                 this.getcoupon(companyId)
@@ -731,7 +731,7 @@
     }
     .shopFont p:nth-child(1) {
         font-size: 0.25rem;
-        color: #0CBBB9;
+        color: #26a2ff;
     }
     .shopFont p:nth-child(3) {
         font-size: 0.2rem;
@@ -848,7 +848,7 @@
     .checks {
         float: right;
         margin-right: 0.8rem;
-        color: #31B1B0;
+        color: #26a2ff;
     }
     .check_select,
     .input_model {
@@ -862,8 +862,8 @@
         opacity: 0;
     }
     .bg_color {
-        background: #31B1B0;
-        border: .01rem solid #31B1B0;
+        background: #26a2ff;
+        border: .01rem solid #26a2ff;
     }
     .input_model img {
         width: .26rem;

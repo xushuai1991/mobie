@@ -191,14 +191,14 @@ export default new Router({
                 title: '到家服务'
             },
         },
-        {
-            path: '/shopinfo', // 消息中心
-            name: 'shopinfo',
-            component: resolve => require(['../components/view/shopinfo/shopinfo.vue'], resolve),
-            meta: {
-                title: '消息中心'
-            },
-        },
+        // {
+        //     path: '/shopinfo', // 消息中心
+        //     name: 'shopinfo',
+        //     component: resolve => require(['../components/view/shopinfo/shopinfo.vue'], resolve),
+        //     meta: {
+        //         title: '消息中心'
+        //     },
+        // },
         {
             path: '/active', // 活动提醒
             name: 'active',

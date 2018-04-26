@@ -50,9 +50,11 @@
     </div>
 </template>
 <script>
+import {Toast} from 'mint-ui'
 export default {
     data(){
         return{
+            list:[],
             data1:{
                 isshow:false,
                 msg:'有商家推荐的一些活动'
@@ -68,7 +70,35 @@ export default {
             data4:{
                 isshow:false,
                 msg:'您有新的服务报告更新信息'
-            },
+            }
+        }
+    },
+    created(){
+        this.getData(1);
+    },
+    methods:{
+        getData(pagenum){
+            let that=this;
+            this.$http.post('/api/public/message/record/query?pageSize=12&page='+pagenum,{})
+            .then(res=>{
+                if(res.data.status==200){
+                    res.data.info.list(item=>{
+                        let json={
+                            title:item.title,
+                            content:item.content
+                        }
+                        that.list.push(json);
+                    });
+                }
+                else{
+                    Toast(res.data.msg);
+                }
+                console.log(res);
+            })
+            .catch(err=>{
+                console.log(err);
+                Toast('消息列表失败');
+            })
         }
     }
 }
@@ -76,7 +106,7 @@ export default {
 
 <style scoped>
 .Ccontain{
-    margin-top:0.8rem;
+    /* margin-top:0.8rem; */
 }
 .list-msg{
     /* padding:0 .2rem; */
