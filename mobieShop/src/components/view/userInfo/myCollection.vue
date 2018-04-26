@@ -7,7 +7,7 @@
                 </p>
                 <div class='goods'>
                     <div class='left'>
-                        <img style='width:100%;height:100%;':src='item.commodityImageList ? "http://"+hostName+":"+port+"/api"+item.commodityImageList[0].url : ""' alt="暂无图片">
+                        <img style='width:100%;height:100%;' :src='item.commodityImageList ? "http://"+hostName+":"+port+"/api"+item.commodityImageList[0].url : ""' alt="暂无图片">
                         <div class='infor' style="margin-left:.2rem;">
                             <p class='name'>{{item.commodityInfo.name}}</p>
                             <!-- <P class='subname'>{{item.commodityInfo.name}}</P> -->
@@ -45,31 +45,14 @@ export default {
     data(){
         return{
             ShopName:'领取优惠劵',
-            collectionlist:[
-                {
-                    imgurl:'',
-                    name:'FASHION',
-                    subame:'这里是副标题',
-                    color:'这里是颜色',
-                    size:'这里是尺码',
-                    price_uint:'200',
-                    nums:'2'
-                },
-                {
-                    imgurl:'',
-                    name:'FASHION',
-                    subame:'这里是副标题',
-                    color:'这里是颜色',
-                    size:'这里是尺码',
-                    price_uint:'200',
-                    nums:'2'
-                }
-            ],
+            collectionlist:[],
             popupVisible:false,
             coupon:[]
         }
     },
     created(){
+        this.hostName = location.hostname;
+        this.port = location.port;
         this.$root.$emit('header','我的收藏');
         this.getData(1);
     },
