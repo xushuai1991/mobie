@@ -126,8 +126,9 @@
                             <span class='type'>微信支付</span>
                 </span>
                 <span class='select'>
-                            <input type="checkbox" v-model='checked'>
-                            <span class='check checked' @click="selectpaytype($event)"></span>
+                    
+                    <input type="checkbox" v-model='checked'>
+                    <span class='check checked' @click="selectpaytype($event)"></span>
                 </span>
             </p>
         </div>
@@ -379,8 +380,13 @@
             // 获取可用优惠券
             getCouponcanuse() {
                 let that = this;
+                let idlist=[];
+                this.goodslist.forEach(item=>{
+                    idlist.push(item.id);
+                });
                 let data = {
-                    amount: 200
+                    amount: this.totalprice,
+                    couponCustomerList:idlist
                 };
                 this.$http.post('/api/product/coupon/customer/display', data)
                     .then(res => {
