@@ -503,11 +503,11 @@
 
 <style scoped lang='less'>
     .contain {
-        margin-top: 0.8rem;
+        // margin-top: 0.8rem;
         font-size: .28rem;
         text-align: left;
         background-color: #e9e9e9;
-        margin-top: 40px;
+        // margin-top: 40px;
     }
     .msg-customer {
         padding: .4rem .2rem;
@@ -813,8 +813,8 @@
         width: 3rem;
         height: .8rem;
         margin-top: -0.75rem;
-        background: linear-gradient(180deg, #11bcbc, #46c5d9);
-        border: 1px solid #31B1B0;
+        background: #26a2ff;
+        border: 1px solid #26a2ff;
         border-radius: .5rem;
         color: #fff;
         outline: none;
