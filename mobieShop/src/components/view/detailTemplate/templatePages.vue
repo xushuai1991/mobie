@@ -21,8 +21,7 @@
                         <components :templateData='item.componentsData' :is='item.componentsName'  :type='item.componentsName'></components>
                         </keep-alive> -->
                         <productDetail :zbdCommodityInfo="commodityInfo" :evaluationTotals="evaluationTotal"></productDetail>
-                        <div class="zbd-coupon" v-show="couponShow">
-                            <img @click="getcoupon" src="./coupon.png">
+                        <div class="zbd-coupon" @click="getcoupon" v-show="couponShow">
                         </div>
                         <div id="zbd-preferences" class="clear">
                             <p>已选<span>{{ commodityInfo.name }}</span>&ensp;{{ specificationNum }}件</p>
@@ -1282,7 +1281,12 @@
         }
         .zbd_closeBtns{width: 0.7rem;color: #7b7b7b;font-size: 0.54rem;position: absolute;right: 0rem;top: 0.2rem;}
     .zbd-coupon{
-        font-size:0.25rem;padding:0.1rem 0.1rem 0.3rem 0.3rem;
+        font-size: 0.25rem;
+        height: 1.8rem;
+        padding: 0.1rem 0.1rem 0.3rem 0.3rem;
+        background: url('./coupon.png') no-repeat;
+        background-size: 91%;
+        background-position: 0.3rem 0rem;
     }
     .zbd-coupon img{
         width:95%;
