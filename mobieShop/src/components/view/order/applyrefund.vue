@@ -1,20 +1,20 @@
 <template>
     <div class='applyrefund-xs'>
         <ul class='goods-xs'>
-            <li v-for="(item,index) in goodslist" :key="index">
+            <li v-for="(item,index) in dataorder.orderDetails" :key="index">
                 <div class='goods'>
                     <div class='left'>
-                        <img src="" alt="">
+                        <img :src='"http://"+hostName+":"+port+"/api"+item.image' alt="">
                         <div class='infor'>
-                            <p class='name'>{{item.name}}</p>
+                            <p class='name'>{{item.categoryName}}</p>
                             <!-- <P class='subname'>{{item.subame}}</P> -->
                             <p class='color'>{{item.condition1Name}}</p>
                             <p class='size'>{{item.condition2Name}}</p>
                         </div>
                     </div>
                     <div class='right'>
-                        <p class='price'>￥{{item.price_uint}}</p>
-                        <p class='num'>x{{item.nums}}</p>
+                        <p class='price'>￥{{item.price}}</p>
+                        <p class='num'>x{{item.saleNumber}}</p>
                     </div>
                 </div>
             </li>
@@ -56,8 +56,8 @@
                 <span class='select' @click='selectreason'>{{reasonrefund}}<i class='icon iconfont icon-arrow-right-copy'></i></span>
             </div>
             <div class='refundabout'>
-                <p class='moneys-refund'>退款金额：<span style='color:#f38650;font-size:.4rem;'>￥{{moneyrefund}}</span></p>
-                <p class='moneys-extra'>最多￥{{moneyrefundmost}}，含发货邮费￥{{postage}}</p>
+                <p class='moneys-refund'>退款金额：<span style='color:#f38650;font-size:.4rem;'>￥<input type="text" v-model="moneyrefund" style='color:rgb(243, 134, 80)'> </span></p>
+                <p class='moneys-extra'>最多￥{{dataorder.actualMoney}}，含发货邮费￥{{postage}}</p>
                 <div class='explain' v-if='false'>
                     <label for="explain">退款说明：</label>
                     <input type="text" id="explain" placeholder="选填" v-model="explain">
@@ -141,20 +141,21 @@ export default {
             postage:0,
             imglist:[{'imgurl':''},{},{}],
             dataorder:null,
-            explain:''
+            explain:'',
+            moneyrefund:0
         }
     },
     computed:{
-        moneyrefund(){
-            let money=0;
-            this.goodslist.forEach(item=>{
-                money+=item.price_uint*item.nums
-            });
-            return money;
-        },
-        moneyrefundmost(){
-            return this.moneyrefund+this.postage;
-        }
+        // moneyrefund(){
+        //     let money=0;
+        //     this.goodslist.forEach(item=>{
+        //         money+=item.price_uint*item.nums
+        //     });
+        //     return money;
+        // },
+        // moneyrefundmost(){
+        //     return this.moneyrefund+this.postage;
+        // }
     },
     created(){
         // console.log(location.hostname);
@@ -178,6 +179,9 @@ export default {
             console.log(detail);
             // detail.forEach();
         }
+        this.hostName = location.hostname;
+        this.port = location.port;
+        this.moneyrefund=this.dataorder.actualMoney;
     },
     methods:{
         refundmoney(){
@@ -290,7 +294,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .applyrefund-xs{
-    margin-top:.9rem;
+    // margin-top:.9rem;
     background-color: #f5f5f5;
     .goods-xs li{
         margin-bottom: .2rem;

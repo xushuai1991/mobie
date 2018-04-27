@@ -242,7 +242,7 @@
                 });
                 this.coupmoney=coupmoney;
                 price = price - deductionmoney - coupmoney;
-                return price < 0 ? 0 : price;
+                return price < 0 ? 0 : price.toFixed(2);
             }
         },
         watch: {
