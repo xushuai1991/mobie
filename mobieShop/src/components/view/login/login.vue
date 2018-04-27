@@ -121,7 +121,8 @@ export default {
             resignflag:false,
             second:'获取验证码',
             to:'',
-            clientHeight:0
+            clientHeight:0,
+            in_resolve:false
         }
     },
     mounted(){
@@ -153,6 +154,9 @@ export default {
         // 登录
         login(){
             if(this.phonejson.status&&this.pswjson.status&&this.codejson.status){
+                if(this.in_resolve){
+                    return;
+                }
                 Indicator.open('Loading...');
                 let that=this;
                 let data='';
@@ -163,6 +167,7 @@ export default {
                 else{
                     data='mobile='+this.phone+'&password='+this.psw+'&openId='+openId;
                 }
+                this.in_resolve=true;
                 this.$http({
                     url: '/api/customer/account/login?'+data,
                     method: 'POST',
@@ -177,6 +182,7 @@ export default {
                     var msg = res.data.msg
                     if (msg !== '登录成功') {
                         Toast(res.data.info);
+                        this.in_resolve=false;
                     } else {
                         let data=res.data.info;
                         let json={
@@ -194,13 +200,16 @@ export default {
                                 duration: 500
                             });
                             this.$router.push('/index');
+                            this.in_resolve=false;
                         }, 1000);
                     }
+                    
                 })
                 .catch(err => {
                     Indicator.close();
-                    console.log("错误")
-                    console.log(err)
+                    console.log("错误");
+                    console.log(err);
+                    this.in_resolve=false;
                 })
             }
             else{
@@ -211,6 +220,9 @@ export default {
         },
         // 快速登录
         loginquick(){
+            if(this.in_resolve){
+                return;
+            }
             Indicator.open('Loading...');
             let that = this
             if(this.phonejson.status){
@@ -227,10 +239,11 @@ export default {
                     else{
                         data='mobile='+this.phone+'&code='+this.code+'&openId='+openId;
                     }
+                    this.in_resolve=true;
                     this.$http.post('/api/customer/account/quickLogin?'+data)
                     .then(function(response){
-                        Toast(response.data.msg);
-                        Indicator.close();
+                        // Toast(response.data.msg);
+                        
                         if(response.data.status == 200){
                             let data=response.data.info;
                             operatelocalstorage('userinfo',JSON.stringify(data),'set',300);
@@ -245,13 +258,19 @@ export default {
                                     duration: 500
                                 });
                                 that.$router.push('/index');
+                                this.in_resolve=false;
                             }, 1000);
                         }
-                       
+                        else{
+                            Toast(response.data.msg);
+                            that.in_resolve=false;
+                        }
+                        Indicator.close();
                     })
                     .catch(function(response){
                         Indicator.close();
                          Toast('登录失败');
+                         this.in_resolve=false;
                     });
                 }
             }

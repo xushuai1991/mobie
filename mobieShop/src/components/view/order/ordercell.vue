@@ -34,7 +34,7 @@
                 <button class='prime pay' @click.stop="pay" v-if='data.payState==2'>付款</button>
                 <button class='cancle' @click.stop="cancleOrder" v-if='data.payState==2||data.payState==3'>取消订单</button>
                 <button class='prime follow' v-if='type=="inservice"'>追单</button>
-                <button class='apply' @click.stop='application' v-if='data.payState==1'>申请退款</button>
+                <button class='apply' @click.stop='application' v-if='data.payState==1&&data.orderState!=4&data.orderState!=5'>申请退款</button>
                 <button class='invoice' @click.stop='invoice(data.id,data.actualMoney)' v-if='data.payState==1'>申请发票</button>
                 
             </div>
@@ -74,10 +74,11 @@ export default {
                             '12点','13点','14点','15点','16点','17点',
                             '18点','19点','20点','21点','22点','23点'],  
                     className: 'slot2',  
-                    textAlign: 'center'  
+                    textAlign: 'center',
+                    defaultIndex:0
                 },
                 {
-                    values: ['00分', '10分','20分','30分','40分','50分',],  
+                    values:['00分', '10分','20分','30分','40分','50分'],
                     className: 'slot3',  
                     textAlign: 'right'  
                 }
@@ -91,14 +92,8 @@ export default {
     },
     created(){
         var d = new Date();
-                var hour = d.getHours();
-                let arrTime = [];
-                for (let i = 0; i <= 24; i++) {
-                    if (i > hour) {
-                        arrTime.push(i+"点")
-                    }
-                }
-                this.dates[1].values = arrTime
+        var hour = d.getHours();
+        this.dates[1].defaultIndex=hour+1;
         this.hostName = location.hostname;
         this.port = location.port;
         let date=this.data.createTime.replace(/\-/g,'/');
@@ -150,27 +145,14 @@ export default {
             this.index_appoint=index;
             this.popupVisible=true;
             this.currentid=id;
-            console.log(this.data.orderDetails[this.index_appoint].appointTime);
+            // console.log(this.data.orderDetails[this.index_appoint].appointTime);
         },
         onValuesChange(picker,values){
-            var d = new Date();
-                var hour = d.getHours();
-                let arrTime = [];
-                for (let i = 0; i <= 24; i++) {
-                    if (i > hour) {
-                        arrTime.push((i<=0?'0'+i:i)+"点")
-                    }
-                }
-                if (values[0] == "今天") {
-                   this.dates[1].values = arrTime
-                }else{
-                    this.dates[1].values = ['00点', '01点', '02点', '03点', '04点', '05点',
-                            '06点', '07点', '08点', '09点', '10点', '11点',
-                            '12点', '13点', '14点', '15点', '16点', '17点',
-                            '18点', '19点', '20点', '21点', '22点', '23点'
-                        ]
-                }
-            console.log(values);
+            var d = new Date();     
+            var hour = d.getHours();
+            if(values[0]=='今天'&&this.dates[1].values.indexOf(values[1])<hour+1){
+                picker.setSlotValue(1, this.dates[1].values[hour+1]);
+            }
             this.datechange=values;
         },
         // 修改订单明细
