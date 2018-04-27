@@ -461,7 +461,7 @@ export default {
         // margin-top: .8rem;
     }
     .mint-tab-container{
-        /* margin-top: 1rem; */
+        margin-top: 1rem;
     }
     .mint-tab-item-label{
         font-size: 0.3rem;
