@@ -135,7 +135,11 @@
         <div class='submitorder'>
             <span class='msgs'>
                         <p>共1件产品</p>
-                        <p>合计：<span class='price'>￥{{finalprice}}</span></p>
+                        <p>合计：
+                            <span class='price'>￥{{finalprice}}</span>
+                            <span class='tip'>{{'积分抵扣：'+deductionmoney+'元'}}</span>
+                            <span class='tip'>{{'优惠券抵扣：'+coupmoney+'元'}}</span>
+                        </p>
             </span>
             <button class='submit' @click='submitorder'>提交订单</button>
         </div>
@@ -210,7 +214,9 @@
                         className: 'slot3',
                         textAlign: 'right'
                     }
-                ]
+                ],
+                deductionmoney:0,
+                coupmoney:0
             }
         },
         computed: {
@@ -226,13 +232,15 @@
                 let deductionmoney = 0;
                 if (this.deductionindex.length != 0) {
                     this.deductionindex.forEach(item => {
-                        deductionmoney += this.deductionlist[item].moneycanduct;
+                        deductionmoney +=Number(this.deductionlist[item].moneycanduct);
                     });
                 }
+                this.deductionmoney=deductionmoney;
                 let coupmoney = 0;
                 this.couponindex.forEach(item => {
-                    coupmoney += this.couponlist[item].money;
+                    coupmoney +=Number(this.couponlist[item].money);
                 });
+                this.coupmoney=coupmoney;
                 price = price - deductionmoney - coupmoney;
                 return price < 0 ? 0 : price;
             }
@@ -814,6 +822,13 @@
     .submitorder .msgs .price {
         font-size: .35rem;
         color: orange;
+    }
+    .submitorder .msgs .tip {
+        font-size:.2rem;
+        display:block;
+        padding-left:.9rem;
+        padding-top: .1rem;
+        color: red;
     }
     .submitorder .submit {
         width: 3rem;
