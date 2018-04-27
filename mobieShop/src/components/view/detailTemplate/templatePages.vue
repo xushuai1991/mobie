@@ -346,7 +346,7 @@
                         //根据详情模板ID查询模板信息
                         that.$http.post('/api/product/mall/template/queryMap/mall',
                                 {
-                                    'templateID':detai-lTemplateId,
+                                    'templateID':detailTemplateId,
                                     'templateType':3,
                                     'companyId':companyId
                                 }
