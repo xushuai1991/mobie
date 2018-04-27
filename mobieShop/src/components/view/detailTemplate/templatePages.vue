@@ -3,7 +3,7 @@
             <div class="productDetailSwitch">
                 <span class="productDetailBtn1" :class="productDetailBack" @click="productDetailBtn1">商品</span>
                 <span class="productDetailBtn2" :class="productDetailBacks" @click="productDetailBtn2">评论</span>
-                <i class='icon iconfont icon-fenxiang productDetailIcon' @click="showShare"></i>
+                <!-- <i class='icon iconfont icon-fenxiang productDetailIcon' @click="showShare"></i> -->
             </div>
             <transition
                 name="custom-classes-transition"
@@ -21,8 +21,7 @@
                         <components :templateData='item.componentsData' :is='item.componentsName'  :type='item.componentsName'></components>
                         </keep-alive> -->
                         <productDetail :zbdCommodityInfo="commodityInfo" :evaluationTotals="evaluationTotal"></productDetail>
-                        <div class="zbd-coupon" v-show="couponShow">
-                            <img @click="getcoupon" src="./coupon.png">
+                        <div class="zbd-coupon" @click="getcoupon" v-show="couponShow">
                         </div>
                         <div id="zbd-preferences" class="clear">
                             <p>已选<span>{{ commodityInfo.name }}</span>&ensp;{{ specificationNum }}件</p>
@@ -109,38 +108,6 @@
                                 <div class="zbd-numPlus" @click="plusClick">+</div>
                             </div>
                             <div class="zbd-Confirmation" @click="confirmPurchaseClick"><p>确认</p></div>
-                        </mt-popup>
-                        <mt-popup v-model="shareVisible" position="bottom" style='width:100%;'>
-                            <div class='zbd_closeBtns' @click="btnClose">&times;</div>
-                            <div class="invite-bottom">
-                                <p class="bottom-title">分享到</p>
-                                <ul class="invite-bottom-share">
-                                    <li>
-                                        <div class="imgDiv imgDiv1" @click='shareTo("wechat")'>
-                                            <p class="icon iconfont icon-ai-weixin"></p>
-                                        </div>
-                                        <p>微信</p> 
-                                    </li>
-                                    <li>
-                                        <div class="imgDiv imgDiv2" @click='shareTo("qq")'>
-                                            <p class="icon iconfont icon-iconfonticon6"></p>
-                                        </div>
-                                        <p>QQ</p> 
-                                    </li>
-                                    <li>
-                                        <div class="imgDiv imgDiv3" @click='shareTo("")'>
-                                            <p class="icon iconfont icon-friends"></p>
-                                        </div>
-                                        <p>朋友圈</p> 
-                                    </li>
-                                    <li>
-                                        <div class="imgDiv imgDiv4" @click='shareTo("qzone")'>
-                                            <p class="icon iconfont icon-qqkongjian"></p>
-                                        </div>
-                                        <p>QQ空间</p> 
-                                    </li>
-                                </ul>
-                            </div>
                         </mt-popup>
                         <mt-popup v-model="receiveCoupons" position="bottom" style='width:100%;'>
                             <p class='shopBxo'>领取优惠劵</p>
@@ -942,32 +909,7 @@
                          localStorage.setItem('commodityInfo',JSON.stringify(commodityInfo))
                          this.$router.push('./ordercertain')
                     }
-                },
-                shareTo(stype){
-                    let totalSrc = window.location.href
-                    var ftit = '绿城';
-                    var flink = '';
-                    var lk = 'http://'+window.location.host+'/static/images/logo.png';
-                    // console.log(lk)
-                    //获取网页中内容的第一张图片
-                    flink = document.getElementById('sharePic').getAttribute('src')
-                    //如果是上传的图片则进行绝对路径拼接
-                    if(flink.indexOf('/uploads/') != -1) {
-                        lk = 'http://'+window.location.host+flink;
-                    }
-                    //qq空间接口的传参
-                    if(stype=='qzone'){
-                        window.open('http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url='+document.location.href+'?sharesource=qzone&title='+ftit+'&pics='+totalSrc+'&desc=绿城');
-                    }
-                    //qq好友接口的传参
-                    if(stype == 'qq'){
-                        window.open('http://connect.qq.com/widget/shareqq/index.html?url='+document.location.href+'?sharesource=qzone&title='+ftit+'&pics='+totalSrc+'&desc=绿城');
-                    }
-                    //生成二维码给微信扫描分享
-                    if(stype == 'wechat'){
-                        window.open('http://192.168.199.102/customer/resource/qrCode.png?content=http://localhost:8080/inviting');
-                    }
-                },
+                }
         },
         components: {
             imageAds,
@@ -1280,9 +1222,14 @@
         font-size: 0.34rem;
         color: #fff;
         }
-        .zbd_closeBtns{width: 0.7rem;color: #7b7b7b;font-size: 0.54rem;position: absolute;right: 0rem;top: 0.2rem;}
+    
     .zbd-coupon{
-        font-size:0.25rem;padding:0.1rem 0.1rem 0.3rem 0.3rem;
+        font-size: 0.25rem;
+        height: 1.8rem;
+        padding: 0.1rem 0.1rem 0.3rem 0.3rem;
+        background: url('./coupon.png') no-repeat;
+        background-size: 91%;
+        background-position: 0.3rem 0rem;
     }
     .zbd-coupon img{
         width:95%;
@@ -1408,70 +1355,4 @@
             height: 3.32rem;
             opacity: .5;
         }
-        .invite-bottom{
-    margin-top:.6rem;
-    padding:0.2rem;
-    background: #fff;
-    padding-top:.5rem;
-    p.bottom-title{
-        font-size: .3rem;
-        opacity: 0.8;
-    }
-    p.bottom-title::before{
-        display:inline-block;
-        content:'';
-        width: 2.5rem;
-        background:#eee;
-        height: 0.04rem;
-        vertical-align:40%;
-        margin-right:0.5rem;
-    }
-    p.bottom-title::after{
-        display:inline-block;
-        content:'';
-        width: 2.5rem;
-        height: 0.04rem;
-        background:#eee;
-        vertical-align:40%;
-        margin-left:0.5rem;
-    }
-    .invite-bottom-share{
-        padding-top:0.35rem;
-        display:flex;
-        justify-content: space-around;
-        li{
-            border-radius:50%;
-            .imgDiv{
-                width:1rem;
-                height:1rem;
-                line-height: 1rem;
-                border-radius:50%;
-                margin:0.3rem auto 0.3rem;
-                p{
-                    color:#fff;
-                    font-size:0.7rem;
-                }
-            }
-            .imgDiv1{
-                background:green;
-                p{
-                    font-size:0.55rem;
-                }
-            }
-            .imgDiv2{
-                background:#409EFF;
-            }
-            .imgDiv3{
-                background:#32D561;
-            }
-            .imgDiv4{
-                background:#FCBF01;
-            }
-            p{
-                font-size: 0.25rem;
-                opacity: 0.8;
-            }
-        }
-    }
-}
 </style>
