@@ -3,7 +3,7 @@
             <div class="productDetailSwitch">
                 <span class="productDetailBtn1" :class="productDetailBack" @click="productDetailBtn1">商品</span>
                 <span class="productDetailBtn2" :class="productDetailBacks" @click="productDetailBtn2">评论</span>
-                <i class='icon iconfont icon-fenxiang productDetailIcon' @click="showShare"></i>
+                <!-- <i class='icon iconfont icon-fenxiang productDetailIcon' @click="showShare"></i> -->
             </div>
             <transition
                 name="custom-classes-transition"
