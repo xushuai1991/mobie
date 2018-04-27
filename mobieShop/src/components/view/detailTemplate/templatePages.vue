@@ -354,7 +354,7 @@
                             .then(function(response){
                                 console.log(response)
                                 if(response.data.info.length == 0){
-                                    alert('商品没有绑定详情模板')
+                                    console.log('商品没有绑定详情模板')
                                 }else{
                                     let comlists = JSON.parse(response.data.info[0].comlist)
                                     // console.log(comlists)
