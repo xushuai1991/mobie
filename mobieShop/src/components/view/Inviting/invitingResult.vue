@@ -34,7 +34,6 @@ html,body{
 </style>
 <style lang="less" scoped>
 #invite-result{
-    padding-top:0.7rem;
     .result-top{
         height:5rem;
         background-size:100% 100%;

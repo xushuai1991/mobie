@@ -282,7 +282,7 @@ html,body{
 </style>
 <style lang="less" scoped>
 #invite-gift{
-    padding-top:0.7rem;
+    
     .gift-top{
         padding:0 0 0.8rem;
         background-repeat:no-repeat;
