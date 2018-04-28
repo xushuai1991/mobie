@@ -1,5 +1,6 @@
 <template>
     <div id="invite-register">
+        <h2 style='font-size:0.5rem; color:#fff;'>到家商城邀请注册</h2>
         <ul class="invite-top">
             <li><img id="sharePic" :src='totalSrc' /></li>
             <li>微信扫一扫</li>
@@ -9,52 +10,46 @@
                 <router-link to='/invitingRegular'>邀请规则 >></router-link>
             </li>
         </ul>
-        <div class="invite-bottom">
-            <p class="bottom-title">分享到</p>
-            <ul class="invite-bottom-share">
-                <li>
-                    <div class="imgDiv imgDiv1" @click='shareTo("wechat")'>
-                        <p class="icon iconfont icon-ai-weixin"></p>
-                    </div>
-                    <p>微信</p>
-                </li>
-                <li>
-                    <div class="imgDiv imgDiv2" @click='shareTo("qq")'>
-                        <p class="icon iconfont icon-iconfonticon6"></p>
-                    </div>
-                    <p>QQ</p>
-                </li>
-                <li>
-                    <div class="imgDiv imgDiv3" @click='shareToWXSpace'>
-                        <p class="icon iconfont icon-friends"></p>
-                    </div>
-                    <p>朋友圈</p>
-                </li>
-                <li>
-                    <div class="imgDiv imgDiv4" @click='shareTo("qzone")'>
-                        <p class="icon iconfont icon-qqkongjian"></p>
-                    </div>
-                    <p>QQ空间</p>
-                </li>
-            </ul>
-        </div>
+        <!--<div class="invite-bottom">
+                <p class="bottom-title">分享到</p>
+                <ul class="invite-bottom-share">
+                    <li>
+                        <div class="imgDiv imgDiv1" @click='shareTo("wechat")'>
+                            <p class="icon iconfont icon-ai-weixin"></p>
+                        </div>
+                        <p>微信</p>
+                    </li>
+                    <li>
+                        <div class="imgDiv imgDiv2" @click='shareTo("qq")'>
+                            <p class="icon iconfont icon-iconfonticon6"></p>
+                        </div>
+                        <p>QQ</p>
+                    </li>
+                    <li>
+                        <div class="imgDiv imgDiv3" @click='share'>
+                            <p class="icon iconfont icon-friends"></p>
+                        </div>
+                        <p>朋友圈</p>
+                    </li>
+                    <li>
+                        <div id="nativeShare">
+                            <div class="imgDiv imgDiv4">
+                                <p class="icon iconfont icon-qqkongjian"></p>
+                            </div>
+                            <p>QQ空间</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>!-->
     </div>
 </template>
-<script src='http://res.wx.qq.com/open/js/jweixin-1.2.0.js'>
 
-</script>
-<script type="text/javascript">
-    wx.config({
-        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-        appId: '', // 必填，公众号的唯一标识
-        timestamp: , // 必填，生成签名的时间戳
-        nonceStr: '', // 必填，生成签名的随机串
-        signature: '', // 必填，签名，见附录1
-        jsApiList: [] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
-    });
-</script>
+
 <script>
     // import wx from 'weixin-js-sdk';
+    import {
+        Toast
+    } from 'mint-ui';
     import {
         Button
     } from 'mint-ui';
@@ -69,12 +64,22 @@
             return {
                 totalSrc: '',
                 wxSrc: 'http://101.89.175.155:8887/customer/resource/qrCode.png?content=http://',
-                address: '101.89.175.155:81',
+                address: 'www.itchun.com',
                 shareUrl: '/invitingGift',
                 paramData: ''
             }
         },
         created() {
+            if (!sessionStorage.getItem(sessionStorage.getItem("tiemId"))) {
+                sessionStorage.setItem(sessionStorage.getItem("tiemId"), 1)
+                location.reload();
+            }
+            if (!this.getQueryString('recommendedCustomerId')) {
+                Toast("你好请登陆后再分享");
+                setTimeout(() => {
+                    window.history.go(-1);
+                }, 1000)
+            }
             this.share()
             this.shareUrlFn()
             this.$root.$emit('header', '邀请注册');
@@ -91,147 +96,114 @@
                 }
             },
             share() {
-                // let access_token = 
-                // "7_W7KilHakfPTOpFORwuIEFEIe_2tGK2ShU1Y5P1VHdjFYnm_dh1_wG2rt5pd3J-wvWf7pTZoSQGOPQNKOFJRy1gg2jrb9tUnU65p3rZOIrDL_N8zIdLl-5xhkP8Eu78y0dzIAEcFdQJFHYP_NHFThABASQE"
-                // let timer_token = 7200
-                // wx.config({
-                //     debug: false,
-                //     appId: 'wx4712266fdf31acd3', // 和获取Ticke的必须一样------必填，公众号的唯一标识
-                //     timestamp:timestamp, // 必填，生成签名的时间戳
-                //     nonceStr: access_token, // 必填，生成签名的随机串
-                //     signature: signature,// 必填，签名，见附录1
-                //     //需要分享的列表项:发送给朋友，分享到朋友圈，分享到QQ，分享到QQ空间
-                //     jsApiList: [
-                //         'onMenuShareAppMessage','onMenuShareTimeline',
-                //         'onMenuShareQQ','onMenuShareQZone'
-                //     ]
-                // });
-                // //处理验证失败的信息
-                // wx.error(function (res) {
-                //     logUtil.printLog('验证失败返回的信息:',res);
-                // });
-                // //处理验证成功的信息
-                // wx.ready(function () {
-                // //       alert(window.location.href.split('#')[0]);
-                //     //分享到朋友圈
-                //     wx.onMenuShareTimeline({
-                //         title: _this.newDetailObj.title, // 分享标题
-                //         link: window.location.href.split('#')[0], // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                //         imgUrl: _this.newDetailObj.thu_image, // 分享图标
-                //         success: function (res) {
-                //             // 用户确认分享后执行的回调函数
-                //             logUtil.printLog("分享到朋友圈成功返回的信息为:",res);
-                //             _this.showMsg("分享成功!")
-                //         },
-                //         cancel: function (res) {
-                //             // 用户取消分享后执行的回调函数
-                //             logUtil.printLog("取消分享到朋友圈返回的信息为:",res);
-                //         }
-                //     });
-                //     //分享给朋友
-                //     wx.onMenuShareAppMessage({
-                //         title: _this.newDetailObj.title, // 分享标题
-                //         desc: _this.desc, // 分享描述
-                //         link: window.location.href.split('#')[0], // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                //         imgUrl: _this.newDetailObj.thu_image, // 分享图标
-                //         type: '', // 分享类型,music、video或link，不填默认为link
-                //         dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
-                //         success: function (res) {
-                //             // 用户确认分享后执行的回调函数
-                //             logUtil.printLog("分享给朋友成功返回的信息为:",res);
-                //         },
-                //         cancel: function (res) {
-                //             // 用户取消分享后执行的回调函数
-                //             logUtil.printLog("取消分享给朋友返回的信息为:",res);
-                //         }
-                //     });
-                //     //分享到QQ
-                //     wx.onMenuShareQQ({
-                //         title: _this.newDetailObj.title, // 分享标题
-                //         desc: _this.desc, // 分享描述
-                //         link: window.location.href.split('#')[0], // 分享链接
-                //         imgUrl: _this.newDetailObj.thu_image, // 分享图标
-                //         success: function (res) {
-                //             // 用户确认分享后执行的回调函数
-                //             logUtil.printLog("分享到QQ好友成功返回的信息为:",res);
-                //         },
-                //         cancel: function (res) {
-                //             // 用户取消分享后执行的回调函数
-                //             logUtil.printLog("取消分享给QQ好友返回的信息为:",res);
-                //         }
-                //     });
-                //     //分享到QQ空间
-                //     wx.onMenuShareQZone({
-                //         title: _this.newDetailObj.title, // 分享标题
-                //         desc: _this.desc, // 分享描述
-                //         link: window.location.href.split('#')[0], // 分享链接
-                //         imgUrl: _this.newDetailObj.thu_image, // 分享图标
-                //         success: function (res) {
-                //             // 用户确认分享后执行的回调函数
-                //             logUtil.printLog("分享到QQ空间成功返回的信息为:",res);
-                //         },
-                //         cancel: function (res) {
-                //             // 用户取消分享后执行的回调函数
-                //             logUtil.printLog("取消分享到QQ空间返回的信息为:",res);
-                //         }
-                //     })
-                // })
-            },
-            register() {
-                Indicator.open({
-                    text: '加载中...',
-                    spinnerType: 'fading-circle'
-                });
+                let userInfo = localStorage.getItem("userinfo")
+                let nickname = (JSON.parse(JSON.parse(userInfo).data)).nickname
+                let companyId = localStorage.getItem("companyId")
                 let that = this;
-                this.$http.get(
-                    'http://192.168.199.102/customer/resource/qrCode.png?content=http://localhost:8080/inviting'
-                ).then(res => {
-                    // that.wxSrc = res.data
-                    Indicator.close();
-                    // this.$router.path('/InvitingResult','成功或者失败');
-                }).catch(err => {
+                let curHref = window.location.href.split('#')[0]
+                let promisel = new Promise((resolve, reject) => {
+                    let url = '/api/product/js/weixin/config';
+                    this.$http({
+                        url: '/api/product/js/weixin/config?companyId=' + 79 + '&url=' + curHref,
+                        methods: "post",
+                        data: {}
+                    }).then((res) => {
+                        resolve(res.data.info)
+                        console.log(res)
+                    }).catch((err) => {
+                        reject(err)
+                    })
+                })
+                promisel.then((data) => {
+                    wx.config({
+                        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                        appId: data.appId, // 必填，公众号的唯一标识
+                        timestamp: data.timestamp, // 必填，生成签名的时间戳
+                        nonceStr: data.nonceStr, // 必填，生成签名的随机串
+                        signature: data.signature, // 必填，签名，见附录1
+                        jsApiList: data.jsApiList // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                    });
+                    // wx.error(function(res) {
+                    //     logUtil.printLog('验证失败返回的信息:', res);
+                    // });
+                    let objs = {
+                        title: '到家商城邀请注册', // 分享标题
+                        desc: nickname + ' 邀请你到家商城邀请注册有礼', // 分享描述
+                        link: 'http://www.itchun.com/InvitingGift?recommendedCustomerId=' + that.paramData, // 分享链接
+                        imgUrl: that.totalSrc, // 分享图标
+                        success: function() {
+                            // 用户确认分享后执行的回调函数
+                            this.$router.push("/Inviting")
+                        },
+                        cancel: function() {
+                            // 用户取消分享后执行的回调函数
+                        }
+                    }
+                    wx.ready(function() {
+                        wx.onMenuShareAppMessage(objs);
+                        wx.onMenuShareQQ(objs);
+                        wx.onMenuShareWeibo(objs);
+                        wx.onMenuShareQZone(objs);
+                    });
+                }, (err) => {
                     console.log(err)
                 })
             },
-            shareToWX() {
-                MessageBox.confirm('确定分享到微信吗?').then(action => {
-                    console.log("分享成功!");
-                }).catch(err => {
-                    console.log("取消分享");
-                })
-            },
-            shareToQQ() {
-                MessageBox.confirm('分享到QQ?').then(action => {
-                    console.log("分享成功!");
-                }).catch(err => {
-                    console.log("取消分享");
-                })
-            },
-            shareToWXSpace() {
-                // MessageBox.confirm('分享到微信朋友圈?').then(action => {
-                //     console.log("分享成功!");
-                // }).catch(err => {
-                //     console.log("取消分享");
-                // })
-                wx.onMenuShareTimeline({
-                    title: '', // 分享标题
-                    link: '', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                    imgUrl: '', // 分享图标
-                    success: function() {
-                        // 用户确认分享后执行的回调函数
-                    },
-                    cancel: function() {
-                        // 用户取消分享后执行的回调函数
-                    }
-                });
-            },
-            shareToQQSpace() {
-                MessageBox.confirm('分享到QQ空间?').then(action => {
-                    console.log("分享成功!");
-                }).catch(err => {
-                    console.log("取消分享");
-                })
-            },
+            // register() {
+            //     Indicator.open({
+            //         text: '加载中...',
+            //         spinnerType: 'fading-circle'
+            //     });
+            //     let that = this;
+            //     this.$http.get(
+            //         'http://192.168.199.102/customer/resource/qrCode.png?content=http://localhost:8080/inviting'
+            //     ).then(res => {
+            //         // that.wxSrc = res.data
+            //         Indicator.close();
+            //         // this.$router.path('/InvitingResult','成功或者失败');
+            //     }).catch(err => {
+            //         console.log(err)
+            //     })
+            // },
+            // shareToWX() {
+            //     MessageBox.confirm('确定分享到微信吗?').then(action => {
+            //         console.log("分享成功!");
+            //     }).catch(err => {
+            //         console.log("取消分享");
+            //     })
+            // },
+            // shareToQQ() {
+            //     MessageBox.confirm('分享到QQ?').then(action => {
+            //         console.log("分享成功!");
+            //     }).catch(err => {
+            //         console.log("取消分享");
+            //     })
+            // },
+            // shareToWXSpace() {
+            //     // MessageBox.confirm('分享到微信朋友圈?').then(action => {
+            //     //     console.log("分享成功!");
+            //     // }).catch(err => {
+            //     //     console.log("取消分享");
+            //     // })
+            //     wx.onMenuShareTimeline({
+            //         title: '', // 分享标题
+            //         link: '', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            //         imgUrl: '', // 分享图标
+            //         success: function() {
+            //             // 用户确认分享后执行的回调函数
+            //         },
+            //         cancel: function() {
+            //             // 用户取消分享后执行的回调函数
+            //         }
+            //     });
+            // },
+            // shareToQQSpace() {
+            //     MessageBox.confirm('分享到QQ空间?').then(action => {
+            //         console.log("分享成功!");
+            //     }).catch(err => {
+            //         console.log("取消分享");
+            //     })
+            // },
             // shareTo(stype){
             //     var ftit = '绿城';
             //     var flink = '';
@@ -276,6 +248,7 @@
 <style lang="less" scoped>
     #invite-register {
         height: 100%;
+        min-height: 12rem;
         background: #409EFF;
         font-size: .24rem;
         padding-top: .7rem;
