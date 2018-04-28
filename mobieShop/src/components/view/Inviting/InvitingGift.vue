@@ -1,5 +1,5 @@
 <template>
-    <div id="invite-gift" @click="hideDiag($event)">
+    <div id="invite-gift" @click="hideDiag($event)" style="height:100%;">
         <ul class="gift-top" :style="{backgroundImage: 'url(' + imgSrc + ')' }">
             <li class="top-headerImg">
                 <div>
@@ -12,9 +12,9 @@
         </ul>
         <div class="gift-bottom">
             <mt-field label="" placeholder="输入手机号接受邀请" type="tel" v-model="formData.phone"></mt-field>
-            <mt-button type="primary" @click.native="handleClick"style='margin-bottom:0.5rem;'>领取优惠券</mt-button>
+            <mt-button type="primary" @click.native="handleClick" style='margin-bottom:0.5rem;'>领取优惠券</mt-button>
         </div>
-        <div class="register-diag" v-show="isShow">
+        <div class="register-diag" v-show="isShow" @touchmove.prevent>
             <div class="invite-register" id="myPanel">
                 <ul class="form-data">
                     <li>
@@ -339,9 +339,10 @@ html,body{
         top: 0;
         background: rgba(0,0,0,0.5);
         z-index:5;
+        // overflow: hidden;
         .invite-register{
             width:80%;
-            top: 3rem;
+            top: .5rem;
             left: 0;
             right: 0;
             margin:auto;
