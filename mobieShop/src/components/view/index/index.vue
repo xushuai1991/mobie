@@ -76,7 +76,7 @@ export default {
             sessionStorage.setItem('companyId',companyid);
         }
         if(code!=null){
-            this.getOpenid().then(flag=>{
+            this.getOpenid().then((flag)=>{
                 if(flag){
                     if(this.$route.params.logining!=null&&this.$route.params.logining){
                         this.selected='我的';
@@ -266,7 +266,7 @@ export default {
         },
         //获取用户openid
         getOpenid(){
-            new Promise((resolve,reject)=>{
+            return new Promise((resolve,reject)=>{
                 let that=this;
                 this.$http.get('/api/product/order/weixin/user?companyId='+this.companyid+'&code='+this.code)
                 .then(res=>{
@@ -287,7 +287,6 @@ export default {
                     resolve(false);
                 })
             })
-            
         }
     },
     components: {
