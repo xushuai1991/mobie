@@ -193,6 +193,7 @@
             }
         },
         created() {
+            sessionStorage.setItem("tiemId", Date.parse(new Date()))
             // this.$root.$emit('header', '个人中心')
             this.$root.$on('loadUserinfo',()=>{
                 let userinfo_location=operatelocalstorage('userinfo',null,'get',null);

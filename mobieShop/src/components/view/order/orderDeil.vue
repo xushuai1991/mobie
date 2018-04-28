@@ -1,18 +1,18 @@
 <template>
     <div class='CmyOveroderDeil'>
         <!--<ul v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
-                                                                                                                            <li v-for="item in list">{{ item }}</li>
-                                                                                                                        </ul>!-->
+                                                                                                                                <li v-for="item in list">{{ item }}</li>
+                                                                                                                            </ul>!-->
         <section>
             <div class="wrap2">
                 <div class='tiemBox'>
                     <p>{{ orderState}}</p>
                     <p v-if='orderState=="等待买家支付"'>
                         <span :endTime="endTime" :callback="callback" :endText="endText">
-                                                                                                                <slot>
-                                                                                                                    {{content}}
-                                                                                                                </slot>
-                                                                                                            </span></p>
+                                                                                                                    <slot>
+                                                                                                                        {{content}}
+                                                                                                                    </slot>
+                                                                                                                </span></p>
                     <p v-else>
                         {{orderText}}
                     </p>
@@ -22,7 +22,7 @@
                         <img :src='userImg'>
                     </div>
                     <div class='infoNmae'>
-                        <p><span>{{uerName}}</span> <span>{{userPhone}}</span></p>
+                        <p><span>{{commodityName}}</span> <span>{{userPhone}}</span></p>
                         <p><i class='icon iconfont icon-dizhi1'></i><span>{{userAdd}}</span></p>
                     </div>
                 </div>
@@ -51,8 +51,8 @@
                                                     数量:<input type="number" disabled :value="item.saleNumber" style='background:#fff;margint-top:0.2rem;' />
                                                 </div>
                                                 <!--<span class="mui_shopcar_del" @click="remove(index,indexs)">
-                                                                                                                                                                <i class='icon iconfont icon-lajitong'></i>
-                                                                                                                                                            </span>!-->
+                                                                                                                                                                    <i class='icon iconfont icon-lajitong'></i>
+                                                                                                                                                                </span>!-->
                                             </li>
                                         </ul>
                                         <div class='refundDetail' v-show='refundOrder'>
@@ -90,8 +90,8 @@
                                                     数量:<input type="number" disabled :value="items.saleNumber" style='background:#fff;margint-top:0.2rem;' />
                                                 </div>
                                                 <!--<span class="mui_shopcar_del" @click="remove(index,indexs)">
-                                                                                                                                                                <i class='icon iconfont icon-lajitong'></i>
-                                                                                                                                                            </span>!-->
+                                                                                                                                                                    <i class='icon iconfont icon-lajitong'></i>
+                                                                                                                                                                </span>!-->
                                             </li>
                                         </ul>
                                         <!--</mt-cell-swipe>!-->
@@ -114,7 +114,8 @@
             </div>
         </section>
         <div class='markOrder'>
-            <div class='nums'>合计:<span class="moneyColor">￥{{actualMoney}}</span></div>
+            <div class='nums'>合计:<span class="moneyColor">￥{{actualMoney}}<span v-if='userPoint'>抵扣金额：{{conversionAmount}}</span></span>
+            </div>
             <input type='button' class='delBtn' v-show=showBtn1 @click='clearOrder(number,actualMoney)' value='取消订单'>
             <input type='button' v-show=showBtn2 value='立即付款' @click='playOrder(number,actualMoney,companyId)'>
             <input type='button' class='delBtn' v-show=showBtn3 @click='delOrder(number)' value='删除订单'>
@@ -173,7 +174,8 @@
                             '18点', '19点', '20点', '21点', '22点', '23点'
                         ],
                         className: 'slot2',
-                        textAlign: 'center'
+                        textAlign: 'center',
+                        defaultIndex:0
                     },
                     {
                         values: ['00分', '10分', '20分', '30分', '40分', '50分', ],
@@ -197,6 +199,8 @@
                 copyBtn: null,
                 datas: '',
                 list: [],
+                userPoint: '',
+                conversionAmount: 0,
                 timeShow: false, //服务时间
                 showBtn1: false, //取消按钮
                 showBtn2: false, //立即付款按钮
@@ -292,38 +296,26 @@
                 })
             },
             appointment(index, id, orstate) {
-                var d = new Date();
-                var hour = d.getHours();
-                let arrTime = [];
-                for (let i = 0; i <= 24; i++) {
-                    if (i > hour) {
-                        arrTime.push(i+"点")
-                    }
-                }
-                this.dates[1].values = arrTime
+                // var d = new Date();
+                // var hour = d.getHours();
+                // let arrTime = [];
+                // for (let i = 0; i <= 24; i++) {
+                //     if (i > hour) {
+                //         arrTime.push(i + "点")
+                //     }
+                // }
+                // this.dates[1].values = arrTime
                 this.popupVisible = true;
                 this.currentindex = index;
                 this.id = id;
                 this.orstate = orstate;
             },
-            onValuesChange(aa, values) {
-                var d = new Date();
-                var hour = d.getHours();
-                let arrTime = [];
-                for (let i = 0; i <= 24; i++) {
-                    if (i > hour) {
-                        arrTime.push((i<=0?'0'+i:i)+"点")
-                    }
-                }
-                if (values[0] == "今天") {
-                   this.dates[1].values = arrTime
-                }else{
-                    this.dates[1].values = ['00点', '01点', '02点', '03点', '04点', '05点',
-                            '06点', '07点', '08点', '09点', '10点', '11点',
-                            '12点', '13点', '14点', '15点', '16点', '17点',
-                            '18点', '19点', '20点', '21点', '22点', '23点'
-                        ]
-                }
+            onValuesChange(picker, values) {
+                 var d = new Date();     
+            var hour = d.getHours();
+            if(values[0]=='今天'&&this.dates[1].values.indexOf(values[1])<hour+1){
+                picker.setSlotValue(1, this.dates[1].values[hour+1]);
+            }
                 this.datechange = values;
             },
             refundButton($event, indexs) {
@@ -389,7 +381,16 @@
                     }
                     this.datas = res
                     let orderStaty = res.data.info.list[0];
-                    console.log(orderStaty)
+                    if (orderStaty.orderDetails) {
+                        orderStaty.orderDetails.forEach((item) => {
+                            if (item.userPoint == true) {
+                                this.userPoint = true
+                            }
+                        })
+                        orderStaty.orderDetails.forEach((item) => {
+                            this.conversionAmount += (item.conversionAmount - 0)
+                        })
+                    }
                     this.uerName = orderStaty.name;
                     this.userPhone = orderStaty.phone
                     this.userAdd = orderStaty.detailAddress
@@ -699,6 +700,9 @@
             this.getDate(this.urlArgs().ordernumber)
             this.serverState = this.urlArgs().index;
             console.log(this.serverState)
+            var d = new Date();
+        var hour = d.getHours();
+        this.dates[1].defaultIndex=hour+1;
         },
         // beforeUpdate(){
         //     this.getDate(this.urlArgs().ordernumber)
@@ -763,7 +767,7 @@
         position: absolute;
         right: -3.2rem;
         /*   bottom:.2rem;
-                                                    right:.2rem; */
+                                                        right:.2rem; */
         background-color: #26a2ff;
         outline: none;
         border: 0;
@@ -954,7 +958,6 @@
         /*margin-left: -1.1rem;*/
     }
     .wrap2 {
-        margin-top: 0.8rem;
         margin-bottom: 1rem;
         .CinputBox {
             position: absolute;
