@@ -66,8 +66,8 @@
                                     </div>
                                     <div v-show='item.isService'>
                                         <div class='edmitTime' v-if='item.isService'>
-                                            <p v-if='item.updateAppointTime'>{{item.updateAppointTime}}(已申请)</p>
-                                            <p v-else>{{item.appointTime==null?'预约时间':item.appointTime}}</p>
+                                            <p v-if='item.updateAppointTime'>{{item.updateAppointTime}}<span v-if='item.updateAppointTimeIsActive ==false'>(待确认)</span></p>
+                                            <p v-else>{{item.appointTime==null?'预约时间':item.appointTime}}(待确认)</p>
                                         </div>
                                         <div class='appointment' v-if='item.isService'>
                                             <button @click.stop="appointment(index,item.id,item.appointTime)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>

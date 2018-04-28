@@ -1,9 +1,9 @@
 <template>
     <div class="page-navbar" id='homepage'>
         <div class="searchTop clear">
-            <div class='code'><i data-v-13ee4bcf="" class="icon iconfont icon-erweima "></i></div>
+            <div class='code' @click='share'><i data-v-13ee4bcf="" class="icon iconfont icon-erweima "></i></div>
             <div class="page-search">
-                <mt-search  v-model="value"></mt-search>
+                <mt-search v-model="value"></mt-search>
             </div>
             <div class='notice'><i data-v-13ee4bcf="" class="icon iconfont icon-tongzhi "></i></div>
         </div>
@@ -17,7 +17,7 @@
             </mt-navbar>
             <mt-tab-container v-model="selected">
                 <mt-tab-container-item id="1">
-                         <recommend></recommend>
+                    <recommend></recommend>
                 </mt-tab-container-item>
                 <mt-tab-container-item id="2">
                 </mt-tab-container-item>
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import recommend from '@/components/view/homepage/recommend/recommend.vue'
+    import recommend from '@/components/view/homepage/recommend/recommend.vue'
     import {
         Swipe,
         SwipeItem
@@ -44,6 +44,44 @@ import recommend from '@/components/view/homepage/recommend/recommend.vue'
                 selected: '1',
                 value: ''
             };
+        },
+        methods: {
+            share() {
+                let companyId = localStorage.getItem("companyId")
+                let that = this;
+                let curHref = window.location.href
+                // let promisel = new Promise((resolve, reject) => {
+                let url = '/api/product/js/weixin/config';
+                this.$http({
+                    url: '/api/product/js/weixin/config?companyId=' + 79 + '&url=' + curHref,
+                    methods: "post",
+                    data: {}
+                }).then((res) => {
+                    let data = res.data.info;
+                    wx.config({
+                        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                        appId: data.appId, // 必填，公众号的唯一标识
+                        timestamp: data.timestamp, // 必填，生成签名的时间戳
+                        nonceStr: data.nonceStr, // 必填，生成签名的随机串
+                        signature: data.signature, // 必填，签名，见附录1
+                        jsApiList: data.jsApiList // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                    });
+                    wx.ready(function() {
+                        wx.scanQRCode({
+                            needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                            scanType: ["qrCode", "barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                            success: function(res) {
+                                var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+                            }
+                        });
+                    });
+                })
+                // })
+                // promisel.then((data) => {
+                // }, (err) => {
+                //     console.log(err)
+                // })
+            },
         },
         computed: {},
         components: {

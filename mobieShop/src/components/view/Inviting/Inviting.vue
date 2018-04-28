@@ -97,16 +97,22 @@
             },
             share() {
                 let userInfo = localStorage.getItem("userinfo")
-                let nickname = (JSON.parse(JSON.parse(userInfo).data)).nickname
-                let companyId = localStorage.getItem("companyId")
+                let nickname = (JSON.parse(JSON.parse(userInfo).data))?(JSON.parse(JSON.parse(userInfo).data)).nickname:""
+                let companyId = sessionStorage.getItem("companyId")
+                if(companyId==null){
+                companyId = this.getURLparms('companyId')
+            }
                 let that = this;
                 let curHref = window.location.href.split('#')[0]
                 let promisel = new Promise((resolve, reject) => {
                     let url = '/api/product/js/weixin/config';
                     this.$http({
-                        url: '/api/product/js/weixin/config?companyId=' + 79 + '&url=' + curHref,
-                        methods: "post",
-                        data: {}
+                        url: '/api/product/js/weixin/config',
+                        method: "post",
+                        data: {
+                            companyId:companyId,
+                            url:curHref
+                        }
                     }).then((res) => {
                         resolve(res.data.info)
                         console.log(res)
@@ -129,7 +135,7 @@
                     let objs = {
                         title: '到家商城邀请注册', // 分享标题
                         desc: nickname + ' 邀请你到家商城邀请注册有礼', // 分享描述
-                        link: 'http://www.itchun.com/InvitingGift?recommendedCustomerId=' + that.paramData, // 分享链接
+                        link: 'http://www.itchun.com/InvitingGift?recommendedCustomerId=' + that.paramData+"&companyId="+companyId, // 分享链接
                         imgUrl: that.totalSrc, // 分享图标
                         success: function() {
                             // 用户确认分享后执行的回调函数
@@ -148,6 +154,13 @@
                 }, (err) => {
                     console.log(err)
                 })
+            },
+            getURLparms(name) {
+                let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                let r = location.search.substr(1).match(reg);
+                if (r != null)
+                    return unescape(r[2]);
+                return null;
             },
             // register() {
             //     Indicator.open({
