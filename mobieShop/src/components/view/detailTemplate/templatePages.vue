@@ -8,7 +8,7 @@
         <transition name="custom-classes-transition" enter-active-class="animated fadeInLeft">
             <div v-if="show1" class="proDetail">
                 <div class="page-swipe">
-                    <mt-swipe :auto="4000">
+                    <mt-swipe :auto="4000" :show-indicators="bannerArr2.length == 1?false:true">
                         <mt-swipe-item v-for='(item,index) in bannerArr2' :key='index'>
                             <img :src="'http://101.89.175.155:8887'+item.url" class="bannerImg">
                         </mt-swipe-item>
