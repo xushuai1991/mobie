@@ -89,14 +89,14 @@
                     </div>
                     <div id="zbd-commoditySpecification" style="height: 5rem;overflow-y: auto;" class="clear">
                         <ul>
-                            <li>规格1</li>
+                            <!-- <li>规格1</li>
                             <li>规格2</li>
                             <li>规格3</li>
                             <li>规格1</li>
                             <li>规格2</li>
                             <li>规格3</li>
                             <li>规格1</li>
-                            <li>规格2</li>
+                            <li>规格2</li> -->
                         </ul>
                     </div>
                     <div style="position: relative;">
