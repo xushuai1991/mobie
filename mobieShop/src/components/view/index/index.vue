@@ -62,7 +62,6 @@ export default {
         }
     },
     created(){
-        
         // document.title='xxx';
         let select_session=sessionStorage.getItem('select_index');
         if(select_session!=null){
@@ -79,7 +78,6 @@ export default {
         if(code!=null){
             this.getOpenid().then(flag=>{
                 if(flag){
-                    console.log(this.$route.params.logining);
                     if(this.$route.params.logining!=null&&this.$route.params.logining){
                         this.selected='我的';
                         this.$router.push('/login');
