@@ -603,6 +603,7 @@
             //领取优惠劵
             okcoupon(id) {
                 console.log(id)
+                let that = this
                 let url = '/api/product/coupon/customer/insert?couponId=' + id + '&number=1';
                 this.$http({
                     url: url,
@@ -615,7 +616,15 @@
                     if (response.data.status == 200) {
                         Toast(response.data.msg);
                     } else {
-                        Toast(response.data.msg);
+                        Toast(response.data.info);
+                        if(response.data.info == "尚未登录"){
+                            that.$router.push({
+                                name: 'index',
+                                params: {
+                                    direct: "logining"
+                                }
+                            });
+                        }
                     }
                 }).catch(error => {
                     console.log(error)
@@ -631,7 +640,13 @@
                                 message: '尚未登录',
                                 duration: 1000
                             });
-                            that.$router.push('./login')
+                            //that.$router.push('./login')
+                            that.$router.push({
+                                name: 'index',
+                                params: {
+                                    direct: "logining"
+                                }
+                            });
                         } else {
                             that.$router.push({
                                 name: 'index',
@@ -666,7 +681,13 @@
                                 duration:1000
                             }
                             );
-                            this.$router.push('./login')
+                            //this.$router.push('./login')
+                            this.$router.push({
+                                name: 'index',
+                                params: {
+                                    direct: "logining"
+                                }
+                            });
                             return false
                         }
                     let customerData = JSON.parse(JSON.parse(customer).data);
@@ -677,7 +698,12 @@
                             message: '尚未登录',
                             duration: 1000
                         });
-                        this.$router.push('./login')
+                        this.$router.push({
+                                name: 'index',
+                                params: {
+                                    direct: "logining"
+                                }
+                            });
                         return false
                     } else {
                         let customerId = this.customerId
@@ -698,7 +724,12 @@
                                         message: '尚未登录',
                                         duration: 1000
                                     });
-                                    that.$router.push('./login')
+                                    that.$router.push({
+                                        name: 'index',
+                                        params: {
+                                            direct: "logining"
+                                        }
+                                    });
                                 } else {
                                     Toast({
                                         message: '加入购物车成功',
@@ -744,7 +775,13 @@
                                     message: '尚未登录',
                                     duration: 1000
                                 });
-                                that.$router.push('./login')
+                                //that.$router.push('./login')
+                                that.$router.push({
+                                    name: 'index',
+                                    params: {
+                                        direct: "logining"
+                                    }
+                                });
                             } else if (response.data.status == 203) {
                                 Toast({
                                     message: response.data.msg,
@@ -898,7 +935,13 @@
                         this.popupVisible = true
                     }else{
                         if(this.isLogins == 'no'){
-                            this.$router.push('./login')
+                           // this.$router.push('./login')
+                           this.$router.push({
+                                name: 'index',
+                                params: {
+                                    direct: "logining"
+                                }
+                            });
                             return false
                         }
                          let commodityInfo = [];
