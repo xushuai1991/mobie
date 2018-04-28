@@ -87,7 +87,7 @@
                         <div class='commodityInfoCloseBtn' @click="btnClose">&times;</div>
                         <div class="commodityInfoLine"></div>
                     </div>
-                    <div id="zbd-commoditySpecification" style="height: 5rem;overflow-y: auto;" class="clear">
+                    <div id="zbd-commoditySpecification" v-show="commoditySpecificationShow" style="height: 5rem;overflow-y: auto;" class="clear">
                         <ul>
                             <!-- <li>规格1</li>
                             <li>规格2</li>
@@ -288,7 +288,8 @@
                 hostName:'',
                 port:'',
                 isFunctionBtn:'',
-                isLogins:''
+                isLogins:'',
+                commoditySpecificationShow:false
             };
         },
         
