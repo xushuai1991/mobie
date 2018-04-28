@@ -62,6 +62,7 @@ export default {
         }
     },
     created(){
+        
         // document.title='xxx';
         let select_session=sessionStorage.getItem('select_index');
         if(select_session!=null){
@@ -76,13 +77,22 @@ export default {
             sessionStorage.setItem('companyId',companyid);
         }
         if(code!=null){
-            this.getOpenid();
+            this.getOpenid().then(flag=>{
+                if(flag){
+                    console.log(this.$route.params.logining);
+                    if(this.$route.params.logining!=null&&this.$route.params.logining){
+                        this.selected='我的';
+                        this.$router.push('/login');
+                    }
+                }
+            });
         }
         else{
             if(sessionStorage.getItem('openId')==null){
                 Toast('请授权后再登录商城');
             }
         }
+        
         let direct=this.$route.params.direct;
         console.log(direct);
         // console.log(direct==undefined);
@@ -258,22 +268,28 @@ export default {
         },
         //获取用户openid
         getOpenid(){
-            let that=this;
-            this.$http.get('/api/product/order/weixin/user?companyId='+this.companyid+'&code='+this.code)
-            .then(res=>{
-                if(res.data.info.code){
-                    let openid=res.data.info.openId;
-                    sessionStorage.setItem('openId',openid);
-                }
-                else{
-                    // Toast(res.data.msg);
-                    // Toast('xxx');
-                }
+            new Promise((resolve,reject)=>{
+                let that=this;
+                this.$http.get('/api/product/order/weixin/user?companyId='+this.companyid+'&code='+this.code)
+                .then(res=>{
+                    if(res.data.info.code){
+                        let openid=res.data.info.openId;
+                        sessionStorage.setItem('openId',openid);
+                        resolve(true);
+                    }
+                    else{
+                        resolve(false);
+                        // Toast(res.data.msg);
+                        // Toast('xxx');
+                    }
+                })
+                .catch(err=>{
+                    Toast('获取openid失败');
+                    console.log(err);
+                    resolve(false);
+                })
             })
-            .catch(err=>{
-                Toast('获取openid失败');
-                console.log(err);
-            })
+            
         }
     },
     components: {
