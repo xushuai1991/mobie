@@ -621,7 +621,7 @@
                             that.$router.push({
                                 name: 'index',
                                 params: {
-                                    direct: "logining"
+                                    logining:true
                                 }
                             });
                         }
@@ -644,7 +644,7 @@
                             that.$router.push({
                                 name: 'index',
                                 params: {
-                                    direct: "logining"
+                                    logining:true
                                 }
                             });
                         } else {
@@ -685,7 +685,7 @@
                             this.$router.push({
                                 name: 'index',
                                 params: {
-                                    direct: "logining"
+                                    logining:true
                                 }
                             });
                             return false
@@ -701,7 +701,7 @@
                         this.$router.push({
                                 name: 'index',
                                 params: {
-                                    direct: "logining"
+                                    logining:true
                                 }
                             });
                         return false
@@ -727,7 +727,7 @@
                                     that.$router.push({
                                         name: 'index',
                                         params: {
-                                            direct: "logining"
+                                            logining:true
                                         }
                                     });
                                 } else {
@@ -779,7 +779,7 @@
                                 that.$router.push({
                                     name: 'index',
                                     params: {
-                                        direct: "logining"
+                                        logining:true
                                     }
                                 });
                             } else if (response.data.status == 203) {
@@ -913,10 +913,16 @@
                     let r=new RegExp(type); 
                     let flag=r.test(this.specificationNum);
                     if(!flag){
-                    　　alert("数量应为正整数");
+                        Toast({
+                            message: "数量应为正整数",
+                            duration: 500
+                        });
                     　　return false;
                     }else if(this.commodityInfo.displayQuantity<this.specificationNum){
-                        alert("库存不足");
+                        Toast({
+                            message: "库存不足",
+                            duration: 500
+                        });
                     }else{
                         this.popupVisible = false
                         this.confirmPurchase = true
@@ -939,7 +945,7 @@
                            this.$router.push({
                                 name: 'index',
                                 params: {
-                                    direct: "logining"
+                                    logining:true
                                 }
                             });
                             return false
