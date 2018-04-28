@@ -284,7 +284,8 @@
                 commodityImageOne:'',
                 hostName:'',
                 port:'',
-                isFunctionBtn:''
+                isFunctionBtn:'',
+                isLogins:''
             };
         },
         created(){
@@ -466,6 +467,9 @@
                     that.starXingXingColor.color = "#ffa700"
                     that.isStar = true
                     that.starId = response.data.info.id
+                }else if(response.data.status == 401){
+                    that.isLogins = "no"
+                    //console.log(that.isLogins)
                 }
             })
             .catch(function(response){
@@ -653,7 +657,10 @@
                         console.log(commodityId)
                          //客户ID 
                         let customer = localStorage.getItem('userinfo')
-                        if(JSON.parse(JSON.parse(customer).data) ==null){
+                        console.log(customer)
+                        if(customer){
+                            console.log('已登录')
+                        }else{
                             Toast({
                                 message:'尚未登录',
                                 duration:1000
@@ -902,6 +909,10 @@
                     if(this.confirmPurchase == false){
                         this.popupVisible = true
                     }else{
+                        if(this.isLogins == 'no'){
+                            this.$router.push('./login')
+                            return false
+                        }
                          let commodityInfo = [];
                          let commodityInfos = this.commodityInfo
                          commodityInfos.nums = this.specificationNum
