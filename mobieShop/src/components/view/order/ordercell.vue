@@ -22,7 +22,8 @@
                 <!-- 服务类商品，添加预约时间功能 -->
                 <div class='appointment' v-if='item.isService==true'>
                     <button  @click.stop="appointment(item.id,index)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>
-                    <span>服务时间：{{item.appointTime==null?'空':item.appointTime.substring(0,16)}}{{((item.updateAppointTimeIsActive&&item.updateAppointTime!=null)||item.updateAppointTime==null)?'':'('+'已申请'+')'}}</span>
+                    <span>服务时间：{{item.updateAppointTime==null?(item.appointment==null?'空':item.appointment.substring(0,16)):item.updateAppointTimeIsActive?(item.appointment==null?'空':item.appointment.substring(0,16)):(item.updateAppointTime==null?'空':item.updateAppointTime.substring(0,16))}}{{(item.updateAppointTimeIsActive==false&&item.updateAppointTime!=null)?'(待确认)':''}}</span>
+                           <!-- {{item.appointTime==null?'空':item.appointTime.substring(0,16)}}{{((item.updateAppointTimeIsActive&&item.updateAppointTime!=null)||item.updateAppointTime==null)?'':'('+'已申请'+')'}} -->
                     <!-- <span>服务时间：{{date_service[index]}}</span> -->
                     <!-- <p>{{date_service[index]}}</p> -->
                 </div>
@@ -157,30 +158,37 @@ export default {
         },
         // 修改订单明细
         updateOrderdetail(id,updateAppointTime,date){
-            let data=[];
-            if(this.data.orderDetails[this.index_appoint].appointTime==null){
-                data=[{id:id,appointTime:updateAppointTime,updateAppointTime:null,updateAppointTimeIsActive:false}];
-            }
-            else{
-                data=[{id:id,updateAppointTime:updateAppointTime}];
-            }
+            let data=[{id:id,updateAppointTime:updateAppointTime,updateAppointTimeIsActive:false}];
+            // 第一次预约时间
+            // if(this.data.orderDetails[this.index_appoint].appointTime==null){
+            //     data=[{id:id,appointTime:updateAppointTime,updateAppointTime:null,updateAppointTimeIsActive:false}];
+            // }
+            // else{
+            //     data=[{id:id,updateAppointTime:updateAppointTime}];
+            // }
             Indicator.open('修改申请提交中...');
             let that=this;
             this.$http.post('/api/product/order/mall/update/orderDetail',data)
             .then(res=>{
                 if(res.data.status==200){
-                    let msg='';
+                    let msg='申请提交成功！';
                     let dom=document.querySelectorAll('.orderlist')[that.index].querySelectorAll('li')[that.indexorder].querySelectorAll('.detail')[that.index_appoint].querySelector('.appointment');
-                    if(this.data.orderDetails[this.index_appoint].appointTime==null){
-                        msg='预约时间成功！';
-                        that.data.orderDetails[that.index_appoint].appointTime=date;
-                        dom.querySelector('span').innerHTML='服务时间：'+date;
-                        dom.querySelector('button').innerHTML='修改时间';
-                    }
-                    else{
-                        msg='申请提交成功！';
-                        dom.querySelector('span').innerHTML=dom.querySelector('span').innerHTML.substring(0,21)+'(已申请)';
-                    }
+                    dom.querySelector('span').innerHTML='服务时间：'+date+'(待确认)';
+                    dom.querySelector('button').innerHTML='修改时间';
+
+
+
+                    // if(this.data.orderDetails[this.index_appoint].appointTime==null){
+                    //     msg='预约时间成功！';
+                    //     that.data.orderDetails[that.index_appoint].appointTime=date;
+                    //     dom.querySelector('span').innerHTML='服务时间：'+date;
+                    //     dom.querySelector('button').innerHTML='修改时间';
+                    // }
+                    // else{
+                    //     msg='申请提交成功！';
+                    //     // dom.querySelector('span').innerHTML=dom.querySelector('span').innerHTML.substring(0,21)+'(待确认)';
+                    //     dom.querySelector('span').innerHTML='服务时间：'+date+'(待确认)';
+                    // }
                     Toast(msg);
                 }
                 else{
