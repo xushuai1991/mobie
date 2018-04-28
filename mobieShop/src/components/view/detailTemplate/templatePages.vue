@@ -618,6 +618,7 @@
                     } else {
                         Toast(response.data.info);
                         if(response.data.info == "尚未登录"){
+                            sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+that.commodityId);
                             that.$router.push({
                                 name: 'index',
                                 params: {
@@ -641,6 +642,7 @@
                                 duration: 1000
                             });
                             //that.$router.push('./login')
+                            sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+that.commodityId);
                             that.$router.push({
                                 name: 'index',
                                 params: {
@@ -682,6 +684,7 @@
                             }
                             );
                             //this.$router.push('./login')
+                            sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+this.commodityId);
                             this.$router.push({
                                 name: 'index',
                                 params: {
@@ -698,6 +701,7 @@
                             message: '尚未登录',
                             duration: 1000
                         });
+                        sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+this.commodityId);
                         this.$router.push({
                                 name: 'index',
                                 params: {
@@ -724,6 +728,7 @@
                                         message: '尚未登录',
                                         duration: 1000
                                     });
+                                    sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+that.commodityId);
                                     that.$router.push({
                                         name: 'index',
                                         params: {
@@ -776,6 +781,7 @@
                                     duration: 1000
                                 });
                                 //that.$router.push('./login')
+                                sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+that.commodityId);
                                 that.$router.push({
                                     name: 'index',
                                     params: {
@@ -942,6 +948,7 @@
                     }else{
                         if(this.isLogins == 'no'){
                            // this.$router.push('./login')
+                           sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+this.commodityId);
                            this.$router.push({
                                 name: 'index',
                                 params: {
