@@ -199,7 +199,17 @@ export default {
                                 iconClass: 'icon icon-success',
                                 duration: 500
                             });
-                            this.$router.push('/index');
+                            let fromgo=sessionStorage.getItem('fromgo');
+                            // let fromgo='/order'
+                            
+                            if(fromgo==null){
+                                this.$router.push('/index');
+                            }
+                            else{
+                                this.$router.push(fromgo);
+                                sessionStorage.removeItem('fromgo');
+                            }
+                            // this.$router.push('/index');
                             this.in_resolve=false;
                         }, 1000);
                     }
@@ -257,7 +267,15 @@ export default {
                                     iconClass: 'icon icon-success',
                                     duration: 500
                                 });
-                                that.$router.push('/index');
+                                let fromgo=sessionStorage.getItem('fromgo');
+                                if(fromgo==null){
+                                    this.$router.push('/index');
+                                }
+                                else{
+                                    this.$router.push(fromgo);
+                                    sessionStorage.removeItem('fromgo');
+                                }
+                                // that.$router.push('/index');
                                 this.in_resolve=false;
                             }, 1000);
                         }
