@@ -69,27 +69,32 @@ export default {
         }
         let url=location.search;
         let companyid=this.getURLparms('company');
-        let code=this.getURLparms('code');
-        this.code=code;
+        // let code=this.getURLparms('code');
+        // this.code=code;
         this.companyid=companyid;
         if(companyid!=null){
             sessionStorage.setItem('companyId',companyid);
         }
-        if(code!=null){
-            this.getOpenid().then((flag)=>{
-                if(flag){
-                    if(this.$route.params.logining!=null&&this.$route.params.logining){
-                        this.selected='我的';
-                        this.$router.push('/login');
-                    }
-                }
-            });
+        if(this.$route.params.logining!=null&&this.$route.params.logining){
+            this.selected='我的';
+            this.tologin();
+            // this.$router.push('/login');
         }
-        else{
-            if(sessionStorage.getItem('openId')==null){
-                Toast('请授权后再登录商城');
-            }
-        }
+        // if(code!=null){
+        //     this.getOpenid().then((flag)=>{
+        //         if(flag){
+        //             if(this.$route.params.logining!=null&&this.$route.params.logining){
+        //                 this.selected='我的';
+        //                 this.$router.push('/login');
+        //             }
+        //         }
+        //     });
+        // }
+        // else{
+        //     if(sessionStorage.getItem('openId')==null){
+        //         Toast('请授权后再登录商城');
+        //     }
+        // }
         
         let direct=this.$route.params.direct;
         console.log(direct);
@@ -257,6 +262,45 @@ export default {
         }
     },
     methods:{
+        // 登录
+        tologin(){
+            this.getAppId().then(flag=>{
+                if(flag){
+                    let companyid=sessionStorage.getItem('companyId');
+                    let url='https://open.weixin.qq.com/connect/oauth2/authorize?appid='+this.appid+
+                        '&redirect_uri=http://codes.itchun.com?company='+companyid+
+                        '&response_type=code&scope=snsapi_userinfo&state=STATE';
+                    location.href=url;
+                    // this.$router.replace(url);
+                }
+            });
+            
+        },
+        //获取appId
+        getAppId(){
+            return new Promise((resolve,reject)=>{
+                let that=this;
+                let companyid=sessionStorage.getItem('companyId');
+                
+                this.$http.get('/api/product/order/weixin/config?companyId='+companyid)
+                .then(res=>{
+                    if(res.data.status==200){
+                        this.appid=res.data.info.appid;
+                        resolve(true);
+                    }
+                    else{
+                        resolve(false);
+                        Toast(res.data.msg);
+                    }
+                })
+                .catch(err=>{
+                    resolve(false);
+                    Toast('appid获取失败');
+                })
+            })
+            
+            
+        },
         getURLparms(name){
             let reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
             let r = location.search.substr(1).match(reg);

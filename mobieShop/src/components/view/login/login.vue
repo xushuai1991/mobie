@@ -122,17 +122,25 @@ export default {
             second:'获取验证码',
             to:'',
             clientHeight:0,
-            in_resolve:false
+            in_resolve:false,
+            openId:''
         }
     },
     mounted(){
         this.yzn();
         
     },
-    // created(){
-    //     operatelocalstorage(1,1,20);
-    // },
+    created(){
+        let openid=this.$route.params.openId;
+        if(openid==null){
+            Toast('获取companyid失败');
+        }
+        else{
+            this.openId=openid;
+        }
+    },
     methods:{
+        
         focus_input(e){
             if(this.clientHeight==0){
                 this.clientHeight=document.body.clientHeight;
@@ -160,12 +168,12 @@ export default {
                 Indicator.open('Loading...');
                 let that=this;
                 let data='';
-                let openId=sessionStorage.getItem('openId');
-                if(openId==null){
+                // let openId=sessionStorage.getItem('openId');
+                if(this.openId==''){
                     data='mobile='+this.phone+'&password='+this.psw;
                 }
                 else{
-                    data='mobile='+this.phone+'&password='+this.psw+'&openId='+openId;
+                    data='mobile='+this.phone+'&password='+this.psw+'&openId='+this.openId;
                 }
                 this.in_resolve=true;
                 this.$http({
@@ -242,12 +250,12 @@ export default {
                 else{
                     let that=this;
                     let data='';
-                    let openId=sessionStorage.getItem('openId');
-                    if(openId==null){
+                    // let openId=sessionStorage.getItem('openId');
+                    if(openId==''){
                         data='mobile='+this.phone+'&code='+this.code;
                     }
                     else{
-                        data='mobile='+this.phone+'&code='+this.code+'&openId='+openId;
+                        data='mobile='+this.phone+'&code='+this.code+'&openId='+this.openId;
                     }
                     this.in_resolve=true;
                     this.$http.post('/api/customer/account/quickLogin?'+data)
@@ -306,7 +314,7 @@ export default {
                     Toast('请确认服务条款');
                 }
                 else{
-                    if(sessionStorage.getItem('openId')==null){
+                    if(this.openId==''){
                         Toast('请授权后再注册！');
                         return;
                     }
@@ -316,7 +324,7 @@ export default {
                             mobile:that.phone,
                             password:that.psw,
                             code:that.code,
-                            openId:sessionStorage.getItem('openId')
+                            openId:this.openId
                         }
                     )
                     .then(function(response){
