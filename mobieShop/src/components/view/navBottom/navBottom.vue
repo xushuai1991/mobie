@@ -48,7 +48,7 @@ export default {
       let that=this;
       let id;
         //从后台取要浏览的ID
-        this.$http.post('/api/product/mall/template/getString'
+        this.$http.post('http://www.jingrunjia.com.cn/api/product/mall/template/getString'
         ).then(function(response){
           //console.log(response)
           id = response.data.msg
