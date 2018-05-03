@@ -399,10 +399,14 @@
             // 查询购物车内商品数量
             getNumberShopcar(){
                 let that=this;
-                this.$http.post('/api/product/shoppingCart/query',{customerId:this.userinfo.id})
+                this.$http.post('/api/product/shoppingCart/myShoppingCart',{})
                 .then(res=>{
                     if(res.data.status==200){
-                        this.num_shopcar=res.data.info.total;
+                        let count=0;
+                        res.data.info.forEach(item=>{
+                            count+=item.commodityCount;
+                        });
+                        this.num_shopcar=count;
                     }
                     console.log(res);
                 })

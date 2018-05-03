@@ -26,8 +26,7 @@ router.beforeEach((to, from, next) => {
         if(userinfo_location==null){
             sessionStorage.setItem('select_index','我的')
             next({
-                name: 'home',
-                params:{'direct':'userinfo'}
+                name: 'home'
             })
         }
         else{
