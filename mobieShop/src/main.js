@@ -24,6 +24,7 @@ router.beforeEach((to, from, next) => {
         Toast('尚未登录，请登录...');
         //需要登录的页面未登录，跳转回登录页
         if(userinfo_location==null){
+            sessionStorage.setItem('select_index','我的')
             next({
                 name: 'home',
                 params:{'direct':'userinfo'}
