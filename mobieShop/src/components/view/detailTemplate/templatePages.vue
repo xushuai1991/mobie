@@ -81,8 +81,7 @@
                         <div class="zbd_commodityInfo">
                             <p>￥{{ commodityInfo.price }}</p>
                             <p>{{ commodityInfo.name }}</p>
-                            <p>库存量：{{ commodityInfo.displayQuantity
-                                <1?0:commodityInfo.displayQuantity }}</p>
+                            <p>库存量：{{ commodityInfo.displayQuantity<1?0:commodityInfo.displayQuantity }}</p>
                         </div>
                         <div class='commodityInfoCloseBtn' @click="btnClose">&times;</div>
                         <div class="commodityInfoLine"></div>
@@ -289,12 +288,13 @@
                 port:'',
                 isFunctionBtn:'',
                 isLogins:'',
-                commoditySpecificationShow:false
+                commoditySpecificationShow:false,
+                companyId:'',
+                appid:''
             };
         },
         
         created() {
-                  
             // 
             this.$root.$emit('header', '商品详情');
             this.hostName = location.hostname;
@@ -317,7 +317,7 @@
                     })
                     .then(function(response) {
                         // console.log(response)
-                        let comlists = JSON.parse(response.data.info[0].comlist)
+                        let comlists = JSON.parse(response.data.info[0].comlist);
                         // console.log(comlists)
                         //that.comlist = comlists
                         let bannerArr = [];
@@ -344,6 +344,12 @@
                         })
                         .then(function(response) {
                             console.log(response)
+                            if(response.data.status==200){
+                                that.companyId=response.data.info.length>0?response.data.info[0].companyId:'';
+                                if(that.companyId!=''){
+                                    sessionStorage.setItem('companyId',that.companyId);
+                                }
+                            }
                             let detailTemplateId = response.data.info[0].detailTemplateId
                             let companyId = sessionStorage.getItem("companyId");
                             //根据详情模板ID查询模板信息
@@ -536,7 +542,41 @@
             })
         },
         methods: {
-            
+            // 获取appid
+            getAppId(){
+                return new Promise((resolve,reject)=>{
+                    let that=this;
+                    let companyid=sessionStorage.getItem('companyId');
+                    
+                    this.$http.get('/api/product/order/weixin/config?companyId='+companyid)
+                    .then(res=>{
+                        if(res.data.status==200){
+                            this.appid=res.data.info.appid;
+                            resolve(true);
+                        }
+                        else{
+                            resolve(false);
+                            Toast(res.data.msg);
+                        }
+                    })
+                    .catch(err=>{
+                        resolve(false);
+                        Toast('appid获取失败');
+                    })
+                }) 
+            },
+            // 登录
+            tologin(){
+                this.getAppId().then(flag=>{
+                    if(flag){
+                        let companyid=sessionStorage.getItem('companyId');
+                        let url='https://open.weixin.qq.com/connect/oauth2/authorize?appid='+this.appid+
+                            '&redirect_uri=http://codes.itchun.com?company='+companyid+
+                            '&response_type=code&scope=snsapi_userinfo&state=STATE';
+                        location.href=url;
+                    }
+                }); 
+            },
             //获取地址栏参数，name:参数名称
             getUrlParms(name) {
                 let url = this.detailTemplateUrl
@@ -644,12 +684,14 @@
                             });
                             //that.$router.push('./login')
                             sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+that.commodityId);
-                            that.$router.push({
-                                name: 'index',
-                                params: {
-                                    logining:true
-                                }
-                            });
+                            that.tologin();
+                            // sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+that.commodityId);
+                            // that.$router.push({
+                            //     name: 'index',
+                            //     params: {
+                            //         logining:true
+                            //     }
+                            // });
                         } else {
                             that.$router.push({
                                 name: 'index',
@@ -682,16 +724,18 @@
                             Toast({
                                 message:'尚未登录',
                                 duration:1000
-                            }
-                            );
-                            //this.$router.push('./login')
-                            sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+this.commodityId);
-                            this.$router.push({
-                                name: 'index',
-                                params: {
-                                    logining:true
-                                }
                             });
+                            sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+this.commodityId);
+                            this.tologin();
+                            //this.$router.push('./login')
+                            
+
+                            // this.$router.push({
+                            //     name: 'index',
+                            //     params: {
+                            //         logining:true
+                            //     }
+                            // });
                             return false
                         }
                     let customerData = JSON.parse(JSON.parse(customer).data);
@@ -703,12 +747,14 @@
                             duration: 1000
                         });
                         sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+this.commodityId);
-                        this.$router.push({
-                                name: 'index',
-                                params: {
-                                    logining:true
-                                }
-                            });
+                        this.tologin();
+                        // sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+this.commodityId);
+                        // this.$router.push({
+                        //         name: 'index',
+                        //         params: {
+                        //             logining:true
+                        //         }
+                        //     });
                         return false
                     } else {
                         let customerId = this.customerId
@@ -730,12 +776,14 @@
                                         duration: 1000
                                     });
                                     sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+that.commodityId);
-                                    that.$router.push({
-                                        name: 'index',
-                                        params: {
-                                            logining:true
-                                        }
-                                    });
+                                    that.tologin();
+                                    // sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+that.commodityId);
+                                    // that.$router.push({
+                                    //     name: 'index',
+                                    //     params: {
+                                    //         logining:true
+                                    //     }
+                                    // });
                                 } else {
                                     Toast({
                                         message: '加入购物车成功',
@@ -781,14 +829,16 @@
                                     message: '尚未登录',
                                     duration: 1000
                                 });
-                                //that.$router.push('./login')
                                 sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+that.commodityId);
-                                that.$router.push({
-                                    name: 'index',
-                                    params: {
-                                        logining:true
-                                    }
-                                });
+                                that.tologin();
+                                //that.$router.push('./login')
+                                // sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+that.commodityId);
+                                // that.$router.push({
+                                //     name: 'index',
+                                //     params: {
+                                //         logining:true
+                                //     }
+                                // });
                             } else if (response.data.status == 203) {
                                 Toast({
                                     message: response.data.msg,
@@ -949,13 +999,15 @@
                     }else{
                         if(this.isLogins == 'no'){
                            // this.$router.push('./login')
-                           sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+this.commodityId);
-                           this.$router.push({
-                                name: 'index',
-                                params: {
-                                    logining:true
-                                }
-                            });
+                            sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+this.commodityId);
+                            this.tologin();
+                        //    sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+this.commodityId);
+                        //    this.$router.push({
+                        //         name: 'index',
+                        //         params: {
+                        //             logining:true
+                        //         }
+                        //     });
                             return false
                         }
                          let commodityInfo = [];
@@ -977,6 +1029,13 @@
             window2,
             productDetail
         },
+        // beforeRouteEnter(to,from,next){
+        //     alert(222);
+        // },
+        // beforeRouteLeave (to, from, next){
+        //     alert(333);
+        // },
+        
     };
 </script>
 <style>

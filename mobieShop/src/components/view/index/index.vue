@@ -75,11 +75,10 @@ export default {
         if(companyid!=null){
             sessionStorage.setItem('companyId',companyid);
         }
-        if(this.$route.params.logining!=null&&this.$route.params.logining){
-            this.selected='我的';
-            this.tologin();
-            // this.$router.push('/login');
-        }
+        // if(this.$route.params.logining!=null&&this.$route.params.logining){
+        //     this.selected='我的';
+        //     this.tologin();
+        // }
         // if(code!=null){
         //     this.getOpenid().then((flag)=>{
         //         if(flag){
@@ -271,10 +270,8 @@ export default {
                         '&redirect_uri=http://codes.itchun.com?company='+companyid+
                         '&response_type=code&scope=snsapi_userinfo&state=STATE';
                     location.href=url;
-                    // this.$router.replace(url);
                 }
-            });
-            
+            }); 
         },
         //获取appId
         getAppId(){
@@ -297,9 +294,7 @@ export default {
                     resolve(false);
                     Toast('appid获取失败');
                 })
-            })
-            
-            
+            }) 
         },
         getURLparms(name){
             let reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");

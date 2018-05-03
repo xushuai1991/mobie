@@ -184,7 +184,7 @@ export default new Router({
             },
         },
         {
-            path: '/recommend', // 首页
+            path: '/recommend', 
             name: 'recommend',
             component: resolve => require(['../components/view/homepage/recommend/recommend.vue'], resolve),
             meta: {

@@ -131,9 +131,9 @@ export default {
         
     },
     created(){
-        let openid=this.$route.params.openId;
+        let openid=this.$route.query.openId;
         if(openid==null){
-            Toast('获取companyid失败');
+            Toast('获取openid失败');
         }
         else{
             this.openId=openid;

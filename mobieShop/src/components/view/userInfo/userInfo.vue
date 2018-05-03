@@ -233,7 +233,6 @@
                         // this.$router.replace(url);
                     }
                 });
-                
             },
             //获取appId
             getAppId(){

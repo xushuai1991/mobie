@@ -63,8 +63,9 @@
         data() {
             return {
                 totalSrc: '',
-                wxSrc: 'http://101.89.175.155:8887/customer/resource/qrCode.png?content=http://',
-                address: 'www.itchun.com',
+                wxSrc: 'http://101.89.175.155:8887/customer/resource/qrCode.png?content=',
+                address: 'http://www.itchun.com/invitingGift',
+                // address: '10.1.1.206:8080',                
                 shareUrl: '/invitingGift',
                 paramData: ''
             }
@@ -86,10 +87,12 @@
         },
         methods: {
             shareUrlFn() {
-                let curHref = window.location.href
+                let curHref = window.location.href;
+                let companyid=sessionStorage.getItem('companyId');
                 this.paramData = this.getQueryString('recommendedCustomerId') // 获取url中的参数
                 if (curHref.indexOf('&') === -1) {
-                    this.totalSrc = this.wxSrc + this.address + this.shareUrl + '?recommendedCustomerId=' + this.paramData;
+                    let url=this.address+'?recommendedCustomerId=' + this.paramData+'&companyId='+companyid;
+                    this.totalSrc = this.wxSrc +escape(url);
                     console.log(this.totalSrc)
                 } else {
                     return
