@@ -23,6 +23,7 @@
             </div>
             <div class='operation'>
                 <button class='prime evaluate' @click.stop='evaluate'>评价</button>
+                <button class='invoice' @click.stop='invoice(data.id,data.actualMoney)'>申请发票</button>
                 <!-- <button class='check'>查看报告</button> -->
                 <!-- <button class='complaint'>投诉</button> -->
             </div>
@@ -44,6 +45,10 @@ export default {
         // console.log(this.data);
     },
     computed:{
+        // 申请开发票
+        invoice(orderid,totalprice){
+            this.$router.push('/invoice?orderid='+orderid+'&totalprice='+totalprice);
+        }
         // totalmoney(){
         //     let total=0;
         //     for(let item of this.data.orderDetails==null?[]:this.data.orderDetails){

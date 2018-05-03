@@ -8,7 +8,8 @@ import Mint from 'mint-ui'
 import 'mint-ui/lib/style.css'
 import store from './store'
 import BaiduMap from 'vue-baidu-map'
-
+import {operatelocalstorage} from './assets/javascript/localstorage_hasdata.js'
+import { Toast } from 'mint-ui';
 Vue.use(BaiduMap, {
     // ak 是在百度地图开发者平台申请的密钥 详见 http://lbsyun.baidu.com/apiconsole/key */
     ak: 'eBFK8PeaclOw8XQBiOEatBPrazdK0qDg'
@@ -18,6 +19,20 @@ Vue.config.productionTip = false
 Vue.prototype.$http = axios
 router.beforeEach((to, from, next) => {
     window.document.title = to.meta.title;
+    if(to.meta.requireAuth){
+        let userinfo_location=operatelocalstorage('userinfo',null,'get',null);
+        Toast('尚未登录，请登录...');
+        //需要登录的页面未登录，跳转回登录页
+        if(userinfo_location==null){
+            sessionStorage.setItem('select_index','我的')
+            next({
+                name: 'home'
+            })
+        }
+        else{
+            next();
+        }
+    }
     next()
   })
 Vue.use(Mint)

@@ -31,7 +31,8 @@
                             </div>
                             <!-- 未登录，跳转到登录页面 -->
                             <div v-else style='font-size:.3rem;padding-top:.5rem;padding-left:.2rem;'>
-                                <router-link :to="{name:'login'}" style='color:#e47524;'>点击登录</router-link>
+                                <span style='color:#e47524;' @click='tologin'>点击登录</span>
+                                <!-- <router-link @click='login' :to="{name:'login'}" style='color:#e47524;'>点击登录</router-link> -->
                             </div>
                         </div>
                         <ul class="behavior">
@@ -189,7 +190,8 @@
                     avatar:'',
                     nickname:'',
                     level:''
-                }
+                },
+                appid:''
             }
         },
         created() {
@@ -219,6 +221,44 @@
             });
         },
         methods: {
+            // 登录
+            tologin(){
+                this.getAppId().then(flag=>{
+                    if(flag){
+                        let companyid=sessionStorage.getItem('companyId');
+                        let url='https://open.weixin.qq.com/connect/oauth2/authorize?appid='+this.appid+
+                            '&redirect_uri=http://codes.itchun.com?company='+companyid+
+                            '&response_type=code&scope=snsapi_userinfo&state=STATE ';
+                        location.href=url;
+                        // this.$router.replace(url);
+                    }
+                });
+            },
+            //获取appId
+            getAppId(){
+                return new Promise((resolve,reject)=>{
+                    let that=this;
+                    let companyid=sessionStorage.getItem('companyId');
+                    
+                    this.$http.get('/api/product/order/weixin/config?companyId='+companyid)
+                    .then(res=>{
+                        if(res.data.status==200){
+                            this.appid=res.data.info.appid;
+                            resolve(true);
+                        }
+                        else{
+                            resolve(false);
+                            Toast(res.data.msg);
+                        }
+                    })
+                    .catch(err=>{
+                        resolve(false);
+                        Toast('appid获取失败');
+                    })
+                })
+                
+                
+            },
             integral(){
                 let that = this
                 this.$http.post(
@@ -359,10 +399,14 @@
             // 查询购物车内商品数量
             getNumberShopcar(){
                 let that=this;
-                this.$http.post('/api/product/shoppingCart/query',{customerId:this.userinfo.id})
+                this.$http.post('/api/product/shoppingCart/myShoppingCart',{})
                 .then(res=>{
                     if(res.data.status==200){
-                        this.num_shopcar=res.data.info.total;
+                        let count=0;
+                        res.data.info.forEach(item=>{
+                            count+=item.commodityCount;
+                        });
+                        this.num_shopcar=count;
                     }
                     console.log(res);
                 })

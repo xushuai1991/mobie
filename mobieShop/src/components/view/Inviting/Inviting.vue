@@ -63,8 +63,9 @@
         data() {
             return {
                 totalSrc: '',
-                wxSrc: hostName+'/customer/resource/qrCode.png?content=http://',
-                address: location.hostname,
+                wxSrc: 'http://'+location.hostname+':8887/customer/resource/qrCode.png?content=',
+                address: 'http://'+location.hostname+'/invitingGift',
+                // address: '10.1.1.206:8080',                
                 shareUrl: '/invitingGift',
                 paramData: ''
             }
@@ -87,10 +88,12 @@
         },
         methods: {
             shareUrlFn() {
-                let curHref = window.location.href
+                let curHref = window.location.href;
+                let companyid=sessionStorage.getItem('companyId');
                 this.paramData = this.getQueryString('recommendedCustomerId') // 获取url中的参数
                 if (curHref.indexOf('&') === -1) {
-                    this.totalSrc = this.wxSrc + this.address + this.shareUrl + '?recommendedCustomerId=' + this.paramData;
+                    let url=this.address+'?recommendedCustomerId=' + this.paramData+'&companyId='+companyid;
+                    this.totalSrc = this.wxSrc +escape(url);
                     console.log(this.totalSrc)
                 } else {
                     return

@@ -4,7 +4,7 @@
         <div class="result-explain" ref="changeText">{{msg}}</div>
         <div class="result-bottom">
             <div :style="{backgroundImage: 'url(' + wxSrc + ')' }"></div>
-            <p>扫描二维码,前往商城</p>
+            <p>扫描二维码,前往公众号</p>
         </div>
     </div>
 </template>
@@ -13,8 +13,29 @@ export default {
     data () {
         return {
             bgSrc:require('./invite-result.png'),
-            wxSrc:require('./wx-code.png'),
+            wxSrc:'http://daojia.jingrunjia.com.cn:8887/static/weixin/78.jpg',
             msg:''
+        }
+    },
+    created(){
+        let companyId=this.$route.query.companyId;
+        switch(companyId){
+            case '78':{
+                this.wxSrc='http://daojia.jingrunjia.com.cn:8887/static/weixin/78.jpg';
+                break;
+            }
+            case '79':{
+                this.wxSrc='http://daojia.jingrunjia.com.cn:8887/static/weixin/79.jpg';
+                break;
+            }
+            case '92':{
+                this.wxSrc='http://daojia.jingrunjia.com.cn:8887/static/weixin/92.jpg';
+                break;
+            }
+            default:{
+                this.wxSrc='http://daojia.jingrunjia.com.cn:8887/static/weixin/78.jpg';
+                break;
+            }
         }
     },
     mounted(){

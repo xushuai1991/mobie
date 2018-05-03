@@ -36,7 +36,7 @@
                 <button class='cancle' @click.stop="cancleOrder" v-if='data.payState==2||data.payState==3'>取消订单</button>
                 <button class='prime follow' v-if='type=="inservice"'>追单</button>
                 <button class='apply' @click.stop='application' v-if='data.payState==1&&data.orderState!=4&data.orderState!=5'>申请退款</button>
-                <button class='invoice' @click.stop='invoice(data.id,data.actualMoney)' v-if='data.payState==1'>申请发票</button>
+                <button class='invoice' @click.stop='invoice(data.id,data.actualMoney)' v-if='data.orderState==2'>申请发票</button>
                 
             </div>
         </div>
