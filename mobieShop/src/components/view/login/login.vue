@@ -127,12 +127,26 @@ export default {
     },
     mounted(){
         this.yzn();
-        
+        this.getCommid()
     },
     // created(){
     //     operatelocalstorage(1,1,20);
     // },
     methods:{
+        getCommid(){
+            let url = '/api/product/order/weixin/config?companyId='+1;
+            this.$http({
+                url:url,
+                method:'get',
+                data:{},
+            }).then((msg)=>{
+                let appdi = msg.data.info.appid;
+                'https://open.weixin.qq.com/connect/oauth2/authorize?appid='+appdi+'&redirect_uri=（新建立的项目地址）?company=1&response_type=code&scope=snsapi_userinfo&state=STATE'
+            }).catch((err)=>{
+                console.log(err)
+            })
+
+        },
         focus_input(e){
             if(this.clientHeight==0){
                 this.clientHeight=document.body.clientHeight;

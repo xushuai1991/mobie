@@ -7,7 +7,7 @@
             <p style='height:.5rem;line-height:.5rem;'>
                 <span class='tip'>发票抬头</span>
                 <span class='right' @click="popupVisible = true">
-                                            <span>{{invoicetype==''?'请选择':invoicetype==11?'个人发票':invoicetype==21?'单位发票':'专用发票'}}</span>
+                                                <span>{{invoicetype==''?'请选择':invoicetype==11?'个人发票':invoicetype==21?'单位发票':'专用发票'}}</span>
                 <i class='icon iconfont icon-arrow-right-copy'></i>
                 </span>
             </p>
@@ -124,7 +124,7 @@
     export default {
         data() {
             return {
-                popupVisibles:false,
+                popupVisibles: false,
                 popupVisible: false,
                 invoicetype: '',
                 imglist: [],
@@ -155,7 +155,7 @@
         },
         created: function() {
             this.$root.$emit('header', '开票申请');
-            this.money= this.urlArgs().totalprice
+            this.money = this.urlArgs().totalprice
         },
         methods: {
             urlArgs() {
@@ -184,9 +184,10 @@
                 return result.flag;
                 this.pswjson.status = result.flag;
                 this.pswjson.msg = result.flag ? '' : result.error;
+
             },
             submit() {
-                let that= this;
+                let that = this;
                 if (this.invoicetype == '') {
                     Toast('请选择发票抬头');
                 } else {
@@ -249,14 +250,14 @@
                         if (res.data.status == 200) {
                             console.log(res.data)
                             Toast(res.data.msg)
-                            setTimeout(()=>{
+                            setTimeout(() => {
                                 that.$router.push({
-                                            // path:"./order",
-                                            name: 'order',
-                                            // params: {
-                                            //     index: this.serverState
-                                            // }
-                                        });
+                                    // path:"./order",
+                                    name: 'order',
+                                    // params: {
+                                    //     index: this.serverState
+                                    // }
+                                });
                             }, 500)
                             this.taxpayername = ''
                             this.compnamee = ''
@@ -275,6 +276,7 @@
                 }
             },
             uploadimg() {
+                
                 let length = this.imglist.length;
                 if (length >= 3) {
                     Toast('最多上传3张图片');
@@ -285,18 +287,79 @@
                 if (!fileObject || !window.FileReader) {
                     return;
                 };
+               this.photoCompress(fileObject, {
+                    quality: 0.2
+                },function(base64Codes){
+                    var bl = that.convertBase64UrlToBlob(base64Codes);
                 if (/^image/.test(fileObject.type)) {
                     let fd = new FormData();
-                    fd.append('fileUpload', fileObject);
+                    fd.append('fileUpload', bl);
                     fd.append('type', 'product');
                     that.upfile(fd);
                 } else {
                     Toast('只能上传图片');
                     return;
                 }
+                })
+                
+            },
+            convertBase64UrlToBlob(urlData) {
+                var arr = urlData.split(','),
+                    mime = arr[0].match(/:(.*?);/)[1],
+                    bstr = atob(arr[1]),
+                    n = bstr.length,
+                    u8arr = new Uint8Array(n);
+                while (n--) {
+                    u8arr[n] = bstr.charCodeAt(n);
+                }
+                return new Blob([u8arr], {
+                    type: mime
+                });
+            },
+            photoCompress(file, w, objDiv) {
+                let that = this;
+                var ready = new FileReader();
+                /*开始读取指定的Blob对象或File对象中的内容. 当读取操作完成时,readyState属性的值会成为DONE,如果设置了onloadend事件处理程序,则调用之.同时,result属性中将包含一个data: URL格式的字符串以表示所读取文件的内容.*/
+                ready.readAsDataURL(file);
+                ready.onload = function() {
+                    var re = this.result;
+                    that.canvasDataURL(re, w, objDiv)
+                }
+            },
+            canvasDataURL(path, obj, callback) {
+                var img = new Image();
+                img.src = path;
+                img.onload = function() {
+                    var that = this;
+                    // 默认按比例压缩
+                    var w = that.width,
+                        h = that.height,
+                        scale = w / h;
+                    w = obj.width || w;
+                    h = obj.height || (w / scale);
+                    var quality = 0.7; // 默认图片质量为0.7
+                    //生成canvas
+                    var canvas = document.createElement('canvas');
+                    var ctx = canvas.getContext('2d');
+                    // 创建属性节点
+                    var anw = document.createAttribute("width");
+                    anw.nodeValue = w;
+                    var anh = document.createAttribute("height");
+                    anh.nodeValue = h;
+                    canvas.setAttributeNode(anw);
+                    canvas.setAttributeNode(anh);
+                    ctx.drawImage(that, 0, 0, w, h);
+                    // 图像质量
+                    if (obj.quality && obj.quality <= 1 && obj.quality > 0) {
+                        quality = obj.quality;
+                    }
+                    // quality值越小，所绘制出的图像越模糊
+                    var base64 = canvas.toDataURL('image/jpeg', quality);
+                    // 回调函数返回base64的值
+                    callback(base64);
+                }
             },
             upfile(file) {
-                console.log(file)
                 Indicator.open('上传中。。。');
                 let that = this;
                 this.$http({

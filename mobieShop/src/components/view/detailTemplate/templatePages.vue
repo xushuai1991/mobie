@@ -10,7 +10,7 @@
                 <div class="page-swipe">
                     <mt-swipe :auto="4000" :show-indicators="bannerArr2.length == 1?false:true">
                         <mt-swipe-item v-for='(item,index) in bannerArr2' :key='index'>
-                            <img :src="'http://101.89.175.155:8887'+item.url" class="bannerImg">
+                            <img :src="'http://'+location.hostname+':8887'+item.url" class="bannerImg">
                         </mt-swipe-item>
                     </mt-swipe>
                 </div>
@@ -381,7 +381,7 @@
                             if (that.commodityInfo.commodityImageList.length == 0) {
                                 that.commodityImageOne = '/static/images/nodata.png'
                             } else {
-                                that.commodityImageOne = "http://101.89.175.155:8887" + that.commodityInfo.commodityImageList[0].url
+                                that.commodityImageOne = "http://"+location.hostname+":8887" + that.commodityInfo.commodityImageList[0].url
                             }
                         })
                         .catch(function(response) {
