@@ -83,8 +83,7 @@ export default {
         this.$root.$emit('header','邀请有礼');
         let companyId=this.$route.query.companyId;
         this.companyId=companyId;
-        alert(companyId);
-        
+    
     },
     methods:{
         shareUrlFn(){

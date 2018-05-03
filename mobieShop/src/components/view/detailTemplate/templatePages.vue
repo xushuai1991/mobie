@@ -1029,13 +1029,6 @@
             window2,
             productDetail
         },
-        // beforeRouteEnter(to,from,next){
-        //     alert(222);
-        // },
-        // beforeRouteLeave (to, from, next){
-        //     alert(333);
-        // },
-        
     };
 </script>
 <style>
