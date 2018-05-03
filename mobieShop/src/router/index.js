@@ -14,19 +14,24 @@ export default new Router({
         // },
         {
             path: '',
-            redirect: '/index'
+            redirect: '/index',
+            name:'home'
         },
         {
             path: '/index', // 首页
             name: 'index',
             component: resolve => require(['../components/view/index/index.vue'], resolve),
             meta: {
-                title: '首页'
+                title: '首页',
+                requireAuth:false
             },
         },
         {
             path: '/homepage', // 主页
             name: 'homepage',
+            meta:{
+                requireAuth:false
+            },
             component: resolve => require(['../components/view/homepage/homepage.vue'], resolve),
         },
         {
@@ -37,6 +42,9 @@ export default new Router({
         {
             path: '/eventTemplate', // 活动模板
             name: 'eventTemplate',
+            meta:{
+                requireAuth:false
+            },
             component: resolve => require(['../components/view/eventTemplate/templatePages.vue'], resolve)
         },
         
@@ -45,7 +53,8 @@ export default new Router({
             name: 'login',
             component: resolve => require(['../components/view/login/login.vue'], resolve),
             meta: {
-                title: '登录'
+                title: '登录',
+                requireAuth:false
             },
         },
         
@@ -55,7 +64,8 @@ export default new Router({
             name: 'order',
             component: resolve => require(['../components/view/order/order.vue'], resolve),
             meta: {
-                title: '订单列表'
+                title: '订单列表',
+                requireAuth:true
             },
         },
         // 确认订单
@@ -64,7 +74,8 @@ export default new Router({
             name: 'ordercertain',
             component: resolve => require(['../components/view/order/certainorder.vue'], resolve),
             meta: {
-                title: '确认订单'
+                title: '确认订单',
+                requireAuth:true
             },
         },
         {//订单详情
@@ -72,7 +83,8 @@ export default new Router({
             name: 'orderDeil',
             component: resolve => require(['../components/view/order/orderDeil.vue'], resolve),
             meta: {
-                title: '订单详情'
+                title: '订单详情',
+                requireAuth:true
             }
         },
         //支付
@@ -81,7 +93,8 @@ export default new Router({
             name:'paying',
             component: resolve => require(['../components/view/order/paying.vue'], resolve),
             meta: {
-                title: '支付'
+                title: '支付',
+                requireAuth:true
             }
         },
         //开票申请
@@ -90,7 +103,8 @@ export default new Router({
             name: 'invoice',
             component: resolve => require(['../components/view/order/invoice.vue'], resolve),
             meta: {
-                title: '开票申请'
+                title: '开票申请',
+                requireAuth:true
             }
         },
         // 消息中心
@@ -99,7 +113,8 @@ export default new Router({
             name: 'msgcenter',
             component: resolve => require(['../components/view/order/msgcenter.vue'], resolve),
             meta: {
-                title: '消息中心'
+                title: '消息中心',
+                requireAuth:true
             }
         },
         {
@@ -107,7 +122,8 @@ export default new Router({
             name: 'userInfo',
             component: resolve => require(['../components/view/userInfo/userInfo.vue'], resolve),
             meta: {
-                title: '个人中心'
+                title: '个人中心',
+                requireAuth:false
             }
         },
         {
@@ -115,7 +131,8 @@ export default new Router({
             name: 'personalScores',
             component: resolve => require(['../components/view/userInfo/personalScore.vue'], resolve),
             meta: {
-                title: '个人积分管理'
+                title: '个人积分管理',
+                requireAuth:true
             }
         },
         {
@@ -123,7 +140,8 @@ export default new Router({
             name: 'accountMangagement',
             component: resolve => require(['../components/view/userInfo/accountMangagement.vue'], resolve),
             meta: {
-                title: '账号管理'
+                title: '账号管理',
+                requireAuth:true
             }
         },
         {
@@ -131,7 +149,8 @@ export default new Router({
             name: 'addEdit',
             component: resolve => require(['../components/view/addEdit/addEdit.vue'], resolve),
             meta: {
-                title: '添加地址'
+                title: '添加地址',
+                requireAuth:true
             }
         },
         
@@ -140,7 +159,8 @@ export default new Router({
             name: 'addManagement',
             component: resolve => require(['../components/view/addEdit/addManagement.vue'], resolve),
             meta: {
-                title: '地址管理'
+                title: '地址管理',
+                requireAuth:true
             }
         },
         {
@@ -148,7 +168,8 @@ export default new Router({
             name: 'shopCar',
             component: resolve => require(['../components/view/userInfo/shopCar.vue'], resolve),
             meta: {
-                title: '购物车'
+                title: '购物车',
+                requireAuth:false
             }
         },
         {
@@ -156,7 +177,8 @@ export default new Router({
             name: 'Coupon',
             component: resolve => require(['../components/view/Coupon/Coupon.vue'], resolve),
             meta: {
-                title: '我的优惠券'
+                title: '我的优惠券',
+                requireAuth:true
             }
         },
         {
@@ -164,7 +186,8 @@ export default new Router({
             name: 'evaluate',
             component: resolve => require(['../components/view/evaluate/evaluate.vue'], resolve),
             meta: {
-                title: '评论'
+                title: '评论',
+                requireAuth:false
             }
         },
         {
@@ -172,7 +195,8 @@ export default new Router({
             name: 'confirmationOrder',
             component: resolve => require(['../components/view/confirmationOrder/confirmationOrder.vue'], resolve),
             meta: {
-                title: '确认订单'
+                title: '确认订单',
+                requireAuth:true
             }
         },
         {
@@ -180,7 +204,8 @@ export default new Router({
             name: 'classification',
             component: resolve => require(['../components/view/classification/classification.vue'], resolve),
             meta: {
-                title: '商品'
+                title: '商品',
+                requireAuth:false
             },
         },
         {
@@ -188,7 +213,8 @@ export default new Router({
             name: 'recommend',
             component: resolve => require(['../components/view/homepage/recommend/recommend.vue'], resolve),
             meta: {
-                title: '到家服务'
+                title: '到家服务',
+                requireAuth:false
             },
         },
         // {
@@ -204,7 +230,8 @@ export default new Router({
             name: 'active',
             component: resolve => require(['../components/view/shopinfo/active.vue'], resolve),
             meta: {
-                title: '活动中心'
+                title: '活动中心',
+                requireAuth:false
             },
         },
         {
@@ -212,7 +239,8 @@ export default new Router({
             name: 'invoiceDateil',
             component: resolve => require(['../components/view/shopinfo/invoice.vue'], resolve),
             meta: {
-                title: '发票列表'
+                title: '发票列表',
+                requireAuth:true
             },
         },
         {
@@ -220,7 +248,8 @@ export default new Router({
             name: 'invoiceInfo',
             component: resolve => require(['../components/view/shopinfo/invoiceInfo.vue'], resolve),
             meta: {
-                title: '发票详情'
+                title: '发票详情',
+                requireAuth:true
             },
         },
         {
@@ -228,7 +257,8 @@ export default new Router({
             name: 'Inviting',
             component: resolve => require(['../components/view/Inviting/Inviting.vue'], resolve),
             meta: {
-                title: '邀请注册'
+                title: '邀请注册',
+                requireAuth:false
             },
         },
         {
@@ -262,7 +292,8 @@ export default new Router({
             name: 'myCollection',
             component: resolve => require(['../components/view/userInfo/myCollection.vue'], resolve),
             meta: {
-                title: '我的收藏'
+                title: '我的收藏',
+                requireAuth:true
             },
         },
         {
@@ -270,7 +301,8 @@ export default new Router({
             name: 'applyRefund',
             component: resolve => require(['../components/view/order/applyrefund.vue'], resolve),
             meta: {
-                title: '申请退款'
+                title: '申请退款',
+                requireAuth:true
             },
         },
         {
@@ -278,7 +310,8 @@ export default new Router({
             name: 'logisticsList',
             component: resolve => require(['../components/view/userInfo/logisticsList.vue'], resolve),
             meta: {
-                title: '物流'
+                title: '物流',
+                requireAuth:true
             },
         },
         {
@@ -286,7 +319,8 @@ export default new Router({
             name: 'logistics',
             component: resolve => require(['../components/view/userInfo/logistics.vue'], resolve),
             meta: {
-                title: '物流'
+                title: '物流',
+                requireAuth:true
             },
         },
         {
@@ -294,7 +328,8 @@ export default new Router({
             name: 'Customer',
             component: resolve => require(['../components/view/userInfo/Customer.vue'], resolve),
             meta: {
-                title: '售后订单'
+                title: '售后订单',
+                requireAuth:true
             },
         },
         {
@@ -302,7 +337,8 @@ export default new Router({
             name: 'detailTemplate',
             component: resolve => require(['../components/view/detailTemplate/templatePages.vue'], resolve),
             meta: {
-                title: '商品详情'
+                title: '商品详情',
+                requireAuth:false
             },
         },
     ]
