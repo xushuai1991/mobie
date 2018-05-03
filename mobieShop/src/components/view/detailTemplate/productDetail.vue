@@ -75,8 +75,8 @@
                     let objs = {
                         title: that.zbdCommodityInfo.name, // 分享标题
                         desc: nickname + " 分享:" + that.zbdCommodityInfo.description ? that.zbdCommodityInfo.description : '', // 分享描述
-                        link: 'http://www.itchun.com/detailTemplate?commodityId=' + that.zbdCommodityId + "&companyId=" + companyId, // 分享链接
-                        imgUrl: "http://www.itchun.com:8887" + encodeURI(that.zbdBannerArr2[0].url),
+                        link: 'http://'+location.hostname+'/detailTemplate?commodityId=' + that.zbdCommodityId + "&companyId=" + companyId, // 分享链接
+                        imgUrl: "http://"+location.hostname+":8887" + encodeURI(that.zbdBannerArr2[0].url),
                         // ", // 分享图标
                         success: function() {
                             // 用户确认分享后执行的回调函数

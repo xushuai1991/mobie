@@ -128,7 +128,7 @@ export default {
     },
     mounted(){
         this.yzn();
-        
+        this.getCommid()
     },
     created(){
         let openid=this.$route.query.openId;
