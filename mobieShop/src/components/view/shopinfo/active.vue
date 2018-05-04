@@ -65,7 +65,7 @@ export default {
 <style lang="less" scoped>
     .Cactive {
         font-size: 0.2rem;
-        margin-top: 0.9rem;
+        // margin-top: 0.9rem;
         background: #ebebeb6e;
         .tipname{
             line-height: 1rem;

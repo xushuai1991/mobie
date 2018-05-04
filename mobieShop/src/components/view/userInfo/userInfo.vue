@@ -48,12 +48,12 @@
                                 </div>
                                 <p class="text_wait">购物车 <span class="carNum">{{num_shopcar}}</span></p>
                             </li>
-                            <li class="markFooter">
+                            <!-- <li class="markFooter">
                                 <div class="collect">
                                     <i class='icon iconfont icon-zuji coloBule'></i>
                                 </div>
                                 <p class="text_wait">足迹</p>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
                 </div>
@@ -104,12 +104,13 @@
                 <ul>
                     <li @click='toLink("address")'>
                             <i class='icon iconfont icon-dingwei fontSize operaicon'></i>
-                            <i class='flag on'></i>
+                            <!-- <i class='flag on'></i> -->
+                            <i class='flag'></i>                            
                             <p class='name_opera'>地址</p>
                     </li>
                     <li @click='toLink("kefu")'>
                             <i class='icon iconfont icon-kefu fontSize operaicon'></i>
-                            <i class='flag on'></i>
+                            <i class='flag'></i>
                             <p class='name_opera'>客服</p>
                     </li>
                     <li @click='toLink("coupon")'>
@@ -118,10 +119,10 @@
                             <p class='name_opera'>优惠券</p>
                         <!-- </router-link> -->
                     </li>
-                    <li @click='toLink("msg")'>
+                    <li @click='toLink("msg")' >
                         <!-- <router-link to=''> -->
                             <i class='icon iconfont icon-lingdang fontSize operaicon'></i>
-                            <i class='flag'></i>
+                            <i :class='{"on":hasnewmsg,"flag":true}'></i>
                             <p class='name_opera'>消息</p>
                         <!-- </router-link> -->
                     </li>
@@ -191,7 +192,8 @@
                     nickname:'',
                     level:''
                 },
-                appid:''
+                appid:'',
+                hasnewmsg:false
             }
         },
         created() {
@@ -217,6 +219,8 @@
                     
                     // 购物车数量
                     this.getNumberShopcar();
+                    // 查询未读消息
+                    this.getMsgwithoutWatch();
                 }
             });
         },
@@ -265,7 +269,6 @@
                     '/api/customer/consumption/points/find?pageSize=1',
                 ).then(res => { 
                     if(res.data.status == 200){
-                        console.log(res)
                         that.point = res.data.info.list[0].effectivePoints
                         that.expiredPoints = res.data.info.list[0].expiredPoints
                     }else{
@@ -310,6 +313,18 @@
                         }
                         case 'customer':{
                             this.$router.push("/Customer");
+                            break;
+                        }
+                        case 'activity':{
+                            this.$router.push('/active');
+                            break;
+                        }
+                        case 'msg':{
+                            this.$router.push('/msgcenter');
+                            break;
+                        }
+                        case 'report':{
+                            Toast('该功能正在开发，请耐心等待。。。');
                             break;
                         }
                         default:{
@@ -429,6 +444,29 @@
                 else{
                     this.$router.push('/mycollection');
                 }
+            },
+            // 查询未读消息的数量
+            getMsgwithoutWatch(){
+                
+                let that=this;
+                this.$http.post('/api/public/message/record/query?pageSize=0',{})
+                .then(res=>{
+                    if(res.data.status==200){
+                        for(let item in res.data.info.list){
+                            if(!item.isRead){
+                                that.hasnewmsg=true
+                                return;
+                            }
+                        }
+                    }
+                    else{
+                        Toast(res.data.msg);
+                    }
+                    console.log(res);
+                })
+                .catch(err=>{
+                    console.log(err);
+                })
             }
         },
         mounted() {
@@ -796,7 +834,8 @@
     }
     .opera_list ul {
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
+
         flex-wrap: wrap;
     }
     .opera_list li {
