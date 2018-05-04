@@ -66,6 +66,7 @@
 </template>
 <script>
 import {Toast} from 'mint-ui'
+import { Indicator } from 'mint-ui';
 export default {
     data(){
         return{
@@ -109,22 +110,27 @@ export default {
                 }
             }
         },
-        // 载入消息列表
+        // 载入未读的消息列表
         getData(){
             this.loading=true;
             let that=this;
-            this.$http.post('/api/public/message/record/query?pageSize=12&page='+this.pagenum,{})
+            Indicator.open('数据载入中...');
+            this.$http.post('/api/public/message/record/query?pageSize=12&page='+this.pagenum,{isRead:0})
             .then(res=>{
                 if(res.data.status==200){
+                    let idlist=[];
                     res.data.info.list.forEach(item=>{
                         let json={
+                            id:item.id,
                             title:item.title,
                             content:item.content,
                             date:item.createTime,
                             sendername:(item.sender==null||item.sender=='')?'系统':item.sender.adminName
                         }
                         that.list.push(json);
+                        idlist.push(item.id);
                     });
+                    that.changeMsgStatus(idlist);
                     let length=res.data.info.list.length;
                     if(length>=0&length<12){
                         that.dataover=true;
@@ -139,12 +145,25 @@ export default {
                     Toast(res.data.msg);
                     that.loading=false;
                 }
+                Indicator.close();
+                console.log(res);
+            })
+            .catch(err=>{
+                Indicator.close();
+                console.log(err);
+                Toast('消息列表失败');
+                that.loading=false;
+            })
+        },
+        // 修改消息状态（变为已读消息）
+        changeMsgStatus(idlist){
+            let that=this;
+            this.$http.post('/api/public/message/record/bulkUpdateIsRead?isRead=1',idlist)
+            .then(res=>{
                 console.log(res);
             })
             .catch(err=>{
                 console.log(err);
-                Toast('消息列表失败');
-                that.loading=false;
             })
         },
         loadMore(){
