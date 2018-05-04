@@ -118,7 +118,7 @@
                             <p class='name_opera'>优惠券</p>
                         <!-- </router-link> -->
                     </li>
-                    <li @click='toLink("msg")'>
+                    <li @click='toLink("msg")' >
                         <!-- <router-link to=''> -->
                             <i class='icon iconfont icon-lingdang fontSize operaicon'></i>
                             <i class='flag'></i>
@@ -132,7 +132,7 @@
                             <p class='name_opera'>活动专区</p>
                         <!-- </router-link> -->
                     </li>
-                    <li @click='toLink("report")'>
+                    <li @click='toLink("report")' v-if='false'>
                         <!-- <router-link to=''> -->
                             <i class='icon iconfont icon-fapiao fontSize operaicon'></i>
                             <i class='flag'></i>
@@ -265,7 +265,6 @@
                     '/api/customer/consumption/points/find?pageSize=1',
                 ).then(res => { 
                     if(res.data.status == 200){
-                        console.log(res)
                         that.point = res.data.info.list[0].effectivePoints
                         that.expiredPoints = res.data.info.list[0].expiredPoints
                     }else{
@@ -310,6 +309,14 @@
                         }
                         case 'customer':{
                             this.$router.push("/Customer");
+                            break;
+                        }
+                        case 'activity':{
+                            this.$router.push('/active');
+                            break;
+                        }
+                        case 'msg':{
+                            this.$router.push('/msgcenter');
                             break;
                         }
                         default:{
@@ -796,7 +803,8 @@
     }
     .opera_list ul {
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
+
         flex-wrap: wrap;
     }
     .opera_list li {
