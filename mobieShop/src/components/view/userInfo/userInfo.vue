@@ -48,12 +48,12 @@
                                 </div>
                                 <p class="text_wait">购物车 <span class="carNum">{{num_shopcar}}</span></p>
                             </li>
-                            <li class="markFooter">
+                            <!-- <li class="markFooter">
                                 <div class="collect">
                                     <i class='icon iconfont icon-zuji coloBule'></i>
                                 </div>
                                 <p class="text_wait">足迹</p>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
                 </div>
