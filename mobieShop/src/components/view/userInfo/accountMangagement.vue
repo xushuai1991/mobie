@@ -17,17 +17,18 @@
         </div>
         <div class="meaningless"></div>
         <div class="user_name" @click="handleClick(item)" v-for='(item,index) in userIfo' :key='index'>{{item.name}}<span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>
-      
         <mt-popup v-model="popupVisible" position="right">
             <div class='userInfoBox'>
                 <h1>{{userName}}</h1>
-                <div v-if='israido'>
-                    <div class='textinfo'>{{listName}}<input type='text' placeholder='请输入' :disabled='isTtrue' v-model='userInput1'></div>
-                    <div class='textinfo'>{{listName2}}<input type='text' placeholder='请输入' v-model='userInput2'></div>
-                </div>
-                <div v-else class='radios'>
-                    <mt-radio title="单项选择" v-model="value" :options="options" @change="check">
-                    </mt-radio>
+                <div v-if='inputShow'>
+                    <div v-if='israido'>
+                        <div class='textinfo'>{{listName}}<input type='text' placeholder='请输入' :disabled='isTtrue' v-model='userInput1'></div>
+                        <div class='textinfo'>{{listName2}}<input type='text' placeholder='请输入' v-model='userInput2'></div>
+                    </div>
+                    <div v-else class='radios'>
+                        <mt-radio title="单项选择" v-model="value" :options="options" @change="check">
+                        </mt-radio>
+                    </div>
                 </div>
                 <div class='isOk'>
                     <input type='button' class='orderOk' value='确认' @click='upData' />
@@ -38,8 +39,12 @@
     </section>
 </template>
 <script>
-import { Toast } from 'mint-ui';
-import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasdata.js'
+    import {
+        Toast
+    } from 'mint-ui';
+    import {
+        operatelocalstorage
+    } from '../../../assets/javascript/localstorage_hasdata.js'
     import Exif from 'exif-js'
     export default {
         data() {
@@ -53,6 +58,7 @@ import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasda
                 userInput1: '',
                 userInput2: '',
                 userInput3: '',
+                inputShow: true,
                 listName: '',
                 listName2: '',
                 isShow: false,
@@ -89,11 +95,14 @@ import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasda
                         listname1: '新密码',
                         listname2: '重复新密码',
                     },
+                    {
+                        name: '安全退出',
+                    },
                 ]
             }
         },
         created() {
-            this.$root.$emit('header','账号管理');
+            this.$root.$emit('header', '账号管理');
             this.getUserInfo();
         },
         methods: {
@@ -102,8 +111,8 @@ import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasda
             },
             getUserInfo() {
                 let that = this;
-                let data = operatelocalstorage('userinfo',null,'get',null);
-                if(data==null){
+                let data = operatelocalstorage('userinfo', null, 'get', null);
+                if (data == null) {
                     Toast('请登录！');
                     return;
                 }
@@ -144,7 +153,7 @@ import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasda
                 }
                 if (this.userName == '性别') {
                     dataInfo = {
-                        gender: this.value-0
+                        gender: this.value - 0
                     }
                 }
                 if (this.userName == '联系方式') {
@@ -183,6 +192,32 @@ import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasda
                         console.log(error)
                     })
                 }
+                if (this.userName == '安全退出') {
+                    let url = '/api/public/logout';
+                    this.$http({
+                            url: url,
+                            method: 'get',
+                            // 请求体重发送的数据
+                            //headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            //  data:qs.stringify( {
+                            //  }),
+                        })
+                        .then(response => {
+                            console.log(response)
+                            if (response.data.msg == "ok") {
+                                localStorage.clear();
+                                sessionStorage.clear();
+                                sessionStorage.setItem('select_index','我的');
+                                this.$router.push("/")
+                            }
+                        })
+                        .catch(error => {
+                            console.log(error);
+                            alert('网络错误，不能访问');
+                        })
+                    // alert("退出");
+                    return false;
+                }
                 this.$http({
                     url: url,
                     method: 'POST',
@@ -201,6 +236,7 @@ import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasda
                 })
             },
             handleClick: function(name) {
+                this.inputShow = true;
                 let data = this.uerserInfo.data.info.list[0];
                 let orderOk = document.querySelector(".orderOk");
                 this.israido = true
@@ -227,7 +263,7 @@ import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasda
                     // }
                 }
                 if (name.name == '地址') {
-                    sessionStorage.setItem("from",'accountMangagement')
+                    sessionStorage.setItem("from", 'accountMangagement')
                     this.$router.push({
                         path: '/addManagement',
                         name: 'addManagement',
@@ -237,6 +273,9 @@ import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasda
                         }
                     });
                     return false
+                }
+                if (name.name == '安全退出') {
+                    this.inputShow = false;
                 }
                 this.popupVisible = true;
                 this.userName = name.name;
@@ -274,11 +313,9 @@ import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasda
                         let result = this.result;
                         let img = new Image();
                         img.src = result;
-                        
                         //判断图片是否大于100K,是就直接上传，反之压缩图片 
                         if (this.result.length <= (100 * 1024)) {
                             self.headerImage = this.result;
-                            
                             self.postImg(self.headerImage);
                         } else {
                             img.onload = function() {
@@ -433,7 +470,6 @@ import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasda
     }
 </script>
 <style>
-  
     .upImgs {
         z-index: 100;
         top: -2.1rem;
