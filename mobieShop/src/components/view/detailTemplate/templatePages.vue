@@ -21,7 +21,7 @@
                 <div class="zbd-coupon" @click="getcoupon" v-show="couponShow">
                 </div>
                 <div id="zbd-preferences" class="clear">
-                    <p>已选<span>{{ commodityInfo.name }}</span>&ensp;{{ specificationNum }}件</p>
+                    <p>已选<span>{{ commodityInfo.name }}</span><i style="overflow:hidden;"><i v-for="(item,index) in areadyValue" :key="index">&ensp;{{ item.value }}</i></i><i>&ensp;{{ specificationNum }}件</i></p>
                     <p @click="showServer">选择规格&ensp;></p>
                 </div>
                 <!--<div id="zbd-productDescription" class="clear">
@@ -85,11 +85,20 @@
                                 <1?0:commodityInfo.displayQuantity }}</p>
                         </div>
                         <div class='commodityInfoCloseBtn' @click="btnClose">&times;</div>
-                        <div class="commodityInfoLine"></div>
+                        <!-- <div class="commodityInfoLine"></div> -->
                     </div>
-                    <div id="zbd-commoditySpecification" v-show="commoditySpecificationShow" style="height: 5rem;overflow-y: auto;" class="clear">
-                        <ul v-for="(item,index) in specificationArr" :key="index">
-                            <li> <div>{{ item.name }}</div> </li>
+                    <div id="zbd-commoditySpecification" v-show="specificationArr.length == 0?false:true" style="height: 5rem;overflow-y: auto;" class="clear">
+                        <ul>
+                            <li v-for="(item,index) in specificationArr" :key="index" style="position: relative;    margin-bottom: 0.3rem;">
+                                <div class="commodityInfoLines"></div>
+                                <div style="    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    text-align: left;
+    padding-left: 0.3rem;">{{ item.name }}</div>
+                                <ul  class="clear" style="margin-left: 0.3rem;">
+                                    <li v-for="(items,indexs) in item.value" :key="indexs" @click="checkedSpecification(indexs,index,item.name,items)" :class="items.valueClass" class="zbd-checkedSpecification" >{{ items.value }}</li>
+                                </ul>
+                            </li>
                         </ul>
                     </div>
                     <div style="position: relative;">
@@ -109,7 +118,7 @@
                     <p class='shopBxo'>领取优惠劵</p>
                     <ul class='shopBox'>
                         <li v-for='(item,index) in coupon' :key='index'>
-                            <div class='shopFont'>
+                             <div class='shopFont'>
                                 <p>{{item.couponInfo.couponMoney}}元</p>
                                 <p>{{item.couponInfo.couponName}}</p>
                                 <p>使用期限 {{item.couponInfo.starTime.split(" ")[0]}}—{{item.couponInfo.endTime.split(" ")[0]}}</p>
@@ -282,8 +291,9 @@
                 port:'',
                 isFunctionBtn:'',
                 isLogins:'',
-                commoditySpecificationShow:false,
-                specificationArr:''
+                specificationArr:'',
+                specification:'',
+                areadyValue:''
             };
         },
         
@@ -379,6 +389,31 @@
                             }
                             //规格渲染
                             that.specificationArr = JSON.parse(that.commodityInfo.options)
+                           
+                            that.specificationArr.forEach((item,index)=>{
+                                let lengths = item.value.length
+                                 let arrObj = [];
+                                
+                                // 
+                                // objs.value=item.value
+                                console.log(item)
+                               item.value.forEach(item=>{
+                                   let objs = {
+                                    value:'',
+                                    valueClass:{
+                                        optionsCheckeds:true,
+                                        optionsChecked:false
+                                    }
+                                }
+                                   console.log(item)
+                                  objs.value = item
+                                  arrObj.push(objs)
+                               })
+                             console.log(arrObj)
+                             item.value = arrObj
+                            })
+                            
+                            console.log(that.specificationArr)
                         })
                         .catch(function(response) {
                             console.log(response)
@@ -521,7 +556,7 @@
             getcouponData.then(function(result) {
                 // console.log(result)
                 that.coupon = result.data.info.list
-                //  console.log(that.coupon)
+                  console.log(that.coupon)
                 if (that.coupon.length == 0) {
                     that.couponShow = false
                 } else {
@@ -879,6 +914,36 @@
                     }
                 }, 2000);
             },
+            //选择规格
+            checkedSpecification(indexs,index,name,items){
+                this.specificationArr[index].value.forEach(item=>{
+                    item.valueClass.optionsChecked = false
+                    item.valueClass.optionsCheckeds = true
+                })
+                this.specificationArr[index].value[indexs].valueClass.optionsChecked = true
+                this.specificationArr[index].value[indexs].valueClass.optionsCheckeds = false
+
+                    var arrs = [] ;
+                    this.specificationArr.forEach(item=>{
+                        let names = item.name
+                        item.value.forEach(item=>{
+                            let objs = {
+                                name:'',
+                                value:''
+                            }
+                            if(item.valueClass.optionsChecked == false){
+                            }else if(item.valueClass.optionsChecked == true){
+                                objs.name = names
+                                objs.value =  item.value
+                                arrs.push(objs)
+                            }
+                            
+                        })
+                       
+                    })
+                   //  console.log(arrs)
+                     this.areadyValue = arrs
+            },
             lessClick() {
                 if (this.specificationNum == 1) {
                     this.numLessBackground = true
@@ -912,6 +977,33 @@
                     }
                 },
                 confirmPurchaseClick(){
+                   // console.log(this.specificationArr)
+                    var arrs = [] ;
+                    this.specificationArr.forEach(item=>{
+                        let names = item.name
+                        item.value.forEach(item=>{
+                            let objs = {
+                                name:'',
+                                value:''
+                            }
+                            if(item.valueClass.optionsChecked == false){
+                            }else if(item.valueClass.optionsChecked == true){
+                                objs.name = names
+                                objs.value =  item.value
+                                arrs.push(objs)
+                            }
+                            
+                        })
+                       
+                    })
+                    // console.log(arrs)
+                    if(arrs.length != this.specificationArr.length){
+                        Toast({
+                            message: "有未选择的规格值",
+                            duration: 500
+                        });
+                     　　return false;
+                    }
                     let type="^[0-9]*[1-9][0-9]*$"; 
                     let r=new RegExp(type); 
                     let flag=r.test(this.specificationNum);
@@ -957,6 +1049,7 @@
                          let commodityInfo = [];
                          let commodityInfos = this.commodityInfo
                          commodityInfos.nums = this.specificationNum
+                         commodityInfos.options = JOSN.stringify(this.areadyValue)
                          commodityInfo.push(commodityInfos)
                          localStorage.setItem('commodityInfo',JSON.stringify(commodityInfo))
                          this.$router.push('./ordercertain')
@@ -976,6 +1069,9 @@
     };
 </script>
 <style>
+.mint-toast ,.is-placemiddle{
+    z-index:10000000000;
+}
     .clear:after {
         content: "";
         display: block;
@@ -1323,12 +1419,18 @@
         border-top: 0.12rem solid #efefef;
     }
     #zbd-preferences p:nth-child(1) {
+        width: 5.5rem;
+        overflow: hidden;
         float: left;
         color: #7b7b7b;
     }
     #zbd-preferences p:nth-child(1) span {
         margin-left: 0.1rem;
         color: #1d1d1d;
+    }
+    #zbd-preferences p:nth-child(1) i {
+        color: #1d1d1d;
+        font-style:normal
     }
     #zbd-preferences p:nth-child(2) {
         float: right;
@@ -1510,6 +1612,13 @@
         left: 0.3rem;
         border-bottom: 1px solid rgb(221, 221, 221);
     }
+    .commodityInfoLines {
+        width: 6.8rem;
+        position: absolute;
+            top: 0rem;
+        left: 0.3rem;
+        border-bottom: 1px solid rgb(221, 221, 221);
+    }
     .zbd-commodityInfoNums {
         padding-left: 0.4rem;
         padding-top: 0.2rem;
@@ -1561,6 +1670,27 @@
         line-height: 0.9rem;
         font-size: 0.34rem;
         color: #fff;
+    }
+     .zbd-checkedSpecification{
+      float: left;
+        border: 0.02rem solid #f5f5f5;
+        background-color: #f5f5f5;
+        padding: 0.1rem 0.17rem;
+        border-radius: 0.08rem;
+        font-size: 0.24rem;
+        margin: 0 0.3rem 0.08rem 0;
+        color: #555;
+    }
+    
+    .optionsChecked{
+        border-color: #27a1f2; 
+        background-color: #27a1f2; 
+        color: #fff; 
+    }
+    .optionsCheckeds{
+        border-color: #f5f5f5;
+        background-color:  #f5f5f5;
+        color: #555;
     }
     .zbd-evalua {
         padding-top: 2.5rem;
