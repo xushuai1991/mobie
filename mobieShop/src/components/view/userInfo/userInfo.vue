@@ -133,7 +133,7 @@
                             <p class='name_opera'>活动专区</p>
                         <!-- </router-link> -->
                     </li>
-                    <li @click='toLink("report")' v-if='false'>
+                    <li @click='toLink("report")'>
                         <!-- <router-link to=''> -->
                             <i class='icon iconfont icon-fapiao fontSize operaicon'></i>
                             <i class='flag'></i>
@@ -321,6 +321,10 @@
                         }
                         case 'msg':{
                             this.$router.push('/msgcenter');
+                            break;
+                        }
+                        case 'report':{
+                            Toast('该功能正在开发，请耐心等待。。。');
                             break;
                         }
                         default:{

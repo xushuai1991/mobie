@@ -109,6 +109,7 @@ export default {
                 }
             }
         },
+        // 载入消息列表
         getData(){
             this.loading=true;
             let that=this;
