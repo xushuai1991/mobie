@@ -80,7 +80,7 @@ export default {
             }
             let hostName = location.hostname;
             let port = location.port;
-            this.imageUrl = 'http://101.89.175.155';
+            this.imageUrl = 'http://'+ hostName;
             this.imageUrls = 'http://' + hostName + ':' + port;
            // console.log(this.imageUrl)
         },

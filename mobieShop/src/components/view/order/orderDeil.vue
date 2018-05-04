@@ -413,8 +413,9 @@
                             this.orderText = '亲，请确认';
                         }
                         if (orderStaty.orderState == 4) {
+                            this.showBtn4 = false, //取消退款
                             this.showBtn6 = true, //取消退款
-                                this.showBtn5 = true; //立即付款按钮
+                            this.showBtn5 = true; //立即付款按钮
                             this.orderState = '退款中...'
                             this.orderText = '亲,请耐心能等待';
                             this.refundOrder = true
@@ -430,7 +431,7 @@
                         // }
                         if (orderStaty.orderState == 5) {
                             this.showBtn3 = true; //删除订单
-                            this.showBtn8 = true; //申请退款
+                            this.showBtn8 = false; //申请退款
                             this.showBtn4 = false; //退款
                             this.showBtn5 = false; //立即付款按钮
                             this.orderState = '退款完成'
@@ -718,6 +719,7 @@
         text-align: left;
         padding-left: 0.4rem;
         line-height: 0.6rem;
+        margin-top: 0.2rem;
     }
     .CmyOveroderDeil .mint-cell-value {
         width: 100%;
@@ -890,6 +892,7 @@
         line-height: 0.8rem;
         padding-top: 0.2rem;
         padding-left: 0.2rem;
+        margin-bottom:1rem;
         position: relative;
         color: #bababa;
         input {

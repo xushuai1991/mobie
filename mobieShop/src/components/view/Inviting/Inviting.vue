@@ -63,14 +63,15 @@
         data() {
             return {
                 totalSrc: '',
-                wxSrc: 'http://101.89.175.155:8887/customer/resource/qrCode.png?content=',
-                address: 'http://www.itchun.com/invitingGift',
+                wxSrc: 'http://'+location.hostname+':8887/customer/resource/qrCode.png?content=',
+                address: 'http://'+location.hostname+'/invitingGift',
                 // address: '10.1.1.206:8080',                
                 shareUrl: '/invitingGift',
                 paramData: ''
             }
         },
         created() {
+            this.hostName = location.hostname;
             if (!sessionStorage.getItem(sessionStorage.getItem("tiemId"))) {
                 sessionStorage.setItem(sessionStorage.getItem("tiemId"), 1)
                 location.reload();
@@ -138,7 +139,7 @@
                     let objs = {
                         title: '到家商城邀请注册', // 分享标题
                         desc: nickname + ' 邀请你到家商城邀请注册有礼', // 分享描述
-                        link: 'http://www.itchun.com/InvitingGift?recommendedCustomerId=' + that.paramData+"&companyId="+companyId, // 分享链接
+                        link: 'http://'+that.hostName+'/InvitingGift?recommendedCustomerId=' + that.paramData+"&companyId="+companyId, // 分享链接
                         imgUrl: that.totalSrc, // 分享图标
                         success: function() {
                             // 用户确认分享后执行的回调函数

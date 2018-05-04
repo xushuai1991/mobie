@@ -4,20 +4,20 @@
         <div v-if='infoStatu==11'>
             <h1>个人普通发票</h1>
              <div class='ImgBox'><img :src='imgBox'/></div>
-              <div>下载电子发票pdf文件</div>
-             <div>将发票发送至邮箱</div>
+              <div class='downPdfs' >下载电子发票pdf文件</div>
+             <div class='payEmails' >将发票发送至邮箱</div>
         </div>
         <div v-if='infoStatu==21'> 
             <h1>单位普通发票</h1>
              <div class='ImgBox'><img :src='imgBox'/></div>
-             <div >下载电子发票pdf文件</div>
-             <div>将发票发送至邮箱</div>
+             <div class='downPdfs' >下载电子发票pdf文件</div>
+             <div class='payEmails' >将发票发送至邮箱</div>
         </div>
         <div v-if='infoStatu==22'> 
             <h1>单位专用发票</h1>
             <div class='ImgBox'><img :src='imgBox'/></div>
-             <div class='downPdf' @click='downPdf' ><a href='./invite-gift.png' download='1.pdf'>下载电子发票pdf文件</a></div>
-             <div class='payEmail' @click='payEmail'>将发票发送至邮箱</div>
+             <div class='downPdfs' @click='downPdf' ><a :href='this.pdfurl' download='1.pdf'>下载电子发票pdf文件</a></div>
+             <div class='payEmails' @click='payEmail'>将发票发送至邮箱</div>
         </div>
     </section>
 </template>
@@ -74,7 +74,7 @@
                 width:100%;
             }
         }
-        .downPdf,.payEmail{
+        .downPdfs,.payEmails{
             margin:auto;
             margin-top:0.8rem;
             line-height:0.8rem;
