@@ -128,7 +128,7 @@ export default {
     },
     mounted(){
         this.yzn();
-        this.getCommid()
+        // this.getCommid()
     },
     created(){
         let openid=this.$route.query.openId;
@@ -190,7 +190,7 @@ export default {
                     var msg = res.data.msg
                     if (msg !== '登录成功') {
                         Toast(res.data.info);
-                        this.in_resolve=false;
+                        that.in_resolve=false;
                     } else {
                         let data=res.data.info;
                         let json={
@@ -214,11 +214,11 @@ export default {
                                 this.$router.push('/index');
                             }
                             else{
-                                this.$router.push(fromgo);
+                                that.$router.push(fromgo);
                                 sessionStorage.removeItem('fromgo');
                             }
                             // this.$router.push('/index');
-                            this.in_resolve=false;
+                            that.in_resolve=false;
                         }, 1000);
                     }
                     
@@ -227,7 +227,7 @@ export default {
                     Indicator.close();
                     console.log("错误");
                     console.log(err);
-                    this.in_resolve=false;
+                    that.in_resolve=false;
                 })
             }
             else{
@@ -241,7 +241,6 @@ export default {
             if(this.in_resolve){
                 return;
             }
-            Indicator.open('Loading...');
             let that = this
             if(this.phonejson.status){
                 if(this.code==''){
@@ -251,13 +250,14 @@ export default {
                     let that=this;
                     let data='';
                     // let openId=sessionStorage.getItem('openId');
-                    if(openId==''){
+                    if(this.openId==''){
                         data='mobile='+this.phone+'&code='+this.code;
                     }
                     else{
                         data='mobile='+this.phone+'&code='+this.code+'&openId='+this.openId;
                     }
                     this.in_resolve=true;
+                    Indicator.open('Loading...');
                     this.$http.post('/api/customer/account/quickLogin?'+data)
                     .then(function(response){
                         // Toast(response.data.msg);
@@ -277,14 +277,14 @@ export default {
                                 });
                                 let fromgo=sessionStorage.getItem('fromgo');
                                 if(fromgo==null){
-                                    this.$router.push('/index');
+                                    that.$router.push('/index');
                                 }
                                 else{
-                                    this.$router.push(fromgo);
+                                    that.$router.push(fromgo);
                                     sessionStorage.removeItem('fromgo');
                                 }
                                 // that.$router.push('/index');
-                                this.in_resolve=false;
+                                that.in_resolve=false;
                             }, 1000);
                         }
                         else{
@@ -296,7 +296,7 @@ export default {
                     .catch(function(response){
                         Indicator.close();
                          Toast('登录失败');
-                         this.in_resolve=false;
+                         that.in_resolve=false;
                     });
                 }
             }
