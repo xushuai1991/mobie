@@ -283,7 +283,7 @@
                     }
                 }).then((res) => {
                     // this.getDate(this.urlArgs().ordernumber)
-                    Toast()
+                    Toast(res.data.msg)
                 }).catch((err) => {})
             },
             opInt(id, mony) {
@@ -433,7 +433,7 @@
                         // }
                         if (orderStaty.orderState == 5) {
                             this.showBtn3 = true; //删除订单
-                            this.showBtn8 = false; //申请退款
+                            this.showBtn8 = true; //申请开票
                             this.showBtn4 = false; //退款
                             this.showBtn5 = false; //立即付款按钮
                             this.orderState = '退款完成'

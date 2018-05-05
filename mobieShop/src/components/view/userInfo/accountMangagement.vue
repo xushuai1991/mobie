@@ -208,7 +208,8 @@
                                 localStorage.clear();
                                 sessionStorage.clear();
                                 sessionStorage.setItem('select_index','我的');
-                                this.$router.push("/")
+                                
+                                this.$router.push("/index?company="+sessionStorage.getItem('companyId'))
                             }
                         })
                         .catch(error => {
