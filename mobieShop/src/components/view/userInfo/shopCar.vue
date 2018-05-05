@@ -693,6 +693,8 @@
     .shopBox {
         margin-bottom: 0.4rem;
         font-size: 0.2rem;
+        height: 7rem;
+        overflow-y: auto;
         button {
             position: absolute;
             right: 0;
