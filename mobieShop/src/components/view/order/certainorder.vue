@@ -291,7 +291,7 @@
                         commodityid:item.id,
                         commodityname: item.name,
                         score: item.originalPricePoint,
-                        moneycanduct: item.originalPriceMoney
+                        moneycanduct:item.originalPrice-item.originalPriceMoney
                     };
                     this.deductionlist.push(json1);
                 }
@@ -446,7 +446,10 @@
                             if (carId!==null||carId=='') {
                                 let cartIdList = [];
                                 carId.forEach((item, i) => {
-                                    cartIdList.push(item.cartIdList[0])
+                                    if(item.cartIdList!=null){
+                                        cartIdList.push(item.cartIdList[0])
+                                    }
+                                    
                                 })
                                 let url = '/api/product/shoppingCart/remove';
                                 that.$http({

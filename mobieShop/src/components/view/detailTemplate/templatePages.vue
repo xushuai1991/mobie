@@ -289,7 +289,8 @@
                 isLogins:'',
                 specificationArr:'',
                 specification:'',
-                areadyValue:''
+                areadyValue:'',
+                appid:''
             };
         },
         
@@ -560,16 +561,21 @@
                 return new Promise((resolve,reject)=>{
                     let that=this;
                     let companyid=sessionStorage.getItem('companyId');
-                    
+                    if(!companyid){
+                          companyid = this.getURLparms(companyId)
+                        }
                     this.$http.get('/api/product/order/weixin/config?companyId='+companyid)
                     .then(res=>{
                         if(res.data.status==200){
-                            this.appid=res.data.info.appid;
+                            that.appid=res.data.info.appid;
                             resolve(true);
                         }
                         else{
                             resolve(false);
-                            Toast(res.data.msg);
+                            Toast({
+                                message: res.data.msg,
+                                duration: 1000
+                            });
                         }
                     })
                     .catch(err=>{
@@ -582,7 +588,11 @@
             tologin(){
                 this.getAppId().then(flag=>{
                     if(flag){
+                        
                         let companyid=sessionStorage.getItem('companyId');
+                        if(!companyid){
+                          companyid = this.getURLparms(companyId)
+                        }
                         let url='https://open.weixin.qq.com/connect/oauth2/authorize?appid='+this.appid+
                             '&redirect_uri=http://codes.itchun.com?company='+companyid+
                             '&response_type=code&scope=snsapi_userinfo&state=STATE';
@@ -668,9 +678,15 @@
                     data: {}
                 }).then(response => {
                     if (response.data.status == 200) {
-                        Toast(response.data.msg);
+                        Toast({
+                                message: '领取成功',
+                                duration: 500
+                            });
                     } else {
-                        Toast(response.data.info);
+                        Toast({
+                                message: '领取失败',
+                                duration: 500
+                            });
                         if(response.data.info == "尚未登录"){
                             sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+that.commodityId);
                             // that.$router.push({

@@ -28,6 +28,7 @@
         Swipe,
         SwipeItem
     } from 'mint-ui';
+    import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasdata.js'
     export default {
         props: ['zbdCommodityInfo', 'evaluationTotals', 'zbdHostName', 'zbdPort', 'zbdCommodityId', 'zbdBannerArr2'],
         data() {
@@ -41,8 +42,8 @@
         },
         methods: {
             share() {
-                let userInfo = localStorage.getItem("userinfo")
-                let nickname = (JSON.parse(JSON.parse(userInfo).data))?(JSON.parse(JSON.parse(userInfo).data)).nickname:""
+                let userInfo = localStorage.getItem('userinfo');
+                let nickname =userInfo==null?'': (JSON.parse(JSON.parse(userInfo).data))?(JSON.parse(JSON.parse(userInfo).data)).nickname:""
                 let companyId = sessionStorage.getItem("companyId")
                 if (companyId == null) {
                     companyId = this.getURLparms('companyId')
