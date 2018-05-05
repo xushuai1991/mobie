@@ -785,11 +785,13 @@
                         console.log(customerId)
                         let commodityCount = this.specificationNum
                         console.log(commodityCount)
+                        let options = JSON.stringify(this.areadyValue)
                         let that = this;
                         this.$http.post('/api/product/shoppingCart/insertOne', {
                                 'commodityId': commodityId,
                                 'customerId': customerId,
-                                'commodityCount': commodityCount
+                                'commodityCount': commodityCount,
+                                'options':options
                             })
                             .then(function(response) {
                                 console.log(response)
