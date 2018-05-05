@@ -679,13 +679,13 @@
                 }).then(response => {
                     if (response.data.status == 200) {
                         Toast({
-                                message: response.data.msg,
-                                duration: 1000
+                                message: '领取成功',
+                                duration: 500
                             });
                     } else {
                         Toast({
-                                message: response.data.info,
-                                duration: 1000
+                                message: '领取失败',
+                                duration: 500
                             });
                         if(response.data.info == "尚未登录"){
                             sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+that.commodityId);
