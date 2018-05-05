@@ -572,7 +572,10 @@
                         }
                         else{
                             resolve(false);
-                            Toast(res.data.msg);
+                            Toast({
+                                message: res.data.msg,
+                                duration: 1000
+                            });
                         }
                     })
                     .catch(err=>{
@@ -675,9 +678,15 @@
                     data: {}
                 }).then(response => {
                     if (response.data.status == 200) {
-                        Toast(response.data.msg);
+                        Toast({
+                                message: response.data.msg,
+                                duration: 1000
+                            });
                     } else {
-                        Toast(response.data.info);
+                        Toast({
+                                message: response.data.info,
+                                duration: 1000
+                            });
                         if(response.data.info == "尚未登录"){
                             sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+that.commodityId);
                             // that.$router.push({
