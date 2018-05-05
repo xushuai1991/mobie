@@ -74,11 +74,11 @@
             <div class='shopBoxS'>{{ShopName}}</div>
             <p class='shopBxo'>领取优惠劵</p>
             <ul class='shopBox'>
-                <li v-for='(item,index) in coupon' :key='index'>
+                <li v-for='(item,index) in coupon' :key='index' v-if='item'>
                     <div class='shopFont'>
-                        <p>{{item.couponMoney}}元</p>
-                        <p>{{item.couponName}}</p>
-                        <p>使用期限 {{item.starTime.split(" ")[0]}}—{{item.endTime.split(" ")[0]}}</p>
+                        <p>{{item?item.couponMoney:''}}元</p>
+                        <p>{{item?item.couponName:""}}</p>
+                        <p>使用期限 {{item?item.starTime.split(" ")[0]:""}}—{{item?item.endTime.split(" ")[0]:''}}</p>
                     </div><button @click='okcoupon(item.id)'>领取</button>
                 </li>
             </ul>
