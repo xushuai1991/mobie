@@ -562,7 +562,7 @@
                     let that=this;
                     let companyid=sessionStorage.getItem('companyId');
                     if(!companyid){
-                          companyid = this.getURLparms(companyId)
+                          companyid = this.getURLparms("company")
                         }
                     this.$http.get('/api/product/order/weixin/config?companyId='+companyid)
                     .then(res=>{
@@ -591,7 +591,7 @@
                         
                         let companyid=sessionStorage.getItem('companyId');
                         if(!companyid){
-                          companyid = this.getURLparms(companyId)
+                          companyid = this.getURLparms("company")
                         }
                         let url='https://open.weixin.qq.com/connect/oauth2/authorize?appid='+this.appid+
                             '&redirect_uri=http://codes.itchun.com?company='+companyid+
@@ -1399,6 +1399,8 @@
         padding-top: 0.1rem;
     }
     .shopBox {
+        height: 7rem;
+        overflow-y: auto;
         margin-bottom: 0.4rem;
         font-size: 0.2rem;
         button {
