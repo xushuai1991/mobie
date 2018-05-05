@@ -42,7 +42,7 @@
         },
         methods: {
             share() {
-                let userInfo =operatelocalstorage('userinfo',null,'get',null);
+                let userInfo = localStorage.getItem('userinfo');
                 let nickname =userInfo==null?'': (JSON.parse(JSON.parse(userInfo).data))?(JSON.parse(JSON.parse(userInfo).data)).nickname:""
                 let companyId = sessionStorage.getItem("companyId")
                 if (companyId == null) {
