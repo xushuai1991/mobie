@@ -291,7 +291,7 @@
                         commodityid:item.id,
                         commodityname: item.name,
                         score: item.originalPricePoint,
-                        moneycanduct: item.originalPriceMoney
+                        moneycanduct:item.originalPrice-item.originalPriceMoney
                     };
                     this.deductionlist.push(json1);
                 }
