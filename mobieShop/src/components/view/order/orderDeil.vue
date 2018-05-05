@@ -42,8 +42,8 @@
                                             <li class="goods_info">
                                                 <p class="brandDesc">{{item.commodityBrand}}</p>
                                                 <p class="goods_identifier strlen" style="width:2.5rem;padding-right:0.2rem;"><span></span></p>
-                                                <p class="goods_color">颜色：<span>红色</span></p>
-                                                <p class="goods_size">尺码：<span>尺寸</span></p>
+                                               <p class="goods_color">{{item.condition1Name}}</p>
+                                                <p class="goods_color">{{item.condition2Name}}</p>
                                             </li>
                                             <li class="goods_info_se">
                                                 <p class="goods_price">￥<span>{{item.price}}</span></p>
@@ -81,8 +81,8 @@
                                             <li class="goods_info">
                                                 <p class="brandDesc">套餐:{{items.commodityBrand}}</p>
                                                 <p class="goods_identifier strlen" style="width:2.5rem;padding-right:0.2rem;"><span></span></p>
-                                                <p class="goods_color">颜色：<span>红色</span></p>
-                                                <p class="goods_size">尺码：<span>尺寸</span></p>
+                                                <p class="goods_color">{{items.condition1Name}}</p>
+                                                <p class="goods_color">{{items.condition2Name}}</p>
                                             </li>
                                             <li class="goods_info_se">
                                                 <p class="goods_price">￥<span>{{items.price}}</span></p>
@@ -155,6 +155,7 @@
                 // value1: null,
                 // startDate: new Date(),
                 // endDate: this.addDay(2),
+                commodityName:'',
                 popupVisible: false,
                 currentindex: '',
                 id: '',
@@ -375,6 +376,7 @@
                         "number": ordernumber
                     }
                 }).then((res) => {
+                    console.log(res)
                     if (res.data.info.list.length == 0 || res.data.status != 200) {
                         Toast('订单有问题请联系客服')
                         return false
