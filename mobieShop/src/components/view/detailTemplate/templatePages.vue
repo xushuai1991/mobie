@@ -21,7 +21,7 @@
                 <div class="zbd-coupon" @click="getcoupon" v-show="couponShow">
                 </div>
                 <div id="zbd-preferences" class="clear">
-                    <p>已选<span>{{ commodityInfo.name }}</span>&ensp;{{ specificationNum }}件</p>
+                    <p>已选<span>{{ commodityInfo.name }}</span><i style="overflow:hidden;"><i v-for="(item,index) in areadyValue" :key="index">&ensp;{{ item.value }}</i></i><i>&ensp;{{ specificationNum }}件</i></p>
                     <p @click="showServer">选择规格&ensp;></p>
                 </div>
                 <!--<div id="zbd-productDescription" class="clear">
@@ -85,11 +85,20 @@
                                 <1?0:commodityInfo.displayQuantity }}</p>
                         </div>
                         <div class='commodityInfoCloseBtn' @click="btnClose">&times;</div>
-                        <div class="commodityInfoLine"></div>
+                        <!-- <div class="commodityInfoLine"></div> -->
                     </div>
-                    <div id="zbd-commoditySpecification" v-show="commoditySpecificationShow" style="height: 5rem;overflow-y: auto;" class="clear">
-                        <ul v-for="(item,index) in specificationArr" :key="index">
-                            <li> <div>{{ item.name }}</div> </li>
+                    <div id="zbd-commoditySpecification" v-show="specificationArr.length == 0?false:true" style="height: 5rem;overflow-y: auto;" class="clear">
+                        <ul>
+                            <li v-for="(item,index) in specificationArr" :key="index" style="position: relative;    margin-bottom: 0.3rem;">
+                                <div class="commodityInfoLines"></div>
+                                <div style="    padding-top: 0.2rem;
+                                    padding-bottom: 0.2rem;
+                                    text-align: left;
+                                    padding-left: 0.3rem;">{{ item.name }}</div>
+                                <ul  class="clear" style="margin-left: 0.3rem;">
+                                    <li v-for="(items,indexs) in item.value" :key="indexs" @click="checkedSpecification(indexs,index,item.name,items)" :class="items.valueClass" class="zbd-checkedSpecification" >{{ items.value }}</li>
+                                </ul>
+                            </li>
                         </ul>
                     </div>
                     <div style="position: relative;">
@@ -108,12 +117,13 @@
                 <mt-popup v-model="receiveCoupons" position="bottom" style='width:100%;'>
                     <p class='shopBxo'>领取优惠劵</p>
                     <ul class='shopBox'>
-                        <li v-for='(item,index) in coupon' :key='index'>
-                            <div class='shopFont'>
-                                <p>{{item.couponInfo.couponMoney}}元</p>
-                                <p>{{item.couponInfo.couponName}}</p>
-                                <p>使用期限 {{item.couponInfo.starTime.split(" ")[0]}}—{{item.couponInfo.endTime.split(" ")[0]}}</p>
-                            </div><button @click='okcoupon(item.couponId)'>领取</button>
+                        <li v-for='(item,index) in coupon' :key='index' v-if='item.couponInfo'>
+                             <div class='shopFont'>
+                                <p>{{ item.couponInfo?item.couponInfo.couponMoney:"" }}元</p>
+                                <p>{{ item.couponInfo?item.couponInfo.couponName:"" }}</p>
+                                <p>使用期限 {{ item.couponInfo?item.couponInfo.starTime.split(" ")[0]:"" }}—{{ item.couponInfo?item.couponInfo.endTime.split(" ")[0]:"" }}</p>
+                            </div>
+                            <button @click='okcoupon(item.couponId)'>领取</button>
                         </li>
                     </ul>
                     <div class='zbd_closeBtn' @click="closeCoupon">关闭</div>
@@ -247,7 +257,7 @@
                 },
                 popupVisible: false,
                 shareVisible: false,
-                coupon: [],
+                coupon:[],
                 receiveCoupons: false,
                 couponShow: false,
                 shopNum: '',
@@ -282,8 +292,9 @@
                 port:'',
                 isFunctionBtn:'',
                 isLogins:'',
-                commoditySpecificationShow:false,
-                specificationArr:''
+                specificationArr:'',
+                specification:'',
+                areadyValue:''
             };
         },
         
@@ -379,6 +390,31 @@
                             }
                             //规格渲染
                             that.specificationArr = JSON.parse(that.commodityInfo.options)
+                           
+                            that.specificationArr.forEach((item,index)=>{
+                                let lengths = item.value.length
+                                 let arrObj = [];
+                                
+                                // 
+                                // objs.value=item.value
+                                console.log(item)
+                               item.value.forEach(item=>{
+                                   let objs = {
+                                    value:'',
+                                    valueClass:{
+                                        optionsCheckeds:true,
+                                        optionsChecked:false
+                                    }
+                                }
+                                   console.log(item)
+                                  objs.value = item
+                                  arrObj.push(objs)
+                               })
+                             console.log(arrObj)
+                             item.value = arrObj
+                            })
+                            
+                            console.log(that.specificationArr)
                         })
                         .catch(function(response) {
                             console.log(response)
@@ -521,7 +557,7 @@
             getcouponData.then(function(result) {
                 // console.log(result)
                 that.coupon = result.data.info.list
-                //  console.log(that.coupon)
+                  console.log(that.coupon)
                 if (that.coupon.length == 0) {
                     that.couponShow = false
                 } else {
@@ -532,7 +568,41 @@
             })
         },
         methods: {
-            
+            // 获取appid
+            getAppId(){
+                return new Promise((resolve,reject)=>{
+                    let that=this;
+                    let companyid=sessionStorage.getItem('companyId');
+                    
+                    this.$http.get('/api/product/order/weixin/config?companyId='+companyid)
+                    .then(res=>{
+                        if(res.data.status==200){
+                            this.appid=res.data.info.appid;
+                            resolve(true);
+                        }
+                        else{
+                            resolve(false);
+                            Toast(res.data.msg);
+                        }
+                    })
+                    .catch(err=>{
+                        resolve(false);
+                        Toast('appid获取失败');
+                    })
+                }) 
+            },
+            // 登录
+            tologin(){
+                this.getAppId().then(flag=>{
+                    if(flag){
+                        let companyid=sessionStorage.getItem('companyId');
+                        let url='https://open.weixin.qq.com/connect/oauth2/authorize?appid='+this.appid+
+                            '&redirect_uri=http://codes.itchun.com?company='+companyid+
+                            '&response_type=code&scope=snsapi_userinfo&state=STATE';
+                        location.href=url;
+                    }
+                }); 
+            },
             //获取地址栏参数，name:参数名称
             getUrlParms(name) {
                 let url = this.detailTemplateUrl
@@ -616,12 +686,13 @@
                         Toast(response.data.info);
                         if(response.data.info == "尚未登录"){
                             sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+that.commodityId);
-                            that.$router.push({
-                                name: 'index',
-                                params: {
-                                    logining:true
-                                }
-                            });
+                            // that.$router.push({
+                            //     name: 'index',
+                            //     params: {
+                            //         logining:true
+                            //     }
+                            // });
+                            that.tologin();
                         }
                     }
                 }).catch(error => {
@@ -640,12 +711,13 @@
                             });
                             //that.$router.push('./login')
                             sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+that.commodityId);
-                            that.$router.push({
-                                name: 'index',
-                                params: {
-                                    logining:true
-                                }
-                            });
+                            // that.$router.push({
+                            //     name: 'index',
+                            //     params: {
+                            //         logining:true
+                            //     }
+                            // });
+                             that.tologin();
                         } else {
                             that.$router.push({
                                 name: 'index',
@@ -682,12 +754,13 @@
                             );
                             //this.$router.push('./login')
                             sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+this.commodityId);
-                            this.$router.push({
-                                name: 'index',
-                                params: {
-                                    logining:true
-                                }
-                            });
+                            // this.$router.push({
+                            //     name: 'index',
+                            //     params: {
+                            //         logining:true
+                            //     }
+                            // });
+                            this.tologin();
                             return false
                         }
                     let customerData = JSON.parse(JSON.parse(customer).data);
@@ -699,23 +772,26 @@
                             duration: 1000
                         });
                         sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+this.commodityId);
-                        this.$router.push({
-                                name: 'index',
-                                params: {
-                                    logining:true
-                                }
-                            });
+                        // this.$router.push({
+                        //         name: 'index',
+                        //         params: {
+                        //             logining:true
+                        //         }
+                        //     });
+                        this.tologin();
                         return false
                     } else {
                         let customerId = this.customerId
                         console.log(customerId)
                         let commodityCount = this.specificationNum
                         console.log(commodityCount)
+                        let options = JSON.stringify(this.areadyValue)
                         let that = this;
                         this.$http.post('/api/product/shoppingCart/insertOne', {
                                 'commodityId': commodityId,
                                 'customerId': customerId,
-                                'commodityCount': commodityCount
+                                'commodityCount': commodityCount,
+                                'options':options
                             })
                             .then(function(response) {
                                 console.log(response)
@@ -726,12 +802,13 @@
                                         duration: 1000
                                     });
                                     sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+that.commodityId);
-                                    that.$router.push({
-                                        name: 'index',
-                                        params: {
-                                            logining:true
-                                        }
-                                    });
+                                    // that.$router.push({
+                                    //     name: 'index',
+                                    //     params: {
+                                    //         logining:true
+                                    //     }
+                                    // });
+                                    that.tologin();
                                 } else {
                                     Toast({
                                         message: '加入购物车成功',
@@ -779,12 +856,13 @@
                                 });
                                 //that.$router.push('./login')
                                 sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+that.commodityId);
-                                that.$router.push({
-                                    name: 'index',
-                                    params: {
-                                        logining:true
-                                    }
-                                });
+                                // that.$router.push({
+                                //     name: 'index',
+                                //     params: {
+                                //         logining:true
+                                //     }
+                                // });
+                                that.tologin();
                             } else if (response.data.status == 203) {
                                 Toast({
                                     message: response.data.msg,
@@ -879,6 +957,36 @@
                     }
                 }, 2000);
             },
+            //选择规格
+            checkedSpecification(indexs,index,name,items){
+                this.specificationArr[index].value.forEach(item=>{
+                    item.valueClass.optionsChecked = false
+                    item.valueClass.optionsCheckeds = true
+                })
+                this.specificationArr[index].value[indexs].valueClass.optionsChecked = true
+                this.specificationArr[index].value[indexs].valueClass.optionsCheckeds = false
+
+                    var arrs = [] ;
+                    this.specificationArr.forEach(item=>{
+                        let names = item.name
+                        item.value.forEach(item=>{
+                            let objs = {
+                                name:'',
+                                value:''
+                            }
+                            if(item.valueClass.optionsChecked == false){
+                            }else if(item.valueClass.optionsChecked == true){
+                                objs.name = names
+                                objs.value =  item.value
+                                arrs.push(objs)
+                            }
+                            
+                        })
+                       
+                    })
+                   //  console.log(arrs)
+                     this.areadyValue = arrs
+            },
             lessClick() {
                 if (this.specificationNum == 1) {
                     this.numLessBackground = true
@@ -912,6 +1020,33 @@
                     }
                 },
                 confirmPurchaseClick(){
+                   // console.log(this.specificationArr)
+                    var arrs = [] ;
+                    this.specificationArr.forEach(item=>{
+                        let names = item.name
+                        item.value.forEach(item=>{
+                            let objs = {
+                                name:'',
+                                value:''
+                            }
+                            if(item.valueClass.optionsChecked == false){
+                            }else if(item.valueClass.optionsChecked == true){
+                                objs.name = names
+                                objs.value =  item.value
+                                arrs.push(objs)
+                            }
+                            
+                        })
+                       
+                    })
+                    // console.log(arrs)
+                    if(arrs.length != this.specificationArr.length){
+                        Toast({
+                            message: "有未选择的规格值",
+                            duration: 500
+                        });
+                     　　return false;
+                    }
                     let type="^[0-9]*[1-9][0-9]*$"; 
                     let r=new RegExp(type); 
                     let flag=r.test(this.specificationNum);
@@ -946,17 +1081,19 @@
                         if(this.isLogins == 'no'){
                            // this.$router.push('./login')
                            sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+this.commodityId);
-                           this.$router.push({
-                                name: 'index',
-                                params: {
-                                    logining:true
-                                }
-                            });
+                        //    this.$router.push({
+                        //         name: 'index',
+                        //         params: {
+                        //             logining:true
+                        //         }
+                        //     });
+                            this.tologin();
                             return false
                         }
                          let commodityInfo = [];
                          let commodityInfos = this.commodityInfo
                          commodityInfos.nums = this.specificationNum
+                         commodityInfos.options = JSON.stringify(this.areadyValue)
                          commodityInfo.push(commodityInfos)
                          localStorage.setItem('commodityInfo',JSON.stringify(commodityInfo))
                          this.$router.push('./ordercertain')
@@ -976,6 +1113,9 @@
     };
 </script>
 <style>
+.mint-toast ,.is-placemiddle{
+    z-index:10000000000;
+}
     .clear:after {
         content: "";
         display: block;
@@ -1323,12 +1463,18 @@
         border-top: 0.12rem solid #efefef;
     }
     #zbd-preferences p:nth-child(1) {
+        width: 5.5rem;
+        overflow: hidden;
         float: left;
         color: #7b7b7b;
     }
     #zbd-preferences p:nth-child(1) span {
         margin-left: 0.1rem;
         color: #1d1d1d;
+    }
+    #zbd-preferences p:nth-child(1) i {
+        color: #1d1d1d;
+        font-style:normal
     }
     #zbd-preferences p:nth-child(2) {
         float: right;
@@ -1510,6 +1656,13 @@
         left: 0.3rem;
         border-bottom: 1px solid rgb(221, 221, 221);
     }
+    .commodityInfoLines {
+        width: 6.8rem;
+        position: absolute;
+            top: 0rem;
+        left: 0.3rem;
+        border-bottom: 1px solid rgb(221, 221, 221);
+    }
     .zbd-commodityInfoNums {
         padding-left: 0.4rem;
         padding-top: 0.2rem;
@@ -1561,6 +1714,27 @@
         line-height: 0.9rem;
         font-size: 0.34rem;
         color: #fff;
+    }
+     .zbd-checkedSpecification{
+      float: left;
+        border: 0.02rem solid #f5f5f5;
+        background-color: #f5f5f5;
+        padding: 0.1rem 0.17rem;
+        border-radius: 0.08rem;
+        font-size: 0.24rem;
+        margin: 0 0.3rem 0.08rem 0;
+        color: #555;
+    }
+    
+    .optionsChecked{
+        border-color: #27a1f2; 
+        background-color: #27a1f2; 
+        color: #fff; 
+    }
+    .optionsCheckeds{
+        border-color: #f5f5f5;
+        background-color:  #f5f5f5;
+        color: #555;
     }
     .zbd-evalua {
         padding-top: 2.5rem;
