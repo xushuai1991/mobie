@@ -72,7 +72,7 @@
         <!-- 积分抵扣 -->
         <div class='deduction'>
             <p class='label'>
-                <span>积分抵扣（可用积分：{{userinfo.consumptionpoints}}）</span>
+                <span>积分抵扣（可用积分：{{point}}）</span>
             </p>
             <ul>
                 <li v-for='(item,index) in deductionlist' :key='index'>
@@ -216,7 +216,8 @@
                     }
                 ],
                 deductionmoney:0,
-                coupmoney:0
+                coupmoney:0,
+                point:0
             }
         },
         computed: {
@@ -250,13 +251,14 @@
                 let length_old = oldvalue.length;
                 let length_new = newvalue.length;
                 if (length_old > length_new) {
-                    this.userinfo.consumptionpoints += this.deductionlist[length_old - 1].score;
+                    this.point += this.deductionlist[length_old - 1].score;
                 } else if (length_old < length_new) {
-                    if (this.userinfo.consumptionpoints - this.deductionlist[length_new - 1].score < 0) {
+                    if (this.point - this.deductionlist[length_new - 1].score < 0) {
                         Toast('剩余积分不足，无法抵扣！');
                         this.deductionindex.pop();
                     } else {
-                        this.userinfo.consumptionpoints -= this.deductionlist[length_new - 1].score;
+                        this.point-=this.deductionlist[length_new - 1].score;
+                        // this.userinfo.consumptionpoints -= this.deductionlist[length_new - 1].score;
                     }
                 }
             }
@@ -286,6 +288,7 @@
                 this.goodslist.push(json);
                 if (item.originalPricePoint != null) {
                     let json1 = {
+                        commodityid:item.id,
                         commodityname: item.name,
                         score: item.originalPricePoint,
                         moneycanduct: item.originalPriceMoney
@@ -306,9 +309,26 @@
                 this.getDefaultaddress();
                 // console.log(userinfo);
                 this.getCouponcanuse();
+                this.integral();
             }
         },
         methods: {
+            // 获取用户可用总积分
+            integral(){
+                let that = this
+                this.$http.post(
+                    '/api/customer/consumption/points/find?pageSize=1',
+                ).then(res => { 
+                    if(res.data.status == 200){
+                        that.point = res.data.info.list[0].effectivePoints
+                        that.expiredPoints = res.data.info.list[0].expiredPoints
+                    }else{
+                        Toast(res.data.msg);
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
             changeaddress() {
                 this.$router.push({
                     'name': 'addManagement'
@@ -494,12 +514,18 @@
                         condition1Name: item.conditionname1 + item.conditionvalue1,
                         condition2Name: item.conditionname2 + item.conditionvalue2
                     };
+                    for(let item1 in this.deductionindex){
+                        if(this.deductionlist[item1].commodityid==item.id){
+                            json.usePoint=true;
+                            json.pointSum=this.deductionlist[item1].score;
+                        }
+                    }
                     mallOrderList.push(json);
                 });
-                this.deductionindex.forEach(item => {
-                    mallOrderList[item].usePoint = true;
-                    mallOrderList[item].pointSum = this.deductionlist[item].score;
-                })
+                // this.deductionindex.forEach(item => {
+                //     mallOrderList[item].usePoint = true;
+                //     mallOrderList[item].pointSum = this.deductionlist[item].score;
+                // })
                 data.mallOrderList = mallOrderList;
                 this.couponindex.forEach(item => {
                     let json = {
@@ -509,7 +535,7 @@
                     data.couponInfoList.push(json);
                 });
                 console.log(data);
-                this.createOrder(data);
+                // this.createOrder(data);
             }
         }
     }

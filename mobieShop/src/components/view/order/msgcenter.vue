@@ -60,7 +60,7 @@
                 <mt-spinner type="fading-circle"></mt-spinner>
                 加载中...
             </p>
-            <p v-show='dataover' class="page-over">数据已加载完</p>
+            <p v-show='dataover' class="page-over">无新消息</p>
         </ul>
     </div>
 </template>
@@ -130,7 +130,9 @@ export default {
                         that.list.push(json);
                         idlist.push(item.id);
                     });
-                    that.changeMsgStatus(idlist);
+                    if(idlist.length!=0){
+                        that.changeMsgStatus(idlist);
+                    }
                     let length=res.data.info.list.length;
                     if(length>=0&length<12){
                         that.dataover=true;

@@ -203,28 +203,51 @@
                 let userinfo_location=operatelocalstorage('userinfo',null,'get',null);
                 // console.log(userinfo_location);
                 // 收藏数量
-                this.getNumberFavorite();
+                // this.getNumberFavorite();
                 if(userinfo_location!=null){
                     let data = JSON.parse(userinfo_location);
                     this.userinfo=data;
                     this.integral();
-                    let data_willpay={payState:2};
+                    // let data_willpay={payState:2};
                     // let data_willservice={payState:1,serviceState:1};
                     // let data_inservice={payState:1,serviceState:2};
                     // 订单数量计算
-                    this.getNUmberOrder(data_willpay,0);
-                    this.getNumberOrderService(1,1);
-                    this.getNumberOrderService(2,2);
-                    this.getNUmberOrderEval(); 
+                    // this.getNUmberOrder(data_willpay,0);
+                    // this.getNumberOrderService(1,1);
+                    // this.getNumberOrderService(2,2);
+                    // this.getNUmberOrderEval(); 
                     
-                    // 购物车数量
-                    this.getNumberShopcar();
-                    // 查询未读消息
-                    this.getMsgwithoutWatch();
+                    // // 购物车数量
+                    // this.getNumberShopcar();
+                    // // 查询未读消息
+                    // this.getMsgwithoutWatch();
+                    // 相关数量
+                    this.getNumbersAbout();
                 }
             });
         },
         methods: {
+            // 查询数量相关（收藏、购物车、待付款、待服务、服务中、待评价）
+            getNumbersAbout(){
+                let that=this;
+                this.$http.post('/api/product/mall/panel/countsOnMallPanel',{})
+                .then(res=>{
+                    if(res.data.status==200){
+                        let nums=res.data.info;
+                        that.num_collection=nums.favoriteCount;
+                        that.num_shopcar=nums.shoppingCartCount;
+                        that.num_orderlist=[nums.pendingPayment,nums.waitingForService,nums.inService,nums.withoutEvaluate]
+                    }
+                    else{
+                        Toast(res.data.msg);
+                    }
+                    console.log(res);
+                })
+                .catch(err=>{
+                    console.log(err);
+                    Toast('相关数量查询失败');
+                })
+            },
             // 登录
             tologin(){
                 this.getAppId().then(flag=>{
@@ -334,101 +357,101 @@
                 }
             },
             //查询订单数量（待付款，待服务，服务中）
-            getNUmberOrder(data,index){
-                let that=this;
-                this.$http.post('/api/product/order/mall/find?pageSize=0',data)
-                .then(res=>{
-                    if(res.data.status==200){
-                        // console.log(res.data.info.size);
-                        let num=res.data.info.size
-                        that.num_orderlist[index]=num;
-                    }
-                    else{
-                        Toast(res.data.msg);
-                    }
-                    console.log(res);
-                })
-                .catch(err=>{
-                    console.log(err);
-                });
+            // getNUmberOrder(data,index){
+            //     let that=this;
+            //     this.$http.post('/api/product/order/mall/find?pageSize=0',data)
+            //     .then(res=>{
+            //         if(res.data.status==200){
+            //             // console.log(res.data.info.size);
+            //             let num=res.data.info.size
+            //             that.num_orderlist[index]=num;
+            //         }
+            //         else{
+            //             Toast(res.data.msg);
+            //         }
+            //         console.log(res);
+            //     })
+            //     .catch(err=>{
+            //         console.log(err);
+            //     });
                 
-            },
+            // },
             // 查询服务状态订单数量
-            getNumberOrderService(status,index){
-                let that=this;
-                this.$http.post('/api/product/order/mall/find/status?pageSize=0&orderStatus='+status)
-                .then(res=>{
-                    if(res.data.status==200){
-                        // console.log(res.data.info.size);
-                        let num=res.data.info.size
-                        that.num_orderlist[index]=num;
-                    }
-                    else{
-                        Toast(res.data.msg);
-                    }
-                    console.log(res);
-                })
-                .catch(err=>{
-                    console.log(err);
-                });
-            },
+            // getNumberOrderService(status,index){
+            //     let that=this;
+            //     this.$http.post('/api/product/order/mall/find/status?pageSize=0&orderStatus='+status)
+            //     .then(res=>{
+            //         if(res.data.status==200){
+            //             // console.log(res.data.info.size);
+            //             let num=res.data.info.size
+            //             that.num_orderlist[index]=num;
+            //         }
+            //         else{
+            //             Toast(res.data.msg);
+            //         }
+            //         console.log(res);
+            //     })
+            //     .catch(err=>{
+            //         console.log(err);
+            //     });
+            // },
             //查询待评价订单数量
-            getNUmberOrderEval(){
-                let that=this;
-                this.$http.post('/api/product/order/mall/find/withoutEvaluate?pageSize=1',{})
-                .then(res=>{
-                    if(res.data.status==200){
-                        that.num_orderlist[3]=res.data.info.total;
-                    }
-                    console.log(res);
-                    // return 0;
-                })
-                .catch(err=>{
-                    console.log(err);
-                    // return 0;
-                })
-            },
+            // getNUmberOrderEval(){
+            //     let that=this;
+            //     this.$http.post('/api/product/order/mall/find/withoutEvaluate?pageSize=1',{})
+            //     .then(res=>{
+            //         if(res.data.status==200){
+            //             that.num_orderlist[3]=res.data.info.total;
+            //         }
+            //         console.log(res);
+            //         // return 0;
+            //     })
+            //     .catch(err=>{
+            //         console.log(err);
+            //         // return 0;
+            //     })
+            // },
             // 查询总的收藏数
-            getNumberFavorite(){
-                let that=this;
-                this.$http.post('/api/product/commodity/favorite/queryPageList')
-                .then(res=>{
-                    if(res.data.status==401){
-                        localStorage.removeItem('userinfo');
-                        this.userinfo={
-                            id:'',
-                            avatar:'',
-                            nickname:'',
-                            level:''
-                        };
-                    }
-                    if(res.data.status==200){
-                        this.num_collection=res.data.info.total;
-                    }
-                    console.log(res);
-                })
-                .catch(err=>{
-                    console.log(err);
-                });
-            },
+            // getNumberFavorite(){
+            //     let that=this;
+            //     this.$http.post('/api/product/commodity/favorite/queryPageList')
+            //     .then(res=>{
+            //         if(res.data.status==401){
+            //             localStorage.removeItem('userinfo');
+            //             this.userinfo={
+            //                 id:'',
+            //                 avatar:'',
+            //                 nickname:'',
+            //                 level:''
+            //             };
+            //         }
+            //         if(res.data.status==200){
+            //             this.num_collection=res.data.info.total;
+            //         }
+            //         console.log(res);
+            //     })
+            //     .catch(err=>{
+            //         console.log(err);
+            //     });
+            // },
             // 查询购物车内商品数量
-            getNumberShopcar(){
-                let that=this;
-                this.$http.post('/api/product/shoppingCart/myShoppingCart',{})
-                .then(res=>{
-                    if(res.data.status==200){
-                        let count=0;
-                        res.data.info.forEach(item=>{
-                            count+=item.commodityCount;
-                        });
-                        this.num_shopcar=count;
-                    }
-                    console.log(res);
-                })
-                .catch(err=>{
-                    console.log(err);
-                });
-            },
+            // getNumberShopcar(){
+            //     let that=this;
+            //     this.$http.post('/api/product/shoppingCart/myShoppingCart',{})
+            //     .then(res=>{
+            //         if(res.data.status==200){
+            //             let count=0;
+            //             res.data.info.forEach(item=>{
+            //                 count+=item.commodityCount;
+            //             });
+            //             this.num_shopcar=count;
+            //         }
+            //         console.log(res);
+            //     })
+            //     .catch(err=>{
+            //         console.log(err);
+            //     });
+            // },
             toShopCar(){
                 if(this.userinfo.id==''){
                     Toast('请先登录！');
