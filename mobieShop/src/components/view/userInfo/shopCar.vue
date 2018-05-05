@@ -340,7 +340,7 @@
                             var b = data.reduce((v, k) => { //循环
                             k.options = JSON.parse(k.options)
                                 // k.otherInfo.commodityInfo.optionss = JSON.parse()
-                                k.otherInfo.commodityInfo.options= k.options    
+                                k.otherInfo.commodityInfo.options= k.options==null?'': k.options    
                                 k['selected'] = false;
                                 var filters = v.filter((data) => {
                                     return data.commodityCount === k.otherInfo.commodityCompanyId //过滤相同的companyId
