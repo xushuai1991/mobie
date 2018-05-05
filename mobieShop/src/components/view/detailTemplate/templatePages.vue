@@ -92,9 +92,9 @@
                             <li v-for="(item,index) in specificationArr" :key="index" style="position: relative;    margin-bottom: 0.3rem;">
                                 <div class="commodityInfoLines"></div>
                                 <div style="    padding-top: 0.2rem;
-    padding-bottom: 0.2rem;
-    text-align: left;
-    padding-left: 0.3rem;">{{ item.name }}</div>
+                                    padding-bottom: 0.2rem;
+                                    text-align: left;
+                                    padding-left: 0.3rem;">{{ item.name }}</div>
                                 <ul  class="clear" style="margin-left: 0.3rem;">
                                     <li v-for="(items,indexs) in item.value" :key="indexs" @click="checkedSpecification(indexs,index,item.name,items)" :class="items.valueClass" class="zbd-checkedSpecification" >{{ items.value }}</li>
                                 </ul>
@@ -117,12 +117,13 @@
                 <mt-popup v-model="receiveCoupons" position="bottom" style='width:100%;'>
                     <p class='shopBxo'>领取优惠劵</p>
                     <ul class='shopBox'>
-                        <li v-for='(item,index) in coupon' :key='index'>
+                        <li v-for='(item,index) in coupon' :key='index' v-if='item.couponInfo'>
                              <div class='shopFont'>
-                                <p>{{item.couponInfo.couponMoney}}元</p>
-                                <p>{{item.couponInfo.couponName}}</p>
-                                <p>使用期限 {{item.couponInfo.starTime.split(" ")[0]}}—{{item.couponInfo.endTime.split(" ")[0]}}</p>
-                            </div><button @click='okcoupon(item.couponId)'>领取</button>
+                                <p>{{ item.couponInfo?item.couponInfo.couponMoney:"" }}元</p>
+                                <p>{{ item.couponInfo?item.couponInfo.couponName:"" }}</p>
+                                <p>使用期限 {{ item.couponInfo?item.couponInfo.starTime.split(" ")[0]:"" }}—{{ item.couponInfo?item.couponInfo.endTime.split(" ")[0]:"" }}</p>
+                            </div>
+                            <button @click='okcoupon(item.couponId)'>领取</button>
                         </li>
                     </ul>
                     <div class='zbd_closeBtn' @click="closeCoupon">关闭</div>
@@ -256,7 +257,7 @@
                 },
                 popupVisible: false,
                 shareVisible: false,
-                coupon: [],
+                coupon:[],
                 receiveCoupons: false,
                 couponShow: false,
                 shopNum: '',
@@ -567,7 +568,41 @@
             })
         },
         methods: {
-            
+            // 获取appid
+            getAppId(){
+                return new Promise((resolve,reject)=>{
+                    let that=this;
+                    let companyid=sessionStorage.getItem('companyId');
+                    
+                    this.$http.get('/api/product/order/weixin/config?companyId='+companyid)
+                    .then(res=>{
+                        if(res.data.status==200){
+                            this.appid=res.data.info.appid;
+                            resolve(true);
+                        }
+                        else{
+                            resolve(false);
+                            Toast(res.data.msg);
+                        }
+                    })
+                    .catch(err=>{
+                        resolve(false);
+                        Toast('appid获取失败');
+                    })
+                }) 
+            },
+            // 登录
+            tologin(){
+                this.getAppId().then(flag=>{
+                    if(flag){
+                        let companyid=sessionStorage.getItem('companyId');
+                        let url='https://open.weixin.qq.com/connect/oauth2/authorize?appid='+this.appid+
+                            '&redirect_uri=http://codes.itchun.com?company='+companyid+
+                            '&response_type=code&scope=snsapi_userinfo&state=STATE';
+                        location.href=url;
+                    }
+                }); 
+            },
             //获取地址栏参数，name:参数名称
             getUrlParms(name) {
                 let url = this.detailTemplateUrl
@@ -651,12 +686,13 @@
                         Toast(response.data.info);
                         if(response.data.info == "尚未登录"){
                             sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+that.commodityId);
-                            that.$router.push({
-                                name: 'index',
-                                params: {
-                                    logining:true
-                                }
-                            });
+                            // that.$router.push({
+                            //     name: 'index',
+                            //     params: {
+                            //         logining:true
+                            //     }
+                            // });
+                            that.tologin();
                         }
                     }
                 }).catch(error => {
@@ -675,12 +711,13 @@
                             });
                             //that.$router.push('./login')
                             sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+that.commodityId);
-                            that.$router.push({
-                                name: 'index',
-                                params: {
-                                    logining:true
-                                }
-                            });
+                            // that.$router.push({
+                            //     name: 'index',
+                            //     params: {
+                            //         logining:true
+                            //     }
+                            // });
+                             that.tologin();
                         } else {
                             that.$router.push({
                                 name: 'index',
@@ -717,12 +754,13 @@
                             );
                             //this.$router.push('./login')
                             sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+this.commodityId);
-                            this.$router.push({
-                                name: 'index',
-                                params: {
-                                    logining:true
-                                }
-                            });
+                            // this.$router.push({
+                            //     name: 'index',
+                            //     params: {
+                            //         logining:true
+                            //     }
+                            // });
+                            this.tologin();
                             return false
                         }
                     let customerData = JSON.parse(JSON.parse(customer).data);
@@ -734,12 +772,13 @@
                             duration: 1000
                         });
                         sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+this.commodityId);
-                        this.$router.push({
-                                name: 'index',
-                                params: {
-                                    logining:true
-                                }
-                            });
+                        // this.$router.push({
+                        //         name: 'index',
+                        //         params: {
+                        //             logining:true
+                        //         }
+                        //     });
+                        this.tologin();
                         return false
                     } else {
                         let customerId = this.customerId
@@ -761,12 +800,13 @@
                                         duration: 1000
                                     });
                                     sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+that.commodityId);
-                                    that.$router.push({
-                                        name: 'index',
-                                        params: {
-                                            logining:true
-                                        }
-                                    });
+                                    // that.$router.push({
+                                    //     name: 'index',
+                                    //     params: {
+                                    //         logining:true
+                                    //     }
+                                    // });
+                                    that.tologin();
                                 } else {
                                     Toast({
                                         message: '加入购物车成功',
@@ -814,12 +854,13 @@
                                 });
                                 //that.$router.push('./login')
                                 sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+that.commodityId);
-                                that.$router.push({
-                                    name: 'index',
-                                    params: {
-                                        logining:true
-                                    }
-                                });
+                                // that.$router.push({
+                                //     name: 'index',
+                                //     params: {
+                                //         logining:true
+                                //     }
+                                // });
+                                that.tologin();
                             } else if (response.data.status == 203) {
                                 Toast({
                                     message: response.data.msg,
@@ -1038,18 +1079,19 @@
                         if(this.isLogins == 'no'){
                            // this.$router.push('./login')
                            sessionStorage.setItem('fromgo','/detailTemplate?commodityId='+this.commodityId);
-                           this.$router.push({
-                                name: 'index',
-                                params: {
-                                    logining:true
-                                }
-                            });
+                        //    this.$router.push({
+                        //         name: 'index',
+                        //         params: {
+                        //             logining:true
+                        //         }
+                        //     });
+                            this.tologin();
                             return false
                         }
                          let commodityInfo = [];
                          let commodityInfos = this.commodityInfo
                          commodityInfos.nums = this.specificationNum
-                         commodityInfos.options = JOSN.stringify(this.areadyValue)
+                         commodityInfos.options = JSON.stringify(this.areadyValue)
                          commodityInfo.push(commodityInfos)
                          localStorage.setItem('commodityInfo',JSON.stringify(commodityInfo))
                          this.$router.push('./ordercertain')
