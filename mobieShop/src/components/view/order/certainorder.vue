@@ -446,7 +446,10 @@
                             if (carId!==null||carId=='') {
                                 let cartIdList = [];
                                 carId.forEach((item, i) => {
-                                    cartIdList.push(item.cartIdList[0])
+                                    if(item.cartIdList!=null){
+                                        cartIdList.push(item.cartIdList[0])
+                                    }
+                                    
                                 })
                                 let url = '/api/product/shoppingCart/remove';
                                 that.$http({
