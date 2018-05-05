@@ -277,10 +277,10 @@
                     id: item.id,
                     name: item.name,
                     imgurl: item.commodityImageList.length > 0 ? item.commodityImageList[0].url : '',
-                    conditionname1: '',
-                    conditionvalue1: '',
-                    conditionname2: '',
-                    conditionvalue2: '',
+                    conditionname1: item.options[0]==null?'':item.options[0].name,
+                    conditionvalue1: item.options[0]==null?'':item.options[0].value,
+                    conditionname2: item.options[1]==null?'':item.options[1].name,
+                    conditionvalue2: item.options[1]==null?'':item.options[1].value,
                     price_unit: item.originalPrice,
                     nums: item.nums,
                     childlist: []
@@ -443,7 +443,7 @@
                         console.log(res)
                         if (res.data.status == 200) {
                             let carId = JSON.parse(localStorage.getItem('commodityInfo'))
-                            if (carId!==null&&carId=='') {
+                            if (carId!==null||carId=='') {
                                 let cartIdList = [];
                                 carId.forEach((item, i) => {
                                     cartIdList.push(item.cartIdList[0])
@@ -511,8 +511,8 @@
                         amount: item.nums,
                         usePoint: false,
                         pointSum: 0,
-                        condition1Name: item.conditionname1 + item.conditionvalue1,
-                        condition2Name: item.conditionname2 + item.conditionvalue2
+                        condition1Name: item.conditionname1 +'：'+ item.conditionvalue1,
+                        condition2Name: item.conditionname2==''?'':(item.conditionname2 + '：'+ item.conditionvalue2) 
                     };
                     for(let item1 in this.deductionindex){
                         if(this.deductionlist[item1].commodityid==item.id){
@@ -535,7 +535,7 @@
                     data.couponInfoList.push(json);
                 });
                 console.log(data);
-                // this.createOrder(data);
+                this.createOrder(data);
             }
         }
     }
