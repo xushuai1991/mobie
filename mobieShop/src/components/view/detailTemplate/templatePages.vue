@@ -289,7 +289,8 @@
                 isLogins:'',
                 specificationArr:'',
                 specification:'',
-                areadyValue:''
+                areadyValue:'',
+                appid:''
             };
         },
         
@@ -564,7 +565,7 @@
                     this.$http.get('/api/product/order/weixin/config?companyId='+companyid)
                     .then(res=>{
                         if(res.data.status==200){
-                            this.appid=res.data.info.appid;
+                            that.appid=res.data.info.appid;
                             resolve(true);
                         }
                         else{
