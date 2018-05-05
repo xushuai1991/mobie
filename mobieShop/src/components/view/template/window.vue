@@ -3,7 +3,7 @@
     <ul class='clear listUl'>
             <li v-for='(item,index) in imgArr' :key='index'>
                 <div class="imgConet">
-                    <div>
+                    <div style="z-index:99;">
                         <a :href="item.url" style="display: inline-block;width: 100%;">
                             <img :src='item.imgSrc !== ""?imageUrl+item.imgSrc:imageUrls+removeDian(item.img)' class="windowImg">
                         </a>

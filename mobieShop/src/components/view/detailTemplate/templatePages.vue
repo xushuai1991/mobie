@@ -14,9 +14,6 @@
                         </mt-swipe-item>
                     </mt-swipe>
                 </div>
-                <!-- <keep-alive v-for='(item,index) in bannerArr1' :key='index'>
-                                <components :templateData='item.componentsData' :is='item.componentsName'  :type='item.componentsName'></components>
-                                </keep-alive> -->
                 <productDetail :zbdCommodityInfo="commodityInfo" :evaluationTotals="evaluationTotal" :zbdHostName="hostName" :zbdPort="port" :zbdCommodityId="commodityId" :zbdBannerArr2="bannerArr2"></productDetail>
                 <div class="zbd-coupon" @click="getcoupon" v-show="couponShow">
                 </div>
@@ -42,10 +39,10 @@
                                     <span>温馨提示：</span>1.该商品为原产地（厂家）发货，每日1该商品为原产地（厂家）发货，每日1该商品为原产地（厂家）发货，每日1该商品为原产地（厂家）发货，每日1该商品为原产地（厂家）发货，每日1
                                 </div> -->
                 <div id="zbd-commodityInfoTitle">商品信息</div>
-                <keep-alive v-for='(item,index) in detailImgArr1' :key='index'>
+                <keep-alive v-for='(item,index) in comlists' :key='index'>
                     <components :templateData='item.componentsData' :is='item.componentsName' :type='item.componentsName'></components>
                 </keep-alive>
-                <div v-show="evaluationListNoShow" style="color: #bfbfbf;font-size: .26rem;text-align: center;">暂无评论！</div>
+                <div v-show="evaluationListNoShow" style="color: #bfbfbf;font-size: .26rem;text-align: center;margin-top:0.3rem;">暂无评论！</div>
                 <div id="zbd-customerReviews" class="clear" v-show="evaluationListShows">
                     <p class="zbd-reviewsTitle">顾客评价</p>
                     <div class="zbd-customerReviewContent">
@@ -239,10 +236,8 @@
             return {
                 selected: '1',
                 value: '',
-                comlist: '',
-                bannerArr1: '',
+                comlists: '',
                 bannerArr2: '',
-                detailImgArr1: '',
                 detailTemplateUrl: '',
                 show1: true,
                 show2: false,
@@ -324,11 +319,7 @@
                         // console.log(response)
                         let comlists = JSON.parse(response.data.info[0].comlist)
                         // console.log(comlists)
-                        //that.comlist = comlists
-                        let bannerArr = [];
-                        bannerArr.push(comlists[0])
-                        console.log(bannerArr)
-                        that.bannerArr1 = bannerArr
+                        that.comlists = comlists
                     })
                     .catch(function(response) {
                         console.log(response)
@@ -349,36 +340,32 @@
                         })
                         .then(function(response) {
                             console.log(response)
-                            let detailTemplateId = response.data.info[0].detailTemplateId
-                            let companyId = sessionStorage.getItem("companyId");
-                            //根据详情模板ID查询模板信息
-                            that.$http.post('/api/product/mall/template/queryMap/mall', {
-                                    'templateID': detailTemplateId,
-                                    'templateType': 3,
-                                    'companyId': companyId
-                                })
-                                .then(function(response) {
-                                    console.log(response)
-                                    if (response.data.info.length == 0) {
-                                        console.log('商品没有绑定详情模板')
-                                    } else {
-                                        let comlists = JSON.parse(response.data.info[0].comlist)
-                                        // console.log(comlists)
-                                        // that.comlist = comlists
-                                        let bannerArr = [];
-                                        bannerArr.push(comlists[0])
-                                        let detailImgArr = [];
-                                        for (let i = 1; i < comlists.length; i++) {
-                                            detailImgArr.push(comlists[i])
+                            if(response.data.info.length == 0){
+                               // console.log(11)
+                            }else{
+                                let detailTemplateId = response.data.info[0].detailTemplateId
+                                let companyId = sessionStorage.getItem("companyId");
+                                //根据详情模板ID查询模板信息
+                                that.$http.post('/api/product/mall/template/queryMap/mall', {
+                                        'templateID': detailTemplateId,
+                                        'templateType': 3,
+                                        'companyId': companyId
+                                    })
+                                    .then(function(response) {
+                                        console.log(response)
+                                        if (response.data.info.length == 0) {
+                                            console.log('商品没有绑定详情模板')
+                                        } else {
+                                            let comlists = JSON.parse(response.data.info[0].comlist)
+                                             //console.log(comlists)
+                                            that.comlists = comlists
                                         }
-                                        //console.log(detailImgArr)
-                                        that.bannerArr1 = bannerArr
-                                        that.detailImgArr1 = detailImgArr
-                                    }
-                                })
-                                .catch(function(response) {
-                                    console.log(response)
-                                })
+                                    })
+                                    .catch(function(response) {
+                                        console.log(response)
+                                    })
+                            }
+                            
                             //商品信息的调用及渲染
                             that.commodityInfo = response.data.info[0]
                             console.log(that.commodityInfo)
@@ -389,32 +376,38 @@
                                 that.commodityImageOne = "http://"+that.hostName+":8887" + that.commodityInfo.commodityImageList[0].url
                             }
                             //规格渲染
-                            that.specificationArr = JSON.parse(that.commodityInfo.options)
+                            //console.log(that.commodityInfo.options == "null")
+                            if(that.commodityInfo.options == "null"){
+                                //console.log(1)
+                                that.specificationArr = []
+                            }else{
+                                that.specificationArr = JSON.parse(that.commodityInfo.options)
                            
-                            that.specificationArr.forEach((item,index)=>{
-                                let lengths = item.value.length
-                                 let arrObj = [];
-                                
-                                // 
-                                // objs.value=item.value
-                                console.log(item)
-                               item.value.forEach(item=>{
-                                   let objs = {
-                                    value:'',
-                                    valueClass:{
-                                        optionsCheckeds:true,
-                                        optionsChecked:false
-                                    }
-                                }
-                                   console.log(item)
-                                  objs.value = item
-                                  arrObj.push(objs)
-                               })
-                             console.log(arrObj)
-                             item.value = arrObj
-                            })
-                            
-                            console.log(that.specificationArr)
+                                that.specificationArr.forEach((item,index)=>{
+                                    let lengths = item.value.length
+                                    let arrObj = [];
+                                    
+                                    // 
+                                    // objs.value=item.value
+                                    console.log(item)
+                                    item.value.forEach(item=>{
+                                        let objs = {
+                                            value:'',
+                                            valueClass:{
+                                                optionsCheckeds:true,
+                                                optionsChecked:false
+                                            }
+                                        }
+                                        console.log(item)
+                                        objs.value = item
+                                        arrObj.push(objs)
+                                    })
+                                    console.log(arrObj)
+                                    item.value = arrObj
+                                    })
+                                    
+                                    console.log(that.specificationArr)
+                            }
                         })
                         .catch(function(response) {
                             console.log(response)
@@ -432,16 +425,7 @@
                             console.log(response)
                             let comlists = JSON.parse(response.data.info[0].comlist)
                             // console.log(comlists)
-                            // that.comlist = comlists
-                            let bannerArr = [];
-                            bannerArr.push(comlists[0])
-                            let detailImgArr = [];
-                            for (let i = 1; i < comlists.length; i++) {
-                                detailImgArr.push(comlists[i])
-                            }
-                            //console.log(detailImgArr)
-                            that.bannerArr1 = bannerArr
-                            that.detailImgArr1 = detailImgArr
+                             that.comlists = comlists
                         })
                         .catch(function(response) {
                             console.log(response)
@@ -456,8 +440,11 @@
                     if (response.data.status == 401) {
                         that.shopCarNumShow = false
                         // console.log(that.shopCarNumShow)
-                    } else {
-                        console.log(response.data.info + '2222')
+                    }else if(response.data.status == 403){
+                        that.shopCarNumShow = false
+                    }
+                     else {
+                        //console.log(response.data.info)
                         if (response.data.info.length == 0) {
                             that.shopCarNumShow = false
                         } else if (response.data.info.length > 0) {
@@ -1020,27 +1007,33 @@
                     }
                 },
                 confirmPurchaseClick(){
-                   // console.log(this.specificationArr)
                     var arrs = [] ;
-                    this.specificationArr.forEach(item=>{
-                        let names = item.name
-                        item.value.forEach(item=>{
-                            let objs = {
-                                name:'',
-                                value:''
-                            }
-                            if(item.valueClass.optionsChecked == false){
-                            }else if(item.valueClass.optionsChecked == true){
-                                objs.name = names
-                                objs.value =  item.value
-                                arrs.push(objs)
-                            }
-                            
-                        })
+                   // console.log(this.specificationArr)
+                   if(this.specificationArr.length == 0){
+                       //console.log(1)
                        
-                    })
+                   }else{
+                       
+                        this.specificationArr.forEach(item=>{
+                            let names = item.name
+                            item.value.forEach(item=>{
+                                let objs = {
+                                    name:'',
+                                    value:''
+                                }
+                                if(item.valueClass.optionsChecked == false){
+                                }else if(item.valueClass.optionsChecked == true){
+                                    objs.name = names
+                                    objs.value =  item.value
+                                    arrs.push(objs)
+                                }
+                                
+                            })
+                        
+                        })
                     // console.log(arrs)
-                    if(arrs.length != this.specificationArr.length){
+                   }
+                     if(arrs.length != this.specificationArr.length){
                         Toast({
                             message: "有未选择的规格值",
                             duration: 500
