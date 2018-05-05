@@ -376,8 +376,8 @@
                                 that.commodityImageOne = "http://"+that.hostName+":8887" + that.commodityInfo.commodityImageList[0].url
                             }
                             //规格渲染
-                            //console.log(that.commodityInfo.options == "null")
-                            if(that.commodityInfo.options == "null"){
+                            console.log(that.commodityInfo.options)
+                            if(that.commodityInfo.options == "null" || that.commodityInfo.options == null){
                                 //console.log(1)
                                 that.specificationArr = []
                             }else{
