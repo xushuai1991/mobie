@@ -226,7 +226,7 @@
                 this.goodslist.forEach(item => {
                     total += item.price_unit * item.nums
                 });
-                return total;
+                return total.toFixed(2);;
             },
             finalprice() {
                 let price = this.totalprice;
@@ -270,7 +270,7 @@
             // 订单内的商品数据
             // let data=JSON.parse(localStorage.getItem('shopCar'))[0].listgoods;
             let data = JSON.parse(localStorage.getItem('commodityInfo'));
-            // console.log(data);
+            console.log(data);
             data.forEach(item => {
                 console.log(item)
                 let json = {

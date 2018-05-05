@@ -25,7 +25,8 @@
                                                 <li class="goods_info">
                                                     <p class="brandDesc">{{items.otherInfo.commodityName}}</p>
                                                     <p class="goods_identifier strlen" style="width:3rem;"></p>
-                                                    <p class="goods_color" v-for='cars in items.options'>{{cars.name}}：<span>{{cars.value}}</span></p>
+                                                    <p class="goods_color">颜色：<span>红色</span></p>
+                                                    <p class="goods_size">尺码：<span>尺寸</span></p>
                                                     <!--<p @click="open('picker1',index,indexs)" size="large">{{items.otherInfo.commodityInfo.playTime}}</p>!-->
                                                 </li>
                                                 <li class="goods_info_se">
@@ -73,11 +74,11 @@
             <div class='shopBoxS'>{{ShopName}}</div>
             <p class='shopBxo'>领取优惠劵</p>
             <ul class='shopBox'>
-                <li v-for='(item,index) in coupon' :key='index' v-if='item'>
+                <li v-for='(item,index) in coupon' :key='index'>
                     <div class='shopFont'>
-                        <p>{{item?item.couponMoney:''}}元</p>
-                        <p>{{item?item.couponName:""}}</p>
-                        <p>使用期限 {{item?item.starTime.split(" ")[0]:""}}—{{item?item.endTime.split(" ")[0]:''}}</p>
+                        <p>{{item.couponMoney}}元</p>
+                        <p>{{item.couponName}}</p>
+                        <p>使用期限 {{item.starTime.split(" ")[0]}}—{{item.endTime.split(" ")[0]}}</p>
                     </div><button @click='okcoupon(item.id)'>领取</button>
                 </li>
             </ul>
@@ -337,10 +338,6 @@
                         if (response.data.status == 200) {
                             let data = response.data.info;
                             var b = data.reduce((v, k) => { //循环
-                                k.options = JSON.parse(k.options)
-                                // k.otherInfo.commodityInfo.optionss = JSON.parse()
-                                k.otherInfo.commodityInfo.options= k.options
-                                // k.otherInfo.commodityInfo.options = JSON.parse(k.options)
                                 k['selected'] = false;
                                 var filters = v.filter((data) => {
                                     return data.commodityCount === k.otherInfo.commodityCompanyId //过滤相同的companyId
