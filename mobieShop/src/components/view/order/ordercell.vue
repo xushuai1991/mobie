@@ -395,6 +395,7 @@ export default {
 .detail-goods p.area,
 .detail-goods p.date{
     font-size: .22rem;
+    padding-top: .2rem;
     padding-bottom: .2rem;
 }
 .price{

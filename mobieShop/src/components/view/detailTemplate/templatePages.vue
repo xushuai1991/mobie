@@ -1452,7 +1452,7 @@
     #zbd-preferences {
         font-size: 0.25rem;
         text-align: left;
-        padding: 0.4rem 0.1rem 0.4rem 0.3rem;
+            padding: 0.4rem 0.1rem 0.3rem 0.3rem;
         border-top: 0.12rem solid #efefef;
     }
     #zbd-preferences p:nth-child(1) {
@@ -1460,6 +1460,8 @@
         overflow: hidden;
         float: left;
         color: #7b7b7b;
+       line-height: 0.38rem;
+    height: 0.38rem;
     }
     #zbd-preferences p:nth-child(1) span {
         margin-left: 0.1rem;
