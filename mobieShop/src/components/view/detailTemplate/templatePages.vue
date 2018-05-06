@@ -562,7 +562,7 @@
                     let that=this;
                     let companyid=sessionStorage.getItem('companyId');
                     if(!companyid){
-                          companyid = this.getURLparms("company")
+                          companyid = this.getURLparms("companyId")
                         }
                     this.$http.get('/api/product/order/weixin/config?companyId='+companyid)
                     .then(res=>{
@@ -591,7 +591,7 @@
                         
                         let companyid=sessionStorage.getItem('companyId');
                         if(!companyid){
-                          companyid = this.getURLparms("company")
+                          companyid = this.getURLparms("companyId")
                         }
                         let url='https://open.weixin.qq.com/connect/oauth2/authorize?appid='+this.appid+
                             '&redirect_uri=http://codes.itchun.com?company='+companyid+
