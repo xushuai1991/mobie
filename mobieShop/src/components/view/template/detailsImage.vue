@@ -27,8 +27,8 @@ export default {
             this.imgArr = this.templateData.ImgArr;
             let hostName = location.hostname;
             let port = location.port;
-            this.imageUrl = 'http://'+ hostName;
-            this.imageUrls = 'http://' + hostName + ':' + port;
+            this.imageUrl = 'http://'+ hostName+'/api';
+            this.imageUrls = 'http://' + hostName + ':' + port+'/api';
            // console.log(this.imageUrl)
         },
         methods:{
