@@ -546,10 +546,10 @@
                 // console.log(result)
                 that.coupon = result.data.info.list
                   console.log(that.coupon)
-                if (that.coupon.length == 0) {
-                    that.couponShow = false
-                } else {
+                if (that.coupon.length > 0) {
                     that.couponShow = true
+                } else {
+                    that.couponShow = false
                 }
             }).catch(function(errmsg) {
                 console.log(errmsg)
