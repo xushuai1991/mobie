@@ -8,17 +8,17 @@
                     <h2>{{item.category==11?'个人普通发票':item.category==21?'单位普通发票':"单位专用发票"}}</h2>
                     <p>付款方：{{item.title}}</p>
                     <p>到家服务</p>
-                    <p>发票金额 <span>￥{{item.orderInfo.paidMoney}}</span></p>
-                    <p>开票时间 <span>{{item.finishTime}}</span></p>
+                    <p>发票金额：<span>￥{{item.orderInfo.paidMoney}}</span></p>
+                    <p>开票时间：<span>{{item.finishTime}}</span></p>
                     <div v-if='item.category==22'>
-                        <p>开户银行名称<span>{{item.bankName}}</span></p>
-                        <p>银行账户<span>{{item.bankAccount}}</span></p>
-                        <p>公司注册地址<span>{{item.companyAddress}}</span></p>
-                        <p>公司电话<span>{{item.companyTelephone}}</span></p>
-                        <p>物流公司名称<span>{{item.logisticsCompany}}</span></p>
-                        <p>物流单号<span>{{item.logisticsNumber}}</span></p>
+                        <p>开户银行名称：<span>{{item.bankName}}</span></p>
+                        <p>银行账户：<span>{{item.bankAccount}}</span></p>
+                        <p>公司注册地址：<span>{{item.companyAddress}}</span></p>
+                        <p>公司电话：<span>{{item.companyTelephone}}</span></p>
+                        <p>物流公司名称：<span>{{item.logisticsCompany}}</span></p>
+                        <p>物流单号：<span>{{item.logisticsNumber}}</span></p>
                     </div>
-                    <p>驳回状态<span>{{item.isDisallowance==true?"驳回":"无驳回"}}</span></p>
+                    <p>驳回状态：<span>{{item.isDisallowance==true?"驳回":"无驳回"}}</span></p>
                 </div>
                 <li class="more_loading" v-show="!queryLoading">
                     <mt-spinner type="snake" color="#00ccff" :size="20" v-show="moreLoading&&!allLoaded"></mt-spinner>
