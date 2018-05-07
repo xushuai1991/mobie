@@ -7,7 +7,7 @@
                 <div class='boxCompany'>
                     <h2>{{item.category==11?'个人普通发票':item.category==21?'单位普通发票':"单位专用发票"}}</h2>
                     <p>付款方：{{item.title}}</p>
-                    <p>到家服务</p>
+                    <p class='daoJia'>到家服务</p>
                     <p>发票金额：<span>￥{{item.orderInfo.paidMoney}}</span></p>
                     <p>开票时间：<span>{{item.finishTime}}</span></p>
                     <div v-if='item.category==22'>
@@ -26,11 +26,9 @@
                 </li>
             </li>
         </ul>
-
     </section>
 </template>
 <script>
-
     import {
         MessageBox
     } from 'mint-ui';
@@ -61,11 +59,14 @@
             this.loadMore();
         },
         methods: {
-            goinvoicInfo(item){
+            goinvoicInfo(item) {
                 this.$router.push({
-                    "name":"invoiceInfo"
-                ,params:{"val":item}})
-                sessionStorage.setItem("invoiceInfo",JSON.stringify(item))
+                    "name": "invoiceInfo",
+                    params: {
+                        "val": item
+                    }
+                })
+                sessionStorage.setItem("invoiceInfo", JSON.stringify(item))
             },
             loadMore() {
                 if (this.allLoaded) {
@@ -110,8 +111,7 @@
         background: #4ab6f7;
     }
     .CInvoice {
-        font-size: 0.2rem;
-        // margin-top: 0.8rem;
+        font-size: 0.2rem; // margin-top: 0.8rem;
         .radioBox {
             width: 100%;
             height: 0.2rem;
@@ -163,11 +163,11 @@
             padding: 0 8%;
             line-height: 0.6rem;
             font-size: 0.25rem;
-            &:nth-child(3) {
-                font-size: 0.3rem;
-                color: #4ab6f7;
-                font-weight: 700;
-            }
+        }
+        .daoJia {
+            font-size: 0.3rem;
+            color: #4ab6f7;
+            font-weight: 700;
         }
     }
 </style>
