@@ -6,7 +6,7 @@
         <div class='content' @click.stop='toOrderDetail(data.number,index)'>
             <div class='detail' v-for='(item,index) in data.orderDetails' :key='index'>
                 <div class='img-goods'>
-                    <img :src="item.image" alt="图片丢失">
+                    <img :src="item.image" alt="图片丢失" style='width:100%;height:100%;'>
                 </div>
                 <div class='detail-goods'>
                     <h3 class='name'>FASHION</h3>

@@ -49,8 +49,10 @@
                 method:'post',
                 data:[info.id]
             }).then((res)=>{
-               this.imgBox = res.data.info[0].taxpayerCertificate
-               this.pdfurl = res.data.info[0].url
+            let hostName = location.hostname;
+            let port = location.port;
+            this.imgBox = 'http://' + hostName + ':' + port + '/api' + res.data.info[0].url;
+            this.pdfurl = 'http://' + hostName + ':' + port + '/api' + res.data.info[0].url;
                console.log(this.pdfurl)
 
             }).catch((error)=>{
