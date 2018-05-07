@@ -3,10 +3,10 @@
     <div class="line">
         <div class="line-s"></div>
     </div>
-    <div>
+    <div v-show="titlesDate.mainTitle==''?false:true">
         <p class="mainTitles" v-bind:style="titlesDate.mainTitleStyle">{{ titlesDate.mainTitle }}</p>
     </div>
-    <div>
+    <div v-show="titlesDate.subtitle==''?false:true">
         <p class="subTitles" v-bind:style="titlesDate.subTitleStyle">{{ titlesDate.subtitle }}</p>
     </div>
 </div>
