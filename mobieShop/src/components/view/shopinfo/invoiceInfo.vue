@@ -15,8 +15,8 @@
         </div>
         <div v-if='infoStatu==22'>
             <h1>单位专用发票</h1>
-            <p>物流公司名称:{{this.logisticsCompany}}</p>
-            <p>物流单号:{{this.logisticsNumber}}</p>
+            <p style='line-height: 0.6rem;'>物流公司名称:{{this.logisticsCompany}}</p>
+            <p style='line-height: 0.6rem;'>物流单号:{{this.logisticsNumber}}</p>
         </div>
     </section>
 </template>
