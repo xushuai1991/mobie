@@ -60,6 +60,7 @@
                                             <div class='hiddles'>
                                                 <p>退款金额：{{item.priceEnd}}</p>
                                                 <p>退款状态：{{orderState}}</p>
+                                                <p v-if='briefReason'>驳回理由：{{briefReason}}</p>
                                             </div>
                                         </div>
                                         <!--</mt-cell-swipe>!-->
@@ -158,6 +159,7 @@
                 commodityName:'',
                 popupVisible: false,
                 currentindex: '',
+                briefReason:'',
                 id: '',
                 orstate: '',
                 datechange: '',
@@ -409,7 +411,8 @@
                         this.showBtn5 = true; //立即付款按钮
                         if (orderStaty.orderState == 2) {
                             this.showBtn4 = true, //退款
-                                this.showBtn5 = false; //确认收货
+                            this.showBtn5 = false; //确认收货
+                            this.showBtn8 = true;
                             this.showBtn7 = true; //评价
                             this.orderState = '已经完成'
                             this.orderText = '亲，请确认';
@@ -420,6 +423,16 @@
                             this.showBtn5 = true; //立即付款按钮
                             this.orderState = '退款中...'
                             this.orderText = '亲,请耐心能等待';
+                            this.refundOrder = true
+                        }
+                        
+                        if (orderStaty.orderState == 7) {
+                            this.briefReason = orderStaty.briefReason
+                            this.showBtn4 = true, //取消退款
+                            this.showBtn6 = false, //取消退款
+                            this.showBtn5 = true; //立即付款按钮
+                            this.orderState = '驳回'
+                            this.orderText = '亲,请和客服联系重新退款';
                             this.refundOrder = true
                         }
                         // if (orderStaty.serviceState == 1) {
@@ -433,7 +446,7 @@
                         // }
                         if (orderStaty.orderState == 5) {
                             this.showBtn3 = true; //删除订单
-                            this.showBtn8 = true; //申请开票
+                            this.showBtn8 = false; //申请开票
                             this.showBtn4 = false; //退款
                             this.showBtn5 = false; //立即付款按钮
                             this.orderState = '退款完成'

@@ -8,7 +8,7 @@
         <div class='content' @click.stop='toOrderDetail(data.number,index)'>
             <div :class='{"detail":true,"grey":(type=="unservice"&item.serviceState!=1)||(type=="inservice"&item.serviceState!=2)}' v-for='(item,index) in data.orderDetails' :key='index' >
                 <div class='img-goods'>
-                    <img :src='"http://"+hostName+":"+port+"/api"+item.image' alt="图片丢失">
+                    <img :src='"http://"+hostName+":"+port+"/api"+item.image' alt="图片丢失" style="width:100%;height:100%;">
                 </div>
                 <div class='detail-goods'>
                     <h3 class='name'>{{item.commodityName}}</h3>
@@ -289,7 +289,7 @@ export default {
                 return this.data.orderState==6?'已取消':'未支付';
             }
             else{
-                return this.data.orderState==1?"未完成":this.data.orderState==2?"已完成":this.data.orderState==3?"异常订单":this.data.orderState==4?"退款中":this.data.orderState==5?"退款完成":this.data.orderState==6?'已取消':"";
+                return this.data.orderState==1?"未完成":this.data.orderState==2?"已完成":this.data.orderState==3?"异常订单":this.data.orderState==4?"退款中":this.data.orderState==5?"退款完成":this.data.orderState==6?'已取消':this.data.orderState==7?"驳回":"";
             }
         }
         // totalmoney(){

@@ -3,7 +3,7 @@
         <div v-for='(item,indexs) in dataArr' :key='indexs'>
             <div class='heardImg clearfloat'>
                 <div class='imgLeft'>
-                    <img src='./sofa.jpg'>
+                    <img :src='imageUrlss'>
                 </div>
                 <div class='textInfo'>
                     <div class='clearfloat'>
@@ -74,7 +74,8 @@
                 // 
                 isActive: '',
                 dataArr: [],
-                shopList: {}　　
+                shopList: {},
+                imageUrlss:''
             }　　　　
         },
         methods: {　　
@@ -82,7 +83,10 @@
                 //获取订单详情
                 let orderdetail = JSON.parse(sessionStorage.getItem("orderdetail"));
                 orderdetail.orderDetails.forEach((item, index) => {
-                    console.log(item)
+                    let hostName = location.hostname;
+                    let port = location.port;
+                    this.imageUrlss = 'http://' + hostName + ':' + port + '/api' + item.image;
+                    console.log(item.image)
                     let shopList = {
                         name: '商品名称',
                         num: 18,
@@ -194,14 +198,75 @@
                 if (!fileObject || !window.FileReader) {
                     return;
                 };
+                this.photoCompress(fileObject, {
+                    quality: 0.2
+                },function(base64Codes){
+                    var bl = that.convertBase64UrlToBlob(base64Codes);
                 if (/^image/.test(fileObject.type)) {
                     let fd = new FormData();
-                    fd.append('fileUpload', fileObject);
+                    fd.append('fileUpload', bl);
                     fd.append('type', 'product');
                     that.upfile(fd, index);
                 } else {
                     Toast('只能上传图片');
                     return;
+                }
+                })
+                
+            },convertBase64UrlToBlob(urlData) {
+                var arr = urlData.split(','),
+                    mime = arr[0].match(/:(.*?);/)[1],
+                    bstr = atob(arr[1]),
+                    n = bstr.length,
+                    u8arr = new Uint8Array(n);
+                while (n--) {
+                    u8arr[n] = bstr.charCodeAt(n);
+                }
+                return new Blob([u8arr], {
+                    type: mime
+                });
+            },
+            photoCompress(file, w, objDiv) {
+                let that = this;
+                var ready = new FileReader();
+                /*开始读取指定的Blob对象或File对象中的内容. 当读取操作完成时,readyState属性的值会成为DONE,如果设置了onloadend事件处理程序,则调用之.同时,result属性中将包含一个data: URL格式的字符串以表示所读取文件的内容.*/
+                ready.readAsDataURL(file);
+                ready.onload = function() {
+                    var re = this.result;
+                    that.canvasDataURL(re, w, objDiv)
+                }
+            },
+            canvasDataURL(path, obj, callback) {
+                var img = new Image();
+                img.src = path;
+                img.onload = function() {
+                    var that = this;
+                    // 默认按比例压缩
+                    var w = that.width,
+                        h = that.height,
+                        scale = w / h;
+                    w = obj.width || w;
+                    h = obj.height || (w / scale);
+                    var quality = 0.7; // 默认图片质量为0.7
+                    //生成canvas
+                    var canvas = document.createElement('canvas');
+                    var ctx = canvas.getContext('2d');
+                    // 创建属性节点
+                    var anw = document.createAttribute("width");
+                    anw.nodeValue = w;
+                    var anh = document.createAttribute("height");
+                    anh.nodeValue = h;
+                    canvas.setAttributeNode(anw);
+                    canvas.setAttributeNode(anh);
+                    ctx.drawImage(that, 0, 0, w, h);
+                    // 图像质量
+                    if (obj.quality && obj.quality <= 1 && obj.quality > 0) {
+                        quality = obj.quality;
+                    }
+                    // quality值越小，所绘制出的图像越模糊
+                    var base64 = canvas.toDataURL('image/jpeg', quality);
+                    // 回调函数返回base64的值
+                    callback(base64);
                 }
             },
             upfile(file, index) {
@@ -282,8 +347,12 @@
                 }).then(action => {
                     if (action == 'confirm') {
                         let objArr = [];
+                        
                         this.dataArr.forEach((item, index) => {
                             let imgArr = [];
+                            item.shopList.imglist.forEach((item, index) => {
+                                imgArr.push(item.imgurl)
+                            })
                             let objInfo = {
                                 "score": item.shopList.list[0].classs.zh[0].lastD,
                                 "comment": item.shopList.MarkInfo,
@@ -292,9 +361,8 @@
                                 "images": imgArr + ''
                             }
                             objArr.push(objInfo)
-                            item.shopList.imglist.forEach((item, index) => {
-                                imgArr.push(item.imgurl)
-                            })
+                            console.log(objInfo)
+                            
                         })
                         let urls = '/api/product/commodity/evaluation/insert';
                         that.$http({

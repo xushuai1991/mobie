@@ -51,6 +51,11 @@
                 </p>
                 <p class='inputs'>
                     <span style="color:red;">*</span>
+                    <label for="name_com">银行账户：</label>
+                    <input type="text" class='input_1' v-model="bankAccount" placeholder="开户银行">
+                </p>
+                <p class='inputs'>
+                    <span style="color:red;">*</span>
                     <label for="name_com">注册地址：</label>
                     <input type="text" class='input_1' v-model="address" placeholder="注册地址">
                 </p>
@@ -149,6 +154,7 @@
                 paragraph: '',
                 bank: '',
                 address: '',
+                bankAccount:'',
                 tel: '',
                 Remarks: ''
             }
@@ -235,6 +241,7 @@
                             title: this.company,
                             taxIdentity: this.paragraph,
                             bankName: this.bank,
+                            bankAccount:this.bankAccount,
                             companyAddress: this.address,
                             companyTelephone: this.tel,
                             taxpayerCertificate: (this.imglist + '').replace(/\[|]/g, ''),
