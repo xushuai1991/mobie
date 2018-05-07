@@ -11,10 +11,6 @@
                     <p>发票金额：<span>￥{{item.orderInfo.paidMoney}}</span></p>
                     <p>开票时间：<span>{{item.finishTime}}</span></p>
                     <div v-if='item.category==22'>
-                        <p>开户银行名称：<span>{{item.bankName}}</span></p>
-                        <p>银行账户：<span>{{item.bankAccount}}</span></p>
-                        <p>公司注册地址：<span>{{item.companyAddress}}</span></p>
-                        <p>公司电话：<span>{{item.companyTelephone}}</span></p>
                         <p>物流公司名称：<span>{{item.logisticsCompany}}</span></p>
                         <p>物流单号：<span>{{item.logisticsNumber}}</span></p>
                     </div>
