@@ -4,7 +4,7 @@
             <li v-for='(item,index) in imgArr' :key='index'>
                 <a :href="item.url" style="display: inline-block;width: 100%;">
                     <div class="imgConet">
-                        <div style="z-index:99;">
+                        <div style="z-index:99;;width: 100%;">
                                 <img :src='item.imgSrc !== ""?imageUrl+item.imgSrc:imageUrls+removeDian(item.img)' class="windowImg">
                         </div>
                         <div class="boxesDiv" v-bind:class="item.boxesDivStyle"></div>
