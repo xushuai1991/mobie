@@ -18,7 +18,7 @@
                         <p>物流公司名称<span>{{item.logisticsCompany}}</span></p>
                         <p>物流单号<span>{{item.logisticsNumber}}</span></p>
                     </div>
-                    <p>驳回状态<span>{{item.isDisallowance==true?"不驳回":"驳回"}}</span></p>
+                    <p>驳回状态<span>{{item.isDisallowance==true?"驳回":"无驳回"}}</span></p>
                 </div>
                 <li class="more_loading" v-show="!queryLoading">
                     <mt-spinner type="snake" color="#00ccff" :size="20" v-show="moreLoading&&!allLoaded"></mt-spinner>
