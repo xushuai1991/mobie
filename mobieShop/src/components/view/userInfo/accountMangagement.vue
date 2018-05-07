@@ -209,7 +209,7 @@
                                 sessionStorage.clear();
                                 sessionStorage.setItem('select_index','我的');
                                 
-                                this.$router.push("/index?company="+sessionStorage.getItem('companyId'))
+                                this.$router.push("/index?company="+localStorage.getItem('companyId'))
                             }
                         })
                         .catch(error => {

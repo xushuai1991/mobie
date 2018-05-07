@@ -72,7 +72,7 @@
             // this.code=code;
             this.companyid = companyid;
             if (companyid != null) {
-                sessionStorage.setItem('companyId', companyid);
+                localStorage.setItem('companyId', companyid);
             }
             // if(this.$route.params.logining!=null&&this.$route.params.logining){
             //     this.selected='我的';
