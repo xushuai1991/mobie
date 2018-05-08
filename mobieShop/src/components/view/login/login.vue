@@ -123,7 +123,8 @@ export default {
             to:'',
             clientHeight:0,
             in_resolve:false,
-            openId:''
+            openId:'',
+            companyid:null
         }
     },
     mounted(){
@@ -131,6 +132,11 @@ export default {
         // this.getCommid()
     },
     created(){
+        let companyid=this.$route.query.companyId;
+        this.companyid=companyid;
+        // if(companyid!=null){
+        //     sessionStorage.setItem('companyId', companyid);
+        // }
         let openid=this.$route.query.openId;
         if(openid==null){
             Toast('获取openid失败');
@@ -211,8 +217,14 @@ export default {
                             // let fromgo='/order'
                             
                             if(fromgo==null){
-                                location.href='http://www.itchun.com';
-                                // this.$router.push('/index');
+                                if(that.companyid!=null){
+                                    this.$router.push('/index?company='+that.companyid);
+                                }
+                                else{
+                                    this.$router.push('/index');
+                                }
+                                // location.href='http://www.itchun.com';
+                                // t
                             }
                             else{
                                 that.$router.push(fromgo);
@@ -278,7 +290,13 @@ export default {
                                 });
                                 let fromgo=sessionStorage.getItem('fromgo');
                                 if(fromgo==null){
-                                    location.href='http://www.itchun.com';
+                                    if(that.companyid!=null){
+                                        this.$router.push('/index?company='+that.companyid);
+                                    }
+                                    else{
+                                        this.$router.push('/index');
+                                    }
+                                    // location.href='http://www.itchun.com';
                                     // that.$router.push('/index');
                                 }
                                 else{
