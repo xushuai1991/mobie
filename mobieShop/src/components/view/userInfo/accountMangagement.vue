@@ -205,16 +205,16 @@
                         .then(response => {
                             console.log(response)
                             if (response.data.msg == "ok") {
+                                let companyid=sessionStorage.getItem('companyId');
                                 localStorage.clear();
                                 sessionStorage.clear();
                                 sessionStorage.setItem('select_index','我的');
-                                
-                                this.$router.push("/index?company="+sessionStorage.getItem('companyId'))
+                                this.$router.push("/index?company="+companyid)
                             }
                         })
                         .catch(error => {
                             console.log(error);
-                            alert('网络错误，不能访问');
+                            //         alert('网络错误，不能访问');
                         })
                     // alert("退出");
                     return false;
