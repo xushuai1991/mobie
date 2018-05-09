@@ -13,7 +13,7 @@ export default {
     data () {
         return {
             bgSrc:require('./invite-result.png'),
-            wxSrc:'http://www.itchun.com:8887/static/weixin/78.jpg',
+            wxSrc:'www.itchun.com:8887/static/weixin/78.jpg',
             msg:''
         }
     },
@@ -21,19 +21,19 @@ export default {
         let companyId=this.$route.query.companyId;
         switch(companyId){
             case '78':{
-                this.wxSrc='http://www.itchun.com:8887/static/weixin/78.jpg';
+                this.wxSrc='www.itchun.com:8887/static/weixin/78.jpg';
                 break;
             }
             case '79':{
-                this.wxSrc='http://www.itchun.com:8887/static/weixin/79.jpg';
+                this.wxSrc='www.itchun.com:8887/static/weixin/79.jpg';
                 break;
             }
             case '92':{
-                this.wxSrc='http://www.itchun.com:8887/static/weixin/92.jpg';
+                this.wxSrc='www.itchun.com:8887/static/weixin/92.jpg';
                 break;
             }
             default:{
-                this.wxSrc='http://www.itchun.com:8887/static/weixin/78.jpg';
+                this.wxSrc='www.itchun.com:8887/static/weixin/78.jpg';
                 break;
             }
         }

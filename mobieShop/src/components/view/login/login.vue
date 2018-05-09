@@ -211,7 +211,7 @@ export default {
                             // let fromgo='/order'
                             
                             if(fromgo==null){
-                                location.href='http://www.itchun.com';
+                                location.href='www.itchun.com';
                                 // this.$router.push('/index');
                             }
                             else{
@@ -278,7 +278,7 @@ export default {
                                 });
                                 let fromgo=sessionStorage.getItem('fromgo');
                                 if(fromgo==null){
-                                    location.href='http://www.itchun.com';
+                                    location.href='www.itchun.com';
                                     // that.$router.push('/index');
                                 }
                                 else{

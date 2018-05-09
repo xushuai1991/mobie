@@ -466,7 +466,7 @@
                             // Toast('订单生成成功！');
                             this.$router.push('paying?number=' + number + '&money=' + this.finalprice);
                             // this.$router.push({name:'paying',params:{'number':number}});
-                            // let url='http://www.itchun.com/paying?number='+number;
+                            // let url='www.itchun.com/paying?number='+number;
                             // let weixinurl="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx047af049a2f7c678&redirect_uri="+encodeURI(url)+"&response_type=code&scope=snsapi_base&state=123#wechat_redirect"
                             // window.location.href=encodeURI(weixinurl);
                         } else {
