@@ -99,20 +99,24 @@ export default {
                     let list=res.data.info.list;
                     //  this.$set(that.couplist.list_using,0,{'text':1})
                     list.forEach(item=>{
-                        let json={
-                            'couponMoney':item.couponInfo.couponMoney,
-                            'fullAmount':item.couponInfo.fullAmount,
-                            'couponType':item.couponInfo.couponType,
-                            'endTime':item.couponInfo.endTime.substring(0,10)
+                        
+                        if(item.couponInfo!=null){
+                            let json={
+                                'couponMoney':item.couponInfo.couponMoney,
+                                'fullAmount':item.couponInfo.fullAmount,
+                                'couponType':item.couponInfo.couponType,
+                                'endTime':item.couponInfo.endTime.substring(0,10)
+                            }
+                            // 可领取
+                            if(item.couponInfo.couponStatus=='1'){
+                                that.couplist.list_using.push(json);
+                            }
+                            // 过期
+                            else if(item.couponInfo.couponStatus=='0'){
+                                that.couplist.list_overdue.push(json);
+                            }
                         }
-                        // 可领取
-                        if(item.couponInfo.couponStatus=='1'){
-                            that.couplist.list_using.push(json);
-                        }
-                        // 过期
-                        else if(item.couponInfo.couponStatus=='0'){
-                            that.couplist.list_overdue.push(json);
-                        }
+                        
                     });
                 }
                 else{

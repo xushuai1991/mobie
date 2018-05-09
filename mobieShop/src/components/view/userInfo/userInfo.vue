@@ -294,7 +294,17 @@
                     if(res.data.status == 200){
                         that.point = res.data.info.list[0].effectivePoints
                         that.expiredPoints = res.data.info.list[0].expiredPoints
-                    }else{
+                    }
+                    else if(res.data.status==401){
+                        localStorage.removeItem('userinfo');
+                        that.userinfo={
+                            id:'',
+                            avatar:'',
+                            nickname:'',
+                            level:''
+                        };
+                    }
+                    else{
                         Toast(res.data.msg);
                     }
                 }).catch(err => {
