@@ -3,7 +3,7 @@
         <div class="portrait">
             <div class="my_portrait">头像
                 <div class='upImgs'>
-                    <div style="padding:20px;">
+                    <div style="padding:20px;width:0.5rem;;">
                         <div class="show">
                             <div class="picture" :style="'backgroundImage:url('+headerImage+')'"></div>
                         </div>
@@ -473,6 +473,7 @@
 </script>
 <style>
     .upImgs {
+        width:5rem;
         z-index: 100;
         top: -2.1rem;
     }
@@ -503,6 +504,7 @@
     }
 </style>
 <style lang="less" scoped>
+
     input[type=button] {
         -webkit-appearance: none;
         outline: none
@@ -578,7 +580,8 @@
         text-align: center;
     }
     .my_portrait {
-        width: 100%;
+        overflow:hidden;
+        width: 97%;
         height: 1.8rem;
         line-height: 1.8rem;
         border-bottom: .01rem solid #dcdcdc;
@@ -617,7 +620,7 @@
     .my_contact,
     .address,
     .account_safety {
-        width: 100%;
+        width: 97%;
         height: 1rem;
         line-height: 1rem;
         border-bottom: .01rem solid #dcdcdc;
