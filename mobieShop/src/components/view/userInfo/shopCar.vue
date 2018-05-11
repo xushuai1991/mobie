@@ -19,7 +19,7 @@
                                         <div class="list-box" @touchstart.capture="touchStart" @touchmove.capture="touchmove" @touchend.capture="touchEnd" @click="skip">
                                             <ul class="goods_detail" style='overflow: hidden; margin-top:0.2rem;'>
                                                 <li class="goods_img" style="margin-left:0px;">
-                                                    <input type="checkbox" v-model="items.selected" v-on:change="checkGoods(index,indexs)" style='position: relative;top:-2.4rem;margin-left:0.2rem;'>
+                                                    <input type="checkbox" v-model="items.selected" v-on:change="checkGoods(index,indexs)" style='position: relative;top:-2.3rem;margin-left:0.2rem;'>
                                                     <img :src='items.otherInfo.commodityImageUrl?"http://"+hostName+":"+port+"/api"+items.otherInfo.commodityImageUrl:"./test.jpg"'>
                                                 </li>
                                                 <li class="goods_info">
@@ -72,7 +72,7 @@
         <mt-popup v-model="popupVisible" position="bottom" style='width:100%; margin-bottom: 0.96rem;'>
             <div class='shopBoxS'>{{ShopName}}</div>
             <p class='shopBxo'>领取优惠劵</p>
-            <ul class='shopBox'>
+            <ul class='shopBox' >
                 <li v-for='(item,index) in coupon' :key='index' v-if='item'>
                     <div class='shopFont'>
                         <p>{{item?item.couponMoney:''}}元</p>
@@ -630,7 +630,8 @@
         },
         beforeDestroy() {
             this.$root.$off('loadShopcar');
-        }
+        },
+        
     }
 </script>
 
@@ -834,9 +835,9 @@
     .goods_title {
         width: 100%;
         height: .88rem;
-        line-height: .88rem;
+        line-height:1rem;
         border-bottom: .01rem solid #dcdcdc;
-        font-size: .24rem;
+        font-size: .25rem;
         padding-left: .24rem;
         position: relative;
     }
@@ -893,15 +894,19 @@
         height: 2.7rem;
         margin-left: 0rem;
         text-align: left;
+        // padding-left: .2rem;
     }
     .goods_detail .goods_img img {
         height: 100%;
         min-width: 3rem;
         width: 3rem;
+        // border:none;
+        // outline: none;
     }
     .goods_info {
         margin-top: .3rem;
         line-height: .5rem;
+        // padding-left: .1rem;
     }
     .goods_info p:first-child {
         font-size: .3rem;
@@ -917,6 +922,9 @@
         color: #f38650;
         font-size: .26rem;
         line-height: 1.1rem;
+        position: relative;
+        right:.2rem;
+        // padding-right: .2rem;
     }
     .footer {
         width: 100%;
@@ -1087,6 +1095,7 @@
         position: absolute;
         line-height: 2rem;
         right: -.5rem;
+        top:1.3rem;
         text-align: center;
         button {
             width: 0.5rem;
@@ -1111,10 +1120,12 @@
     .goods_size {
         font-size: 0.2rem;
         color: #707070;
+        padding-left: .1rem;
     }
     .brandDesc {
         font-size: 0.3rem;
         font-weight: 700;
+        padding-left: .1rem;
     }
 </style>
 

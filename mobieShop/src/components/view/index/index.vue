@@ -155,30 +155,21 @@
                 //alert('现在浏览状态')
                 this.isTrue = true;
                 let that = this;
-                let id;
                 //从后台取要浏览的ID
-                this.$http.post('/api/product/mall/template/getString').then(function(response) {
+                let id = this.getURLparms("id");
+                this.$http.post('/api/product/mall/template/queryMap/mall', {
+                    'templateID': id,
+                    'templateType': 1
+                    })
+                    .then(function(response) {
                     //console.log(response)
-                    id = response.data.msg
-                    that.$http.post('/api/product/mall/template/queryMap/mall', {
-                            'templateID': id,
-                            'templateType': 1
-                        })
-                        .then(function(response) {
-                            //console.log(response)
-                            // if(response.data.info == "尚未登录"){
-                            //   that.$router.push({ path: '/login' })
-                            // }
-                            let comlists = JSON.parse(response.data.info[0].comlist)
-                            // console.log(comlists)
-                            that.$store.commit('getTemplateData', comlists) //对应组件的标识
-                        })
-                        .catch(function(response) {
-                            console.log(response)
-                        })
-                }).catch(function(response) {
+                    let comlists = JSON.parse(response.data.info[0].comlist)
+                    // console.log(comlists)
+                    that.$store.commit('getTemplateData', comlists) //对应组件的标识
+                    })
+                    .catch(function(response) {
                     console.log(response)
-                });
+                    })
             } else {
                 // 非浏览状态(手机状态)：根据'启用中'和'商城模板类型'字段，查询首页模板数据。 启用中：查询启用中那一项 isTrue = true  ,  不启用：设置 isTrue = false
                 let ids = this.getURLparms("id");
@@ -279,7 +270,7 @@
                     if (flag) {
                         let companyid = sessionStorage.getItem('companyId');
                         let url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + this.appid +
-                            '&redirect_uri=http://codes.itchun.com?company=' + companyid +
+                            '&redirect_uri=http://pay.jingrunjia.com.cn?company=' + companyid +
                             '&response_type=code&scope=snsapi_userinfo&state=STATE';
                         location.href = url;
                     }
