@@ -45,7 +45,7 @@
           this.isTrue = true;
           let that = this;
           //从后台取要浏览的ID
-          let id = this.getURLparms("templateId");
+          let id = this.getURLparms("id");
           this.$http.post('/api/product/mall/template/queryMap/mall', {
               'templateID': id,
               'templateType': 1
