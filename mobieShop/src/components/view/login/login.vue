@@ -217,19 +217,14 @@ export default {
                             // let fromgo='/order'
                             
                             if(fromgo==null){
-<<<<<<< HEAD
-                                location.href='www.itchun.com';
-                                // this.$router.push('/index');
-=======
                                 if(that.companyid!=null){
                                     this.$router.push('/index?company='+that.companyid);
                                 }
                                 else{
                                     this.$router.push('/index');
                                 }
-                                // location.href='http://www.itchun.com';
+                                // location.href='http://daojia.jingrunjia.com.cn';
                                 // t
->>>>>>> f367d8054bf88f1ddbf74921a2f93a99179888c7
                             }
                             else{
                                 that.$router.push(fromgo);
@@ -295,17 +290,13 @@ export default {
                                 });
                                 let fromgo=sessionStorage.getItem('fromgo');
                                 if(fromgo==null){
-<<<<<<< HEAD
-                                    location.href='www.itchun.com';
-=======
                                     if(that.companyid!=null){
                                         this.$router.push('/index?company='+that.companyid);
                                     }
                                     else{
                                         this.$router.push('/index');
                                     }
-                                    // location.href='http://www.itchun.com';
->>>>>>> f367d8054bf88f1ddbf74921a2f93a99179888c7
+                                    // location.href='http://daojia.jingrunjia.com.cn';
                                     // that.$router.push('/index');
                                 }
                                 else{
