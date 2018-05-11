@@ -242,11 +242,12 @@
                 let orderOk = document.querySelector(".orderOk");
                 this.israido = true
                 if (name.name == '昵称') {
-                    this.userInput1 = data.name;
+                    this.userInput1 = data.nickname;
                     this.isTtrue = true
                 }
                 if (name.name == '性别') {
-                    this.userInput1 = data.name;
+                    console.log(data.gender)
+                    this.value = data.gender?'1':"0";
                     this.israido = false
                 }
                 if (name.name == '联系方式') {
@@ -561,6 +562,7 @@
     .accountMangagement {
         // margin-top: 0.8rem;
         text-align: left;
+        overflow:hidden;
         div {
             position: relative;
         }
