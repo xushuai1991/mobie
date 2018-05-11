@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="meaningless"></div>
-        <div class="user_name" @click="handleClick(item)" v-for='(item,index) in userIfo' :key='index'>{{item.name}}<span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>
+        <div class="user_name" @click="handleClick(item)" v-for='(item,index) in userIfo' :key='index'>{{item.name}}<span>{{item.names}}   <i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>
         <mt-popup v-model="popupVisible" position="right">
             <div class='userInfoBox'>
                 <h1>{{userName}}</h1>
@@ -76,24 +76,29 @@
                         name: '昵称',
                         listname1: '用户姓名:',
                         listname2: '用户姓名1:',
-                        isShow: false
+                        isShow: false,
+                        names: '',
                     },
                     {
-                        name: '性别'
+                        name: '性别',
+                        names: '',
                     },
                     {
                         name: '联系方式',
                         listname1: '手机号:',
                         listname2: '修改手机号',
+                        names: '',
                     },
                     {
-                        name: '地址'
+                        name: '地址',
+                        names: '',
                     },
                     {
                         name: '修改密码',
                         isShow: true,
                         listname1: '新密码',
                         listname2: '重复新密码',
+                        names: '',
                     },
                     {
                         name: '安全退出',
@@ -139,6 +144,11 @@
                     console.log(result)
                     that.uerserInfo = (result)
                     that.headerImage = that.uerserInfo.data.info.list[0].avatar
+                  
+                        that.userIfo[0].names = that.uerserInfo.data.info.list[0].nickname
+                        that.userIfo[1].names = that.uerserInfo.data.info.list[0].gender==true?'男':"女"
+                        that.userIfo[2].names= that.uerserInfo.data.info.list[0].mobile
+                    
                 }).catch(function(errmsg) {
                     console.log(errmsg)
                 })
