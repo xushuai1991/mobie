@@ -294,6 +294,7 @@ import { Indicator } from 'mint-ui';
         .mint-tab-item{
             float:left;
             width:100%;
+            background-color: #fff;
             // position: fixed;
         }
         .page-search {
