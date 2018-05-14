@@ -6,8 +6,8 @@
                     <div class='header'>
                         <p class='userName'><span v-text='item.consigneeName'></span><span v-text='item.consigneeMobilePhone'>15800000000</span></p>
                         <p class='p2'><i class='icon iconfont icon-dizhi1'></i><span>
-                            {{item.area.regionName+'区'+item.province.regionName+item.city.regionName+item.region.regionName+item.address}}
-                            </span></p>
+                                {{item.area.regionName+'区'+item.province.regionName+item.city.regionName+item.region.regionName+item.address}}
+                                </span></p>
                     </div>
                     <div class='footer'>
                         <span><input type='checkbox' v-model='item.isDefaultAddress' @change='routeTo(item)'>设为默认</span>
@@ -102,7 +102,7 @@
                 });
             },
             addAdd() { //新增地址
-            sessionStorage.removeItem("addManagement")
+                sessionStorage.removeItem("addManagement")
                 this.$router.push({
                     path: '/addEdit',
                     name: 'addEdit',
@@ -168,9 +168,19 @@
                         'customerId': data.id
                     }
                 }).then(res => {
-                    this.list = res.data.info.list
-                    this.listpages = res.data.info.pages;
-                    // console.log(res.data.info.list.isDefaultAddress)
+                    let companyId = sessionStorage.getItem('companyId');
+                    if (companyId-0 == 72) {
+                        res.data.info.list.forEach(item => {
+                            console.log(item)
+                            if (item.cityId-0 == 101) {
+                                this.list = [item]
+                                this.listpages = res.data.info.pages;
+                            }
+                        })
+                    } else {
+                        this.list = res.data.info.list
+                        this.listpages = res.data.info.pages;
+                    }
                 }).catch(error => {
                     console.log(error)
                 })
