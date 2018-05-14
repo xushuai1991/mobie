@@ -75,7 +75,7 @@ export default {
     // top:.8rem;
   }
   .mint-tab-container{
-    top: .2rem;
+    top: 1rem;
   }
 }
 

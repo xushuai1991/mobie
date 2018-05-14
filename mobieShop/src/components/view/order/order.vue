@@ -1,6 +1,6 @@
 <template>
     <div class='contain order-xs'>
-        <mt-navbar v-model="selected" fixed>
+        <mt-navbar v-model="selected" fixed >
             <mt-tab-item id="all">全部</mt-tab-item>
             <mt-tab-item id="willpay">待付款</mt-tab-item>
             <mt-tab-item id="willservice">待服务</mt-tab-item>

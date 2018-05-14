@@ -104,7 +104,7 @@
                 <mt-tab-container-item id="等级规划" class='level_tabcontainer'>
                     <div class='container' style='margin-top:-.1rem;'>
                         <header>
-                            <i class='icon iconfont icon-wenjian'></i>
+                            <i class='icon iconfont icon-wenjian font'></i>
                             <span class='title'>会员等级介绍</span>
                         </header>
                         <article>
@@ -124,7 +124,7 @@
                     </div>
                     <div class='container'>
                         <header>
-                            <i class='icon iconfont icon-shijian'></i>
+                            <i class='icon iconfont icon-shijian font'></i>
                             <span class='title'>会员有效时间</span>
                         </header>
                         <article>
@@ -152,7 +152,7 @@
                     </div>
                     <div class='container' style='margin-top:-.1rem;'>
                         <header>
-                            <i class='icon iconfont icon-wenjian1'></i>
+                            <i class='icon iconfont icon-wenjian1 font'></i>
                             <span class='title'>升降级规则</span>
                         </header>
                         <article>
@@ -172,7 +172,7 @@
                     </div>
                     <div class='container' style='margin-top:-.1rem;'>
                         <header>
-                            <i class='icon iconfont icon-rili'></i>
+                            <i class='icon iconfont icon-rili font'></i>
                             <span class='title'>会员等级对照表</span>
                         </header>
                         <article>

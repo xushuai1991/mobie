@@ -19,7 +19,7 @@
         <div class="user_name" @click="handleClick(item)" v-for='(item,index) in userIfo' :key='index'>{{item.name}}<span>{{item.names}}   <i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>
         <mt-popup v-model="popupVisible" position="right">
             <div class='userInfoBox'>
-                <h1>{{userName}}</h1>
+                <h1 class='background'>{{userName}}</h1>
                 <div v-if='inputShow'>
                     <div v-if='israido'>
                         <div class='textinfo'>{{listName}}<input type='text' placeholder='请输入' :disabled='isTtrue' v-model='userInput1'></div>
@@ -31,8 +31,8 @@
                     </div>
                 </div>
                 <div class='isOk'>
-                    <input type='button' class='orderOk' value='确认' @click='upData' />
-                    <input type='button' @click='clearBox' value='取消' />
+                    <input type='button' class='orderOk button border' value='确认' @click='upData' />
+                    <input type='button'  @click='clearBox' value='取消' />
                 </div>
             </div>
         </mt-popup>

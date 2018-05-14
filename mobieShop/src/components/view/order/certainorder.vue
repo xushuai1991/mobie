@@ -332,7 +332,7 @@
             changeaddress() {
                 this.$router.push({
                     'name': 'addManagement',
-                    props:{'compoanyId':sessionStorage.getItem('companyId')}
+                    // props:{'compoanyId':sessionStorage.getItem('companyId')}
                 });
                 sessionStorage.setItem('from', 'ordercertain');
             },

@@ -12,7 +12,7 @@
                                 <div class="goods">
                                     <div class="goods_title type-pay">
                                         <input type="checkbox" class='CinputBox' v-model="item.shopselected" @change="checkShop(index)" /><span>{{item.listgoods[0].otherInfo.company.companyName}}</span>
-                                        <div class="checks" @click='showServer(item.shopname,item.listgoods[0].otherInfo.company.companyId)'>领券</div>
+                                        <div class="checks font" @click='showServer(item.shopname,item.listgoods[0].otherInfo.company.companyId)'>领券</div>
                                         <p></p>
                                     </div>
                                     <div class="goodsBox list-item" v-for="(items,indexs) in item.listgoods" :key="indexs" data-type="0">
@@ -64,7 +64,7 @@
                     合计: <span>￥<i class="price_all" >{{total.toFixed(2)}}</i></span>
                 </li>
                 <li class="pay">
-                    <p @click='Submit'>结算</p>
+                    <p @click='Submit' class='button'>结算</p>
                 </li>
             </ul>
         </footer>
@@ -75,13 +75,13 @@
             <ul class='shopBox' >
                 <li v-for='(item,index) in coupon' :key='index' v-if='item'>
                     <div class='shopFont'>
-                        <p>{{item?item.couponMoney:''}}元</p>
+                        <p class='font'>{{item?item.couponMoney:''}}元</p>
                         <p>{{item?item.couponName:""}}</p>
                         <p>使用期限 {{item?item.starTime.split(" ")[0]:""}}—{{item?item.endTime.split(" ")[0]:''}}</p>
-                    </div><button @click='okcoupon(item.id)'>领取</button>
+                    </div><button @click='okcoupon(item.id)' class='button'>领取</button>
                 </li>
             </ul>
-            <div class='closeBtn' @click="btnClose">关闭</div>
+            <div class='closeBtn button' @click="btnClose">关闭</div>
         </mt-popup>
         <mt-popup v-model="popupVisible2" position="bottom" style='width:100%; margin-bottom: 0.96rem;'>
             <div class='shopBoxS'></div>
@@ -94,7 +94,7 @@
                     </div><button @click='playmoney(item)'>付款</button>
                 </li>
             </ul>
-            <div class='closeBtn' @click="btnClose">关闭</div>
+            <div class='closeBtn button' @click="btnClose">关闭</div>
         </mt-popup>
         <mt-datetime-picker ref="picker1" type="date" v-model="value1" year-format="{value} 年" month-format="{value} 月" date-format="{value} 日" :startDate="startDate" :endDate="endDate" @confirm="handleChange">
         </mt-datetime-picker>

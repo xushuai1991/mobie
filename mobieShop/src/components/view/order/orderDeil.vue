@@ -5,7 +5,7 @@
                                                                                                                             </ul>!-->
         <section>
             <div class="wrap2">
-                <div class='tiemBox'>
+                <div class='tiemBox background'>
                     <p>{{ orderState}}</p>
                     <p v-if='orderState=="等待买家支付"'>
                         <span :endTime="endTime" :callback="callback" :endText="endText">
@@ -71,7 +71,7 @@
                                             <p v-else>{{item.appointTime==null?'预约时间':item.appointTime}}(待确认)</p>
                                         </div>
                                         <div class='appointment' v-if='item.isService'>
-                                            <button @click.stop="appointment(index,item.id,item.appointTime)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>
+                                            <button class='button' @click.stop="appointment(index,item.id,item.appointTime)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>
                                         </div>
                                     </div>
                                     <div class="goodsBox" v-for="(items,indexs) in item.orderDetailList" :key="indexs">
@@ -118,13 +118,13 @@
             <div class='nums'>合计:<span class="moneyColor">￥{{actualMoney}}<span v-if='userPoint'>抵扣金额：{{conversionAmount}}</span></span>
             </div>
             <input type='button' class='delBtn' v-show=showBtn1 @click='clearOrder(number,actualMoney)' value='取消订单'>
-            <input type='button' v-show=showBtn2 value='立即付款' @click='playOrder(number,actualMoney,companyId)'>
+            <input type='button' class='button' v-show=showBtn2 value='立即付款' @click='playOrder(number,actualMoney,companyId)'>
             <input type='button' class='delBtn' v-show=showBtn3 @click='delOrder(number)' value='删除订单'>
             <input type='button' class='delBtn' v-show=showBtn4 @click='applectoinMoney(datas.data.info.list[0])' value='申请退款'>
             <input type='button' class='delBtn' v-show=showBtn6 @click='CloseOrder(number)' value='取消退款'>
-            <input type='button' v-show=showBtn5 @click='OkOrder(number)' value='确认收货'>
-            <input type='button' v-show=showBtn8 @click='opInt(datas.data.info.list[0].id,actualMoney)' value='申请开票'>
-            <input type='button' v-show=showBtn7 @click='comment(datas.data.info.list[0])' value='评价订单'>
+            <input type='button' class='button' v-show=showBtn5 @click='OkOrder(number)' value='确认收货'>
+            <input type='button' class='button' v-show=showBtn8 @click='opInt(datas.data.info.list[0].id,actualMoney)' value='申请开票'>
+            <input type='button' class='button' v-show=showBtn7 @click='comment(datas.data.info.list[0])' value='评价订单'>
         </div>
         <mt-popup v-model="popupVisible" position="bottom" class="popup">
             <mt-picker :slots="dates" @change='onValuesChange' :showToolbar='true'>

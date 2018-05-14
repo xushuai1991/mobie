@@ -108,7 +108,7 @@
                         <div class="zbd-numPlus" @click="plusClick">+</div>
                     </div>
                     <div class="zbd-Confirmation" @click="confirmPurchaseClick">
-                        <p>确认</p>
+                        <p class='button'>确认</p>
                     </div>
                 </mt-popup>
                 <mt-popup v-model="receiveCoupons" position="bottom" style='width:100%;'>
@@ -197,11 +197,11 @@
                                     background: #ff2500;
                                     color: #fff;">{{ shopNum>=100?"99+":shopNum }}</div>
                 </li>
-                <li @click='addShopCar'>
-                    <p>加入购物车</p>
+                <li @click='addShopCar' class='font border'>
+                    <p class='font'>加入购物车</p>
                 </li>
-                <li @click='buyNow'>
-                    <p>立即购买</p>
+                <li @click='buyNow' class='border'>
+                    <p class='button'>立即购买</p>
                 </li>
             </ul>
         </div>
@@ -243,11 +243,11 @@
                 show2: false,
                 commodityInfo: '',
                 productDetailBack: {
-                    productDetailBack1: true,
+                    button: true,
                     productDetailBack2: false
                 },
                 productDetailBacks: {
-                    productDetailBack1: false,
+                    button: false,
                     productDetailBack2: true
                 },
                 popupVisible: false,
@@ -619,17 +619,17 @@
             productDetailBtn1() {
                 this.show1 = true
                 this.show2 = false
-                this.productDetailBack.productDetailBack1 = true
+                this.productDetailBack.button = true
                 this.productDetailBack.productDetailBack2 = false
-                this.productDetailBacks.productDetailBack1 = false
+                this.productDetailBacks.button = false
                 this.productDetailBacks.productDetailBack2 = true
             },
             productDetailBtn2() {
                 this.show1 = false
                 this.show2 = true
-                this.productDetailBack.productDetailBack1 = false
+                this.productDetailBack.button = false
                 this.productDetailBack.productDetailBack2 = true
-                this.productDetailBacks.productDetailBack1 = true
+                this.productDetailBacks.button = true
                 this.productDetailBacks.productDetailBack2 = false
             },
             btnClose() {

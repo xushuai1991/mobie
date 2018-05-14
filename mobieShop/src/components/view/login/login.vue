@@ -1,5 +1,5 @@
 <template>
-    <div :class='{"contain":true,"style-two":styletwo}'>
+    <div class='contain'>
         <div class='imgs'>
             <div v-if='!styletwo'>
                 <img class='logo1' src="static/images/icon1.png" alt="">
@@ -132,7 +132,6 @@ export default {
             in_resolve:false,
             openId:'',
             companyid:null,
-            styletwo:false,
             style2Login1:{
                 width:'100%',
                 height:'2rem',
@@ -148,7 +147,8 @@ export default {
                 backgroundSize:'cover',
                 position:'absolute',
                 bottom:'.6rem'
-            }
+            },
+            styletwo:false
         }
     },
     mounted(){

@@ -38,13 +38,13 @@
                         <ul class="behavior">
                             <li @click="toMycollection">
                                 <div class="collect">
-                                    <i class='icon iconfont icon-xingxing coloBule'></i>
+                                    <i class='icon iconfont icon-xingxing coloBule font'></i>
                                 </div>
                                 <p class="text_wait">收藏 <span class="coller">{{num_collection}}</span></p>
                             </li>
                             <li class="shopCar" @click="toShopCar">
                                 <div class="collect">
-                                    <i class='icon iconfont icon-gouwuche coloBule'></i>
+                                    <i class='icon iconfont icon-gouwuche coloBule font'></i>
                                 </div>
                                 <p class="text_wait">购物车 <span class="carNum">{{num_shopcar}}</span></p>
                             </li>
@@ -103,53 +103,53 @@
             <div class='opera_list'>
                 <ul>
                     <li @click='toLink("address")'>
-                            <i class='icon iconfont icon-dingwei fontSize operaicon'></i>
+                            <i class='icon iconfont icon-dingwei fontSize operaicon font'></i>
                             <!-- <i class='flag on'></i> -->
                             <i class='flag'></i>                            
                             <p class='name_opera'>地址</p>
                     </li>
                     <li @click='toLink("kefu")'>
-                            <i class='icon iconfont icon-kefu fontSize operaicon'></i>
+                            <i class='icon iconfont icon-kefu fontSize operaicon font'></i>
                             <i class='flag'></i>
                             <p class='name_opera'>客服</p>
                     </li>
                     <li @click='toLink("coupon")'>
-                            <i class='icon iconfont icon-youhuijuan fontSize operaicon'></i>
+                            <i class='icon iconfont icon-youhuijuan fontSize operaicon font'></i>
                             <i class='flag'></i>
                             <p class='name_opera'>优惠券</p>
                         <!-- </router-link> -->
                     </li>
                     <li @click='toLink("msg")' >
                         <!-- <router-link to=''> -->
-                            <i class='icon iconfont icon-lingdang fontSize operaicon'></i>
+                            <i class='icon iconfont icon-lingdang fontSize operaicon font'></i>
                             <i :class='{"on":hasnewmsg,"flag":true}'></i>
                             <p class='name_opera'>消息</p>
                         <!-- </router-link> -->
                     </li>
                     <li @click='toLink("activity")'>
                         <!-- <router-link to=''> -->
-                            <i class='icon iconfont icon-liwu fontSize operaicon'></i>
+                            <i class='icon iconfont icon-liwu fontSize operaicon font'></i>
                             <i class='flag'></i>
                             <p class='name_opera'>活动专区</p>
                         <!-- </router-link> -->
                     </li>
                     <li @click='toLink("report")'>
                         <!-- <router-link to=''> -->
-                            <i class='icon iconfont icon-fapiao fontSize operaicon'></i>
+                            <i class='icon iconfont icon-fapiao fontSize operaicon font'></i>
                             <i class='flag'></i>
                             <p class='name_opera'>服务报告更新</p>
                         <!-- </router-link> -->
                     </li>
                     <li @click='toLink("invite")'>
                         <!-- <router-link :to="'/inviting?recommendedCustomerId='+userinfo.id"> -->
-                            <i class='icon iconfont icon-yaoqing fontSize operaicon'></i>
+                            <i class='icon iconfont icon-yaoqing fontSize operaicon font'></i>
                             <i class='flag'></i>
                             <p class='name_opera'>邀请注册</p>
                         <!-- </router-link> -->
                     </li>
                     <li @click='toLink("invoice")'>
                         <!-- <router-link to=''> -->
-                            <i class='icon iconfont icon-printer fontSize operaicon'></i>
+                            <i class='icon iconfont icon-printer fontSize operaicon font'></i>
                             <i class='flag'></i>
                             <p class='name_opera'>发票管理</p>
                         <!-- </router-link> -->

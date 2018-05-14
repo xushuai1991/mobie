@@ -44,11 +44,11 @@
                     </ul>
                 </mt-tab-container-item>
             </mt-tab-container>
-            <div class='closeBtn' @click="btnClose">关闭</div>
+            <div class='closeBtn button' @click="btnClose">关闭</div>
         </mt-popup>
         <baidu-map class="bm-view" style='display:none;'>
         </baidu-map>
-        <mt-badge class='btnStyle' @click.native='saveAddInfo' size="large" color="#26a2ff">保存</mt-badge>
+        <mt-badge class='btnStyle button' @click.native='saveAddInfo' size="large" color="#26a2ff">保存</mt-badge>
     </div>
 </template>
 

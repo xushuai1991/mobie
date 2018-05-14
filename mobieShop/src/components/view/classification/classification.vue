@@ -5,7 +5,7 @@
         </div>
         <div class='nav-bar'>
             <ul class='list'>
-                <li class='active' @click='changestatus($event,"classify")'>
+                <li class='active font' @click='changestatus($event,"classify")'>
                     <span>{{classifyname}}</span>
                     <i class='icon iconfont icon-sanjiaoxing-up'></i>
                 </li>
@@ -96,7 +96,7 @@ import { Indicator } from 'mint-ui';
                
                 let dom=document.querySelector('.nav-bar').querySelector('.active');
                 dom.removeAttribute('class');
-                event.currentTarget.setAttribute('class','active');
+                event.currentTarget.setAttribute('class','active font');
                 // 当前点击的选项之前是否已选中
                 let iscurrent=dom==event.currentTarget;
                 let dom_i=event.currentTarget.querySelector('i');

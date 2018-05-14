@@ -1,5 +1,5 @@
 <template>
-    <div :class="{'page-tabbar':true,'style-two':styletwo} ">
+    <div class="page-tabbar">
         <div class="page-wrap" style='-webkit-overflow-scrolling : touch;'>
             <mt-tab-container class="page-tabbar-container" v-model="selected">
                 <mt-tab-container-item id="首页">
@@ -57,8 +57,7 @@
                 isTrue: true,
                 templateUrl: '',
                 code: '',
-                companyid: '',
-                styletwo:false
+                companyid: ''
             }
         },
         created() {
@@ -75,9 +74,6 @@
             if (companyid != null) {
                 sessionStorage.setItem('companyId', companyid);
                 // localStorage.setItem('companyId', companyid);
-            }
-            if(sessionStorage.getItem('companyId')==92){
-                this.styletwo=true;
             }
             // if(this.$route.params.logining!=null&&this.$route.params.logining){
             //     this.selected='我的';
@@ -371,5 +367,8 @@
      .tabbar-xs .iconfont {
          display: block;
          padding-bottom: .1rem;
+     }
+     .mint-tabbar > .mint-tab-item.is-selected {
+         color:#f1c885 !important;
      }
 </style>
