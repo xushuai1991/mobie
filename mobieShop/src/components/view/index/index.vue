@@ -368,7 +368,5 @@
          display: block;
          padding-bottom: .1rem;
      }
-     .mint-tabbar > .mint-tab-item.is-selected {
-         color:#f1c885 !important;
-     }
+     
 </style>

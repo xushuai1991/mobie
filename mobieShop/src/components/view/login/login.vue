@@ -2,8 +2,8 @@
     <div class='contain'>
         <div class='imgs'>
             <div v-if='!styletwo'>
-                <img class='logo1' src="static/images/icon1.png" alt="">
-                <img class='logo2' src="static/images/icon2.png" alt="">
+                <div class='logo1'></div>
+                <div class='logo2'></div>
             </div>
             <div v-if="styletwo">
                 <div v-if='resignflag' :style='style2Login1'></div>
@@ -507,15 +507,21 @@ export default {
 }
 .logo1{
     width:2rem;
+    height:.6rem;
     position:absolute;
     left:1rem;
-    top:1.5rem
+    top:1.5rem;
+    background-image:url("/static/images/icon1.png");
+    background-size: cover;
 }
 .logo2{
     width:4rem;
+    height:3.7rem;
     position:absolute;
     right:0.3rem;
     top:.5rem;
+    background-image:url("/static/images/icon2.png");
+    background-size: cover;
 }
 .contain{
     /* height:fit-content; */

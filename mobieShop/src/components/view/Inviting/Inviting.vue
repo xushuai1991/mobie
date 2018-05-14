@@ -1,11 +1,11 @@
 <template>
-    <div id="invite-register">
-        <h2 style='font-size:0.5rem; color:#fff;'>到家商城邀请注册</h2>
+    <div id="invite-register" class='background'>
+        <!-- <h2 style='font-size:0.5rem; color:#fff;'>到家商城邀请注册</h2> -->
         <ul class="invite-top">
             <li><img id="sharePic" :src='totalSrc' /></li>
             <li>微信扫一扫</li>
             <li>邀请好友获5元无门槛优惠券</li>
-            <li>邀请码 : <span>025645889</span></li>
+            <li>邀请码 : <span class='font'>025645889</span></li>
             <li>
                 <router-link to='/invitingRegular'>邀请规则 >></router-link>
             </li>
@@ -63,7 +63,7 @@
         data() {
             return {
                 totalSrc: '',
-                wxSrc: 'http://'+location.hostname+':8887/customer/resource/qrCode.png?content=',
+                wxSrc:this.url_qrcode+'?content=',
                 address: 'http://'+location.hostname+'/invitingGift',
                 // address: '10.1.1.206:8080',                
                 shareUrl: '/invitingGift',

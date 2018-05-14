@@ -3,8 +3,8 @@
     <section class='CInvoice background'>
         <ul class="mui-table-view" v-infinite-scroll="loadMore" infinite-scroll-disabled="moreLoading" infinite-scroll-distance="0" infinite-scroll-immediate-check="false">
             <li class="mui-table-view-cell" v-for='(item,index) in list' :key='index' @click='goinvoicInfo(item)'>
-                <div class='radioBox'></div>
-                <div class='boxCompany'>
+                <div class='radioBox colormore'></div>
+                <div class='boxCompany backgroundextra'>
                     <h2>{{item.category==11?'个人普通发票':item.category==21?'单位普通发票':"单位专用发票"}}</h2>
                     <p>付款方：{{item.title}}</p>
                     <p class='daoJia font'>到家服务</p>

@@ -1,5 +1,5 @@
 <template>
-  <section class='personalscores' style='background-image:url("static/images/background_scores.png")'>
+  <section class='personalscores' style=''>
       <header class='userinfo' >
           <div class='info_main'>
               <div class='portrait'><img :src="userinfo.avatar" alt=""></div>
@@ -466,7 +466,7 @@ export default {
     width: 100%;
     background-size: contain;
     background-repeat: no-repeat;
-    // margin-top: .8rem;
+    background-image:url("/static/images/background_scores.png");
 }
 .personalscores .userinfo{
     height: 3.75rem;

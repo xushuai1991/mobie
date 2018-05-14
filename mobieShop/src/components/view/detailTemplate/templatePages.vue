@@ -244,10 +244,12 @@
                 commodityInfo: '',
                 productDetailBack: {
                     button: true,
+                    productDetailBack1:true,
                     productDetailBack2: false
                 },
                 productDetailBacks: {
                     button: false,
+                    productDetailBack1:false,                    
                     productDetailBack2: true
                 },
                 popupVisible: false,
@@ -620,16 +622,20 @@
                 this.show1 = true
                 this.show2 = false
                 this.productDetailBack.button = true
+                this.productDetailBack.productDetailBack1 = true                
                 this.productDetailBack.productDetailBack2 = false
                 this.productDetailBacks.button = false
+                this.productDetailBacks.productDetailBack1 = false                                
                 this.productDetailBacks.productDetailBack2 = true
             },
             productDetailBtn2() {
                 this.show1 = false
                 this.show2 = true
                 this.productDetailBack.button = false
+                this.productDetailBack.productDetailBack1 = false                                
                 this.productDetailBack.productDetailBack2 = true
                 this.productDetailBacks.button = true
+                this.productDetailBacks.productDetailBack1 = true                                                
                 this.productDetailBacks.productDetailBack2 = false
             },
             btnClose() {
