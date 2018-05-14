@@ -172,6 +172,7 @@ export default {
             .then(res=>{
                 if(res.data.status==200){
                     let msg='申请提交成功！';
+                    console.log(that.indexorder,document.querySelectorAll('.orderlist')[that.index].querySelectorAll('li'));
                     let dom=document.querySelectorAll('.orderlist')[that.index].querySelectorAll('li')[that.indexorder].querySelectorAll('.detail')[that.index_appoint].querySelector('.appointment');
                     dom.querySelector('span').innerHTML='服务时间：'+date+'(待确认)';
                     dom.querySelector('button').innerHTML='修改时间';

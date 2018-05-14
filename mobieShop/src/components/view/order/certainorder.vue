@@ -331,7 +331,8 @@
             },
             changeaddress() {
                 this.$router.push({
-                    'name': 'addManagement'
+                    'name': 'addManagement',
+                    props:{'compoanyId':sessionStorage.getItem('companyId')}
                 });
                 sessionStorage.setItem('from', 'ordercertain');
             },

@@ -1,5 +1,5 @@
 <template>
-    <div class="page-tabbar ">
+    <div :class="{'page-tabbar':true,'style-two':styletwo} ">
         <div class="page-wrap" style='-webkit-overflow-scrolling : touch;'>
             <mt-tab-container class="page-tabbar-container" v-model="selected">
                 <mt-tab-container-item id="首页">
@@ -24,16 +24,16 @@
         </div>
         <mt-tabbar v-model="selected" class='tabbar-xs'>
             <mt-tab-item id="首页">
-                <i class='icon iconfont icon-solid-home'></i> 首页
+                <i class='icon iconfont icon-solid-home font'></i> 首页
             </mt-tab-item>
             <mt-tab-item id="分类">
-                <i class='icon iconfont icon-leimupinleifenleileibie2'></i> 分类
+                <i class='icon iconfont icon-leimupinleifenleileibie2 font'></i> 分类
             </mt-tab-item>
             <mt-tab-item id="购物车">
-                <i class='icon iconfont icon-gouwuche1'></i> 购物车
+                <i class='icon iconfont icon-gouwuche1 font'></i> 购物车
             </mt-tab-item>
             <mt-tab-item id="我的">
-                <i class='icon iconfont icon-wode'></i> 我的
+                <i class='icon iconfont icon-wode font'></i> 我的
             </mt-tab-item>
         </mt-tabbar>
     </div>
@@ -57,7 +57,8 @@
                 isTrue: true,
                 templateUrl: '',
                 code: '',
-                companyid: ''
+                companyid: '',
+                styletwo:false
             }
         },
         created() {
@@ -74,6 +75,9 @@
             if (companyid != null) {
                 sessionStorage.setItem('companyId', companyid);
                 // localStorage.setItem('companyId', companyid);
+            }
+            if(sessionStorage.getItem('companyId')==92){
+                this.styletwo=true;
             }
             // if(this.$route.params.logining!=null&&this.$route.params.logining){
             //     this.selected='我的';

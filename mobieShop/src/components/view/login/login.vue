@@ -1,30 +1,36 @@
 <template>
-    <div class='contain'>
+    <div :class='{"contain":true,"style-two":styletwo}'>
         <div class='imgs'>
-            <img class='logo1' src="static/images/icon1.png" alt="">
-            <img class='logo2' src="static/images/icon2.png" alt="">
+            <div v-if='!styletwo'>
+                <img class='logo1' src="static/images/icon1.png" alt="">
+                <img class='logo2' src="static/images/icon2.png" alt="">
+            </div>
+            <div v-if="styletwo">
+                <div v-if='resignflag' :style='style2Login1'></div>
+                <div v-if='!resignflag' :style='style2Login2'></div>                
+            </div>
         </div>
         
         <!-- 登录 -->
         <div class='form login' v-show='loginflag'>
             <div class="phone">
-                <i class='icon iconfont icon-shouji'></i>
+                <i class='icon iconfont icon-shouji font'></i>
                 <input type="number" placeholder="手机号码" v-model="phone" key='phone_login' @change='checkphone()' @focus="focus_input" @blur="blur_input">
                 <p class='error'>{{phonejson.msg}}</p>
             </div>
             <div class="psw">
-                <i class='icon iconfont icon-16suo'></i>
+                <i class='icon iconfont icon-16suo font'></i>
                 <input type="password" placeholder="密码" v-model="psw" @change='checkpsw()' @focus="focus_input" @blur="blur_input">
                 <p class='error'>{{pswjson.msg}}</p>
             </div>
             <div class="verificationcode">
-                <i class='icon iconfont icon-key'></i>
+                <i class='icon iconfont icon-key font'></i>
                 <input type="text" class='codeinput' placeholder="验证码" v-model="code" @change='checkcode()' @focus="focus_input" @blur="blur_input">
                 <p class='error'>{{codejson.msg}}</p>
-                <div id='codeimg' class='codeimg' @click='yzn'>{{codehas}}</div>
+                <div id='codeimg' class='codeimg font border' @click='yzn'>{{codehas}}</div>
             </div>
             <p class='opera_quick'>
-                <mt-button type="default" class='btn-login' @click="login">登录<i class='icon iconfont icon-xiangyoujiantou'></i></mt-button>
+                <mt-button type="default" class='btn-login button' @click="login">登录<i class='icon iconfont icon-xiangyoujiantou'></i></mt-button>
                 <router-link to='' class='quicklogin' @click.native='switch_quick'>快速登录</router-link>
             </p>
             <p style='text-align:left;'>
@@ -35,49 +41,50 @@
         <!-- 快速登录 -->
         <div class='form loginquick' v-show='loginquickflag'>
             <div class="phone">
-                <i class='icon iconfont icon-shouji'></i>
+                <i class='icon iconfont icon-shouji font'></i>
                 <input type="tel" placeholder="手机号码" v-model="phone" @change='checkphone()' @focus="focus_input" @blur="blur_input">
                 <p class='error'>{{phonejson.msg}}</p>
             </div>
             <div class="verificationcode">
-                <i class='icon iconfont icon-key'></i>
+                <i class='icon iconfont icon-key font'></i>
                 <input type="text" class='codeinput' placeholder="验证码" v-model="code" @focus="focus_input" @blur="blur_input">
                 <p class='error'></p>
                 <router-link to='' style='position:absolute;font-size:.3rem;top:.6rem;right:.2rem;'  @click.native='getcode(2)'>{{second}}</router-link>
             </div>
             
             <p class='opera_quick'>
-                <mt-button type="default" class='btn-login' @click="loginquick">快速登录</mt-button>
+                <mt-button type="default" class='btn-login button' @click="loginquick">快速登录</mt-button>
                 <router-link to='' class='pswlogin' @click.native='switch_login'>密码登录</router-link>
             </p>
         </div>
         <!-- 注册 -->
         <div class='form login' v-show='resignflag'>
             <div class="phone">
-                <i class='icon iconfont icon-shouji'></i>
+                <i class='icon iconfont icon-shouji font'></i>
                 <input type="tel" placeholder="手机号码" v-model="phone" key='phone_login' @change='checkphone()' @focus="focus_input" @blur="blur_input">
                 <p class='error'>{{phonejson.msg}}</p>
             </div>
             <div class="verificationcode">
-                <i class='icon iconfont icon-key'></i>
+                <i class='icon iconfont icon-key font'></i>
                 <input type="text" class='codeinput' placeholder="验证码" v-model="code" @focus="focus_input" @blur="blur_input">
                 <p class='error'></p>
                 <router-link to='' style='position:absolute;font-size:.3rem;top:.6rem;right:.2rem;'  @click.native='getcode(1)'>{{second}}</router-link>
             </div>
             <div class="psw">
-                <i class='icon iconfont icon-16suo'></i>
+                <i class='icon iconfont icon-16suo font'></i>
                 <input type="password" placeholder="密码" v-model="psw" @change='checkpsw()' @focus="focus_input" @blur="blur_input">
                 <p class='error'>{{pswjson.msg}}</p>
             </div>
             <div class="psw">
-                <i class='icon iconfont icon-16suo'></i>
+                <i class='icon iconfont icon-16suo font'></i>
                 <input type="password" placeholder="确认密码" v-model="pswtwice" @change='pswcertain()' @focus="focus_input" @blur="blur_input">
                 <p class='error'>{{pswcertainjson.msg}}</p>
             </div>
             
-            <div class='agreement'>
-                <mt-button type="default" class='btn-login' @click.native="resign" style='z-index:99;'>注册<i class='icon iconfont icon-xiangyoujiantou'></i></mt-button>
+            <div class='agreement' >
+                <mt-button type="default" class='btn-login button' @click.native="resign" style='z-index:99;'>注册<i class='icon iconfont icon-xiangyoujiantou'></i></mt-button>
                 <mt-checklist
+                v-if='false'
                     v-model="agreement"
                     :options="['用户协议书']">
                 </mt-checklist>
@@ -124,7 +131,24 @@ export default {
             clientHeight:0,
             in_resolve:false,
             openId:'',
-            companyid:null
+            companyid:null,
+            styletwo:false,
+            style2Login1:{
+                width:'100%',
+                height:'2rem',
+                backgroundImage:"url(" + require("../../../../static/images/style2-login1.png") + ")",
+                backgroundSize:'cover',
+                position:'absolute',
+                bottom:'1.5rem'
+            },
+            style2Login2:{
+                width:'100%',
+                height:'3rem',
+                backgroundImage:"url(" + require("../../../../static/images/style2-login2.png") + ")",
+                backgroundSize:'cover',
+                position:'absolute',
+                bottom:'.6rem'
+            }
         }
     },
     mounted(){
@@ -134,9 +158,13 @@ export default {
     created(){
         let companyid=this.$route.query.companyId;
         this.companyid=companyid;
-        // if(companyid!=null){
-        //     sessionStorage.setItem('companyId', companyid);
-        // }
+        
+        if(companyid!=null){
+            sessionStorage.setItem('companyId', companyid);
+        }
+        if(sessionStorage.getItem('companyId')==92){
+            this.styletwo=true;
+        }
         let openid=this.$route.query.openId;
         if(openid==null){
             Toast('获取openid失败');

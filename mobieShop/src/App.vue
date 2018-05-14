@@ -18,7 +18,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang='less'>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -27,5 +27,17 @@ export default {
   color: #2c3e50;
   margin: 0;
   padding-top: 0;
+}
+.style-one{}
+.style-two{
+  .font{
+    color:#f1c885 !important;
+  }
+  .border{
+    border:0.01rem solid #f1c885 !important;
+  }
+  .button{
+    background: -webkit-linear-gradient(90deg,#a77d38,#f1c885) !important;
+  }
 }
 </style>

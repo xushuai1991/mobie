@@ -28,7 +28,7 @@
             <!-- 待付款 -->
             <mt-tab-container-item id="willpay">
                 <ul v-infinite-scroll="loadMore1" infinite-scroll-disabled="loading2" :infinite-scroll-immediate-check='false' class='orderlist'>
-                    <li v-for="(item,index) in orderlist[1]" :key="index">
+                    <li v-for="(item,index) in orderlist[1]" :key="index" :indexorder='index'>
                         <ordercell :data='item' index='1'></ordercell>
                     </li>
                 </ul>
@@ -41,8 +41,8 @@
             <!-- 待服务 -->
             <mt-tab-container-item id="willservice">
                 <ul v-infinite-scroll="loadMore2" infinite-scroll-disabled="loading3" infinite-scroll-immediate-check='false'  class='orderlist'>
-                    <li v-for="item in orderlist[2]" :key="item">
-                        <ordercell :data='item' index='2' :type='type_service[0]'></ordercell>
+                    <li v-for="(item,index) in orderlist[2]" :key="item">
+                        <ordercell :data='item' index='2' :type='type_service[0]' :indexorder='index'></ordercell>
                     </li>
                 </ul>
                 <p v-show="!loading3" class="page-infinite-loading">
@@ -54,8 +54,8 @@
             <!-- 服务中 -->
             <mt-tab-container-item id="inservice">
                 <ul v-infinite-scroll="loadMore3" infinite-scroll-disabled="loading4" infinite-scroll-immediate-check='false'  class='orderlist'>
-                    <li v-for="item in orderlist[3]" :key="item">
-                        <ordercell :data='item' index='3' :type='type_service[1]'></ordercell>
+                    <li v-for="(item,index) in orderlist[3]" :key="item">
+                        <ordercell :data='item' index='3' :type='type_service[1]' :indexorder='index'></ordercell>
                     </li>
                 </ul>
                 <p v-show="!loading4" class="page-infinite-loading">
@@ -133,13 +133,13 @@ export default {
                  //更新待服务数据
                 case '2':{
                     let data={payState:1,serviceState:1};
-                    this.getOrderList(1,data);
+                    this.getOrderListService(1,1);
                     break;
                 }
                 //更新服务中数据
                 case '3':{
                     let data={payState:1,serviceState:2};
-                    this.getOrderList(1,data);
+                    this.getOrderListService(1,2);
                     break;
                 }
                 //更新待评价数据
