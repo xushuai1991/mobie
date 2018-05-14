@@ -11,7 +11,7 @@
         </mt-checklist>
         <mt-popup v-model="popupVisible" position="bottom" style='width:100%;'>
             <mt-navbar v-model="selected">
-                <mt-tab-item id="1">大区</mt-tab-item>
+                <mt-tab-item id="1" >大区</mt-tab-item>
                 <mt-tab-item id="2" v-show='provinceIshow'>省份</mt-tab-item>
                 <mt-tab-item id="3" v-show='cirtyIshwo'>城市</mt-tab-item>
                 <mt-tab-item id="4" v-show='countyIshwo'>区县</mt-tab-item>
@@ -95,9 +95,11 @@ import { Toast } from 'mint-ui';
                 bigDisId: {},
                 proDisId: [],
                 cityDisId: {},
+                companyId:0,
                 //
                 popupVisible: false,
                 value: [],
+
                 options: [{
                     label: '默认地址：',
                     value: '1'
@@ -107,6 +109,10 @@ import { Toast } from 'mint-ui';
                 //       lat: 39.897445
                 // }
             }
+        },
+        mounted(){
+            this.companyId = sessionStorage.getItem('companyId');
+            // this.LargeArea();
         },
         methods: {
             saveAddInfo() { //提交地址
@@ -157,10 +163,8 @@ import { Toast } from 'mint-ui';
                 }
             //    console.log(routerParams.name =='addManagement')
             let addManagementGood = JSON.parse(sessionStorage.getItem("addManagement")) ;
-            addManagementGood ==null?null:addManagementGood.goadd
-                 console.log(addManagementGood)
+                addManagementGood ==null?null:addManagementGood.goadd;
                 if(addManagementGood){
-                    console.log(userifno)
                      let datainfo2 = {
                     "areaId": this.checkindex,
                     "provinceId": this.checkindex1,
@@ -173,7 +177,6 @@ import { Toast } from 'mint-ui';
                     "customerId": userifno.val.customerId,
                     'id':userifno.val.id
                 }
-                console.log(datainfo2)
                     let url = '/api/customer/address/update?useAsDefault=' + (this.value == true ? true : false);
                     this.$http({
                             url: url,
@@ -185,7 +188,6 @@ import { Toast } from 'mint-ui';
                             data:datainfo2
                         })
                         .then(response => {
-                            console.log(response)
                             if (response.data.msg = '修改成功') {
                                 sessionStorage.removeItem("addManagement")
                                 this.$toast(response.data.msg);
@@ -222,6 +224,7 @@ import { Toast } from 'mint-ui';
             LargeArea() { //大区
                 let that = this;
                 //获取地区的
+                
                 this.popupVisible = true;
                 //创建一个Promise实例，获取数据。并把数据传递给处理函数resolve和reject。需要注意的是Promise在声明的时候就执行了。
                 var getUserInfo = new Promise(function(resolve, reject) {
@@ -244,23 +247,39 @@ import { Toast } from 'mint-ui';
                 //另一个ajax Promise对象，
                 //Promise的方法then,catch方法
                 getUserInfo.then(function(ResultJson) {
-                    that.largeAreArr = ResultJson.data.info
-                    if (ResultJson.data.info == null) {
-                        Toast(res.data.error)
-                    } else {
-                        that.houseInfo = ResultJson.data.info; //大区
-                        (ResultJson.data.info).forEach(function(e, i) {
-                            that.proInfoList = that.houseInfo[e.id - 1].sysRegionList; //省
-                            that.bigDisId[e.id] = e.regionName;
-                            that.proInfoList.forEach(function(e, i) {
-                                that.proInfo.push(e);
-                                that.cityInfoList = that.proInfoList[i].sysRegionList; //城市
-                                that.cityInfoList.forEach(function(e, i) {
-                                    that.cityInfo.push(e); //街道
-                                });
-                            });
-                        });
+                    // let companyId = sessionStorage.getItem('companyId');
+                    //
+                    console.log(ResultJson.data.info)
+                    if(ResultJson.data.info){
+                        if(that.companyId-0 == 72){
+                            ResultJson.data.info.forEach(item=>{
+                            if(item.id-0 ==1){
+                                that.largeAreArr = [item]
+                                that.getlarge(item)
+                            }
+                        })
+                        }else{
+                             that.largeAreArr = ResultJson.data.info
+                        }
                     }
+
+                    // if (ResultJson.data.info == null) {
+                    //     Toast(res.data.error)
+                    // } else {
+                    //     that.houseInfo = ResultJson.data.info; //大区
+                    //     console.log(that.houseInfo)
+                    //     (ResultJson.data.info).forEach(function(e, i) {
+                    //         that.proInfoList = that.houseInfo[e.id - 1].sysRegionList; //省
+                    //         that.bigDisId[e.id] = e.regionName;
+                    //         that.proInfoList.forEach(function(e, i) {
+                    //             that.proInfo.push(e);
+                    //             that.cityInfoList = that.proInfoList[i].sysRegionList; //城市
+                    //             that.cityInfoList.forEach(function(e, i) {
+                    //                 that.cityInfo.push(e); //街道
+                    //             });
+                    //         });
+                    //     });
+                    // }
                     //通过拿到的数据渲染页面
                 }).catch(function(ErrMsg) {
                     //获取数据失败时的处理逻辑
@@ -280,7 +299,20 @@ import { Toast } from 'mint-ui';
                     .then(res => {
                         that.provinceIshow = true;
                         that.selected = '2';
-                        this.proDisId = res.data.info
+                        if(this.companyId-0 ==72){
+                            console.log()
+                            res.data.info.forEach(item=>{
+                                console.log(item.id)
+                            if(item.id-0 ==100){
+                                console.log(item)
+                                that.proDisId = [item]
+                                that.proDis(item)
+                            }
+                        })
+                        }else{
+                             this.proDisId = res.data.info
+                        }
+                       
                     }).catch(err => {
                         console.log(err)
                     });
@@ -292,6 +324,7 @@ import { Toast } from 'mint-ui';
                 // });
             },
             proDis(item) { //省选择
+            console.log(item)
                 this.cirty = item.regionName;
                 this.checkindex1 = item.id
                 let that = this;
@@ -301,7 +334,20 @@ import { Toast } from 'mint-ui';
                     .then(res => {
                         that.cirtyIshwo = true;
                         that.selected = '3';
-                        this.countyInfo = res.data.info;
+                        if(this.companyId-0 ==72){
+                            console.log()
+                            res.data.info.forEach(item=>{
+                                // console.log(item)
+                            if(item.id-0 ==101){
+                                console.log(item)
+                                that.countyInfo = [item]
+                                that.cityDis(item)
+                            }
+                        })
+                        }else{
+                            this.countyInfo = res.data.info;
+                        }
+                        
                     }).catch(err => {
                         console.log(err)
                     });

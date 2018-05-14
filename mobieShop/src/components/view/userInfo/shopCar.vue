@@ -32,8 +32,8 @@
                                                     <p class="goods_price">￥<span>{{items.otherInfo.commodityPrice}}</span></p>
                                                     <div class='cgqNumBox'>
                                                         <input type="button" @click="reduce(index,indexs,items.commodityCount,items.id)" value='－'>
-                                                        <input type="number" disabled :value="items.commodityCount" />
-                                                        <input type="button" @click="add(index,indexs,items.commodityCount,items.id)" value='＋'>
+                                                        <input type="number"  v-model="items.commodityCount" v-on:blur="changeCount(index,indexs,items.commodityCount,items.id,items.otherInfo.commodityInfo.displayQuantity)"/>
+                                                        <input type="button" @click="add(index,indexs,items.commodityCount,items.id,items.otherInfo.commodityInfo.displayQuantity)" value='＋'>
                                                     </div>
                                                 </li>
                                                 <!-- <span class="mui_shopcar_del" @click="remove(index,indexs)">
@@ -168,7 +168,7 @@
                 var num = 0;
                 this.list.forEach(function(item) {
                     item.listgoods.map(function(a) {
-                        return a.commodityCount
+                        return a.commodityCount-0
                     }).foreEach(function(a) {
                         num += a
                     })
@@ -182,8 +182,8 @@
                     item.listgoods.filter(function(a) {
                         return a.selected
                     }).map(function(a) {
-                        as += a.commodityCount
-                        return a.commodityCount * a.otherInfo.commodityPrice
+                        as += a.commodityCount-0
+                        return (a.commodityCount-0) * a.otherInfo.commodityPrice
                     }).forEach(function(a) {
                         total += a;
                     })
@@ -208,6 +208,19 @@
             this.port = location.port;
         },
         methods: {
+            changeCount(parentID, ID, sum, shopId,maxShop){
+                 var self = this.list[parentID].listgoods[ID];
+                if (self.commodityCount <= 1) {
+                    self.commodityCount = 1
+                    Toast('最少买一件');
+                    return false
+                }
+                if (self.commodityCount >= maxShop) {
+                    self.commodityCount = maxShop-1
+                    Toast('最多买'+maxShop);
+                    return false
+                }
+            },
             getURLparms(name) {
                 let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
                 let r = location.search.substr(1).match(reg);
@@ -265,7 +278,7 @@
                     let cartIdList = [];
                     cartIdList.push(item.id);
                     item.otherInfo.commodityInfo.cartIdList = cartIdList;
-                    item.otherInfo.commodityInfo.nums = item.commodityCount;
+                    item.otherInfo.commodityInfo.nums = item.commodityCount-0;
                     commodityInfo.push(item.otherInfo.commodityInfo)
                 })
                 localStorage.setItem("commodityInfo", JSON.stringify(commodityInfo))
@@ -388,10 +401,11 @@
                     })
                 }
             },
-            add: function(parentID, ID, sum, shopId) { //parentID是商家id,ID是商品id
+            add: function(parentID, ID, sum, shopId,maxShop) { //parentID是商家id,ID是商品id
                 var self = this.list[parentID].listgoods[ID];
-                if (self.commodityCount > 100) {
-                    Toast('最多99件');
+                if (self.commodityCount >= maxShop) {
+                    self.commodityCount = maxShop
+                    Toast('最多买'+maxShop);
                     return false;
                 }
                 self.commodityCount++;
@@ -414,6 +428,7 @@
             reduce: function(parentID, ID, sum, shopId) { //parentID是商家id,ID是商品id
                 var self = this.list[parentID].listgoods[ID];
                 if (self.commodityCount <= 1) {
+                    self.commodityCount = 1
                     Toast('最少买一件');
                     return false
                 }
