@@ -6,7 +6,7 @@
                     <div class='header'>
                         <p class='userName'><span v-text='item.consigneeName'></span><span v-text='item.consigneeMobilePhone'>15800000000</span></p>
                         <p class='p2'><i class='icon iconfont icon-dizhi1'></i><span>
-                                        {{((item.area?item.area.regionName+'区':'')+(item.province?item.province.regionName:'')+(item.city?item.city.regionName:'')+(item.region?item.region.regionName:'')+item.address)?((item.area?item.area.regionName+'区':'')+(item.province?item.province.regionName:'')+(item.city?item.city.regionName:'')+(item.region?item.region.regionName:'')+item.address):'默认自提'}}
+                                        {{((item.area?item.area.regionName+'区':'')+(item.province?item.province.regionName:'')+(item.city?item.city.regionName:'')+(item.district?item.district.regionName:'')+(item.region?item.region.regionName:'')+item.address)?((item.area?item.area.regionName+'区':'')+(item.province?item.province.regionName:'')+(item.city?item.city.regionName:'')+(item.district?item.district.regionName:'')+(item.region?item.region.regionName:'')+item.address):'默认自提'}}
                                             </span></p>
                     </div>
                     <div class='footer'>
@@ -83,6 +83,20 @@
                     })
                     .then(response => {
                         console.log(response)
+                        if(response.data.status==200){
+                            this.goName = sessionStorage.getItem("from")
+                            this.$router.push({
+                                path: '/' + this.goName,
+                                name: this.goName,
+                                params: {
+                                    direct: 'userinfo',
+                                    dataObj: value
+                                }
+                            });
+                        }
+                        else{
+                            Toast(response.data.msg);
+                        }
                         // if(response.data.info.msg='新增成功'){
                         //     this.$toast(response.data.info.msg);
                         //     this.$router.push('./addManagement')
@@ -91,15 +105,7 @@
                     .catch(error => {
                         console.log(error)
                     })
-                this.goName = sessionStorage.getItem("from")
-                this.$router.push({
-                    path: '/' + this.goName,
-                    name: this.goName,
-                    params: {
-                        direct: 'userinfo',
-                        dataObj: value
-                    }
-                });
+                
             },
             addAdd() { //新增地址
                 sessionStorage.removeItem("addManagement")

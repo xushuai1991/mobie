@@ -22,7 +22,7 @@
       <div class='content'>
             <mt-navbar v-model="type" class='navbar_type'>
                 <mt-tab-item id="积分记录">积分记录</mt-tab-item>
-                <mt-tab-item id="等级规划">等级规划</mt-tab-item>
+                <mt-tab-item id="积分说明">积分说明</mt-tab-item>
             </mt-navbar>
             <mt-tab-container v-model="type">
                 <mt-tab-container-item id="积分记录">
@@ -101,28 +101,37 @@
                         </mt-tab-container-item>
                     </mt-tab-container>
                 </mt-tab-container-item>
-                <mt-tab-container-item id="等级规划" class='level_tabcontainer'>
+                <mt-tab-container-item id="积分说明" class='level_tabcontainer'>
                     <div class='container' style='margin-top:-.1rem;'>
                         <header>
                             <i class='icon iconfont icon-wenjian font'></i>
-                            <span class='title'>会员等级介绍</span>
+                            <span class='title'>积分说明</span>
                         </header>
                         <article>
-                            <p>
-                                <span class='title'>大众会员：</span>
-                                <span class='content'>拿商品经济的视角去解读，顾名思义是某一类志趣相同、取向一致的消费人群，被商家归类梳理</span>
-                            </p>
-                            <p>
-                                <span class='title'>黄金会员：</span>
-                                <span class='content'>拿商品经济的视角去解读，顾名思义是某一类志趣相同、取向一致的消费人群，被商家归类梳理</span>
-                            </p>
-                            <p>
-                                <span class='title'>铂金会员：</span>
-                                <span class='content'>拿商品经济的视角去解读，顾名思义是某一类志趣相同、取向一致的消费人群，被商家归类梳理</span>
-                            </p>
+                            <div class='area'>
+                                <p class='title'>一、如何获得积分？</p>
+                                <p class='content'>积分：会员通过注册、邀请好友、团购或商城购买均可获得相应积分，并以积分享受不同程度的专属优惠或实物礼品兑换</p>
+                            </div>
+                            <div class='area'>
+                                <p class='title'>二、获得积分规则：</p>
+                                <p class='content'>会员注册即可获得20积分；</p>
+                                <p class='content'>每邀请一位好友成功注册可获得5积分，邀请50积分为上限；</p>
+                                <p class='content'>在商城购买监理服务每消费20元获得1积分，陪签服务每消费10元获得1积分，积分按实际消费取整后金额计算，无封顶；</p>
+                            </div>
+                            <div class='area'>
+                                <p class='title'>三、积分使用注意事项：</p>
+                                <p class='content'>（1）不同的账户中的积分不可合并使用；</p>
+                                <p class='content'>（2）以积分兑换的代金券或其他凭证，是有使用期限的，您需要在该折价、兑换券或其他凭证所标注的有效期内使用，否则即丧失使用权利，亦无法退换或延续；</p>
+                                <p class='content'>（3）如交易款项发生退货，订单金额将不计入积分；</p>
+                                <p class='content'>（4）积分是绿城装修管家对用户行为的记录数据，不构成用户资产。</p>
+                            </div>
+                            <div class='area'>
+                                <p class='title'>四、修改及终止：</p>
+                                <p class='content'>绿城装修管家保留对本活动细则中条款的解释的权利，并有权根据需要取消本细则或增删、修订（包括但不限于参加资格、积分计算及兑换标准）</p>
+                            </div>
                         </article>
                     </div>
-                    <div class='container'>
+                    <div class='container' v-if='false'>
                         <header>
                             <i class='icon iconfont icon-shijian font'></i>
                             <span class='title'>会员有效时间</span>
@@ -150,7 +159,7 @@
                             </p>
                         </article>
                     </div>
-                    <div class='container' style='margin-top:-.1rem;'>
+                    <div class='container' v-if='false' style='margin-top:-.1rem;'>
                         <header>
                             <i class='icon iconfont icon-wenjian1 font'></i>
                             <span class='title'>升降级规则</span>
@@ -170,7 +179,7 @@
                             </p>
                         </article>
                     </div>
-                    <div class='container' style='margin-top:-.1rem;'>
+                    <div class='container' v-if='false' style='margin-top:-.1rem;'>
                         <header>
                             <i class='icon iconfont icon-rili font'></i>
                             <span class='title'>会员等级对照表</span>
@@ -587,13 +596,15 @@ export default {
     position: relative;
 }
 .level_tabcontainer article{
-    padding:.2rem .4rem;
+    padding:.2rem .4rem 2rem .4rem;
     font-size: .26rem;
+}
+.level_tabcontainer article .area{
+    margin-bottom: .2rem;
 }
 .level_tabcontainer article p{
     text-align: left;
-    line-height: .35rem;
-    margin-bottom: .2rem;
+    line-height: .5rem;
 }
 .level_tabcontainer article .content{
     color:#939393;

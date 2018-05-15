@@ -297,7 +297,6 @@
         },
         
         created() {
-                  
             // 
             this.$root.$emit('header', '商品详情');
             this.hostName = location.hostname;

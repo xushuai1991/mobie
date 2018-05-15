@@ -389,11 +389,22 @@
                             Toast('请先登录');
                         }
                         if (res.data.status == 200) {
-                            
                             if(res.data.info.length>0){
                                 let data=res.data.info[0];
                                 that.userinfo.addressid =data.defaultAddressId;
-                                that.userinfo.address = data.defaultAddress==null?'自提':data.defaultAddress;
+                                let address='';
+                                if(data.defaultAddress==null){
+                                    address='自提';
+                                }
+                                else{
+                                    address=data.defaultAddress.area.regionName+
+                                            data.defaultAddress.province.regionName+
+                                            data.defaultAddress.city.regionName+
+                                            data.defaultAddress.district.regionName
+                                            data.defaultAddress.region.regionName+
+                                            data.defaultAddress.address;
+                                }
+                                that.userinfo.address = address;
                             }
                         }
                         console.log(res);
@@ -476,32 +487,18 @@
                         console.log(err);
                     });
             },
-            //获取微信支付config
-            // getWeixinpayconfig(){
-            //     return new Promise((resolve,reject)=>{
-            //         let that=this;
-            //         let url=window.location.href;
-            //         this.$http.get('/api/public/share/wechat/config/fetch?url='+url)
-            //         .then(res=>{
-            //             console.log(res);
-            //             if(res.data.status==200){
-            //                 resolve(true);
-            //             }
-            //         })
-            //         .catch(err=>{
-            //             console.log(err);
-            //             resolve(false);
-            //         });
-            //     })
-            // },
             submitorder() {
                 if (this.checked != 'checked') {
                     Toast('请选择支付方式！');
                     return;
                 }
                 if(this.userinfo.addressid==null){
-                    this.changeaddress();
-                    return;
+                    MessageBox.confirm('请先选择收货地址').then(_=>{
+                        this.changeaddress();
+                        return;
+                    }).catch(_=>{
+                        return;
+                    });
                 }
                 let data = {
                     mallOrderList: [],
@@ -530,6 +527,7 @@
                 //     mallOrderList[item].usePoint = true;
                 //     mallOrderList[item].pointSum = this.deductionlist[item].score;
                 // })
+                
                 data.mallOrderList = mallOrderList;
                 this.couponindex.forEach(item => {
                     let json = {
@@ -538,7 +536,7 @@
                     };
                     data.couponInfoList.push(json);
                 });
-                console.log(data);
+                // console.log(data);
                 this.createOrder(data);
             }
         }

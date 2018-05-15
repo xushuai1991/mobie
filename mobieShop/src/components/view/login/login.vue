@@ -376,7 +376,6 @@ export default {
                         recommendedAdminId:recommendedAdminId,
                         recommendedTeamId:recommendedTeamId
                     };
-                    console.log(data);
                     let that=this;
                     this.$http.post('/api/customer/account/register',data)
                     .then(function(response){
