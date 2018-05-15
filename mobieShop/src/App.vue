@@ -50,7 +50,7 @@ export default {
   }
   .font::after{
       background-color:#f1c885 !important;
-    }
+  }
   .border{
     border-color:#f1c885 !important;
   }

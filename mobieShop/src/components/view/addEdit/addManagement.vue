@@ -6,13 +6,13 @@
                     <div class='header'>
                         <p class='userName'><span v-text='item.consigneeName'></span><span v-text='item.consigneeMobilePhone'>15800000000</span></p>
                         <p class='p2'><i class='icon iconfont icon-dizhi1'></i><span>
-                                {{item.area.regionName+'区'+item.province.regionName+item.city.regionName+item.region.regionName+item.address}}
-                                </span></p>
+                                        {{((item.area?item.area.regionName+'区':'')+(item.province?item.province.regionName:'')+(item.city?item.city.regionName:'')+(item.district?item.district.regionName:'')+(item.region?item.region.regionName:'')+item.address)?((item.area?item.area.regionName+'区':'')+(item.province?item.province.regionName:'')+(item.city?item.city.regionName:'')+(item.district?item.district.regionName:'')+(item.region?item.region.regionName:'')+item.address):'默认自提'}}
+                                            </span></p>
                     </div>
                     <div class='footer'>
                         <span><input type='checkbox' v-model='item.isDefaultAddress' @change='routeTo(item)'>设为默认</span>
-                        <div class='operation'>
-                            <span @click='editAdd(item)'><i class='icon iconfont icon-bianji'></i> 编辑</span>
+                        <div class='operation' v-if='item.createTime'>
+                            <span @click='editAdd(item)'><i class='icon iconfont icon-bianji' ></i> 编辑</span>
                             <span @click='delAdd(item.id,index)'><i class='icon iconfont icon-lajitong'></i>删除</span>
                         </div>
                     </div>
@@ -83,6 +83,20 @@
                     })
                     .then(response => {
                         console.log(response)
+                        if(response.data.status==200){
+                            this.goName = sessionStorage.getItem("from")
+                            this.$router.push({
+                                path: '/' + this.goName,
+                                name: this.goName,
+                                params: {
+                                    direct: 'userinfo',
+                                    dataObj: value
+                                }
+                            });
+                        }
+                        else{
+                            Toast(response.data.msg);
+                        }
                         // if(response.data.info.msg='新增成功'){
                         //     this.$toast(response.data.info.msg);
                         //     this.$router.push('./addManagement')
@@ -91,15 +105,7 @@
                     .catch(error => {
                         console.log(error)
                     })
-                this.goName = sessionStorage.getItem("from")
-                this.$router.push({
-                    path: '/' + this.goName,
-                    name: this.goName,
-                    params: {
-                        direct: 'userinfo',
-                        dataObj: value
-                    }
-                });
+                
             },
             addAdd() { //新增地址
                 sessionStorage.removeItem("addManagement")
@@ -169,16 +175,72 @@
                     }
                 }).then(res => {
                     let companyId = sessionStorage.getItem('companyId');
-                    if (companyId-0 == 92) {
-                        res.data.info.list.forEach(item => {
-                            console.log(item)
-                            if (item.cityId-0 == 101) {
-                                this.list = [item]
-                                this.listpages = res.data.info.pages;
+                    if (companyId - 0 == 92) {
+                        this.list = res.data.info.list
+                        let isTrue = true;
+                        let num = 0;
+                        this.list.forEach((item) => {
+                            if (item.isDefaultAddress == true) {
+                                num++;
+                                if (num >= 1) {
+                                    isTrue = false
+                                }
+                            } else {
+                                num++
+                                if (num <= 0) {
+                                    isTrue = true
+                                }
                             }
                         })
+                        this.list.unshift({
+                            customerId: "ddb42a00-4784-11e8-aa2a-fa163edc8ab6",
+                            id: '',
+                            area: '',
+                            province: '',
+                            city: '',
+                            region: '',
+                            address: '',
+                            cityId: 101,
+                            isDefaultAddress: isTrue
+                        })
+                        
+                        let newList = [];
+                        if (this.list) {
+                            this.list.forEach(item => {
+                                if ((item.cityId - 0) == 101) {
+                                    newList.push(item)
+                                }
+                            })
+                        }
+                        this.list=(newList)
+                        this.listpages = res.data.info.pages;
                     } else {
+                        let isTrue = true;
                         this.list = res.data.info.list
+                        let num = 0;
+                        this.list.forEach((item) => {
+                            if (item.isDefaultAddress == true) {
+                                num++;
+                                if (num >= 1) {
+                                    isTrue = false
+                                }
+                            } else {
+                                num++
+                                if (num <= 0) {
+                                    isTrue = true
+                                }
+                            }
+                        })
+                        this.list.unshift({
+                            customerId: "ddb42a00-4784-11e8-aa2a-fa163edc8ab6",
+                            id: '',
+                            area: '',
+                            province: '',
+                            city: '',
+                            region: '',
+                            address: '',
+                            isDefaultAddress: isTrue
+                        })
                         this.listpages = res.data.info.pages;
                     }
                 }).catch(error => {

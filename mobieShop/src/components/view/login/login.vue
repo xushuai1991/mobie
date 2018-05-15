@@ -366,15 +366,18 @@ export default {
                         Toast('请授权后再注册！');
                         return;
                     }
+                    let recommendedTeamId=this.$route.query.recommendedTeamId;
+                    let recommendedAdminId=this.$route.query.recommendedAdminId;
+                    let data={
+                        mobile:that.phone,
+                        password:that.psw,
+                        code:that.code,
+                        openId:this.openId,
+                        recommendedAdminId:recommendedAdminId,
+                        recommendedTeamId:recommendedTeamId
+                    };
                     let that=this;
-                    this.$http.post('/api/customer/account/register',
-                        {
-                            mobile:that.phone,
-                            password:that.psw,
-                            code:that.code,
-                            openId:this.openId
-                        }
-                    )
+                    this.$http.post('/api/customer/account/register',data)
                     .then(function(response){
                         Toast(response.data.msg);
                         if(response.data.status==200){

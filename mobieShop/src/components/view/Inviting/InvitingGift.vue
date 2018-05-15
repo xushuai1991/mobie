@@ -162,7 +162,6 @@ export default {
                 password:that.formData.password,
                 }
             data[this.type] = this.paramData
-            console.log(data)
             this.$http.post('/api/customer/account/register',
                 data
             ).then(function(response){
