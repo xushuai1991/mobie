@@ -563,9 +563,9 @@
                 return new Promise((resolve,reject)=>{
                     let that=this;
                     let companyid=sessionStorage.getItem('companyId');
-                    if(!companyid){
-                          companyid = this.getURLparms("companyId")
-                        }
+                    if(companyid==null){
+                        companyid = this.getURLparms("companyId")
+                    }
                     this.$http.get('/api/product/order/weixin/config?companyId='+companyid)
                     .then(res=>{
                         if(res.data.status==200){
@@ -590,14 +590,17 @@
             tologin(){
                 this.getAppId().then(flag=>{
                     if(flag){
-                        
                         let companyid=sessionStorage.getItem('companyId');
-                        if(!companyid){
+                        if(companyid==null){
                           companyid = this.getURLparms("companyId")
                         }
+                        let recommendedTeamId=this.$route.query.recommendedTeamId;
+                        let recommendedAdminId=this.$route.query.recommendedAdminId;
                         let url='https://open.weixin.qq.com/connect/oauth2/authorize?appid='+this.appid+
-                            '&redirect_uri=http://pay.jingrunjia.com.cn?company='+companyid+
-                            '&response_type=code&scope=snsapi_userinfo&state=STATE';
+                            '&redirect_uri=http://pay.jingrunjia.com.cn?company='+companyid
+                            +'&recommendedTeamId='+recommendedTeamId
+                            +'&recommendedAdminId='+recommendedAdminId
+                            +'&response_type=code&scope=snsapi_userinfo&state=STATE';
                         location.href=url;
                     }
                 }); 

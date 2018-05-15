@@ -168,7 +168,7 @@
                     username: '',
                     phone: '',
                     address: '',
-                    addressid: '',
+                    addressid: null,
                     imgurl: '',
                     consumptionpoints: 0
                 },
@@ -383,21 +383,17 @@
             // 获取默认地址
             getDefaultaddress() {
                 let that = this;
-                this.$http.post('/api/customer/address/queryMap', {
-                        customerId: this.userinfo.id
-                    })
+                this.$http.post('/api/customer/account/queryMapByIds',[this.userinfo.id])
                     .then(res => {
                         if (res.data.status == 401) {
                             Toast('请先登录');
                         }
                         if (res.data.status == 200) {
-                            for (let item of res.data.info) {
-                                if (item.isDefaultAddress) {
-                                    let address = item.province.regionName + item.city.regionName + item.district.regionName + item.region.regionName + item.address;
-                                    that.userinfo.address = address;
-                                    that.userinfo.addressid = item.id;
-                                    break;
-                                }
+                            
+                            if(res.data.info.length>0){
+                                let data=res.data.info[0];
+                                that.userinfo.addressid =data.defaultAddressId;
+                                that.userinfo.address = data.defaultAddress==null?'自提':data.defaultAddress;
                             }
                         }
                         console.log(res);
@@ -501,6 +497,10 @@
             submitorder() {
                 if (this.checked != 'checked') {
                     Toast('请选择支付方式！');
+                    return;
+                }
+                if(this.userinfo.addressid==null){
+                    this.changeaddress();
                     return;
                 }
                 let data = {
