@@ -682,6 +682,7 @@
                                 message: '领取成功',
                                 duration: 500
                             });
+                        that.receiveCoupons = false
                     } else {
                         Toast({
                                 message: '领取失败',
