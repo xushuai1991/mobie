@@ -169,7 +169,7 @@
                     }
                 }).then(res => {
                     let companyId = sessionStorage.getItem('companyId');
-                    if (companyId-0 == 72) {
+                    if (companyId-0 == 92) {
                         res.data.info.list.forEach(item => {
                             console.log(item)
                             if (item.cityId-0 == 101) {
