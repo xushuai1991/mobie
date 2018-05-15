@@ -298,6 +298,7 @@
                 }).then(response => {
                     if (response.data.status == 200) {
                         Toast(response.data.msg);
+                        this.popupVisible = false;
                     } else {
                         Toast(response.data.msg);
                     }

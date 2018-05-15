@@ -251,7 +251,7 @@ import { Toast } from 'mint-ui';
                     //
                     console.log(ResultJson.data.info)
                     if(ResultJson.data.info){
-                        if(that.companyId-0 == 72){
+                        if(that.companyId-0 == 92){
                             ResultJson.data.info.forEach(item=>{
                             if(item.id-0 ==1){
                                 that.largeAreArr = [item]
@@ -299,7 +299,7 @@ import { Toast } from 'mint-ui';
                     .then(res => {
                         that.provinceIshow = true;
                         that.selected = '2';
-                        if(this.companyId-0 ==72){
+                        if(this.companyId-0 ==92){
                             console.log()
                             res.data.info.forEach(item=>{
                                 console.log(item.id)
@@ -334,7 +334,7 @@ import { Toast } from 'mint-ui';
                     .then(res => {
                         that.cirtyIshwo = true;
                         that.selected = '3';
-                        if(this.companyId-0 ==72){
+                        if(this.companyId-0 ==92){
                             console.log()
                             res.data.info.forEach(item=>{
                                 // console.log(item)
