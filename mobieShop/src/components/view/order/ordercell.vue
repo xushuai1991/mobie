@@ -1,7 +1,7 @@
 <template>
     <div class='ordercell' >
         <div class='title' @click.stop='toOrderDetail(data.number,index)'>
-            <span class='tip'>{{status}}</span>
+            <span class='tip font'>{{status}}</span>
             <span class='time-remain' v-if='data.payState==2'>还剩{{date_ramian}}</span>
             <!-- <div class='time-remain'></div> -->
         </div>
@@ -21,7 +21,7 @@
                 </div>
                 <!-- 服务类商品，添加预约时间功能 -->
                 <div class='appointment' v-if='item.isService==true'>
-                    <button  @click.stop="appointment(item.id,index)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>
+                    <button class='button'  @click.stop="appointment(item.id,index)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>
                     <span>服务时间：{{item.updateAppointTime==null?(item.appointment==null?'空':item.appointment.substring(0,16)):item.updateAppointTimeIsActive?(item.appointment==null?'空':item.appointment.substring(0,16)):(item.updateAppointTime==null?'空':item.updateAppointTime.substring(0,16))}}{{(item.updateAppointTimeIsActive==false&&item.updateAppointTime!=null)?'(待确认)':''}}</span>
                            <!-- {{item.appointTime==null?'空':item.appointTime.substring(0,16)}}{{((item.updateAppointTimeIsActive&&item.updateAppointTime!=null)||item.updateAppointTime==null)?'':'('+'已申请'+')'}} -->
                     <!-- <span>服务时间：{{date_service[index]}}</span> -->
@@ -32,19 +32,19 @@
                 <p>合计：<span class='total'>￥{{data.actualMoney}}</span></p>
             </div>
             <div class='operation'>
-                <button class='prime pay' @click.stop="pay" v-if='data.payState==2'>付款</button>
-                <button class='cancle' @click.stop="cancleOrder" v-if='data.payState==2||data.payState==3'>取消订单</button>
-                <button class='prime follow' v-if='type=="inservice"'>追单</button>
-                <button class='apply' @click.stop='application' v-if='data.payState==1&&data.orderState!=4&data.orderState!=5'>申请退款</button>
-                <button class='invoice' @click.stop='invoice(data.id,data.actualMoney)' v-if='data.orderState==2'>申请发票</button>
+                <button class='prime pay button' style='padding:.16rem .2rem' @click.stop="pay" v-if='data.payState==2'>付款</button>
+                <button class='cancle border' @click.stop="cancleOrder" v-if='data.payState==2||data.payState==3'>取消订单</button>
+                <button class='prime follow button' style='padding:.16rem .2rem' v-if='type=="inservice"'>追单</button>
+                <button class='apply border' @click.stop='application' v-if='data.payState==1&&data.orderState!=4&data.orderState!=5'>申请退款</button>
+                <button class='invoice border' @click.stop='invoice(data.id,data.actualMoney)' v-if='data.orderState==2'>申请发票</button>
                 
             </div>
         </div>
         <mt-popup v-model="popupVisible" position="bottom" class="popup">
             <mt-picker :slots="dates" @change='onValuesChange'  :showToolbar='true' >
                 <p class='btn-group'>
-                    <button class='cancle' @click.stop='cancledate'>取消</button>
-                    <button class='certain' @click.stop="getdate">确定</button>
+                    <button class='cancle font' @click.stop='cancledate'>取消</button>
+                    <button class='certain font' @click.stop="getdate">确定</button>
                 </p>
             </mt-picker>
         </mt-popup>
@@ -172,6 +172,7 @@ export default {
             .then(res=>{
                 if(res.data.status==200){
                     let msg='申请提交成功！';
+                    console.log(that.indexorder,document.querySelectorAll('.orderlist')[that.index].querySelectorAll('li'));
                     let dom=document.querySelectorAll('.orderlist')[that.index].querySelectorAll('li')[that.indexorder].querySelectorAll('.detail')[that.index_appoint].querySelector('.appointment');
                     dom.querySelector('span').innerHTML='服务时间：'+date+'(待确认)';
                     dom.querySelector('button').innerHTML='修改时间';

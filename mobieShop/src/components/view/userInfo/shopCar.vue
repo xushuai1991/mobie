@@ -12,14 +12,14 @@
                                 <div class="goods">
                                     <div class="goods_title type-pay">
                                         <input type="checkbox" class='CinputBox' v-model="item.shopselected" @change="checkShop(index)" /><span>{{item.listgoods[0].otherInfo.company.companyName}}</span>
-                                        <div class="checks" @click='showServer(item.shopname,item.listgoods[0].otherInfo.company.companyId)'>领券</div>
+                                        <div class="checks font" @click='showServer(item.shopname,item.listgoods[0].otherInfo.company.companyId)'>领券</div>
                                         <p></p>
                                     </div>
                                     <div class="goodsBox list-item" v-for="(items,indexs) in item.listgoods" :key="indexs" data-type="0">
                                         <div class="list-box" @touchstart.capture="touchStart" @touchmove.capture="touchmove" @touchend.capture="touchEnd" @click="skip">
                                             <ul class="goods_detail" style='overflow: hidden; margin-top:0.2rem;'>
                                                 <li class="goods_img" style="margin-left:0px;">
-                                                    <input type="checkbox" v-model="items.selected" v-on:change="checkGoods(index,indexs)" style='position: relative;top:-2.4rem;margin-left:0.2rem;'>
+                                                    <input type="checkbox" v-model="items.selected" v-on:change="checkGoods(index,indexs)" style='position: relative;top:-2.3rem;margin-left:0.2rem;'>
                                                     <img :src='items.otherInfo.commodityImageUrl?"http://"+hostName+":"+port+"/api"+items.otherInfo.commodityImageUrl:"./test.jpg"'>
                                                 </li>
                                                 <li class="goods_info">
@@ -32,8 +32,8 @@
                                                     <p class="goods_price">￥<span>{{items.otherInfo.commodityPrice}}</span></p>
                                                     <div class='cgqNumBox'>
                                                         <input type="button" @click="reduce(index,indexs,items.commodityCount,items.id)" value='－'>
-                                                        <input type="number" disabled :value="items.commodityCount" />
-                                                        <input type="button" @click="add(index,indexs,items.commodityCount,items.id)" value='＋'>
+                                                        <input type="number"  v-model="items.commodityCount" v-on:blur="changeCount(index,indexs,items.commodityCount,items.id,items.otherInfo.commodityInfo.displayQuantity)"/>
+                                                        <input type="button" @click="add(index,indexs,items.commodityCount,items.id,items.otherInfo.commodityInfo.displayQuantity)" value='＋'>
                                                     </div>
                                                 </li>
                                                 <!-- <span class="mui_shopcar_del" @click="remove(index,indexs)">
@@ -64,7 +64,7 @@
                     合计: <span>￥<i class="price_all" >{{total.toFixed(2)}}</i></span>
                 </li>
                 <li class="pay">
-                    <p @click='Submit'>结算</p>
+                    <p @click='Submit' class='button'>结算</p>
                 </li>
             </ul>
         </footer>
@@ -72,16 +72,16 @@
         <mt-popup v-model="popupVisible" position="bottom" style='width:100%; margin-bottom: 0.96rem;'>
             <div class='shopBoxS'>{{ShopName}}</div>
             <p class='shopBxo'>领取优惠劵</p>
-            <ul class='shopBox'>
+            <ul class='shopBox' >
                 <li v-for='(item,index) in coupon' :key='index' v-if='item'>
                     <div class='shopFont'>
-                        <p>{{item?item.couponMoney:''}}元</p>
+                        <p class='font'>{{item?item.couponMoney:''}}元</p>
                         <p>{{item?item.couponName:""}}</p>
                         <p>使用期限 {{item?item.starTime.split(" ")[0]:""}}—{{item?item.endTime.split(" ")[0]:''}}</p>
-                    </div><button @click='okcoupon(item.id)'>领取</button>
+                    </div><button @click='okcoupon(item.id)' class='button'>领取</button>
                 </li>
             </ul>
-            <div class='closeBtn' @click="btnClose">关闭</div>
+            <div class='closeBtn button' @click="btnClose">关闭</div>
         </mt-popup>
         <mt-popup v-model="popupVisible2" position="bottom" style='width:100%; margin-bottom: 0.96rem;'>
             <div class='shopBoxS'></div>
@@ -94,7 +94,7 @@
                     </div><button @click='playmoney(item)'>付款</button>
                 </li>
             </ul>
-            <div class='closeBtn' @click="btnClose">关闭</div>
+            <div class='closeBtn button' @click="btnClose">关闭</div>
         </mt-popup>
         <mt-datetime-picker ref="picker1" type="date" v-model="value1" year-format="{value} 年" month-format="{value} 月" date-format="{value} 日" :startDate="startDate" :endDate="endDate" @confirm="handleChange">
         </mt-datetime-picker>
@@ -168,7 +168,7 @@
                 var num = 0;
                 this.list.forEach(function(item) {
                     item.listgoods.map(function(a) {
-                        return a.commodityCount
+                        return a.commodityCount-0
                     }).foreEach(function(a) {
                         num += a
                     })
@@ -182,8 +182,8 @@
                     item.listgoods.filter(function(a) {
                         return a.selected
                     }).map(function(a) {
-                        as += a.commodityCount
-                        return a.commodityCount * a.otherInfo.commodityPrice
+                        as += a.commodityCount-0
+                        return (a.commodityCount-0) * a.otherInfo.commodityPrice
                     }).forEach(function(a) {
                         total += a;
                     })
@@ -208,6 +208,19 @@
             this.port = location.port;
         },
         methods: {
+            changeCount(parentID, ID, sum, shopId,maxShop){
+                 var self = this.list[parentID].listgoods[ID];
+                if (self.commodityCount <= 1) {
+                    self.commodityCount = 1
+                    Toast('最少买一件');
+                    return false
+                }
+                if (self.commodityCount >= maxShop) {
+                    self.commodityCount = maxShop-1
+                    Toast('最多买'+maxShop);
+                    return false
+                }
+            },
             getURLparms(name) {
                 let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
                 let r = location.search.substr(1).match(reg);
@@ -265,7 +278,7 @@
                     let cartIdList = [];
                     cartIdList.push(item.id);
                     item.otherInfo.commodityInfo.cartIdList = cartIdList;
-                    item.otherInfo.commodityInfo.nums = item.commodityCount;
+                    item.otherInfo.commodityInfo.nums = item.commodityCount-0;
                     commodityInfo.push(item.otherInfo.commodityInfo)
                 })
                 localStorage.setItem("commodityInfo", JSON.stringify(commodityInfo))
@@ -285,6 +298,7 @@
                 }).then(response => {
                     if (response.data.status == 200) {
                         Toast(response.data.msg);
+                        this.popupVisible = false;
                     } else {
                         Toast(response.data.msg);
                     }
@@ -388,10 +402,11 @@
                     })
                 }
             },
-            add: function(parentID, ID, sum, shopId) { //parentID是商家id,ID是商品id
+            add: function(parentID, ID, sum, shopId,maxShop) { //parentID是商家id,ID是商品id
                 var self = this.list[parentID].listgoods[ID];
-                if (self.commodityCount > 100) {
-                    Toast('最多99件');
+                if (self.commodityCount >= maxShop) {
+                    self.commodityCount = maxShop
+                    Toast('最多买'+maxShop);
                     return false;
                 }
                 self.commodityCount++;
@@ -414,6 +429,7 @@
             reduce: function(parentID, ID, sum, shopId) { //parentID是商家id,ID是商品id
                 var self = this.list[parentID].listgoods[ID];
                 if (self.commodityCount <= 1) {
+                    self.commodityCount = 1
                     Toast('最少买一件');
                     return false
                 }
@@ -630,7 +646,8 @@
         },
         beforeDestroy() {
             this.$root.$off('loadShopcar');
-        }
+        },
+        
     }
 </script>
 
@@ -834,9 +851,9 @@
     .goods_title {
         width: 100%;
         height: .88rem;
-        line-height: .88rem;
+        line-height:1rem;
         border-bottom: .01rem solid #dcdcdc;
-        font-size: .24rem;
+        font-size: .25rem;
         padding-left: .24rem;
         position: relative;
     }
@@ -893,15 +910,19 @@
         height: 2.7rem;
         margin-left: 0rem;
         text-align: left;
+        // padding-left: .2rem;
     }
     .goods_detail .goods_img img {
         height: 100%;
         min-width: 3rem;
         width: 3rem;
+        // border:none;
+        // outline: none;
     }
     .goods_info {
         margin-top: .3rem;
         line-height: .5rem;
+        // padding-left: .1rem;
     }
     .goods_info p:first-child {
         font-size: .3rem;
@@ -917,6 +938,9 @@
         color: #f38650;
         font-size: .26rem;
         line-height: 1.1rem;
+        position: relative;
+        right:.2rem;
+        // padding-right: .2rem;
     }
     .footer {
         width: 100%;
@@ -1087,6 +1111,7 @@
         position: absolute;
         line-height: 2rem;
         right: -.5rem;
+        top:1.3rem;
         text-align: center;
         button {
             width: 0.5rem;
@@ -1111,10 +1136,12 @@
     .goods_size {
         font-size: 0.2rem;
         color: #707070;
+        padding-left: .1rem;
     }
     .brandDesc {
         font-size: 0.3rem;
         font-weight: 700;
+        padding-left: .1rem;
     }
 </style>
 

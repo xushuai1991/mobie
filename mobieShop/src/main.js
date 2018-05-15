@@ -17,6 +17,7 @@ Vue.use(BaiduMap, {
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
+Vue.prototype.url_qrcode='http://47.100.51.41:8887/customer/resource/qrCode.png';
 router.beforeEach((to, from, next) => {
     window.document.title = to.meta.title;
     if(to.meta.requireAuth){

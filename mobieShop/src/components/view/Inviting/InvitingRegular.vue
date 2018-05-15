@@ -2,16 +2,13 @@
     <div id="invite-regular">
         <div class="regular-title" >
             <h3>邀请规则</h3>
-            <div :style="{backgroundImage: 'url(' + bgSrc + ')' }">
-                <p>5<span>元</span></p>
+            <div class='topimg'>
             </div>
         </div>
         <ul class="regular-top">
             <li class="top-fir-des">
-                <p class="top-title">活动简介</p>
-                <p>分享推荐有奖链接给您的好友邀请好友体验XXX服务。</p>
-                <p>每当您的1位好友<span>完成第一次XXX服务并支付订单</span>,您便获得<span>5元</span>优惠劵作为推荐奖励。</p>
-                <p>您推荐完成首次XXX服务的好友越多您获得的优惠劵越多,可用于支付您的XXX服务费。</p>
+                <p class="top-title">积分邀请</p>
+                <p>会员通过邀请好友注册活动，成功邀请注册一个新会员，每个会员可以获得<span class='font'>5个积分</span>（限额20人）；</p>
             </li>
             <li class="top-sec-process">
                 <p class="top-title">参与流程</p>
@@ -22,12 +19,12 @@
                 </div>
                 <div class="process0 process process-sec">根据页面提示获取您的专属邀请有礼链接</div>
                 <div class="process0 process process-thi">分享给您的好友</div>
-                <div class="process0 process process-fou">1位好友领取<span> 5元</span>绿城新手券</div>
-                <div class="process0 process process-fif">该好友完成1次订单并<span>支付订单</span></div>
-                <div class="process0 process process-six">您获得推荐奖励 : <span>5元</span>绿城优惠券</div>
+                <div class="process0 process process-fou">1位好友领取<span class='font'> 5积分</span></div>
+                <div class="process0 process process-fif">该好友完成1次订单并<span class='font'>支付订单</span></div>
+                <div class="process0 process process-six">您获得推荐奖励 : <span class='font'>5积分</span></div>
             </li>
         </ul>
-        <div class="regular-explain">
+        <div class="regular-explain" v-if='false'>
             <p>活动说明</p>
             <p class="explain-text">拿商品经济的视角去解读，顾名思义是某一类志趣相同、取向一致的消费人群，被商家归类梳理，拿商品经济的视角去解读，顾名思义是某一类志趣相。</p>
             <p class="explain-text">拿商品经济的视角去解读，顾名思义是某一类志趣相同、取向一致的消费人群，被商家归类梳理，拿商品经济的视角去解读。</p>
@@ -35,7 +32,7 @@
             <p class="explain-text">拿商品经济的视角去解读，顾名思义是某一类志趣相同、取向一致的消费人群，被商家归类梳理，拿商品经济的视角去解读。</p>
         </div>
         <div class="regular-bottom">
-            <div :style="{backgroundImage: 'url(' + logoSrc + ')' }"></div>
+            <div class='bottom'></div>
         </div>
     </div>
 </template>
@@ -61,10 +58,13 @@ html,body{
 #invite-regular{
     width:100%;
     height:100%;
-    padding-top:0.7rem;
+    // padding-top:0.7rem;
     .regular-title{
         padding:0.6rem 1rem 0.8rem;
         text-align:center;
+        .topimg{
+            background-image:url('/static/images/style1-inviteresult.png');
+        }
         h3{
             font-size:0.6rem;
             opacity: 0.6;
@@ -98,7 +98,7 @@ html,body{
         li{
             margin-bottom:0.6rem;
             p.top-title{
-                font-size:0.6rem;
+                font-size:0.5rem;
                 text-align:left;
                 margin-bottom:0.4rem;
             }
@@ -106,7 +106,7 @@ html,body{
                 display:inline-block;
                 content:'';
                 width:0.1rem;
-                height:0.6rem;
+                height:0.5rem;
                 background: #409EFF;
                 border-radius:0.1rem;
                 vertical-align:top;
@@ -201,8 +201,14 @@ html,body{
         }
     }
     .regular-bottom{
-        background:#eff;
-        padding:0.8rem 0 1rem 0;
+        // background:#eff;
+        width:80%;
+        margin:0 auto;
+        border-top:1px solid #aaa;
+        padding:0.4rem 0 .4rem 0;
+        .bottom{
+            background-image:url('/static/img/logo.365ceed.png');
+        }
         div{
             width: 3rem;
             height: 1rem;

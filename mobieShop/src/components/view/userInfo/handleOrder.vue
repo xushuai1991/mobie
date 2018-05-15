@@ -7,7 +7,7 @@
                         <!--li数据遍历循环部分-->
                         <li v-for="(item,index) in list" :key="index">
                             <div class='title' @click.stop='toOrderDetail(item.number)'>
-                                <span class='tip'>退款中</span>
+                                <span class='tip font'>退款中</span>
                             </div>
                             <div class='content' @click.stop='toOrderDetail(item.number)'>
                                 <div class='detail' v-for='(commodity,index1) in item.orderDetails' :key='index1' >

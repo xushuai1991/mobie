@@ -1,18 +1,17 @@
 <template>
     <div id="invite-gift" @click="hideDiag($event)" style="height:100%;">
-        <ul class="gift-top" :style="{backgroundImage: 'url(' + imgSrc + ')' }">
-            <li class="top-headerImg">
+        <ul class="gift-top personalscores" >
+            <li class="top-headerImg" style='padding-top:.5rem;'>
                 <div>
-                    <img src="./invite-gift.png" alt="">
+                    <img :src="headimg"  alt="">
                 </div>
             </li>
-            <li>接受绿城小伙伴的邀请</li>
-            <li>首单立减5元</li>
-            <li><span>5</span>元</li>
+            <li class='font-extra'>接受绿城小伙伴的邀请</li>
+            <li style='font-size:.4rem'>可以获得5个积分</li>
         </ul>
         <div class="gift-bottom">
             <mt-field label="" placeholder="输入手机号接受邀请" type="tel" v-model="formData.phone"></mt-field>
-            <mt-button type="primary" @click.native="handleClick" style='margin-bottom:0.5rem;'>领取优惠券</mt-button>
+            <mt-button type="primary" class='button' @click.native="handleClick" style='margin-bottom:0.5rem;'>领取积分</mt-button>
         </div>
         <div class="register-diag" v-show="isShow" @touchmove.prevent>
             <div class="invite-register" id="myPanel">
@@ -31,7 +30,7 @@
                         <input type="password" v-model="formData.surePassword" @blur="pswcertain" name="surePassword" placeholder="请确认密码">
                     </li>
                     <li>
-                        <mt-button type="primary" @click="registerOk">确认</mt-button>
+                        <mt-button type="primary" class='button' style='padding:0 1rem;' @click="registerOk">确认</mt-button>
                     </li>
                 </ul>
             </div>
@@ -42,6 +41,7 @@
 import {checkClass} from '../../../assets/javascript/checkClass.js'
 import { Toast } from 'mint-ui';
 import { Indicator } from 'mint-ui';
+import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasdata.js'
 export default {
     data () {
         return {
@@ -75,15 +75,20 @@ export default {
             },
             isClcik:true,
             isShow:false,
-            companyId:null
+            companyId:null,
+            headimg:null
         }
     },
     created(){
         this.shareUrlFn()
         this.$root.$emit('header','邀请有礼');
-        let companyId=this.$route.query.companyId;
+        let companyId=sessionStorage.getItem('companyId');;
         this.companyId=companyId;
-    
+        let userinfo_location=operatelocalstorage('userinfo',null,'get',null);
+        if(userinfo_location!=null){
+            let data = JSON.parse(userinfo_location);
+            this.headimg=data.avatar;
+        }
     },
     methods:{
         shareUrlFn(){
@@ -294,6 +299,7 @@ html,body{
         background-position:center center;
         color:#fff;
         letter-spacing:1px;
+        background-image:url('/static/images/background_scores.png');
         .top-headerImg{
             div{
                 width: 2.5rem;

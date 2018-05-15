@@ -1,7 +1,7 @@
 <template>
     <div class='pendpay'>
         <div class='title' @click.stop='toOrderDetail(data.number,index)'>
-            <span class='tip'>待评价</span>
+            <span class='tip font'>待评价</span>
         </div>
         <div class='content' @click.stop='toOrderDetail(data.number,index)'>
             <div :class='{"detail":true,"haseval":item.evaluation!=null}' v-for='(item,index) in data.orderDetails' :key='index'>
@@ -22,8 +22,8 @@
                 <p>合计：<span class='total'>￥{{onValuesChange}}</span></p>
             </div>
             <div class='operation'>
-                <button class='prime evaluate' @click.stop='evaluate'>评价</button>
-                <button class='invoice' @click.stop='invoice(data.id,data.actualMoney)'>申请发票</button>
+                <button class='prime evaluate button' style='padding:.16rem .2rem' @click.stop='evaluate'>评价</button>
+                <button class='invoice border' @click.stop='invoice(data.id,data.actualMoney)'>申请发票</button>
                 <!-- <button class='check'>查看报告</button> -->
                 <!-- <button class='complaint'>投诉</button> -->
             </div>

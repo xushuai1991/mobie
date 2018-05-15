@@ -1,7 +1,7 @@
 <template>
     <div id="invite-result">
-        <div class="result-top" :style="{backgroundImage: 'url(' + bgSrc + ')' }"></div>
-        <div class="result-explain" ref="changeText">{{msg}}</div>
+        <div class="result-top" ></div>
+        <div class="result-explain font" ref="changeText">{{msg}}</div>
         <div class="result-bottom">
             <div :style="{backgroundImage: 'url(' + wxSrc + ')' }"></div>
             <p>扫描二维码,前往公众号</p>
@@ -13,7 +13,7 @@ export default {
     data () {
         return {
             bgSrc:require('./invite-result.png'),
-            wxSrc:'daojia.jingrunjia.com.cn/api/static/weixin/78.jpg',
+            wxSrc:'http://daojia.jingrunjia.com.cn/api/static/weixin/78.jpg',
             msg:''
         }
     },
@@ -21,19 +21,19 @@ export default {
         let companyId=this.$route.query.companyId;
         switch(companyId){
             case '78':{
-                this.wxSrc='daojia.jingrunjia.com.cn/api/static/weixin/78.jpg';
+                this.wxSrc='http://daojia.jingrunjia.com.cn/api/static/weixin/78.jpg';
                 break;
             }
             case '79':{
-                this.wxSrc='daojia.jingrunjia.com.cn/api/static/weixin/79.jpg';
+                this.wxSrc='http://daojia.jingrunjia.com.cn/api/static/weixin/79.jpg';
                 break;
             }
             case '92':{
-                this.wxSrc='daojia.jingrunjia.com.cn/api/static/weixin/92.jpg';
+                this.wxSrc='http://daojia.jingrunjia.com.cn/api/static/weixin/92.jpg';
                 break;
             }
             default:{
-                this.wxSrc='daojia.jingrunjia.com.cn/api/static/weixin/78.jpg';
+                this.wxSrc='http://daojia.jingrunjia.com.cn/api/static/weixin/78.jpg';
                 break;
             }
         }
@@ -60,6 +60,7 @@ html,body{
         background-size:100% 100%;
         background-repeat:no-repeat;
         background-position:center center;
+        background-image:url('/static/images/style1-inviteresult.png');
     }
     .result-explain{
         width:5rem;

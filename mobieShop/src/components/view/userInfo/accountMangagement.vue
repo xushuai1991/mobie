@@ -3,7 +3,7 @@
         <div class="portrait">
             <div class="my_portrait">头像
                 <div class='upImgs'>
-                    <div style="padding:20px;">
+                    <div style="padding:20px;width:0.5rem;;">
                         <div class="show">
                             <div class="picture" :style="'backgroundImage:url('+headerImage+')'"></div>
                         </div>
@@ -16,10 +16,10 @@
             </div>
         </div>
         <div class="meaningless"></div>
-        <div class="user_name" @click="handleClick(item)" v-for='(item,index) in userIfo' :key='index'>{{item.name}}<span><i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>
+        <div class="user_name" @click="handleClick(item)" v-for='(item,index) in userIfo' :key='index'>{{item.name}}<span>{{item.names}}   <i class='icon iconfont icon-arrow-right-copy fontSize'></i></span></div>
         <mt-popup v-model="popupVisible" position="right">
             <div class='userInfoBox'>
-                <h1>{{userName}}</h1>
+                <h1 class='background'>{{userName}}</h1>
                 <div v-if='inputShow'>
                     <div v-if='israido'>
                         <div class='textinfo'>{{listName}}<input type='text' placeholder='请输入' :disabled='isTtrue' v-model='userInput1'></div>
@@ -31,8 +31,8 @@
                     </div>
                 </div>
                 <div class='isOk'>
-                    <input type='button' class='orderOk' value='确认' @click='upData' />
-                    <input type='button' @click='clearBox' value='取消' />
+                    <input type='button' class='orderOk button border' value='确认' @click='upData' />
+                    <input type='button'  @click='clearBox' value='取消' />
                 </div>
             </div>
         </mt-popup>
@@ -76,24 +76,29 @@
                         name: '昵称',
                         listname1: '用户姓名:',
                         listname2: '用户姓名1:',
-                        isShow: false
+                        isShow: false,
+                        names: '',
                     },
                     {
-                        name: '性别'
+                        name: '性别',
+                        names: '',
                     },
                     {
                         name: '联系方式',
                         listname1: '手机号:',
                         listname2: '修改手机号',
+                        names: '',
                     },
                     {
-                        name: '地址'
+                        name: '地址',
+                        names: '',
                     },
                     {
                         name: '修改密码',
                         isShow: true,
                         listname1: '新密码',
                         listname2: '重复新密码',
+                        names: '',
                     },
                     {
                         name: '安全退出',
@@ -139,6 +144,11 @@
                     console.log(result)
                     that.uerserInfo = (result)
                     that.headerImage = that.uerserInfo.data.info.list[0].avatar
+                  
+                        that.userIfo[0].names = that.uerserInfo.data.info.list[0].nickname
+                        that.userIfo[1].names = that.uerserInfo.data.info.list[0].gender==true?'男':"女"
+                        that.userIfo[2].names= that.uerserInfo.data.info.list[0].mobile
+                    
                 }).catch(function(errmsg) {
                     console.log(errmsg)
                 })
@@ -242,11 +252,12 @@
                 let orderOk = document.querySelector(".orderOk");
                 this.israido = true
                 if (name.name == '昵称') {
-                    this.userInput1 = data.name;
+                    this.userInput1 = data.nickname;
                     this.isTtrue = true
                 }
                 if (name.name == '性别') {
-                    this.userInput1 = data.name;
+                    console.log(data.gender)
+                    this.value = data.gender?'1':"0";
                     this.israido = false
                 }
                 if (name.name == '联系方式') {
@@ -472,6 +483,7 @@
 </script>
 <style>
     .upImgs {
+        width:5rem;
         z-index: 100;
         top: -2.1rem;
     }
@@ -502,6 +514,7 @@
     }
 </style>
 <style lang="less" scoped>
+
     input[type=button] {
         -webkit-appearance: none;
         outline: none
@@ -561,6 +574,7 @@
     .accountMangagement {
         // margin-top: 0.8rem;
         text-align: left;
+        overflow:hidden;
         div {
             position: relative;
         }
@@ -576,7 +590,8 @@
         text-align: center;
     }
     .my_portrait {
-        width: 100%;
+        overflow:hidden;
+        width: 97%;
         height: 1.8rem;
         line-height: 1.8rem;
         border-bottom: .01rem solid #dcdcdc;
@@ -615,7 +630,7 @@
     .my_contact,
     .address,
     .account_safety {
-        width: 100%;
+        width: 97%;
         height: 1rem;
         line-height: 1rem;
         border-bottom: .01rem solid #dcdcdc;
