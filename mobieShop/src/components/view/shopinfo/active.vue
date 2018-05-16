@@ -14,7 +14,6 @@
                 </div>
             </div>
         </mt-loadmore>
-        
         <div style="background-color:#fff;font-size:.4rem;padding-top:3rem;" v-if='list_activiety.length==0'>
             <p>暂无数据</p>
         </div>
@@ -71,7 +70,7 @@ export default {
             })
             .catch(err=>{
                 console.log(err);
-                Toast('活动载入失败，请稍后尝试。');
+                Toast('数据载入失败，请稍后尝试。');
             })
         },
         loadMore(){

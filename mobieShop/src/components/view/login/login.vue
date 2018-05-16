@@ -366,6 +366,7 @@ export default {
                         Toast('请授权后再注册！');
                         return;
                     }
+                    let that=this;                    
                     let recommendedTeamId=this.$route.query.recommendedTeamId;
                     let recommendedAdminId=this.$route.query.recommendedAdminId;
                     let data={
@@ -376,7 +377,6 @@ export default {
                         recommendedAdminId:recommendedAdminId,
                         recommendedTeamId:recommendedTeamId
                     };
-                    let that=this;
                     this.$http.post('/api/customer/account/register',data)
                     .then(function(response){
                         Toast(response.data.msg);
