@@ -156,7 +156,7 @@ export default {
         // this.getCommid()
     },
     created(){
-        let companyid=this.$route.query.companyId;
+        let companyid=this.$route.query.company;
         this.companyid=companyid;
         
         if(companyid!=null){
