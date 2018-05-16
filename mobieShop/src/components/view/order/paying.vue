@@ -56,16 +56,21 @@ export default {
                 if(res.data.status==200){
                     if(res.data.info.code){
                         let data=res.data.info;
-                        let config={
-                            appId:data.appId,
-                            timeStamp:data.timeStamp,
-                            nonceStr:data.nonceStr,
-                            package:data.package,
-                            signType:data.signType,
-                            paySign:data.paySign
-                        };
-                        // Toast(config.appId);
-                        weixinPay(config,that.orderNumber,that);
+                        if(data.type=='skip_wechat'){
+                            that.$router.push('orderDeil?ordernumber='+this.orderNumber+'&index=0');
+                        }
+                        else{
+                            let config={
+                                appId:data.appId,
+                                timeStamp:data.timeStamp,
+                                nonceStr:data.nonceStr,
+                                package:data.package,
+                                signType:data.signType,
+                                paySign:data.paySign
+                            };
+                            weixinPay(config,that.orderNumber,that);
+                        }
+                        
                     }
                     else{
                         Toast(res.data.info.desc);

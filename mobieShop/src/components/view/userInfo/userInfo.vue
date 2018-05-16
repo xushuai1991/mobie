@@ -295,6 +295,7 @@
                         that.point = res.data.info.list[0].effectivePoints
                         that.expiredPoints = res.data.info.list[0].expiredPoints
                     }
+                    // 长时间未操作，需重新登录
                     else if(res.data.status==401){
                         localStorage.removeItem('userinfo');
                         that.userinfo={
