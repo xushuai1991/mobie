@@ -4,8 +4,8 @@
         <ul class="invite-top">
             <li><img id="sharePic" :src='totalSrc' /></li>
             <li>微信扫一扫</li>
-            <li>邀请好友获5元无门槛优惠券</li>
-            <li>邀请码 : <span class='font'>025645889</span></li>
+            <li>邀请好友获5个积分</li>
+            <!-- <li>邀请码 : <span class='font'>025645889</span></li> -->
             <li>
                 <router-link to='/invitingRegular'>邀请规则 >></router-link>
             </li>
@@ -64,7 +64,7 @@
             return {
                 totalSrc: '',
                 wxSrc:this.url_qrcode+'?content=',
-                address: 'http://'+location.hostname+'/invitingGift',
+                address: 'http://'+location.host+'/invitingGift',
                 // address: '10.1.1.206:8080',                
                 shareUrl: '/invitingGift',
                 paramData: ''
@@ -94,7 +94,7 @@
                 if (curHref.indexOf('&') === -1) {
                     let url=this.address+'?recommendedCustomerId=' + this.paramData+'&companyId='+companyid;
                     this.totalSrc = this.wxSrc +escape(url);
-                    console.log(this.totalSrc)
+                    console.log(url)
                 } else {
                     return
                 }

@@ -138,7 +138,8 @@ export default {
                 backgroundImage:"url(" + require("../../../../static/images/style2-login1.png") + ")",
                 backgroundSize:'cover',
                 position:'absolute',
-                bottom:'1.5rem'
+                bottom:'1rem',
+                
             },
             style2Login2:{
                 width:'100%',
@@ -146,7 +147,8 @@ export default {
                 backgroundImage:"url(" + require("../../../../static/images/style2-login2.png") + ")",
                 backgroundSize:'cover',
                 position:'absolute',
-                bottom:'.6rem'
+                bottom:'.2rem',
+                backgroundPositionX:'50%'
             },
             styletwo:false
         }
@@ -505,7 +507,7 @@ export default {
 <style scoped>
 .imgs{
     width:100%;
-    height:4.5rem;
+    height:4rem;
     position:relative;
 }
 .logo1{
@@ -529,7 +531,7 @@ export default {
 .contain{
     /* height:fit-content; */
     /* height:13.4rem; */
-    height:110vh;
+    height:100vh;
     /* overflow:scroll; */
 }
 .form{
@@ -622,7 +624,7 @@ export default {
     left: 0;
     font-size: 0.3rem;
     position: absolute;
-    top: 7.4rem;
+    top: 7rem;
     display: block;
 }
 .error{
