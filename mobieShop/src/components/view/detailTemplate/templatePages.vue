@@ -334,6 +334,9 @@
                     //模板ID 为空的情况下，先取商品ID 根据商品ID 查询模板ID
                     let commodityId = this.getURLparms("commodityId");
                     let companyId = this.getURLparms("companyId");
+                    if(companyId == null || companyId == 'null'){
+                       companyId = sessionStorage.getItem("companyId");
+                    }
                     this.commodityId = commodityId
                     //根据商品ID 查询相关的商品信息(根据商品取模板ID)
                     this.$http.post('/api/product/commodity/info/queryMap/mall', {
