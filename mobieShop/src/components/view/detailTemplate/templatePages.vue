@@ -599,7 +599,7 @@
                         let recommendedTeamId=this.$route.query.recommendedTeamId;
                         let recommendedAdminId=this.$route.query.recommendedAdminId;
                         let url='https://open.weixin.qq.com/connect/oauth2/authorize?appid='+this.appid+
-                            '&redirect_uri=http://codes.itchun.com?company='+companyid
+                            '&redirect_uri=http://pay.jingrunjia.com.cn?company='+companyid
                             +'&recommendedTeamId='+recommendedTeamId
                             +'&recommendedAdminId='+recommendedAdminId
                             +'&response_type=code&scope=snsapi_userinfo&state=STATE';
@@ -1610,7 +1610,7 @@
         font-size: 0.3rem;
     }
     .zbd-customerReviewContent {
-        margin: 0.3rem 0.1rem 0rem 0.1rem;
+        margin: 0.3rem 0.1rem 1.3rem 0.1rem;
         -webkit-box-shadow: 0px 0px 2px #f4f4f4;
         box-shadow: 0px 0px 0.2rem #f4f4f4;
     }
