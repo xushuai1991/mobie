@@ -185,7 +185,7 @@ export default {
             let winheight=document.body.clientHeight;//页面高度 
             // let _height=winheight - viewheight;
             if(winheight - viewheight > 50){
-                document.body.style.height=this.clientHeight+80+'px';
+                document.body.style.height=this.clientHeight+100+'px';
             }
             console.log(e.target);
             e.target.scrollIntoViewIfNeeded();
