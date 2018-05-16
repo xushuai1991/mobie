@@ -251,7 +251,7 @@ export default {
                                 else{
                                     this.$router.push('/index');
                                 }
-                                // location.href='http://www.itchun.com';
+                                // location.href='http://daojia.jingrunjia.com.cn';
                                 // t
                             }
                             else{
@@ -324,7 +324,7 @@ export default {
                                     else{
                                         this.$router.push('/index');
                                     }
-                                    // location.href='http://www.itchun.com';
+                                    // location.href='http://daojia.jingrunjia.com.cn';
                                     // that.$router.push('/index');
                                 }
                                 else{

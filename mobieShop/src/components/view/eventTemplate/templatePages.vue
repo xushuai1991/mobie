@@ -1,5 +1,5 @@
 <template>
-    <div class="page-navbar" id='templatePage'>
+    <div class="page-navbar" id='activitytemplatePage'>
         <!-- <div class="searchTop clear">
             <div class='code'><i data-v-13ee4bcf="" class="icon iconfont icon-erweima "></i></div>
             <div class="page-search">
@@ -111,18 +111,18 @@
     };
 </script>
 <style>
-    #templatePage .mint-searchbar-inner .mintui-search {
+    #activitytemplatePage .mint-searchbar-inner .mintui-search {
         color: #fff;
         font-size: 0.4rem;
         padding: 0 0.2rem;
     }
-    #templatePage .mint-searchbar-inner {
+    #activitytemplatePage .mint-searchbar-inner {
         background: rgba(100, 100, 100, 0.2);
     }
-    #templatePage .mint-searchbar {
+    #activitytemplatePage .mint-searchbar {
         background: #fff;
     }
-    #templatePage .mint-searchbar-core {
+    #activitytemplatePage .mint-searchbar-core {
         color: #fff;
         background: rgba(50, 50, 50, 0);
     }
@@ -135,23 +135,23 @@
         visibility: hidden;
         clear: both;
     }
-    #templatePage .code,
-    #templatePage .notice {
+    #activitytemplatePage .code,
+    #activitytemplatePage .notice {
         width: 10%;
         float: left;
     }
-    #templatePage .code i,
-    #templatePage .notice i {
+    #activitytemplatePage .code i,
+    #activitytemplatePage .notice i {
         font-size: 0.55rem;
         position: relative;
         top: -0.1rem;
     }
-    #templatePage .mint-search {
+    #activitytemplatePage .mint-search {
         height: 100%;
         margin-bottom: 0.2rem;
         font-size: 0.3rem;
     }
-    #templatePage .page-search {
+    #activitytemplatePage .page-search {
         width: 80%;
         float: left;
     }
