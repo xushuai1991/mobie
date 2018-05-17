@@ -7,7 +7,7 @@
                 </div>
             </li>
             <li class='font-extra'>接受绿城小伙伴的邀请</li>
-            <li style='font-size:.4rem'>可以获得5个积分</li>
+            <li style='font-size:.4rem'>可以获得20个积分</li>
         </ul>
         <div class="gift-bottom">
             <mt-field label="" placeholder="输入手机号接受邀请" type="tel" v-model="formData.phone"></mt-field>
@@ -76,19 +76,25 @@ export default {
             isClcik:true,
             isShow:false,
             companyId:null,
-            headimg:null
+            headimg:'/static/images/default-headimg.png'
         }
     },
     created(){
         this.shareUrlFn()
         this.$root.$emit('header','邀请有礼');
-        let companyId=sessionStorage.getItem('companyId');;
+        let companyId=sessionStorage.getItem('companyId');
+        if(companyId==null){
+            companyId=this.$route.query.companyId;
+            sessionStorage.setItem('companyId',companyId);
+            let timestamp= Date.parse(new Date());
+            window.location.href= window.location.href+'&'+timestamp
+        } 
         this.companyId=companyId;
-        let userinfo_location=operatelocalstorage('userinfo',null,'get',null);
-        if(userinfo_location!=null){
-            let data = JSON.parse(userinfo_location);
-            this.headimg=data.avatar;
-        }
+        // let userinfo_location=operatelocalstorage('userinfo',null,'get',null);
+        // if(userinfo_location!=null){
+        //     let data = JSON.parse(userinfo_location);
+        //     // this.headimg=data.avatar;
+        // }
     },
     methods:{
         shareUrlFn(){
