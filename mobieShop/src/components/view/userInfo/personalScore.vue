@@ -300,7 +300,7 @@ export default {
     methods:{
         // 查询会员总积分
         integral(){
-            let that = this
+            let that = this;
             this.$http.post(
                 '/api/customer/consumption/points/find?pageSize=1',
             ).then(res => { 

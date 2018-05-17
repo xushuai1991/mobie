@@ -4,7 +4,7 @@
         <div class="result-explain font" ref="changeText">{{msg}}</div>
         <div class="result-bottom">
             <div :style="{backgroundImage: 'url(' + wxSrc + ')' }"></div>
-            <p>扫描二维码,前往公众号</p>
+            <p>扫描二维码,前往商城</p>
         </div>
     </div>
 </template>

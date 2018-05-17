@@ -71,6 +71,7 @@
             // let code=this.getURLparms('code');
             // this.code=code;
             this.companyid = companyid;
+            console.log(companyid);
             if (companyid != null) {
                 sessionStorage.setItem('companyId', companyid);
                 // localStorage.setItem('companyId', companyid);

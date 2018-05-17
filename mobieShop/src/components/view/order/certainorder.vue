@@ -26,9 +26,12 @@
                         <div class='tips'>
                             <p class='price'>￥{{item.price_unit}}</p>
                             <p class='oper'>
-                                <span>X{{item.nums}}</span>
+                                <input type="button" @click="reduce(index)" value='－'>
+                                <input type="number"  v-model="item.nums" v-on:blur="changeCount()"/>
+                                <input type="button" @click="add(index)" value='＋'>
+                                <!-- <span>X{{item.nums}}</span> -->
                                 <!-- <span>{{item.num}}</span> -->
-                                <i class='icon iconfont icon-edit_icon' @click="changenums(index)"></i>
+                                <!-- <i class='icon iconfont icon-edit_icon' @click="changenums(index)"></i> -->
                             </p>
                         </div>
                     </div>
@@ -89,36 +92,11 @@
             </p>
             <ul>
                 <li v-for='(item,index) in couponlist' :key='index'>
-                    <label for="">{{item.couponType==0?'满'+item.fullmoney+'元减'+item.money+'元':(item.money+'元（'+(item.coupontype==1?'专享）':item.coupontype==2?'无门槛）':''))}}</label>
-                    <input type="checkbox" v-model="couponindex" style="float:right;" :value='index' name='coupon'>
+                    <label for="">{{item.coupontype==0?'满'+item.fullmoney+'元减'+item.money+'元':(item.money+'元（'+(item.coupontype==1?'专享）':item.coupontype==2?'无门槛）':''))}}</label>
+                    <input type="radio"  v-model="couponindex" style="float:right;" :value='index' name='coupon'>
                 </li>
             </ul>
         </div>
-        <!-- <div class='service-time'>
-                    <p>
-                        <span class='tip' >可预约服务时间</span>
-                        <span class='data'>{{servicedate}}</span>
-                        <i class='icon iconfont icon-arrow-right-copy' style='position:absolute;right:.2rem;' @click="popupVisible = true"></i>   
-                    </p>
-                    
-                    <mt-popup v-model="popupVisible" position="bottom" class="popup">
-                        <mt-picker :slots="dates" @change='onValuesChange'  :showToolbar='true'>
-                            <p class='btn-group'>
-                                <button class='cancle' @click='cancledate'>取消</button>
-                                <button class='certain' @click="getdate">确定</button>
-                            </p>
-                            
-                        </mt-picker>
-                    </mt-popup>
-                    
-                </div> -->
-        <!-- <div class='invoice'>
-                    <p>
-                        <span class='tip'>我要开发票</span>
-                        <i class='icon iconfont icon-arrow-right-copy' style='position:absolute;right:.2rem;'  @click='makeinvoice'></i>   
-                    </p>
-                    
-                </div> -->
         <div class='type-pay'>
             <p>
                 <span class='typepay'>
@@ -162,6 +140,8 @@
     export default {
         data() {
             return {
+                changeCouponable:false,
+                timestamp_end:100000000000000000000,
                 checked: 'checked',
                 userinfo: {
                     id: '',
@@ -190,7 +170,7 @@
                 deductionindex: [],
                 iscoupon: false,
                 couponlist: [],
-                couponindex: [],
+                couponindex:'',
                 servicedate: '',
                 datechange: '',
                 popupVisible: false,
@@ -237,10 +217,12 @@
                     });
                 }
                 this.deductionmoney=deductionmoney;
-                let coupmoney = 0;
-                this.couponindex.forEach(item => {
-                    coupmoney +=Number(this.couponlist[item].money);
-                });
+                let coupmoney =this.couponindex===''?0:this.couponlist[this.couponindex].money;
+                // let index_coupon=this.couponindex;
+                // console.log(this.couponlist[index_coupon].money);
+                // this.couponindex.forEach(item => {
+                //     coupmoney +=Number(this.couponlist[item].money);
+                // });
                 this.coupmoney=coupmoney;
                 price = price - deductionmoney - coupmoney;
                 return price < 0 ? 0 : price.toFixed(2);
@@ -261,7 +243,13 @@
                         // this.userinfo.consumptionpoints -= this.deductionlist[length_new - 1].score;
                     }
                 }
-            }
+            },
+            // changeCouponable(value){
+            //     setTimeout(_=>{
+                    
+            //         console.log(value);
+            //     },3000);
+            // }
         },
         created: function() {
             this.hostName = location.hostname;
@@ -369,16 +357,22 @@
             makeinvoice() {
                 this.$router.push('/invoice');
             },
-            changenums(index) {
-                MessageBox.prompt('请输入数量').then(({
-                    value
-                }) => {
-                    if (isNaN(value)) {
-                        Toast('请输入数字');
-                    } else {
-                        this.goodslist[index].nums = Math.abs(value);
-                    }
-                }).catch(() => {});
+            changeCount(){
+                this.getCouponcanuse();
+            },
+            //改变商品数量+
+            add(index){
+                this.timestamp_start=new Date();
+                this.changeCouponable=false;
+                this.goodslist[index].nums++; 
+                this.getCouponcanuse();
+            },
+            // 改变商品数量-
+            reduce(index){
+                this.timestamp_start=new Date();                
+                this.changeCouponable=false;
+                this.goodslist[index].nums=this.goodslist[index].nums==1?1:--this.goodslist[index].nums;
+                this.getCouponcanuse();
             },
             // 获取默认地址
             getDefaultaddress() {
@@ -417,6 +411,7 @@
             getCouponcanuse() {
                 let that = this;
                 let idlist=[];
+                this.couponlist=[];
                 this.goodslist.forEach(item=>{
                     idlist.push(item.id);
                 });
@@ -649,6 +644,18 @@
         position: absolute;
         bottom: .3rem;
         right: 0;
+        input[type='number']{
+            // width:auto;
+            width: .8rem;
+            height:.4rem;
+            line-height: .5rem;
+            text-align: center;
+        }
+        input[type='button']{
+            width:.4rem;
+            height:.4rem;
+            text-align: center;
+        }
     }
     .msg-goods .tips p.oper span {
         padding: 0 .2rem;
