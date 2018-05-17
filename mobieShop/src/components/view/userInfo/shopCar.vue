@@ -137,7 +137,8 @@
                 list: [], //领取优惠劵
                 popupVisible: false,
                 popupVisible2: false,
-                shopLIst: []
+                shopLIst: [],
+                flag:true,
             }
         },
         params() {
@@ -427,7 +428,10 @@
                     Toast('最多买'+maxShop);
                     return false;
                 }
+                let that = this;
                 self.commodityCount++;
+                if(this.flag){
+                    this.flag = false
                 let url = '/api/product/shoppingCart/update';
                 this.$http({
                         url: url,
@@ -439,9 +443,13 @@
                     })
                     .then(res => {
                         console.log(res)
+                        setTimeout(function(){
+                            that.flag = true
+                        },300)
                     }).catch(error => {
                         console.log(error)
                     })
+                }
             },
             //减少商品数量 最少买一件
             reduce: function(parentID, ID, sum, shopId) { //parentID是商家id,ID是商品id
@@ -451,8 +459,12 @@
                     Toast('最少买一件');
                     return false
                 }
+                let that = this;
                 self.commodityCount--;
-                let url = '/api/product/shoppingCart/update';
+                // let flag = true;
+                if(this.flag){
+                    this.flag = false
+                    let url = '/api/product/shoppingCart/update';
                 this.$http({
                         url: url,
                         method: "post",
@@ -463,9 +475,15 @@
                     })
                     .then(res => {
                         console.log(res)
+                        setTimeout(function(){
+                            that.flag = true
+                        },300)
+                        console.log(this.flag )
                     }).catch(error => {
                         console.log(error)
                     })
+                }
+                
             },
             deleteSection(parentID, ID, shopID) { //parentID是商家id,ID是商品id
                 this.unbind(parentID, ID, shopID)
