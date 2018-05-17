@@ -27,7 +27,7 @@
                             <p class='price'>￥{{item.price_unit}}</p>
                             <p class='oper'>
                                 <input type="button" @click="reduce(index)" value='－'>
-                                <input type="number"  v-model="item.nums" v-on:blur="changeCount()"/>
+                                <input type="number" v-model="item.nums" v-on:blur="changeCount()" />
                                 <input type="button" @click="add(index)" value='＋'>
                                 <!-- <span>X{{item.nums}}</span> -->
                                 <!-- <span>{{item.num}}</span> -->
@@ -93,31 +93,31 @@
             <ul>
                 <li v-for='(item,index) in couponlist' :key='index'>
                     <label for="">{{item.coupontype==0?'满'+item.fullmoney+'元减'+item.money+'元':(item.money+'元（'+(item.coupontype==1?'专享）':item.coupontype==2?'无门槛）':''))}}</label>
-                    <input type="radio"  v-model="couponindex" style="float:right;" :value='index' name='coupon'>
+                    <input type="radio" v-model="couponindex" style="float:right;" :value='index' name='coupon'>
                 </li>
             </ul>
         </div>
         <div class='type-pay'>
             <p>
                 <span class='typepay'>
-                            <img src="static/images/weixin.jpg" alt="">
-                            <span class='type'>微信支付</span>
+                                <img src="static/images/weixin.jpg" alt="">
+                                <span class='type'>微信支付</span>
                 </span>
                 <span class='select'>
-                    
-                    <input type="checkbox" v-model='checked'>
-                    <span class='check checked' @click="selectpaytype($event)"></span>
+                        
+                        <input type="checkbox" v-model='checked'>
+                        <span class='check checked' @click="selectpaytype($event)"></span>
                 </span>
             </p>
         </div>
         <div class='submitorder'>
             <span class='msgs'>
-                        <p>共1件产品</p>
-                        <p>合计：
-                            <span class='price'>￥{{finalprice}}</span>
-                            <span class='tip'>{{'积分抵扣：'+deductionmoney+'元'}}</span>
-                            <span class='tip'>{{'优惠券抵扣：'+coupmoney+'元'}}</span>
-                        </p>
+                            <p>共1件产品</p>
+                            <p>合计：
+                                <span class='price'>￥{{finalprice}}</span>
+            <span class='tip'>{{'积分抵扣：'+deductionmoney+'元'}}</span>
+            <span class='tip'>{{'优惠券抵扣：'+coupmoney+'元'}}</span>
+            </p>
             </span>
             <button class='submit' @click='submitorder'>提交订单</button>
         </div>
@@ -140,7 +140,7 @@
     export default {
         data() {
             return {
-                timestamp_start:'',
+                timestamp_start: '',
                 checked: 'checked',
                 userinfo: {
                     id: '',
@@ -169,7 +169,7 @@
                 deductionindex: [],
                 iscoupon: false,
                 couponlist: [],
-                couponindex:'',
+                couponindex: '',
                 servicedate: '',
                 datechange: '',
                 popupVisible: false,
@@ -194,9 +194,9 @@
                         textAlign: 'right'
                     }
                 ],
-                deductionmoney:0,
-                coupmoney:0,
-                point:0
+                deductionmoney: 0,
+                coupmoney: 0,
+                point: 0
             }
         },
         computed: {
@@ -212,17 +212,17 @@
                 let deductionmoney = 0;
                 if (this.deductionindex.length != 0) {
                     this.deductionindex.forEach(item => {
-                        deductionmoney +=Number(this.deductionlist[item].moneycanduct);
+                        deductionmoney += Number(this.deductionlist[item].moneycanduct);
                     });
                 }
-                this.deductionmoney=deductionmoney;
-                let coupmoney =this.couponindex===''?0:this.couponlist[this.couponindex].money;
+                this.deductionmoney = deductionmoney;
+                let coupmoney = this.couponindex === '' ? 0 : this.couponlist[this.couponindex].money;
                 // let index_coupon=this.couponindex;
                 // console.log(this.couponlist[index_coupon].money);
                 // this.couponindex.forEach(item => {
                 //     coupmoney +=Number(this.couponlist[item].money);
                 // });
-                this.coupmoney=coupmoney;
+                this.coupmoney = coupmoney;
                 price = price - deductionmoney - coupmoney;
                 return price < 0 ? 0 : price.toFixed(2);
             }
@@ -238,18 +238,18 @@
                         Toast('剩余积分不足，无法抵扣！');
                         this.deductionindex.pop();
                     } else {
-                        this.point-=this.deductionlist[length_new - 1].score;
+                        this.point -= this.deductionlist[length_new - 1].score;
                         // this.userinfo.consumptionpoints -= this.deductionlist[length_new - 1].score;
                     }
                 }
             },
-            timestamp_start(time){
-                setTimeout(_=>{
-                    let timestamp_end=new Date()-this.timestamp_start;
-                    if(timestamp_end>3000){
+            timestamp_start(time) {
+                setTimeout(_ => {
+                    let timestamp_end = new Date() - this.timestamp_start;
+                    if (timestamp_end > 3000) {
                         this.getCouponcanuse();
                     }
-                },3000)
+                }, 3000)
             }
         },
         created: function() {
@@ -266,10 +266,10 @@
                     id: item.id,
                     name: item.name,
                     imgurl: item.commodityImageList.length > 0 ? item.commodityImageList[0].url : '',
-                    conditionname1: item.options[0]==null?'':item.options[0].name,
-                    conditionvalue1: item.options[0]==null?'':item.options[0].value,
-                    conditionname2: item.options[1]==null?'':item.options[1].name,
-                    conditionvalue2: item.options[1]==null?'':item.options[1].value,
+                    conditionname1: item.options[0] == null ? '' : item.options[0].name,
+                    conditionvalue1: item.options[0] == null ? '' : item.options[0].value,
+                    conditionname2: item.options[1] == null ? '' : item.options[1].name,
+                    conditionvalue2: item.options[1] == null ? '' : item.options[1].value,
                     price_unit: item.originalPrice,
                     nums: item.nums,
                     childlist: []
@@ -277,10 +277,10 @@
                 this.goodslist.push(json);
                 if (item.originalPricePoint != null) {
                     let json1 = {
-                        commodityid:item.id,
+                        commodityid: item.id,
                         commodityname: item.name,
                         score: item.originalPricePoint,
-                        moneycanduct:item.originalPrice-item.originalPriceMoney
+                        moneycanduct: item.originalPrice - item.originalPriceMoney
                     };
                     this.deductionlist.push(json1);
                 }
@@ -303,15 +303,15 @@
         },
         methods: {
             // 获取用户可用总积分
-            integral(){
+            integral() {
                 let that = this
                 this.$http.post(
                     '/api/customer/consumption/points/find?pageSize=1',
-                ).then(res => { 
-                    if(res.data.status == 200){
+                ).then(res => {
+                    if (res.data.status == 200) {
                         that.point = res.data.info.list[0].effectivePoints
                         that.expiredPoints = res.data.info.list[0].expiredPoints
-                    }else{
+                    } else {
                         Toast(res.data.msg);
                     }
                 }).catch(err => {
@@ -358,49 +358,47 @@
             makeinvoice() {
                 this.$router.push('/invoice');
             },
-            changeCount(){
+            changeCount() {
                 this.getCouponcanuse();
             },
             //改变商品数量+
-            add(index){
-                this.timestamp_start=new Date();
-                this.changeCouponable=false;
-                this.goodslist[index].nums++; 
+            add(index) {
+                this.timestamp_start = new Date();
+                this.changeCouponable = false;
+                this.goodslist[index].nums++;
                 // this.getCouponcanuse();
             },
             // 改变商品数量-
-            reduce(index){
-                this.timestamp_start=new Date();                
-                this.changeCouponable=false;
-                this.goodslist[index].nums=this.goodslist[index].nums==1?1:--this.goodslist[index].nums;
+            reduce(index) {
+                this.timestamp_start = new Date();
+                this.changeCouponable = false;
+                this.goodslist[index].nums = this.goodslist[index].nums == 1 ? 1 : --this.goodslist[index].nums;
                 // this.getCouponcanuse();
             },
             // 获取默认地址
             getDefaultaddress() {
                 let that = this;
-                this.$http.post('/api/customer/account/queryMapByIds',[this.userinfo.id])
+                this.$http.post('/api/customer/account/queryMapByIds', [this.userinfo.id])
                     .then(res => {
                         if (res.data.status == 401) {
                             Toast('请先登录');
                         }
                         if (res.data.status == 200) {
-                            if(res.data.info.length>0){
-                                let data=res.data.info[0];
-                                that.userinfo.addressid =data.defaultAddressId;
-                                let address='';
-                                if(data.defaultAddressId=='ziti'){
-                                    address='自提';
-                                }
-                                else if(data.defaultAddressId==''){
-                                    address='';
-                                }
-                                else{
-                                    address=data.defaultAddress.area.regionName+
-                                            data.defaultAddress.province.regionName+
-                                            data.defaultAddress.city.regionName+
-                                            data.defaultAddress.district.regionName
-                                            data.defaultAddress.region.regionName+
-                                            data.defaultAddress.address;
+                            if (res.data.info.length > 0) {
+                                let data = res.data.info[0];
+                                that.userinfo.addressid = data.defaultAddressId;
+                                let address = '';
+                                if (data.defaultAddressId == 'ziti') {
+                                    address = '自提';
+                                } else if (data.defaultAddressId == '') {
+                                    address = '';
+                                } else {
+                                    address = data.defaultAddress.area.regionName +
+                                        data.defaultAddress.province.regionName +
+                                        data.defaultAddress.city.regionName +
+                                        data.defaultAddress.district.regionName
+                                    data.defaultAddress.region.regionName +
+                                        data.defaultAddress.address;
                                 }
                                 that.userinfo.address = address;
                             }
@@ -414,14 +412,14 @@
             // 获取可用优惠券
             getCouponcanuse() {
                 let that = this;
-                let idlist=[];
-                this.couponlist=[];
-                this.goodslist.forEach(item=>{
+                let idlist = [];
+                this.couponlist = [];
+                this.goodslist.forEach(item => {
                     idlist.push(item.id);
                 });
                 let data = {
                     amount: this.totalprice,
-                    couponCustomerList:idlist
+                    couponCustomerList: idlist
                 };
                 this.$http.post('/api/product/coupon/customer/display', data)
                     .then(res => {
@@ -450,13 +448,12 @@
                         console.log(res)
                         if (res.data.status == 200) {
                             let carId = JSON.parse(localStorage.getItem('commodityInfo'))
-                            if (carId!==null||carId=='') {
+                            if (carId !== null || carId == '') {
                                 let cartIdList = [];
                                 carId.forEach((item, i) => {
-                                    if(item.cartIdList!=null){
+                                    if (item.cartIdList != null) {
                                         cartIdList.push(item.cartIdList[0])
                                     }
-                                    
                                 })
                                 let url = '/api/product/shoppingCart/remove';
                                 that.$http({
@@ -491,11 +488,11 @@
                     Toast('请选择支付方式！');
                     return;
                 }
-                if(this.userinfo.address==''){
-                    MessageBox.confirm('请先选择收货地址').then(_=>{
+                if (this.userinfo.address == '') {
+                    MessageBox.confirm('请先选择收货地址').then(_ => {
                         this.changeaddress();
                         return;
-                    }).catch(_=>{
+                    }).catch(_ => {
                         return;
                     });
                 }
@@ -511,13 +508,13 @@
                         amount: item.nums,
                         usePoint: false,
                         pointSum: 0,
-                        condition1Name: item.conditionname1 +'：'+ item.conditionvalue1,
-                        condition2Name: item.conditionname2==''?'':(item.conditionname2 + '：'+ item.conditionvalue2) 
+                        condition1Name: item.conditionname1 + '：' + item.conditionvalue1,
+                        condition2Name: item.conditionname2 == '' ? '' : (item.conditionname2 + '：' + item.conditionvalue2)
                     };
-                    for(let item1 in this.deductionindex){
-                        if(this.deductionlist[item1].commodityid==item.id){
-                            json.usePoint=true;
-                            json.pointSum=this.deductionlist[item1].score;
+                    for (let item1 in this.deductionindex) {
+                        if (this.deductionlist[item1].commodityid == item.id) {
+                            json.usePoint = true;
+                            json.pointSum = this.deductionlist[item1].score;
                         }
                     }
                     mallOrderList.push(json);
@@ -526,13 +523,17 @@
                 //     mallOrderList[item].usePoint = true;
                 //     mallOrderList[item].pointSum = this.deductionlist[item].score;
                 // })
-                
                 data.mallOrderList = mallOrderList;
-                let json = {
-                    id: this.couponlist[this.couponindex].id,
-                    couponAmount: 1
-                };
-                data.couponInfoList.push(json);
+                // console.log(this.couponlist)
+                // console.log(this.couponindex)
+                // console.log(this.couponlist[this.couponindex])
+                if (this.couponindex) {
+                    let json = {
+                        id: this.couponlist[this.couponindex].id,
+                        couponAmount: 1
+                    };
+                    data.couponInfoList.push(json);
+                }
                 // this.couponindex.forEach(item => {
                 //     let json = {
                 //         id: this.couponlist[item].id,
@@ -552,8 +553,7 @@
         // margin-top: 0.8rem;
         font-size: .28rem;
         text-align: left;
-        background-color: #e9e9e9;
-        // margin-top: 40px;
+        background-color: #e9e9e9; // margin-top: 40px;
     }
     .msg-customer {
         padding: .4rem .2rem;
@@ -653,16 +653,16 @@
         position: absolute;
         bottom: .3rem;
         right: 0;
-        input[type='number']{
+        input[type='number'] {
             // width:auto;
             width: .8rem;
-            height:.4rem;
+            height: .4rem;
             line-height: .5rem;
             text-align: center;
         }
-        input[type='button']{
-            width:.4rem;
-            height:.4rem;
+        input[type='button'] {
+            width: .4rem;
+            height: .4rem;
             text-align: center;
         }
     }
@@ -854,7 +854,7 @@
         background-color: #f1f1f1;
     }
     /* .submitorder .msg{
-        } */
+            } */
     .submitorder .msgs p:first-child {
         font-size: .2rem;
         color: #787878;
@@ -868,9 +868,9 @@
         color: orange;
     }
     .submitorder .msgs .tip {
-        font-size:.2rem;
-        display:block;
-        padding-left:.9rem;
+        font-size: .2rem;
+        display: block;
+        padding-left: .9rem;
         padding-top: .1rem;
         color: red;
     }

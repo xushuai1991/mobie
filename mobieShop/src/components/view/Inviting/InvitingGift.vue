@@ -177,7 +177,7 @@ export default {
                 }else if(response.data.status==300){
                     that.$router.push({path:'/InvitingResult?companyId='+this.companyId,query:{text:'老朋友,您已是会员,领取失败'}})
                 }
-            }).catch(function(response){
+            }).catch(function(err){
                 console.log(err)
             })
         },
