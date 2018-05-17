@@ -140,6 +140,8 @@
     export default {
         data() {
             return {
+                changeCouponable:false,
+                timestamp_end:100000000000000000000,
                 checked: 'checked',
                 userinfo: {
                     id: '',
@@ -241,7 +243,13 @@
                         // this.userinfo.consumptionpoints -= this.deductionlist[length_new - 1].score;
                     }
                 }
-            }
+            },
+            // changeCouponable(value){
+            //     setTimeout(_=>{
+                    
+            //         console.log(value);
+            //     },3000);
+            // }
         },
         created: function() {
             this.hostName = location.hostname;
@@ -349,29 +357,20 @@
             makeinvoice() {
                 this.$router.push('/invoice');
             },
-            changenums(index) {
-                MessageBox.prompt('请输入数量').then(({
-                    value
-                }) => {
-                    // alert(value);
-                    if (isNaN(value)) {
-                        Toast('请输入数字');
-                    } else {
-                        this.goodslist[index].nums = Math.abs(value);
-                        this.getCouponcanuse();
-                    }
-                }).catch(() => {});
-            },
             changeCount(){
                 this.getCouponcanuse();
             },
             //改变商品数量+
             add(index){
+                this.timestamp_start=new Date();
+                this.changeCouponable=false;
                 this.goodslist[index].nums++; 
                 this.getCouponcanuse();
             },
             // 改变商品数量-
             reduce(index){
+                this.timestamp_start=new Date();                
+                this.changeCouponable=false;
                 this.goodslist[index].nums=this.goodslist[index].nums==1?1:--this.goodslist[index].nums;
                 this.getCouponcanuse();
             },
