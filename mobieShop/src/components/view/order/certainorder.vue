@@ -525,13 +525,18 @@
                 // })
                 
                 data.mallOrderList = mallOrderList;
-                this.couponindex.forEach(item => {
-                    let json = {
-                        id: this.couponlist[item].id,
-                        couponAmount: 1
-                    };
-                    data.couponInfoList.push(json);
-                });
+                let json = {
+                    id: this.couponlist[this.couponindex].id,
+                    couponAmount: 1
+                };
+                data.couponInfoList.push(json);
+                // this.couponindex.forEach(item => {
+                //     let json = {
+                //         id: this.couponlist[item].id,
+                //         couponAmount: 1
+                //     };
+                //     data.couponInfoList.push(json);
+                // });
                 // console.log(data);
                 this.createOrder(data);
             }
