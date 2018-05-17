@@ -3,7 +3,7 @@
         <ul class='collection-xs'>
             <li v-for="(item,index) in collectionlist" :key="index">
                 <p class='Coupon'>
-                    <span @click="getcoupon(item.commodityId)">领券<i class='icon iconfont icon-arrow-right-copy'></i></span>
+                    <span class='font' @click="getcoupon(item.commodityId)">领券<i class='icon iconfont icon-arrow-right-copy'></i></span>
                 </p>
                 <div class='goods'>
                     <div class='left'>
@@ -32,10 +32,10 @@
                         <p>{{item.couponMoney}}元</p>
                         <p>{{item.couponName}}</p>
                         <p>使用期限 {{item.starTime.split(" ")[0]}}—{{item.endTime.split(" ")[0]}}</p>
-                    </div><button @click='okcoupon(item.id)'>领取</button>
+                    </div><button class='button' @click='okcoupon(item.id)'>领取</button>
                 </li>
             </ul>
-            <div class='closeBtn' @click="btnClose">关闭</div>
+            <div class='closeBtn button' @click="btnClose">关闭</div>
         </mt-popup>
     </div>
 </template>

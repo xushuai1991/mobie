@@ -104,8 +104,8 @@
                 let nickname = (JSON.parse(JSON.parse(userInfo).data))?(JSON.parse(JSON.parse(userInfo).data)).nickname:""
                 let companyId = sessionStorage.getItem("companyId")
                 if(companyId==null){
-                companyId = this.getURLparms('companyId')
-            }
+                    companyId = this.getURLparms('companyId')
+                }
                 let that = this;
                 let curHref = window.location.href.split('#')[0]
                 let promisel = new Promise((resolve, reject) => {

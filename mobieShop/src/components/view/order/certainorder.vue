@@ -388,8 +388,11 @@
                                 let data=res.data.info[0];
                                 that.userinfo.addressid =data.defaultAddressId;
                                 let address='';
-                                if(data.defaultAddress==null){
+                                if(data.defaultAddressId=='ziti'){
                                     address='自提';
+                                }
+                                else if(data.defaultAddressId==''){
+                                    address='';
                                 }
                                 else{
                                     address=data.defaultAddress.area.regionName+
@@ -488,7 +491,7 @@
                     Toast('请选择支付方式！');
                     return;
                 }
-                if(this.userinfo.addressid==null){
+                if(this.userinfo.address==''){
                     MessageBox.confirm('请先选择收货地址').then(_=>{
                         this.changeaddress();
                         return;
