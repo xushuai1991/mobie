@@ -1,11 +1,11 @@
 <template>
     <div class="page-navbar" id='templatePage'>
         <div class="searchTop clear">
-            <div class='code'><i data-v-13ee4bcf="" class="icon iconfont icon-erweima "></i></div>
+            <!-- <div class='code'><i data-v-13ee4bcf="" class="icon iconfont icon-erweima "></i></div> -->
             <div class="page-search">
                 <mt-search  v-model="value"></mt-search>
             </div>
-            <div class='notice'><i data-v-13ee4bcf="" class="icon iconfont icon-tongzhi "></i></div>
+            <!-- <div class='notice'><i data-v-13ee4bcf="" class="icon iconfont icon-tongzhi "></i></div> -->
         </div>
             <keep-alive v-for='(item,index) in comlist' :key='index'>
               <components :templateData='item.componentsData' :is='item.componentsName'  :type='item.componentsName'></components>
@@ -92,7 +92,7 @@
         font-size: 0.3rem;
     }
     #templatePage .page-search {
-        width: 80%;
+        width: 100%;
         float: left;
     }
 </style>
