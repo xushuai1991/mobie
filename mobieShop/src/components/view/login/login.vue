@@ -138,7 +138,8 @@ export default {
                 backgroundImage:"url(" + require("../../../../static/images/style2-login1.png") + ")",
                 backgroundSize:'cover',
                 position:'absolute',
-                bottom:'1.5rem'
+                bottom:'1rem',
+                
             },
             style2Login2:{
                 width:'100%',
@@ -146,7 +147,8 @@ export default {
                 backgroundImage:"url(" + require("../../../../static/images/style2-login2.png") + ")",
                 backgroundSize:'cover',
                 position:'absolute',
-                bottom:'.6rem'
+                bottom:'.2rem',
+                backgroundPositionX:'50%'
             },
             styletwo:false
         }
@@ -156,7 +158,7 @@ export default {
         // this.getCommid()
     },
     created(){
-        let companyid=this.$route.query.companyId;
+        let companyid=this.$route.query.company;
         this.companyid=companyid;
         
         if(companyid!=null){
@@ -185,7 +187,7 @@ export default {
             let winheight=document.body.clientHeight;//页面高度 
             // let _height=winheight - viewheight;
             if(winheight - viewheight > 50){
-                document.body.style.height=this.clientHeight+80+'px';
+                document.body.style.height=this.clientHeight+100+'px';
             }
             console.log(e.target);
             e.target.scrollIntoViewIfNeeded();
@@ -366,6 +368,7 @@ export default {
                         Toast('请授权后再注册！');
                         return;
                     }
+                    let that=this;                    
                     let recommendedTeamId=this.$route.query.recommendedTeamId;
                     let recommendedAdminId=this.$route.query.recommendedAdminId;
                     let data={
@@ -376,7 +379,6 @@ export default {
                         recommendedAdminId:recommendedAdminId,
                         recommendedTeamId:recommendedTeamId
                     };
-                    let that=this;
                     this.$http.post('/api/customer/account/register',data)
                     .then(function(response){
                         Toast(response.data.msg);
@@ -505,7 +507,7 @@ export default {
 <style scoped>
 .imgs{
     width:100%;
-    height:4.5rem;
+    height:4rem;
     position:relative;
 }
 .logo1{
@@ -529,7 +531,7 @@ export default {
 .contain{
     /* height:fit-content; */
     /* height:13.4rem; */
-    height:110vh;
+    height:100vh;
     /* overflow:scroll; */
 }
 .form{
@@ -622,7 +624,7 @@ export default {
     left: 0;
     font-size: 0.3rem;
     position: absolute;
-    top: 7.4rem;
+    top: 7rem;
     display: block;
 }
 .error{

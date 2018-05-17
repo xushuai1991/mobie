@@ -1,19 +1,19 @@
 <template>
     <section class='Cactive'>
         <h3 class='tipname'>新品热卖活动</h3>
-        <ul class='ImbBox'>
-            <li v-for='(item,index) in list_activiety' :key='index'>
-                <router-link :to='item.activityLink'>
+        <mt-loadmore :bottom-method="loadMore"  :bottom-all-loaded="loading" ref="loadmore" :autoFill='false'>
+            <div class='ImbBox'>
+                <div v-for='(item,index) in list_activiety' :key='index'>
                     <div class='imgBox'>
-                        <img :src='item.imgurl' />
+                        <img :src='item.imgurl' alt='图片丢失' />
                     </div>
                     <div class='titleInof'>
-                        <p><i class='icon iconfont icon-xiaohuomiao hots'></i><span class='textSpace'>{{item.title}}</span> <span class='flortRight'>go <i class="icon iconfont icon-youshuangjiantou ritJtou"></i></span></p>
+                        <p><i class='icon iconfont icon-xiaohuomiao hots'></i><span class='textSpace'>{{item.title}}</span> <a :href='item.activityLink'><span class='flortRight'>go <i class="icon iconfont icon-youshuangjiantou ritJtou"></i></span></a> </p>
                         <p>关注人数 {{item.registeredNumber}} <span class='flortRight'>{{item.startTime}}</span></p>
                     </div>
-                </router-link>
-            </li>
-        </ul>
+                </div>
+            </div>
+        </mt-loadmore>
         <div style="background-color:#fff;font-size:.4rem;padding-top:3rem;" v-if='list_activiety.length==0'>
             <p>暂无数据</p>
         </div>
@@ -26,21 +26,36 @@ export default {
     data(){
         return{
             list_activiety:[],
+            loading:false,
+            pagenum:1,
+            pagesize:0,
+            overload:false
         }
     },
     created(){
-        this.$root.$emit('header','活动列表');
+        // this.$root.$emit('header','活动列表');
+        this.hostName = location.hostname;
+        this.port = location.port;
+        this.getActivitylist();
     },
     methods:{
-        getActivitylist(pagenum){
+        getActivitylist(){
             let that=this;
-            this.$http.post('/api/product/activity/find?pageSize=5&pageNo='+pagenum)
+            this.$http.post('/api/product/activity/find?pageSize=5&pageNo='+this.pagenum)
             .then(res=>{
                 if(res.data.status==200){
+                    that.pagesize=res.data.info.pages;
+                    if(that.pagenum<that.pagesize){
+                        that.pagenum++;
+                    }
+                    // 数据加载完成
+                    else{
+                        that.overload=true;
+                    }
                     res.data.info.list.forEach(item=>{
                         let json={
                             title:item.activityTitle,
-                            imgurl:item.image,
+                            imgurl:"http://"+that.hostName+":"+that.port+"/api"+item.image,
                             startTime:item.startTime,
                             activityLink:item.activityLink,
                             registeredNumber:item.registeredNumber
@@ -55,8 +70,25 @@ export default {
             })
             .catch(err=>{
                 console.log(err);
-                Toast('活动载入失败，请稍后尝试。');
+                Toast('数据载入失败，请稍后尝试。');
             })
+        },
+        loadMore(){
+            if(this.overload){
+                setTimeout(() => {
+                    this.$refs.loadmore.onBottomLoaded();
+                    Toast('数据已加载完');
+                }, 1000);
+            }
+            else{
+                this.getActivitylist();
+                setTimeout(() => {
+                    this.$refs.loadmore.onBottomLoaded();
+                }, 1000);
+            }
+            
+            
+            // console.log(value);
         }
     }
 }
@@ -64,6 +96,8 @@ export default {
 
 <style lang="less" scoped>
     .Cactive {
+        height:100vh;
+        overflow:auto;
         font-size: 0.2rem;
         // margin-top: 0.9rem;
         background: #ebebeb6e;
@@ -77,15 +111,23 @@ export default {
     }
     .ImbBox {
         // padding: 0.2rem;
-        li {
+        // height:100vh;
+        overflow:hidden;
+        min-height:75vh;
+        >div {
             background: #fff;
-            padding: 2% 4%;
+            padding: 2% 4% 0 4%;
             margin-bottom: .2rem;
-            width: 92%;
-            height: 5.4rem;
+            // width: 92%;
+            height: 5rem;
+            .imgBox{
+                height:4rem;
+            }
+            
             img {
                 width: 100%;
                 height: 4rem;
+                display:block;
             }
         }
     }
