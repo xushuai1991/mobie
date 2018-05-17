@@ -30,6 +30,7 @@ export default {
     },
     created(){
         this.$root.$emit('header','活动列表');
+        this.getActivitylist(1)
     },
     methods:{
         getActivitylist(pagenum){
@@ -37,6 +38,7 @@ export default {
             this.$http.post('/api/product/activity/find?pageSize=5&pageNo='+pagenum)
             .then(res=>{
                 if(res.data.status==200){
+                    console.log(res.data)
                     res.data.info.list.forEach(item=>{
                         let json={
                             title:item.activityTitle,
