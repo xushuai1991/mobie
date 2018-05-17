@@ -120,7 +120,7 @@
                                 <p>{{ item.couponInfo?item.couponInfo.couponName:"" }}</p>
                                 <p>使用期限 {{ item.couponInfo?item.couponInfo.starTime.split(" ")[0]:"" }}—{{ item.couponInfo?item.couponInfo.endTime.split(" ")[0]:"" }}</p>
                             </div>
-                            <button @click='okcoupon(item.couponId)'>领取</button>
+                            <button @click='okcoupon(item.couponId)' :disabled='item.couponAmount==0' :class='item.couponAmount==0?"noButton":""'>领取</button>
                         </li>
                     </ul>
                     <div class='zbd_closeBtn' @click="closeCoupon">关闭</div>
@@ -327,7 +327,7 @@
                         console.log(response)
                     })
             } else if (isBrowse == null) { //移动端浏览效果
-                let id = this.getURLparms("id");
+                let id = this.getURLparms("id"); //详情模板ID
                 console.log(id)
                 if (id == null) {
                     let that = this;
@@ -375,6 +375,7 @@
                             that.commodityInfo = response.data.info[0]
                             console.log(that.commodityInfo)
                             that.bannerArr2 = that.commodityInfo.commodityImageList
+                             console.log(that.bannerArr2)
                             if (that.commodityInfo.commodityImageList.length == 0) {
                                 that.commodityImageOne = '/static/images/nodata.png'
                             } else {
@@ -1160,7 +1161,7 @@
         background: rgba(50, 50, 50, 0);
     }
     #detailTemplatePage .page-swipe {
-        height: 5.56rem;
+        height: 6rem;
     }
     /* new style */
     .productDetailSwitch {
@@ -1304,6 +1305,9 @@
     }
 </style>
 <style lang="less" scoped>
+ .noButton{
+        background:gray !important;
+    }
     .numLessNo {
         background-color: #f3f1f1;
     }
