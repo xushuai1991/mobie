@@ -250,12 +250,6 @@
                         this.getCouponcanuse();
                     }
                 },3000)
-            },
-            changeCouponable(value){
-                setTimeout(_=>{
-                    
-                    console.log(value);
-                },3000);
             }
         },
         created: function() {
