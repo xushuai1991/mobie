@@ -78,7 +78,7 @@
                         <p class='font'>{{item?item.couponMoney:''}}元</p>
                         <p>{{item?item.couponName:""}}</p>
                         <p>使用期限 {{item?item.starTime.split(" ")[0]:""}}—{{item?item.endTime.split(" ")[0]:''}}</p>
-                    </div><button @click='okcoupon(item.id)' class='button'>领取</button>
+                    </div><button @click='okcoupon(item.id)' :disabled='item.couponAmount==0' :class='item.couponAmount==0?"noButton":""'   class='button'>领取</button>
                 </li>
             </ul>
             <div class='closeBtn button' @click="btnClose">关闭</div>
@@ -310,7 +310,7 @@
             getcoupon(id) {
                 let that = this;
                 let getdata = new Promise(function(rel, rej) {
-                    let url = '/api/product/coupon/info/find';
+                    let url = '/api/product/coupon/info/find?pageSize=0';
                     that.$http({
                         url: url,
                         method: 'POST',
@@ -328,6 +328,7 @@
                 })
                 getdata.then(function(result) {
                     that.coupon = result.data.info.list
+                    console.log(result.data.info.list)
                 }).catch(function(errmsg) {})
             },
             getCarData() {
@@ -354,9 +355,11 @@
                             var b = data.reduce((v, k) => { //循环
                                  k.options = JSON.parse(k.options)
                                 // k.otherInfo.commodityInfo.optionss = JSON.parse()
-                                k.otherInfo.commodityInfo.commodityImageList.push({"url":k.otherInfo.commodityImageUrl})
-                                k.otherInfo.commodityInfo.options= k.options==null?'': k.options    
-                                k['selected'] = false;
+                                if(k.otherInfo.commodityInfo){
+                                    k.otherInfo.commodityInfo.commodityImageList.push({"url":k.otherInfo.commodityImageUrl})
+                                    k.otherInfo.commodityInfo.options= k.options==null?'': k.options    
+                                    k['selected'] = false;
+                                }
                                 var filters = v.filter((data) => {
                                     return data.commodityCount === k.otherInfo.commodityCompanyId //过滤相同的companyId
                                 });
@@ -372,6 +375,21 @@
                                 return v
                             }, [])
                             console.log(b)
+                           let newArr = [];
+                            b.forEach((items)=>{
+                                items.listgoods.forEach(item=>{
+                                     
+                                    if(item.otherInfo.commodityInfo){
+                                        newArr.push(item)
+                                    }
+                                    console.log(newArr)
+                                    
+                                })
+                            })
+                            console.log()
+                            b[0].listgoods = newArr
+                            console.log(b)
+                            // b = newArr
                             that.list = (b)
                         } else {
                             if (response.data.status == 401) {
@@ -652,6 +670,9 @@
 </script>
 
 <style>
+    .noButton{
+        background:gray !important;
+    }
     input[type=button] {
         -webkit-appearance: none;
         outline: none

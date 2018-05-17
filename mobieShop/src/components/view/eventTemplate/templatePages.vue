@@ -18,6 +18,9 @@
         Swipe,
         SwipeItem
     } from 'mint-ui';
+    import {
+        Toast
+    } from 'mint-ui'
     // import { mapState,mapMutations,mapGetters } from 'vuex'
     import imageAds from '@/components/view/template/imageAds.vue'
     import classification from '@/components/view/template/classification.vue'
@@ -32,21 +35,29 @@
                 selected: '1',
                 value: '',
                 comlist:'',
-                eventTemplateUrl:''
+                eventTemplateUrl:'',
+                hostName:'',
+                port:''
             };
         },
         created(){
+            this.hostName = location.hostname;
+            this.port = location.port;
+            ///////活动模板///////
+            //浏览状态 / 手机显示状态
             let isBrowse = sessionStorage.getItem ("isBrowse");
             console.log(isBrowse)
             if(isBrowse == true){
                 this.eventTemplateUrl = sessionStorage.getItem ("eventTemplateUrl");
+                let companyId = sessionStorage.getItem("companyId");
                 let id = this.getUrlParms("id")
                  console.log(id)
                   let that=this;
                     this.$http.post('/api/product/mall/template/queryMap/mall',
                         {
                             'templateID':id,
-                            'templateType':2
+                            'templateType':2,
+                            'companyId': companyId
                         }
                     )
                     .then(function(response){
@@ -59,15 +70,18 @@
                         console.log(response)
                     })
             }else if(isBrowse == null){
-                let id = this.getURLparms("id");
+                let id = this.getURLparms("templateId");
                 console.log(id)
-                //console.log(this.comlist)
-              // let templateId = sessionStorage.getItem ("eventTemplateID");
+                let companyId = this.getURLparms("companyId");
+                if(companyId == null || companyId == 'null'){
+                    companyId = sessionStorage.getItem("companyId");
+                }
                 let that=this;
                 this.$http.post('/api/product/mall/template/queryMap/mall',
                     {
                         'templateID':id,
-                        'templateType':2
+                        'templateType':2,
+                        'companyId': companyId
                     }
                 )
                 .then(function(response){
@@ -80,6 +94,9 @@
                     console.log(response)
                 })
             }
+        },
+        beforeUpdate(){
+            this.share();
         },
         methods:{
                 //获取地址栏参数，name:参数名称
