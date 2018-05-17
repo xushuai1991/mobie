@@ -36,6 +36,9 @@
                         </p>
                     </a>
                 </div>
+                <div class='nodata' v-if='commoditylist.length==0'>
+                    <span>暂无数据</span>
+                </div>
             </div>
         </mt-loadmore>
     </div>
@@ -402,6 +405,10 @@ import { Indicator } from 'mint-ui';
     padding:.2rem;
     background-color:#f5f5f5;
     margin-top:1.9rem;
+    .nodata{
+        font-size:.4rem;
+        padding-top:3rem;
+    }
     .commodity{
         width:49%;
         height:min-content;
