@@ -140,8 +140,7 @@
     export default {
         data() {
             return {
-                changeCouponable:false,
-                timestamp_end:100000000000000000000,
+                timestamp_start:'',
                 checked: 'checked',
                 userinfo: {
                     id: '',
@@ -244,12 +243,20 @@
                     }
                 }
             },
-            // changeCouponable(value){
-            //     setTimeout(_=>{
+            timestamp_start(time){
+                setTimeout(_=>{
+                    let timestamp_end=new Date()-this.timestamp_start;
+                    if(timestamp_end>3000){
+                        this.getCouponcanuse();
+                    }
+                },3000)
+            },
+            changeCouponable(value){
+                setTimeout(_=>{
                     
-            //         console.log(value);
-            //     },3000);
-            // }
+                    console.log(value);
+                },3000);
+            }
         },
         created: function() {
             this.hostName = location.hostname;
@@ -365,14 +372,14 @@
                 this.timestamp_start=new Date();
                 this.changeCouponable=false;
                 this.goodslist[index].nums++; 
-                this.getCouponcanuse();
+                // this.getCouponcanuse();
             },
             // 改变商品数量-
             reduce(index){
                 this.timestamp_start=new Date();                
                 this.changeCouponable=false;
                 this.goodslist[index].nums=this.goodslist[index].nums==1?1:--this.goodslist[index].nums;
-                this.getCouponcanuse();
+                // this.getCouponcanuse();
             },
             // 获取默认地址
             getDefaultaddress() {

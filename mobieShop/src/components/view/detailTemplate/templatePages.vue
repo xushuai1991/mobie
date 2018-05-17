@@ -600,7 +600,7 @@
                         let recommendedTeamId=this.$route.query.recommendedTeamId;
                         let recommendedAdminId=this.$route.query.recommendedAdminId;
                         let url='https://open.weixin.qq.com/connect/oauth2/authorize?appid='+this.appid+
-                            '&redirect_uri=http://pay.jingrunjia.com.cn?company='+companyid
+                            '&redirect_uri=http://codes.itchun.com?company='+companyid
                             +'&recommendedTeamId='+recommendedTeamId
                             +'&recommendedAdminId='+recommendedAdminId
                             +'&response_type=code&scope=snsapi_userinfo&state=STATE';
