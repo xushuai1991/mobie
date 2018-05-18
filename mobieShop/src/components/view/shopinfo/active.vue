@@ -8,8 +8,8 @@
                         <img :src='item.imgurl' alt='图片丢失' />
                     </div>
                     <div class='titleInof'>
-                        <p><i class='icon iconfont icon-xiaohuomiao hots'></i><span class='textSpace'>{{item.title}}</span> <a :href='item.activityLink'><span class='flortRight'>go <i class="icon iconfont icon-youshuangjiantou ritJtou"></i></span></a> </p>
-                        <p>关注人数 {{item.registeredNumber}} <span class='flortRight'>{{item.startTime}}</span></p>
+                        <p><i class='icon iconfont icon-xiaohuomiao hots'></i><span class='textSpace'>{{item.title}}</span> <a :href='item.activityLink+"&activeId="+item.activeId+"&companyId="+item.companyId'><span class='flortRight'>go <i class="icon iconfont icon-youshuangjiantou ritJtou"></i></span></a> </p>
+                        <p>关注人数 {{item.registeredNumber}} <span class='flortRight'>{{item.startTime}}</span></p> 
                     </div>
                 </div>
             </div>
@@ -41,7 +41,9 @@ export default {
     methods:{
         getActivitylist(){
             let that=this;
-            this.$http.post('/api/product/activity/find?pageSize=5&pageNo='+this.pagenum)
+            this.$http.post('/api/product/activity/find?pageSize=5&pageNo='+this.pagenum,{
+                'activityStatus':1
+            })
             .then(res=>{
                 if(res.data.status==200){
                     that.pagesize=res.data.info.pages;
@@ -58,7 +60,9 @@ export default {
                             imgurl:"http://"+that.hostName+":"+that.port+"/api"+item.image,
                             startTime:item.startTime,
                             activityLink:item.activityLink,
-                            registeredNumber:item.registeredNumber
+                            registeredNumber:item.registeredNumber,
+                            activeId:item.id,
+                            companyId:item.companyId
                         };
                         that.list_activiety.push(json);
                     });
