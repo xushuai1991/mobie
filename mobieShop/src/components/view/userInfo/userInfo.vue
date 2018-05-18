@@ -1,11 +1,11 @@
 <template>
-    <div class="wrapper">
+    <div class="wrapper userinfo">
         <!-- <mt-header fixed  title="个人中心"> -->
             <!-- <router-link to="" slot="left">
                 <mt-button icon="back" @click="goback" ></mt-button>
             </router-link> -->
         <!-- </mt-header> -->
-        <section class='infoBottom' style='background-image:url("static/images/background_info.png");background-repeat: no-repeat;background-size:contain;'>
+        <section class='infoBottom' style=''>
             <div class="account">
                 <div class="account_info">
                     <div class="change" v-if='userinfo.id!=""'>
@@ -592,6 +592,12 @@
     }
 </script>
 <style scoped>
+    .infoBottom{
+        /* background-image:url("/static/images/style1-background_info.png"); */
+        background-image:url("/static/images/style1-background_info.png");
+        background-repeat: no-repeat;
+        background-size:contain;
+    }
     .mint-header{
         background-color: black;
     }

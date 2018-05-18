@@ -1,46 +1,23 @@
 <template>
-    <div id="invite-register" class='background'>
+    <div id="invite-register" class=''>
         <!-- <h2 style='font-size:0.5rem; color:#fff;'>到家商城邀请注册</h2> -->
-        <ul class="invite-top">
-            <li><img id="sharePic" :src='totalSrc' /></li>
-            <li>微信扫一扫</li>
-            <li>邀请好友获5个积分</li>
-            <!-- <li>邀请码 : <span class='font'>025645889</span></li> -->
-            <li>
-                <router-link to='/invitingRegular'>邀请规则 >></router-link>
-            </li>
-        </ul>
-        <!--<div class="invite-bottom">
-                <p class="bottom-title">分享到</p>
-                <ul class="invite-bottom-share">
-                    <li>
-                        <div class="imgDiv imgDiv1" @click='shareTo("wechat")'>
-                            <p class="icon iconfont icon-ai-weixin"></p>
-                        </div>
-                        <p>微信</p>
-                    </li>
-                    <li>
-                        <div class="imgDiv imgDiv2" @click='shareTo("qq")'>
-                            <p class="icon iconfont icon-iconfonticon6"></p>
-                        </div>
-                        <p>QQ</p>
-                    </li>
-                    <li>
-                        <div class="imgDiv imgDiv3" @click='share'>
-                            <p class="icon iconfont icon-friends"></p>
-                        </div>
-                        <p>朋友圈</p>
-                    </li>
-                    <li>
-                        <div id="nativeShare">
-                            <div class="imgDiv imgDiv4">
-                                <p class="icon iconfont icon-qqkongjian"></p>
-                            </div>
-                            <p>QQ空间</p>
-                        </div>
-                    </li>
-                </ul>
-            </div>!-->
+        <div class="invite-top background">
+            <div><img id="sharePic" :src='totalSrc' /></div>
+            <p>微信扫一扫</p>
+            <p>邀请好友“注册”即可获5积分</p>
+        </div>
+        <div class='tips'>
+            <p class='title'><span></span> 我的邀请记录 <span></span></p>
+            
+            <div class='msg'>
+                <div class='icon'></div>
+                <p class=''>已成功邀请<span class='font'>{{peopleinvited}}</span>人</p>
+                <p class=''>已获得<span class='font'>{{scoregeted}}</span>积分</p>                
+            </div>
+        </div>
+        <router-link to='/InvitingRegular' class='linkto font'>邀请规则</router-link>
+        <div class='background-tip' @click='cancelback($el)'></div>
+        
     </div>
 </template>
 
@@ -67,7 +44,9 @@
                 address: 'http://'+location.host+'/invitingGift',
                 // address: '10.1.1.206:8080',                
                 shareUrl: '/invitingGift',
-                paramData: ''
+                paramData: '',
+                peopleinvited:0,
+                scoregeted:0
             }
         },
         created() {
@@ -85,8 +64,30 @@
             this.share()
             this.shareUrlFn()
             this.$root.$emit('header', '邀请注册');
+            this.getMsgabout();
         },
         methods: {
+            // 获取用户的邀请信息
+            getMsgabout(){
+                let that=this;
+                this.$http.post('/api/customer/consumption/points/find?pageSize=1',{channel: 5, remarks: "邀请注册赠送积分"})
+                .then(res => { 
+                    if(res.data.status == 200){
+                        console.log(res)
+                        that.peopleinvited=res.data.info.list.length;
+                        let score_every=res.data.info.list.length==0?0:res.data.info.list[0].increasedPoints;
+                        that.scoregeted=res.data.info.list.length*score_every;
+                    }else{
+                        Toast(res.data.msg);
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+            },
+            cancelback(e){
+                e.querySelector('.background-tip').style.display='none';
+                console.log(e);
+            },
             shareUrlFn() {
                 let curHref = window.location.href;
                 let companyid=sessionStorage.getItem('companyId');
@@ -266,46 +267,137 @@
     #invite-register {
         height: 100%;
         min-height: 12rem;
-        background: #409EFF;
+        // background: #409EFF;
         font-size: .24rem;
-        padding-top: .7rem;
+        // padding-top: .7rem;
         letter-spacing: 0.01rem;
     }
+    .background-tip{
+        width: 100%;
+        height:100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 999;
+        position: fixed;
+        top: 0;
+        left:0;
+        // background-image: url("/static/images/back_tip.png");
+        background-image: url("/static/images/back_tip.png");
+        background-position-y: -1rem;
+        background-size: cover;
+    }
     .invite-top {
-        background: #fff;
-        margin: 0.7rem 0.2rem;
-        padding: 0.7rem 0 0.6rem;
+        background: #409EFF;    
+        padding-top: .5rem;    
+        padding-bottom: .5rem;
+        // margin: 0.7rem 0.2rem;
+        // margin-top: .5rem;
+        // padding: 0.1rem;
         border-radius: .08rem;
-        li:nth-child(1) {
+        div:nth-child(1) {
+            margin: auto;
+            padding:.3rem;
+            background: #fff;            
             width: 3.3rem;
             height: 3.3rem;
-            margin: auto;
+            
             img {
                 width: 100%;
                 height: 100%;
             }
         }
-        li:nth-child(2) {
+        div:nth-child(2) {
             width: 1.5rem;
             margin: .3rem auto .55rem;
             cursor: pointer;
         }
-        li:nth-child(3) {
-            font-size: .3rem;
+        p:nth-child(2){
+            color: #fff;
+            font-size: .25rem;
+            margin-top: .2rem;
         }
-        li:nth-child(4) {
-            font-size: .3rem;
-            margin: .45rem 0 .6rem 0;
-            span {
-                color: #409EFF;
+        p:nth-child(3){
+            color: #fff;
+            margin-top: .3rem;
+            font-size: .35rem;
+        }
+
+
+
+
+
+
+        // li:nth-child(3) {
+        //     font-size: .3rem;
+        // }
+        // li:nth-child(4) {
+        //     font-size: .3rem;
+        //     margin: .45rem 0 .6rem 0;
+        //     span {
+        //         color: #409EFF;
+        //     }
+        // }
+        // li:nth-child(5) {
+        //     width: 1.5rem;
+        //     opacity: 0.5;
+        //     cursor: pointer;
+        //     margin: auto;
+        // }
+    }
+    .tips{
+        
+        width:6rem;
+        margin:0 auto;
+        margin-top: 1rem;
+        // border:1px solid #FCBF01;
+        border-radius: .2rem;
+        padding-top: .5rem;
+        padding-bottom: .2rem;
+        box-shadow:0px 0px 2px #FCBF01;
+        span{
+            color:#409EFF;
+            padding: 0 .1rem;
+        }
+        .title{
+            padding-bottom: .2rem;
+            color:#7e8c8d;
+            span{
+                width: 1rem;
+                height:1px;
+                background-color: #d9d9d9;
+                display: inline-block;
+            }
+            span:nth-child(1){
+                margin-right: .2rem;
+            }
+            span:nth-child(2){
+                margin-left: .2rem;
             }
         }
-        li:nth-child(5) {
-            width: 1.5rem;
-            opacity: 0.5;
-            cursor: pointer;
-            margin: auto;
+        .msg{
+            position: relative;
+            margin-top: .3rem;
+            .icon{
+                width:.8rem;
+                height:1rem;
+                background-image: url("/static/images/style1-icon.png");
+                background-size:cover;
+                background-repeat: no-repeat;
+                position: absolute;
+                left: 1.2rem;;
+            }
+            p{
+                padding-left: 1.5rem;
+                font-size: .3rem;
+                padding-bottom: .4rem;
+            }
         }
+        
+    }
+    .linkto{
+        color: #409EFF;
+        font-size: .3rem;
+        margin-top: .5rem;
+        display: block;
     }
     .invite-bottom {
         margin-top: .6rem;

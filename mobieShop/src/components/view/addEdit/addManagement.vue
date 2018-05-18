@@ -113,7 +113,8 @@
                     path: '/addEdit',
                     name: 'addEdit',
                     params: {
-                        name: 'addManagement'
+                        name: 'addManagement',
+                        flag:'addaddress'
                     }
                 });
             },

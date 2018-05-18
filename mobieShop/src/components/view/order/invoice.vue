@@ -105,7 +105,7 @@
             </div>
         </mt-popup>
         <div class='area'>
-            <button class='submit' @click='submit'>提交</button>
+            <button class='submit button' @click='submit'>提交</button>
         </div>
     </div>
 </template>
