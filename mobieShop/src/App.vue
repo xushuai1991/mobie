@@ -19,9 +19,19 @@ export default {
   },
   watch:{
       '$route'(to,from){
+        console.log(to,from);
         // 监听从登录页跳转到商品详情页的返回事件，定向到首页index
         if(to.name=='login'&&from.name=='detailTemplate'){
           this.$router.push('/index');
+        }
+        // 监听从地址编辑页跳转到地址列表页的返回事件，定向到首页
+        if(to.name=='addEdit'&&from.name=='addManagement'&&to.params.flag!='addaddress'){
+          this.goName = sessionStorage.getItem("from")
+          this.$router.push({
+              path: '/' + this.goName,
+              name: this.goName
+          });
+          // this.$router.push('/index');
         }
       }
   }
@@ -76,6 +86,15 @@ export default {
   .mint-tabbar > .mint-tab-item.is-selected {
       color:#edc278 !important;
   }
+  // 个人中心
+  .userinfo{
+    .infoBottom{
+      background-image:url("/static/images/style2-background_info.jpg") !important;
+    }
+    .account_info{
+      box-shadow: 0.05rem 0.05rem 0.15rem #f1c885 !important;
+    }
+  }
   // 发票
   .colormore::after{
     background:#f1c885 !important;
@@ -96,6 +115,12 @@ export default {
   #invite-result .result-top{
     background-image:url('/static/images/style2-inviteresult.png') !important;
   }
+  // 邀请注册
+    #invite-register{
+        .icon{
+          background-image: url("/static/images/style2-icon.png");
+        }
+    }
   // 邀请规则
   #invite-regular {
     .topimg{

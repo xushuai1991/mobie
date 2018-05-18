@@ -158,11 +158,15 @@ export default {
         // this.getCommid()
     },
     created(){
-        let companyid=this.$route.query.company;
-        this.companyid=companyid;
+        let companyid=this.$route.query.company==null?this.$route.query.companyId:this.$route.query.company;
+        
         
         if(companyid!=null){
             sessionStorage.setItem('companyId', companyid);
+            this.companyid=companyid;
+        }
+        else{
+            this.companyid=sessionStorage.getItem('companyId');;
         }
         if(sessionStorage.getItem('companyId')==92){
             this.styletwo=true;
