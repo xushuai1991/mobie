@@ -42,8 +42,9 @@ export default new Router({
         {
             path: '/eventTemplate', // 活动模板
             name: 'eventTemplate',
-            meta:{
-                requireAuth:false
+            meta: {
+                title: '活动详情',
+                requireAuth:true
             },
             component: resolve => require(['../components/view/eventTemplate/templatePages.vue'], resolve)
         },
@@ -280,7 +281,10 @@ export default new Router({
         {
             path: '/InvitingResult', // 邀请结果
             name: 'InvitingResult',
-            component: resolve => require(['../components/view/Inviting/InvitingResult.vue'], resolve)
+            component: resolve => require(['../components/view/Inviting/InvitingResult.vue'], resolve),
+            meta: {
+                title: '邀请注册'
+            },
         },
         {
             path: '/buttomNav', // 底部导航栏

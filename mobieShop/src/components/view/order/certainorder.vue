@@ -537,6 +537,7 @@
                     };
                     data.couponInfoList.push(json);
                 }
+                console.log( data.couponInfoList)
                 // this.couponindex.forEach(item => {
                 //     let json = {
                 //         id: this.couponlist[item].id,
