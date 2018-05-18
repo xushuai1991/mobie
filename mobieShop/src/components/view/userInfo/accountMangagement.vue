@@ -9,7 +9,7 @@
                         </div>
                         <div style="margin-top:20px;">
                             <!--<input type="file"  accept="image" @change="upload">!-->
-                            <input type="file" name='upload'  id="upload" class='imgupload' accept="image/*" @change='uploadimg' multiple='true'>
+                            <input type="file" name='upload' id="upload" class='imgupload' accept="image/*" @change='uploadimg' multiple='true'>
                             <label for="upload"></label>
                         </div>
                     </div>
@@ -315,7 +315,6 @@
                     quality: 0.2
                 }, function(base64Codes) {
                     var bl = that.convertBase64UrlToBlob(base64Codes);
-                    console.log(bl)
                     if (/^image/.test(fileObject.type)) {
                         let fd = new FormData();
                         fd.append('fileUpload', bl);
@@ -403,7 +402,7 @@
                             let hostName = location.hostname;
                             let port = location.port;
                             let url = res.data.info;
-                            let imageUrl = 'http://' + hostName + ':' + port + '/api/sms' + url; //  后台返
+                            let imageUrl = 'http://' + hostName + ':' + port + '/api/sms' + url+"?"+new Date().getTime(); //  后台返
                             console.log(imageUrl)
                             that.headerImage = imageUrl;
                             that.postImg(imageUrl)
@@ -743,7 +742,6 @@
         font-size: .26rem;
         position: relative;
     }
-    
     .check {
         float: right;
         margin-right: .9rem;
