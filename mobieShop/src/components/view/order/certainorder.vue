@@ -527,6 +527,7 @@
                 // console.log(this.couponlist)
                 // console.log(this.couponindex)
                 // console.log(this.couponlist[this.couponindex])
+                console.log(this.couponindex)
                 if (this.couponindex) {
                     let json = {
                         id: this.couponlist[this.couponindex].id,
@@ -534,6 +535,7 @@
                     };
                     data.couponInfoList.push(json);
                 }
+                console.log( data.couponInfoList)
                 // this.couponindex.forEach(item => {
                 //     let json = {
                 //         id: this.couponlist[item].id,

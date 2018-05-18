@@ -23,7 +23,7 @@
                 <div v-if='inputShow'>
                     <div v-if='israido'>
                         <div class='textinfo'>{{listName}}<input type='text' placeholder='请输入' :disabled='isTtrue' v-model='userInput1'></div>
-                        <div class='textinfo'>{{listName2}}<input type='text' placeholder='请输入' v-model='userInput2'></div>
+                        <div class='textinfo'>{{listName2}}<input type='text' placeholder='请输入' v-model='userInput2' style='width: 2.2rem;'></div>
                     </div>
                     <div v-else class='radios'>
                         <mt-radio title="单项选择" v-model="value" :options="options" @change="check">
@@ -541,6 +541,7 @@
         input {
             outline: none;
             padding: 0.1rem;
+            width: 2.2rem;
         }
         .isOk {
             border: none;

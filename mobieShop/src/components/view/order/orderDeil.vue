@@ -1,18 +1,18 @@
 <template>
     <div class='CmyOveroderDeil'>
         <!--<ul v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
-                                                                                                                                <li v-for="item in list">{{ item }}</li>
-                                                                                                                            </ul>!-->
+                                                                                                                                    <li v-for="item in list">{{ item }}</li>
+                                                                                                                                </ul>!-->
         <section>
             <div class="wrap2">
                 <div class='tiemBox background'>
                     <p>{{ orderState}}</p>
                     <p v-if='orderState=="等待买家支付"'>
                         <span :endTime="endTime" :callback="callback" :endText="endText">
-                                                                                                                    <slot>
-                                                                                                                        {{content}}
-                                                                                                                    </slot>
-                                                                                                                </span></p>
+                            <slot>
+                                {{content}}
+                            </slot>
+                        </span></p>
                     <p v-else>
                         {{orderText}}
                     </p>
@@ -42,7 +42,7 @@
                                             <li class="goods_info">
                                                 <p class="brandDesc">{{item.commodityBrand}}</p>
                                                 <p class="goods_identifier strlen" style="width:2.5rem;padding-right:0.2rem;"><span></span></p>
-                                               <p class="goods_color">{{item.condition1Name}}</p>
+                                                <p class="goods_color">{{item.condition1Name}}</p>
                                                 <p class="goods_color">{{item.condition2Name}}</p>
                                             </li>
                                             <li class="goods_info_se">
@@ -51,8 +51,8 @@
                                                     数量:<input type="number" disabled :value="item.saleNumber" style='background:#fff;margint-top:0.2rem;' />
                                                 </div>
                                                 <!--<span class="mui_shopcar_del" @click="remove(index,indexs)">
-                                                                                                                                                                    <i class='icon iconfont icon-lajitong'></i>
-                                                                                                                                                                </span>!-->
+                                                                                                                                                                        <i class='icon iconfont icon-lajitong'></i>
+                                                                                                                                                                    </span>!-->
                                             </li>
                                         </ul>
                                         <div class='refundDetail' v-show='refundOrder'>
@@ -65,7 +65,7 @@
                                         </div>
                                         <!--</mt-cell-swipe>!-->
                                     </div>
-                                    <div v-show='item.isService'>
+                                    <div v-show='item.isService&&orderState!="订单已取消"' >
                                         <div class='edmitTime' v-if='item.isService'>
                                             <p v-if='item.updateAppointTime'>{{item.updateAppointTime}}<span v-if='item.updateAppointTimeIsActive ==false'>(待确认)</span></p>
                                             <p v-else>{{item.appointTime==null?'预约时间':item.appointTime}}(待确认)</p>
@@ -91,8 +91,8 @@
                                                     数量:<input type="number" disabled :value="items.saleNumber" style='background:#fff;margint-top:0.2rem;' />
                                                 </div>
                                                 <!--<span class="mui_shopcar_del" @click="remove(index,indexs)">
-                                                                                                                                                                    <i class='icon iconfont icon-lajitong'></i>
-                                                                                                                                                                </span>!-->
+                                                                                                                                                                        <i class='icon iconfont icon-lajitong'></i>
+                                                                                                                                                                    </span>!-->
                                             </li>
                                         </ul>
                                         <!--</mt-cell-swipe>!-->
@@ -156,14 +156,15 @@
                 // value1: null,
                 // startDate: new Date(),
                 // endDate: this.addDay(2),
-                commodityName:'',
+                commodityName: '',
                 popupVisible: false,
                 currentindex: '',
-                briefReason:'',
+                briefReason: '',
                 id: '',
                 orstate: '',
                 datechange: '',
                 userImg: '',
+                orderStates:'',
                 dates: [{
                         values: ['今天', '明天', '后天'],
                         className: 'slot1',
@@ -178,7 +179,7 @@
                         ],
                         className: 'slot2',
                         textAlign: 'center',
-                        defaultIndex:0
+                        defaultIndex: 0
                     },
                     {
                         values: ['00分', '10分', '20分', '30分', '40分', '50分', ],
@@ -314,11 +315,11 @@
                 this.orstate = orstate;
             },
             onValuesChange(picker, values) {
-                 var d = new Date();     
-            var hour = d.getHours();
-            if(values[0]=='今天'&&this.dates[1].values.indexOf(values[1])<hour+1){
-                picker.setSlotValue(1, this.dates[1].values[hour+1]);
-            }
+                var d = new Date();
+                var hour = d.getHours();
+                if (values[0] == '今天' && this.dates[1].values.indexOf(values[1]) < hour + 1) {
+                    picker.setSlotValue(1, this.dates[1].values[hour + 1]);
+                }
                 this.datechange = values;
             },
             refundButton($event, indexs) {
@@ -409,32 +410,31 @@
                         this.orderText = '亲,请耐心能等待';
                         this.showBtn4 = true; //退款
                         this.showBtn5 = true; //立即付款按钮
-                        if (orderStaty.orderState == 2) {
-                            this.showBtn4 = true, //退款
-                            this.showBtn5 = false; //确认收货
-                            this.showBtn8 = true;
-                            this.showBtn7 = true; //评价
-                            this.orderState = '已经完成'
-                            this.orderText = '亲，请确认';
-                        }
-                        if (orderStaty.orderState == 4) {
-                            this.showBtn4 = false, //取消退款
-                            this.showBtn6 = true, //取消退款
-                            this.showBtn5 = true; //立即付款按钮
-                            this.orderState = '退款中...'
-                            this.orderText = '亲,请耐心能等待';
-                            this.refundOrder = true
-                        }
-                        
-                        if (orderStaty.orderState == 7) {
-                            this.briefReason = orderStaty.briefReason
-                            this.showBtn4 = true, //取消退款
-                            this.showBtn6 = false, //取消退款
-                            this.showBtn5 = true; //立即付款按钮
-                            this.orderState = '驳回'
-                            this.orderText = '亲,请和客服联系重新退款';
-                            this.refundOrder = true
-                        }
+                    if (orderStaty.orderState == 2) {
+                        this.showBtn4 = true, //退款
+                        this.showBtn5 = false; //确认收货
+                        this.showBtn8 = true;
+                        this.showBtn7 = true; //评价
+                        this.orderState = '已经完成'
+                        this.orderText = '亲，请确认';
+                    }
+                    if (orderStaty.orderState == 4) {
+                        this.showBtn4 = false, //取消退款
+                        this.showBtn6 = true, //取消退款
+                        this.showBtn5 = true; //立即付款按钮
+                        this.orderState = '退款中...'
+                        this.orderText = '亲,请耐心能等待';
+                        this.refundOrder = true
+                    }
+                    if (orderStaty.orderState == 7) {
+                        this.briefReason = orderStaty.briefReason
+                        this.showBtn4 = true, //取消退款
+                        this.showBtn6 = false, //取消退款
+                        this.showBtn5 = true; //立即付款按钮
+                        this.orderState = '驳回'
+                        this.orderText = '亲,请和客服联系重新退款';
+                        this.refundOrder = true
+                    }
                         // if (orderStaty.serviceState == 1) {
                         //     this.orderState = '等待服务'
                         // }
@@ -467,6 +467,13 @@
                         if (orderStaty.orderState == 1) {
                             this.showBtn1 = true, //取消按钮
                                 this.showBtn2 = true; //立即付款按钮
+                        }
+                        if (orderStaty.orderState == 6) {
+                            this.showBtn3 = true; //删除订单
+                            this.showBtn4 = false; //退款
+                            this.showBtn5 = false; //立即付款按钮
+                            this.orderState = '订单已取消'
+                            this.orderText = '';
                         }
                     } else if (orderStaty.payState == 3) {
                         //过去订单只能删除
@@ -717,8 +724,8 @@
             this.serverState = this.urlArgs().index;
             console.log(this.serverState)
             var d = new Date();
-        var hour = d.getHours();
-        this.dates[1].defaultIndex=hour+1;
+            var hour = d.getHours();
+            this.dates[1].defaultIndex = hour + 1;
         },
         // beforeUpdate(){
         //     this.getDate(this.urlArgs().ordernumber)
@@ -784,7 +791,7 @@
         position: absolute;
         right: -3.2rem;
         /*   bottom:.2rem;
-                                                        right:.2rem; */
+                                                            right:.2rem; */
         background-color: #26a2ff;
         outline: none;
         border: 0;
@@ -907,7 +914,7 @@
         line-height: 0.8rem;
         padding-top: 0.2rem;
         padding-left: 0.2rem;
-        margin-bottom:1rem;
+        margin-bottom: 1rem;
         position: relative;
         color: #bababa;
         input {
