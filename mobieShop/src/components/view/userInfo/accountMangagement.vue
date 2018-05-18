@@ -9,7 +9,7 @@
                         </div>
                         <div style="margin-top:20px;">
                             <!--<input type="file"  accept="image" @change="upload">!-->
-                            <input type="file" name='upload' id="upload" class='imgupload' accept="image/*" @change='uploadimg' multiple='true'>
+                            <input type="file" name='upload'  id="upload" class='imgupload' accept="image/*" @change='uploadimg' multiple='true'>
                             <label for="upload"></label>
                         </div>
                     </div>
@@ -119,12 +119,14 @@
                 console.log(this.value)
             },
             getUserInfo() {
+               
                 let that = this;
                 let data = operatelocalstorage('userinfo', null, 'get', null);
                 if (data == null) {
                     Toast('请登录！');
                     return;
                 }
+                
                 data = JSON.parse(data);
                 console.log(data);
                 let getdata = new Promise(function(rel, rej) {
@@ -145,7 +147,7 @@
                     })
                 })
                 getdata.then(function(result) {
-                    console.log(result)
+
                     that.uerserInfo = (result)
                     if (that.uerserInfo.data.info.list[0]) {
                         that.headerImage = that.uerserInfo.data.info.list[0].avatar;
@@ -313,6 +315,7 @@
                     quality: 0.2
                 }, function(base64Codes) {
                     var bl = that.convertBase64UrlToBlob(base64Codes);
+                    console.log(bl)
                     if (/^image/.test(fileObject.type)) {
                         let fd = new FormData();
                         fd.append('fileUpload', bl);
@@ -400,7 +403,7 @@
                             let hostName = location.hostname;
                             let port = location.port;
                             let url = res.data.info;
-                            let imageUrl = 'http://' + hostName + ':' + port + '/api' + url; //  后台返
+                            let imageUrl = 'http://' + hostName + ':' + port + '/api/sms' + url; //  后台返
                             console.log(imageUrl)
                             that.headerImage = imageUrl;
                             that.postImg(imageUrl)
@@ -415,7 +418,7 @@
                         Indicator.close();
                         Toast('上传失败！');
                     })
-            },
+            }, 
             postImg(data) {
                 let dataInfo = {
                     avatar: data
@@ -431,7 +434,7 @@
                     data: JSON.stringify(dataInfo)
                 }).then(response => {
                     console.log(response)
-                    if (response.data.msg == '修改成功') {
+                    if (response.data.status == 200) {
                         this.getUserInfo();
                         this.userInput2 = '';
                         this.clearBox()
@@ -740,6 +743,7 @@
         font-size: .26rem;
         position: relative;
     }
+    
     .check {
         float: right;
         margin-right: .9rem;
