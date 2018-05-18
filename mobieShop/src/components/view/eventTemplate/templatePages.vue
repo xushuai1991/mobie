@@ -1,5 +1,5 @@
 <template>
-    <div class="page-navbar" id='activitytemplatePage'>
+    <div class="page-navbar" id='activitytemplatePage'  style='-webkit-overflow-scrolling : touch;'>
             <keep-alive v-for='(item,index) in comlist' :key='index'>
               <components :templateData='item.componentsData' :is='item.componentsName'  :type='item.componentsName'></components>
             </keep-alive>
@@ -13,12 +13,6 @@
     } from 'mint-ui';
     import {
         Toast
-    } from 'mint-ui'
-    import {
-        InfiniteScroll
-    } from 'mint-ui'
-    import {
-        Spinner
     } from 'mint-ui'
     // import { mapState,mapMutations,mapGetters } from 'vuex'
     import imageAds from '@/components/view/template/imageAds.vue'
@@ -353,7 +347,7 @@
         font-size: 0.3rem;
     }
     #activitytemplatePage .page-search {
-        width: 80%;
+        width: 100%;
         float: left;
     }
 </style>
