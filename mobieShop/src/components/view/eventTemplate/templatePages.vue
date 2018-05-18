@@ -37,7 +37,8 @@
                 eventTemplateUrl:'',
                 hostName:'',
                 port:'',
-                activeId:'',
+                activeIds:'',
+                templateIds:'',
                 activityTitle:'',
                 activeImages:''
             };
@@ -78,6 +79,7 @@
                 if(ids == null) {
                     //根据URL查看活动详情
                     let templateId = this.getURLparms("templateId");//活动详情ID
+                    this.templateIds = templateId
                     let companyId = this.getURLparms("companyId"); //活动公司ID
                     if(companyId == null || companyId == 'null'){
                         companyId = sessionStorage.getItem("companyId");
@@ -105,7 +107,7 @@
                     ///////////////查询活动信息////////////////
 
                     let activeId = this.getURLparms("activeId"); //活动ID
-                    this.activeId = activeId
+                    this.activeIds = activeId
                     this.$http.post('/api/product/activity/find?pageSize=10&pageNo=1',{
                         'id':activeId
                     })
@@ -194,7 +196,7 @@
                     let objs = {
                         title: that.activityTitle, // 分享标题
                         desc: nickname + " 分享:" + that.desc ? that.desc : '', // 分享描述
-                        link: 'http://'+location.hostname+'/eventTemplate?templateId=' + that.templateId + "&companyId=" + companyId+'&activeId='+that.activeId, // 分享链接
+                        link: 'http://'+location.hostname+'/eventTemplate?templateId=' + that.templateIds + "&companyId=" + companyId+'&activeId='+that.activeIds, // 分享链接
                         //imgUrl: "http://"+location.hostname+":8887" + encodeURI(that.zbdBannerArr2[0].url),
                         imgUrl: that.activeImages,
                         // ", // 分享图标
