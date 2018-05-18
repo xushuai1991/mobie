@@ -200,6 +200,7 @@
             sessionStorage.setItem("tiemId", Date.parse(new Date()))
             // this.$root.$emit('header', '个人中心')
             this.$root.$on('loadUserinfo',()=>{
+                
                 let userinfo_location=operatelocalstorage('userinfo',null,'get',null);
                 // console.log(userinfo_location);
                 // 收藏数量
@@ -207,6 +208,7 @@
                 if(userinfo_location!=null){
                     let data = JSON.parse(userinfo_location);
                     this.userinfo=data;
+                    this.getuserinfo();
                     this.integral();
                     // let data_willpay={payState:2};
                     // let data_willservice={payState:1,serviceState:1};
@@ -366,6 +368,28 @@
                         }
                     }
                 }
+            },
+            // 获取用户信息
+            getuserinfo(){
+                console.log();
+                let that=this;
+                this.$http.post('/api/customer/account/queryByIds',[that.userinfo.id])
+                .then(res => {
+                    if (res.data.status == 200) {
+                        if(res.data.info.list.length!=0){
+                            let data=res.data.info.list[0];
+                            operatelocalstorage('userinfo',JSON.stringify(data),'set',300);
+                            that.userinfo=data;
+                        }
+                    }
+                    else{
+                        Toast(res.data.info.msg);
+                    }
+                    console.log(res);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
             },
             //查询订单数量（待付款，待服务，服务中）
             // getNUmberOrder(data,index){

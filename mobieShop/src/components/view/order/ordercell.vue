@@ -2,7 +2,7 @@
     <div class='ordercell' >
         <div class='title' @click.stop='toOrderDetail(data.number,index)'>
             <span class='tip font'>{{status}}</span>
-            <span class='time-remain' v-if='data.payState==2'>还剩{{date_ramian}}</span>
+            <span class='time-remain' v-if='data.payState==2&data.orderState==1'>还剩{{date_ramian}}</span>
             <!-- <div class='time-remain'></div> -->
         </div>
         <div class='content' @click.stop='toOrderDetail(data.number,index)'>
@@ -12,8 +12,8 @@
                 </div>
                 <div class='detail-goods'>
                     <h3 class='name'>{{item.commodityName}}</h3>
-                    <P class='area'>{{item.condition1Name}}</P>
-                    <p class='date'>{{item.condition2Name}}</p>
+                    <P class='area'>{{item.condition1Name==''||item.condition1Name==':'?'':item.condition1Name}}</P>
+                    <p class='date'>{{item.condition2Name==''||item.condition2Name==':'?'':item.condition2Name}}</p>
                 </div>
                 <div class='price'>
                     <p>￥{{item.price}}</p>
@@ -32,8 +32,8 @@
                 <p>合计：<span class='total'>￥{{data.actualMoney}}</span></p>
             </div>
             <div class='operation'>
-                <button class='prime pay button' style='padding:.16rem .2rem' @click.stop="pay" v-if='data.payState==2'>付款</button>
-                <button class='cancle border' @click.stop="cancleOrder" v-if='data.payState==2||data.payState==3'>取消订单</button>
+                <button class='prime pay button' style='padding:.16rem .2rem' @click.stop="pay" v-if='data.payState==2&data.orderState==1'>付款</button>
+                <button class='cancle border' @click.stop="cancleOrder" v-if='(data.payState==2||data.payState==3)&data.orderState==1'>取消订单</button>
                 <button class='prime follow button' style='padding:.16rem .2rem' v-if='type=="inservice"'>追单</button>
                 <button class='apply border' @click.stop='application' v-if='data.payState==1&&data.orderState!=4&data.orderState!=5'>申请退款</button>
                 <button class='invoice border' @click.stop='invoice(data.id,data.actualMoney)' v-if='data.orderState==2'>申请发票</button>
