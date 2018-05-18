@@ -86,6 +86,15 @@ export default {
   .mint-tabbar > .mint-tab-item.is-selected {
       color:#edc278 !important;
   }
+  // 个人中心
+  .userinfo{
+    .infoBottom{
+      background-image:url("/static/images/style2-background_info.jpg") !important;
+    }
+    .account_info{
+      box-shadow: 0.05rem 0.05rem 0.15rem #f1c885 !important;
+    }
+  }
   // 发票
   .colormore::after{
     background:#f1c885 !important;
@@ -106,6 +115,12 @@ export default {
   #invite-result .result-top{
     background-image:url('/static/images/style2-inviteresult.png') !important;
   }
+  // 邀请注册
+    #invite-register{
+        .icon{
+          background-image: url("/static/images/style2-icon.png");
+        }
+    }
   // 邀请规则
   #invite-regular {
     .topimg{

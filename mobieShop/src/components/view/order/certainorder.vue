@@ -119,7 +119,7 @@
             <span class='tip'>{{'优惠券抵扣：'+coupmoney+'元'}}</span>
             </p>
             </span>
-            <button class='submit' @click='submitorder'>提交订单</button>
+            <button class='submit button' @click='submitorder'>提交订单</button>
         </div>
     </div>
 </template>

@@ -35,7 +35,7 @@
                 <button class='prime pay button' style='padding:.16rem .2rem' @click.stop="pay" v-if='data.payState==2&data.orderState==1'>付款</button>
                 <button class='cancle border' @click.stop="cancleOrder" v-if='(data.payState==2||data.payState==3)&data.orderState==1'>取消订单</button>
                 <button class='prime follow button' style='padding:.16rem .2rem' v-if='type=="inservice"'>追单</button>
-                <button class='apply border' @click.stop='application' v-if='data.payState==1&&data.orderState!=4&data.orderState!=5'>申请退款</button>
+                <button class='apply border' @click.stop='application' v-if='data.payState==1&&data.orderState!=4&data.orderState!=5&data.actualMoney!=0'>申请退款</button>
                 <button class='invoice border' @click.stop='invoice(data.id,data.actualMoney)' v-if='data.orderState==2'>申请发票</button>
                 
             </div>

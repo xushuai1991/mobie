@@ -173,9 +173,11 @@ export default {
             ).then(function(response){
                 Toast(response.data.msg);
                 if(response.data.status==200){ 
-                    that.$router.push({path:'/InvitingResult?companyId='+that.companyId,query:{text:'恭喜你 ! 已成功领取此优惠券'}})
+                    that.$router.push({path:'/InvitingResult?companyId='+that.companyId,query:{text:'恭喜你 ! 已成功领取积分'}})
                 }else if(response.data.status==300){
-                    that.$router.push({path:'/InvitingResult?companyId='+that.companyId,query:{text:'老朋友,您已是会员,领取失败'}})
+                    if(response.data.msg=='账号已被注册'){
+                        that.$router.push({path:'/InvitingResult?companyId='+that.companyId,query:{text:'老朋友,您已是会员,领取失败'}})
+                    }
                 }
             }).catch(function(err){
                 console.log(err)
