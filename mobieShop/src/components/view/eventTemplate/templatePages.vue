@@ -1,5 +1,5 @@
 <template>
-    <div class="page-navbar" id='activitytemplatePage'  style='-webkit-overflow-scrolling : touch;'>
+    <div class="page-navbar" id='templatePage'  style='-webkit-overflow-scrolling : touch;'>
             <keep-alive v-for='(item,index) in comlist' :key='index'>
               <components :templateData='item.componentsData' :is='item.componentsName'  :type='item.componentsName'></components>
             </keep-alive>
@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import Mint from 'mint-ui';
     import {
         Swipe,
         SwipeItem
