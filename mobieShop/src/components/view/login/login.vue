@@ -321,10 +321,10 @@ export default {
                                 let fromgo=sessionStorage.getItem('fromgo');
                                 if(fromgo==null){
                                     if(that.companyid!=null){
-                                        this.$router.push('/index?company='+that.companyid);
+                                        that.$router.push('/index?company='+that.companyid);
                                     }
                                     else{
-                                        this.$router.push('/index');
+                                        that.$router.push('/index');
                                     }
                                     // location.href='http://daojia.jingrunjia.com.cn';
                                     // that.$router.push('/index');
