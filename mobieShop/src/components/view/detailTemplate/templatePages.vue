@@ -334,7 +334,7 @@
                     .catch(function(response) {
                         console.log(response)
                     })
-            } else if (isBrowse == null) { //移动端浏览效果
+            } else{ //移动端浏览效果
                 let id = this.getURLparms("id"); //详情模板ID
                 console.log(id)
                 if (id == null) {

@@ -72,7 +72,7 @@
                     .catch(function(response){
                         console.log(response)
                     })
-            }else if(isBrowse == null){
+            }else{
                 //非后台查看活动详情或者活动模板
                 let ids = this.getURLparms("id"); //活动模板ID
                 if(ids == null) {
