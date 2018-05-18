@@ -37,12 +37,17 @@
                 comlist:'',
                 eventTemplateUrl:'',
                 hostName:'',
-                port:''
+                port:'',
+                activeImages:'',
+                activeId:'',
+                templateId:'',
+                activityTitle:''
             };
         },
         created(){
             this.hostName = location.hostname;
             this.port = location.port;
+            let that = this;
             ///////活动模板///////
             //浏览状态 / 手机显示状态
             let isBrowse = sessionStorage.getItem ("isBrowse");
@@ -70,16 +75,33 @@
                         console.log(response)
                     })
             }else if(isBrowse == null){
-                let id = this.getURLparms("templateId");
-                console.log(id)
+                this.templateId = this.getURLparms("templateId");
                 let companyId = this.getURLparms("companyId");
+                let activeId = this.getURLparms("activeId");
+                this.activeId = activeId
+                 this.$http.post('/api/product/activity/find?pageSize=1&pageNo=1',
+                    {
+                        'id':activeId,
+                        'companyId':companyId
+                    }
+                )
+                .then(function(response){
+                    console.log(response.data.info.list[0])
+                    let datasss = response.data.info.list[0]
+                    that.activeImages = "http://"+that.hostName+":"+that.port+"/api"+datasss.image
+                    that.desc = datasss.note
+                    that.activityTitle = datasss.activityTitle
+                })
+                .catch(function(response){
+                    console.log(response)
+                })
                 if(companyId == null || companyId == 'null'){
                     companyId = sessionStorage.getItem("companyId");
                 }
                 let that=this;
                 this.$http.post('/api/product/mall/template/queryMap/mall',
                     {
-                        'templateID':id,
+                        'templateID':that.templateId,
                         'templateType':2,
                         'companyId': companyId
                     }
@@ -99,6 +121,66 @@
             this.share();
         },
         methods:{
+            share() {
+                let userInfo = localStorage.getItem('userinfo');
+                let nickname =userInfo==null?'': (JSON.parse(JSON.parse(userInfo).data))?(JSON.parse(JSON.parse(userInfo).data)).nickname:""
+                let companyId = sessionStorage.getItem("companyId")
+                if (companyId == null) {
+                    companyId = this.getURLparms('companyId')
+                }
+                let that = this;
+                //  alert("http://"+that.zbdHostName+that.zbdPort+that.zbdBannerArr2[0].url)
+                let curHref = location.href
+                // let promisel = new Promise((resolve, reject) => {
+                let url = '/api/product/js/weixin/config';
+                this.$http({
+                    url: '/api/product/js/weixin/config',
+                    method: "post",
+                    data: {
+                        companyId:companyId,
+                        url: curHref
+                    }
+                }).then((res) => {
+                    let data = res.data.info;
+                    wx.config({
+                        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                        appId: data.appId, // 必填，公众号的唯一标识
+                        timestamp: data.timestamp, // 必填，生成签名的时间戳
+                        nonceStr: data.nonceStr, // 必填，生成签名的随机串
+                        signature: data.signature, // 必填，签名，见附录1
+                        jsApiList: data.jsApiList // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                    });
+                    // wx.error(function(res) {
+                    //     logUtil.printLog('验证失败返回的信息:', res);
+                    // });
+                    let objs = {
+                        title: that.activityTitle, // 分享标题
+                        desc: nickname + " 分享:" + that.desc ? that.desc : '', // 分享描述
+                        link: 'http://'+location.hostname+'/eventTemplate?templateId=' + that.templateId + "&companyId=" + companyId+'&activeId='+that.activeId, // 分享链接
+                        //imgUrl: "http://"+location.hostname+":8887" + encodeURI(that.zbdBannerArr2[0].url),
+                        imgUrl: that.activeImages,
+                        // ", // 分享图标
+                        success: function() {
+                            // 用户确认分享后执行的回调函数
+                            this.$router.push("/templatePages")
+                        },
+                        cancel: function() {
+                            // 用户取消分享后执行的回调函数
+                        }
+                    }
+                    wx.ready(function() {
+                        wx.onMenuShareAppMessage(objs);
+                        wx.onMenuShareQQ(objs);
+                        wx.onMenuShareWeibo(objs);
+                        wx.onMenuShareQZone(objs);
+                    });
+                })
+                // })
+                // promisel.then((data) => {
+                // }, (err) => {
+                //     console.log(err)
+                // })
+            },
                 //获取地址栏参数，name:参数名称
                 getUrlParms(name){
                     let url = this.eventTemplateUrl

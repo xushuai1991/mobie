@@ -42,8 +42,9 @@ export default new Router({
         {
             path: '/eventTemplate', // 活动模板
             name: 'eventTemplate',
-            meta:{
-                requireAuth:false
+            meta: {
+                title: '活动详情',
+                requireAuth:true
             },
             component: resolve => require(['../components/view/eventTemplate/templatePages.vue'], resolve)
         },
