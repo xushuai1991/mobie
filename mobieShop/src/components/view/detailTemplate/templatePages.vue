@@ -308,12 +308,16 @@
             //console.log(this.comlist)
             ///////////////////////（详情模板）/////////////////////////////
             //浏览状态 和 手机状态显示的不同详情页 
-            let isBrowse = sessionStorage.getItem("isBrowse");
-            console.log(isBrowse)
-            if (isBrowse == true) { //后台管理浏览效果
-                this.detailTemplateUrl = sessionStorage.getItem("detailTemplateUrl");
+            let isBrowse;
+            if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+                isBrowse = false;
+            } else {
+                isBrowse = true;
+            }
+            if (isBrowse) { //后台管理浏览效果
+               // this.detailTemplateUrl = sessionStorage.getItem("detailTemplateUrl");
                 let companyId = sessionStorage.getItem("companyId");
-                let id = this.getUrlParms("id")
+                let id = this.getURLparms("id");
                 console.log(id) //详情模板ID
                 let that = this;
                 this.$http.post('/api/product/mall/template/queryMap/mall', {

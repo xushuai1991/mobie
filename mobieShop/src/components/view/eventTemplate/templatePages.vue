@@ -42,13 +42,18 @@
             this.port = location.port;
             let that = this;
             //浏览状态 / 手机显示状态 
-            let isBrowse = sessionStorage.getItem ("isBrowse");
+            let isBrowse;
+            if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+                isBrowse = false;
+            } else {
+                isBrowse = true;
+            }
            // console.log(isBrowse+'是否为后台浏览')
-            if(isBrowse == true){
+            if(isBrowse){
             //后台活动模板列表点击浏览时 查询对应id的活动模板信息    
-                this.eventTemplateUrl = sessionStorage.getItem ("eventTemplateUrl");
+                //this.eventTemplateUrl = sessionStorage.getItem ("eventTemplateUrl");
                 let companyId = sessionStorage.getItem("companyId");
-                let id = this.getUrlParms("id")
+                let id = this.getURLparms("id");
                  console.log(id)
                   let that=this;
                     this.$http.post('/api/product/mall/template/queryMap/mall',
