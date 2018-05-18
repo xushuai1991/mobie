@@ -127,7 +127,7 @@ export default {
                 }
                 // 更新待付款数据
                 case '1':{
-                    let data={payState:2};
+                    let data={payState:2,orderState:1};
                     this.getOrderList(1,data);
                 }
                  //更新待服务数据
@@ -176,7 +176,7 @@ export default {
                 // 待付款
                 case 'willpay':{
                     if(this.orderlist[1].length==0){
-                       let data={payState:2};
+                       let data={payState:2,orderState:1};
                         this.getOrderList(1,data);
                     }
                     else{

@@ -76,6 +76,9 @@
                 this.companyid = companyid;
                 // localStorage.setItem('companyId', companyid);
             }
+            else{
+                this.companyid = sessionStorage.getItem('companyId');
+            }
             // if(this.$route.params.logining!=null&&this.$route.params.logining){
             //     this.selected='我的';
             //     this.tologin();

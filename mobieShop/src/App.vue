@@ -19,9 +19,19 @@ export default {
   },
   watch:{
       '$route'(to,from){
+        console.log(to,from);
         // 监听从登录页跳转到商品详情页的返回事件，定向到首页index
         if(to.name=='login'&&from.name=='detailTemplate'){
           this.$router.push('/index');
+        }
+        // 监听从地址编辑页跳转到地址列表页的返回事件，定向到首页
+        if(to.name=='addEdit'&&from.name=='addManagement'&&to.params.flag!='addaddress'){
+          this.goName = sessionStorage.getItem("from")
+          this.$router.push({
+              path: '/' + this.goName,
+              name: this.goName
+          });
+          // this.$router.push('/index');
         }
       }
   }
