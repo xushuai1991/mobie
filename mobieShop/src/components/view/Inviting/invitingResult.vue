@@ -3,7 +3,7 @@
         <div class="result-top" ></div>
         <div class="result-explain font" ref="changeText">{{msg}}</div>
         <div class="result-bottom">
-            <div :style="{backgroundImage: 'url(' + wxSrc + ')' }"></div>
+            <img class='ImgBox' :src='wxSrc' />
             <p>扫描二维码,前往商城</p>
         </div>
     </div>
@@ -54,6 +54,14 @@ html,body{
 }
 </style>
 <style lang="less" scoped>
+.ImgBox{
+        width: 3rem;
+    height: 3rem;
+    margin: auto;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: 50%;
+}
 #invite-result{
     .result-top{
         height:5rem;
