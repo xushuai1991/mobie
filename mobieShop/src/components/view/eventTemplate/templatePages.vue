@@ -114,6 +114,8 @@
                         //需要判断未登录跳转到登录页  登录后才能够分享 this.$router.push("/login")
                         if(res.data.status == 401){
                             Toast('尚未登录');
+                            sessionStorage.setItem('fromgo','/eventTemplate?templateId='+templateId+'&activeId='+activeId+'&companyId='+companyId);
+                            that.tologin();
                         }else{
                             if(response.data.info.list == []){
                                 Toast('活动信息为空')
@@ -154,69 +156,69 @@
             }
         },
         beforeUpdate(){
-            // this.share();
+             this.share();
         },
         methods:{
-            // share() {
-            //     let userInfo = localStorage.getItem('userinfo');
-            //     let nickname =userInfo==null?'': (JSON.parse(JSON.parse(userInfo).data))?(JSON.parse(JSON.parse(userInfo).data)).nickname:""
-            //     let companyId = sessionStorage.getItem("companyId")
-            //     if (companyId == null) {
-            //         companyId = this.getURLparms('companyId')
-            //     }
-            //     let that = this;
-            //     //  alert("http://"+that.zbdHostName+that.zbdPort+that.zbdBannerArr2[0].url)
-            //     let curHref = location.href
-            //     // let promisel = new Promise((resolve, reject) => {
-            //     let url = '/api/product/js/weixin/config';
-            //     this.$http({
-            //         url: '/api/product/js/weixin/config',
-            //         method: "post",
-            //         data: {
-            //             companyId:companyId,
-            //             url: curHref
-            //         }
-            //     }).then((res) => {
-            //         let data = res.data.info;
-            //         wx.config({
-            //             debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-            //             appId: data.appId, // 必填，公众号的唯一标识
-            //             timestamp: data.timestamp, // 必填，生成签名的时间戳
-            //             nonceStr: data.nonceStr, // 必填，生成签名的随机串
-            //             signature: data.signature, // 必填，签名，见附录1
-            //             jsApiList: data.jsApiList // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
-            //         });
-            //         // wx.error(function(res) {
-            //         //     logUtil.printLog('验证失败返回的信息:', res);
-            //         // });
-            //         let objs = {
-            //             title: that.activityTitle, // 分享标题
-            //             desc: nickname + " 分享:" + that.desc ? that.desc : '', // 分享描述
-            //             link: 'http://'+location.hostname+'/eventTemplate?templateId=' + that.templateId + "&companyId=" + companyId+'&activeId='+that.activeId, // 分享链接
-            //             //imgUrl: "http://"+location.hostname+":8887" + encodeURI(that.zbdBannerArr2[0].url),
-            //             imgUrl: that.activeImages,
-            //             // ", // 分享图标
-            //             success: function() {
-            //                 // 用户确认分享后执行的回调函数
-            //                 this.$router.push("/templatePages")
-            //             },
-            //             cancel: function() {
-            //                 // 用户取消分享后执行的回调函数
-            //             }
-            //         }
-            //         wx.ready(function() {
-            //             wx.onMenuShareAppMessage(objs);
-            //             wx.onMenuShareQQ(objs);
-            //             wx.onMenuShareWeibo(objs);
-            //             wx.onMenuShareQZone(objs);
-            //         });
-            //     })
-            //     // })
-            //     // promisel.then((data) => {
-            //     // }, (err) => {
-            //     //     console.log(err)
-            //     // })
-            // },
+            share() {
+                let userInfo = localStorage.getItem('userinfo');
+                let nickname =userInfo==null?'': (JSON.parse(JSON.parse(userInfo).data))?(JSON.parse(JSON.parse(userInfo).data)).nickname:""
+                let companyId = sessionStorage.getItem("companyId")
+                if (companyId == null) {
+                    companyId = this.getURLparms('companyId')
+                }
+                let that = this;
+                //  alert("http://"+that.zbdHostName+that.zbdPort+that.zbdBannerArr2[0].url)
+                let curHref = location.href
+                // let promisel = new Promise((resolve, reject) => {
+                let url = '/api/product/js/weixin/config';
+                this.$http({
+                    url: '/api/product/js/weixin/config',
+                    method: "post",
+                    data: {
+                        companyId:companyId,
+                        url: curHref
+                    }
+                }).then((res) => {
+                    let data = res.data.info;
+                    wx.config({
+                        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                        appId: data.appId, // 必填，公众号的唯一标识
+                        timestamp: data.timestamp, // 必填，生成签名的时间戳
+                        nonceStr: data.nonceStr, // 必填，生成签名的随机串
+                        signature: data.signature, // 必填，签名，见附录1
+                        jsApiList: data.jsApiList // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                    });
+                    // wx.error(function(res) {
+                    //     logUtil.printLog('验证失败返回的信息:', res);
+                    // });
+                    let objs = {
+                        title: that.activityTitle, // 分享标题
+                        desc: nickname + " 分享:" + that.desc ? that.desc : '', // 分享描述
+                        link: 'http://'+location.hostname+'/eventTemplate?templateId=' + that.templateId + "&companyId=" + companyId+'&activeId='+that.activeId, // 分享链接
+                        //imgUrl: "http://"+location.hostname+":8887" + encodeURI(that.zbdBannerArr2[0].url),
+                        imgUrl: that.activeImages,
+                        // ", // 分享图标
+                        success: function() {
+                            // 用户确认分享后执行的回调函数
+                            this.$router.push("/templatePages")
+                        },
+                        cancel: function() {
+                            // 用户取消分享后执行的回调函数
+                        }
+                    }
+                    wx.ready(function() {
+                        wx.onMenuShareAppMessage(objs);
+                        wx.onMenuShareQQ(objs);
+                        wx.onMenuShareWeibo(objs);
+                        wx.onMenuShareQZone(objs);
+                    });
+                })
+                // })
+                // promisel.then((data) => {
+                // }, (err) => {
+                //     console.log(err)
+                // })
+            },
                 //获取地址栏参数，name:参数名称
                 getUrlParms(name){
                     let url = this.eventTemplateUrl
@@ -232,7 +234,69 @@
                     if(r!=null)
                     return unescape(r[2]);
                     return null;
-                }
+                },
+                // 获取appid
+            getAppId(){
+                return new Promise((resolve,reject)=>{
+                    let that=this;
+                    let companyid=sessionStorage.getItem('companyId');
+                    if(companyid==null){
+                        companyid = this.getURLparms("companyId")
+                    }
+                    this.$http.get('/api/product/order/weixin/config?companyId='+companyid)
+                    .then(res=>{
+                        if(res.data.status==200){
+                            that.appid=res.data.info.appid;
+                            resolve(true);
+                        }
+                        else{
+                            resolve(false);
+                            Toast({
+                                message: res.data.msg,
+                                duration: 1000
+                            });
+                        }
+                    })
+                    .catch(err=>{
+                        resolve(false);
+                        Toast('appid获取失败');
+                    })
+                }) 
+            },
+            // 登录
+            tologin(){
+                this.getAppId().then(flag=>{
+                    if(flag){
+                        let companyid=sessionStorage.getItem('companyId');
+                        if(companyid==null){
+                          companyid = this.getURLparms("companyId")
+                        }
+                        let recommendedTeamId=this.$route.query.recommendedTeamId;
+                        let recommendedAdminId=this.$route.query.recommendedAdminId;
+                        // alert(recommendedAdminId);
+                        // alert(recommendedTeamId);
+                        // let url='https://open.weixin.qq.com/connect/oauth2/authorize?appid='+this.appid+
+                        //     '&redirect_uri=http://pay.jingrunjia.com.cn?company='+companyid
+                        //     +'&recommendedTeamId='+recommendedTeamId
+                        //     +'&recommendedAdminId='+recommendedAdminId
+                        //     +'&response_type=code&scope=snsapi_userinfo&state=STATE';
+                        let json={
+                            company:companyid,
+                            recommendedTeamId:recommendedTeamId,
+                            recommendedAdminId:recommendedAdminId
+                        };
+                            let url='https://open.weixin.qq.com/connect/oauth2/authorize?appid='+this.appid+
+                            '&redirect_uri=http://pay.jingrunjia.com.cn?json='+JSON.stringify(json)
+                            +'&response_type=code&scope=snsapi_userinfo&state=STATE';
+                        // let url=
+                        //     'http://localhost:8082?company='+companyid
+                        //     +'&recommendedTeamId='+recommendedTeamId
+                        //     +'&recommendedAdminId='+recommendedAdminId
+                        //     +'&response_type=code&scope=snsapi_userinfo&state=STATE';
+                        location.href=url;
+                    }
+                }); 
+            }
         },
         components: {
             imageAds,
