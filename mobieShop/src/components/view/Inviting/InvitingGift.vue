@@ -166,7 +166,7 @@ export default {
                 code:that.formData.checkCode,
                 mobile:that.formData.phone,
                 password:that.formData.password,
-                }
+            }
             data[this.type] = this.paramData
             this.$http.post('/api/customer/account/register',
                 data

@@ -297,6 +297,10 @@
         },
         
         created() {
+            let companyid=this.$route.query.companyId;
+            if(companyid!=null){
+                sessionStorage.setItem('companyId',companyid);
+            }
             // 
             this.$root.$emit('header', '商品详情');
             this.hostName = location.hostname;

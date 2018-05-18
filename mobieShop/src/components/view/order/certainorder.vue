@@ -246,10 +246,10 @@
             timestamp_start(time) {
                 setTimeout(_ => {
                     let timestamp_end = new Date() - this.timestamp_start;
-                    if (timestamp_end > 3000) {
+                    if (timestamp_end > 1000) {
                         this.getCouponcanuse();
                     }
-                }, 3000)
+                }, 1000)
             }
         },
         created: function() {
@@ -424,6 +424,9 @@
                 this.$http.post('/api/product/coupon/customer/display', data)
                     .then(res => {
                         if (res.data.status == 200) {
+                            if(res.data.info.length==0){
+                                that.couponindex='';
+                            }
                             res.data.info.forEach(item => {
                                 let json = {
                                     id: item.id,
@@ -508,7 +511,7 @@
                         amount: item.nums,
                         usePoint: false,
                         pointSum: 0,
-                        condition1Name: item.conditionname1 + '：' + item.conditionvalue1,
+                        condition1Name: item.conditionname1 ==''?'':(item.conditionname1 + '：' + item.conditionvalue1),
                         condition2Name: item.conditionname2 == '' ? '' : (item.conditionname2 + '：' + item.conditionvalue2)
                     };
                     for (let item1 in this.deductionindex) {
@@ -527,8 +530,7 @@
                 // console.log(this.couponlist)
                 // console.log(this.couponindex)
                 // console.log(this.couponlist[this.couponindex])
-                console.log(this.couponindex)
-                if (this.couponindex) {
+                if (this.couponindex!=='') {
                     let json = {
                         id: this.couponlist[this.couponindex].id,
                         couponAmount: 1
@@ -633,6 +635,10 @@
     .msg-goods .msg .name {
         font-size: .4rem;
         padding-bottom: .3rem;
+        width:3.5rem;
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
     }
     .msg-goods .msg .brand,
     .msg-goods .msg .area {
