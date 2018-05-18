@@ -34,7 +34,7 @@
             };
         },
         created(){
-           // console.log(this.comlist)
+            console.log(this.comlist)
         },
         computed:mapState({
             comlist:state => state.templateData.templateDATA

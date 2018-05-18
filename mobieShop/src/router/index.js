@@ -39,15 +39,6 @@ export default new Router({
             name: 'navBottom',
             component: resolve => require(['../components/view/navBottom/navBottom.vue'], resolve)
         },
-        {
-            path: '/eventTemplate', // 活动模板
-            name: 'eventTemplate',
-            meta: {
-                title: '活动详情',
-                requireAuth:true
-            },
-            component: resolve => require(['../components/view/eventTemplate/templatePages.vue'], resolve)
-        },
         
         {
             path: '/login',
@@ -344,6 +335,15 @@ export default new Router({
                 title: '商品详情',
                 requireAuth:false
             },
+        },
+        {
+            path: '/eventTemplate', // 活动模板
+            name: 'eventTemplate',
+            meta: {
+                title: '活动详情',
+                requireAuth:true
+            },
+            component: resolve => require(['../components/view/eventTemplate/templatePages.vue'], resolve)
         },
     ]
 })
