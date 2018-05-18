@@ -41,8 +41,10 @@ export default {
     methods:{
         getActivitylist(){
             let that=this;
+            let companyId = sessionStorage.getItem("companyId");
             this.$http.post('/api/product/activity/find?pageSize=5&pageNo='+this.pagenum,{
-                'activityStatus':1
+                'activityStatus':1,
+                "companyId":companyId
             })
             .then(res=>{
                 if(res.data.status==200){
