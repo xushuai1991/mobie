@@ -255,9 +255,18 @@
                 this.getAppId().then(flag=>{
                     if(flag){
                         let companyid=sessionStorage.getItem('companyId');
+                        let json={
+                            company:companyid,
+                            recommendedTeamId:null,
+                            recommendedAdminId:null
+                        };
                         let url='https://open.weixin.qq.com/connect/oauth2/authorize?appid='+this.appid+
-                            '&redirect_uri=http://pay.jingrunjia.com.cn?company='+companyid+
-                            '&response_type=code&scope=snsapi_userinfo&state=STATE ';
+                        '&redirect_uri=http://pay.jingrunjia.com.cn?json='+JSON.stringify(json)
+                        +'&response_type=code&scope=snsapi_userinfo&state=STATE';
+
+                        // let url='https://open.weixin.qq.com/connect/oauth2/authorize?appid='+this.appid+
+                        //     '&redirect_uri=http://pay.jingrunjia.com.cn?company='+companyid+
+                        //     '&response_type=code&scope=snsapi_userinfo&state=STATE ';
                         location.href=url;
                         // this.$router.replace(url);
                     }
