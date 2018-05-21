@@ -119,14 +119,14 @@ import Mint from 'mint-ui';
                             sessionStorage.setItem('fromgo','/eventTemplate?templateId='+templateId+'&activeId='+activeId+'&companyId='+companyId);
                             that.tologin();
                         }else{
-                            if(response.data.info.list == []){
-                                Toast('活动信息为空')
-                            }else{
+                            // if(response.data.info.list == []){
+                            //     Toast('活动信息为空')
+                            // }else{
                                 let activityData = response.data.info.list[0] //活动信息
-                                that.activeImages = "http://"+that.hostName+":"+that.port+"/api"+ activityData.image //活动图片
+                                that.activeImages = activityData.image //活动图片
                                 that.desc = activityData.note  //活动标签（模板名称）
                                 that.activityTitle = activityData.activityTitle //活动标题
-                            }
+                            // }
                         }
                     }).catch(function(res){
                         //console.log(res)
@@ -198,7 +198,7 @@ import Mint from 'mint-ui';
                         desc: nickname + " 分享:" + that.desc ? that.desc : '', // 分享描述
                         link: 'http://'+location.hostname+'/eventTemplate?templateId=' + that.templateIds + "&companyId=" + companyId+'&activeId='+that.activeIds, // 分享链接
                         //imgUrl: "http://"+location.hostname+":8887" + encodeURI(that.zbdBannerArr2[0].url),
-                        imgUrl: that.activeImages,
+                        imgUrl: "http://"+location.hostname+":8887" + encodeURI(that.activeImages),
                         // ", // 分享图标
                         success: function() {
                             // 用户确认分享后执行的回调函数
