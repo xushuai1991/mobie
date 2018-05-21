@@ -20,7 +20,7 @@
                     <p>x{{item.saleNumber}}</p>
                 </div>
                 <!-- 服务类商品，添加预约时间功能 -->
-                <div class='appointment' v-if='item.isService==true'>
+                <div class='appointment' v-if='item.isService==true&item.payState==1'>
                     <button class='button'  @click.stop="appointment(item.id,index)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>
                     <span>服务时间：{{item.updateAppointTime==null?(item.appointment==null?'空':item.appointment.substring(0,16)):item.updateAppointTimeIsActive?(item.appointment==null?'空':item.appointment.substring(0,16)):(item.updateAppointTime==null?'空':item.updateAppointTime.substring(0,16))}}{{(item.updateAppointTimeIsActive==false&&item.updateAppointTime!=null)?'(待确认)':''}}</span>
                            <!-- {{item.appointTime==null?'空':item.appointTime.substring(0,16)}}{{((item.updateAppointTimeIsActive&&item.updateAppointTime!=null)||item.updateAppointTime==null)?'':'('+'已申请'+')'}} -->

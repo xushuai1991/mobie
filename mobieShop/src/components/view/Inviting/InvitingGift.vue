@@ -116,7 +116,9 @@
                 companyId = this.$route.query.companyId;
                 sessionStorage.setItem('companyId', companyId);
                 let timestamp = Date.parse(new Date());
+                // alert(window.location.href);
                 window.location.href = window.location.href + '&' + timestamp
+                // window.location.href = window.location.href +'companyId='+companyId+ '&' + timestamp
             }
             this.companyId = companyId;
             // let userinfo_location=operatelocalstorage('userinfo',null,'get',null);
