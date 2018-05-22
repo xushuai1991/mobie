@@ -237,7 +237,7 @@
                         })
                         this.list.unshift({
                             customerId: "ddb42a00-4784-11e8-aa2a-fa163edc8ab6",
-                            id: '',
+                            id: 'ziti',
                             area: '',
                             province: '',
                             city: '',
