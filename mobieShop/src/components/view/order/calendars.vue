@@ -41,7 +41,7 @@
             }
         },
         created(){
-            console.log(new Date(this.getNowFormatDate()))
+            console.log(new Date(this.getNowFormatDate()).getTime())
         },
         methods: {
             getNowFormatDate() {
