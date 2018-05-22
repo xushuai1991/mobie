@@ -15,6 +15,9 @@
 </template>
 
 <script>
+    import {
+        formatdate
+    } from '../../../assets/javascript/formatdate.js'
     import calendar from './calendar.vue'
     export default {
         name: 'app',
@@ -23,11 +26,13 @@
         },
         data() {
             return {
+                Willday:'',
+                newDay:'',
                 calendar3: {
                     display: this.getNowFormatDate(),
                     show: false,
-                    begin: [2018, 5, 22], //可选开始日期
-                    end: [2018, 6, 2], //可选结束日期
+                    begin: [], //可选开始日期
+                    end: [], //可选结束日期
                     zero: true,
                     // value:[2018,5,22], //默认日期
                     lunar: true, //显示农历
@@ -40,8 +45,11 @@
                 },
             }
         },
-        created(){
-            console.log(new Date(this.getNowFormatDate()).getTime())
+        mounted() {
+            let day = new Date();
+            this.Willday = new Date(day.setDate(day.getDate() + 10)).format('yyyy-M-d');
+            this.calendar3.begin = [(this.newDay = this.getNowFormatDate(day).split("-")[0]),(this.newDay = this.getNowFormatDate(day).split("-")[1]),(this.newDay = this.getNowFormatDate(day).split("-")[2])];
+            this.calendar3.end = [this.Willday.split("-")[0],this.Willday.split("-")[1],this.Willday.split("-")[2]]
         },
         methods: {
             getNowFormatDate() {
@@ -56,7 +64,7 @@
                 if (strDate >= 0 && strDate <= 9) {
                     strDate = "0" + strDate;
                 }
-                var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate ;
+                var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate;
                 return currentdate;
             },
             openByDrop(e) {

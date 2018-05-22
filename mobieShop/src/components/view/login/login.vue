@@ -271,65 +271,8 @@
                     //     }
                     // }
                 }
-                else{
-                    let that=this;
-                    let data='';
-                    // let openId=sessionStorage.getItem('openId');
-                    if(this.openId==''){
-                        data='mobile='+this.phone+'&code='+this.code;
-                    }
-                    else{
-                        data='mobile='+this.phone+'&code='+this.code+'&openId='+this.openId;
-                    }
-                    this.in_resolve=true;
-                    Indicator.open('Loading...');
-                    this.$http.post('/api/customer/account/quickLogin?'+data)
-                    .then(function(response){
-                        // Toast(response.data.msg);
-                        
-                        if(response.data.status == 200){
-                            let data=response.data.info;
-                            operatelocalstorage('userinfo',JSON.stringify(data),'set',300);
-                            // sessionStorage.setItem('userinfo', JSON.stringify(data));
-                            // that.$store.commit('login',response.data.info)
-                            // this.cleardata();
-                            // this.$store.commit('login',res.data)
-                            setTimeout(() => {
-                                Toast({
-                                    message: '登录成功正在为你跳转请稍后...',
-                                    iconClass: 'icon icon-success',
-                                    duration: 500
-                                });
-                                let fromgo=sessionStorage.getItem('fromgo');
-                                if(fromgo==null){
-                                    if(that.companyid!=null){
-                                        that.$router.push('/index?company='+that.companyid);
-                                    }
-                                    else{
-                                        that.$router.push('/index');
-                                    }
-                                    // location.href='http://sss.itchun.com';
-                                    // that.$router.push('/index');
-                                }
-                                else{
-                                    that.$router.push(fromgo);
-                                    sessionStorage.removeItem('fromgo');
-                                }
-                                // that.$router.push('/index');
-                                that.in_resolve=false;
-                            }, 1000);
-                        }
-                        else{
-                            Toast(response.data.msg);
-                            that.in_resolve=false;
-                        }
-                        Indicator.close();
-                    })
-                    .catch(function(response){
-                        Indicator.close();
-                         Toast('登录失败');
-                         that.in_resolve=false;
-                    });
+                if(isiOS){
+                    
                 }
             },
             focus_input(e) {
