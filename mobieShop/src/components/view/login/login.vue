@@ -380,6 +380,7 @@ export default {
                         password:that.psw,
                         code:that.code,
                         openId:this.openId,
+                        companyId:this.companyid,
                         recommendedAdminId:recommendedAdminId,
                         recommendedTeamId:recommendedTeamId
                     };
