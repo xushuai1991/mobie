@@ -65,7 +65,7 @@
                                         </div>
                                         <!--</mt-cell-swipe>!-->
                                     </div>
-                                    <div v-show='item.isService&&orderState!="订单已取消"' >
+                                    <div v-show='item.isService&&(orderState!="订单已取消"||orderState!="等待买家支付")' >
                                         <div class='edmitTime' v-if='item.isService'>
                                             <p v-if='item.updateAppointTime'>{{item.updateAppointTime}}<span v-if='item.updateAppointTimeIsActive ==false'>(待确认)</span></p>
                                             <p v-else>{{item.appointTime==null?'预约时间':item.appointTime}}(待确认)</p>

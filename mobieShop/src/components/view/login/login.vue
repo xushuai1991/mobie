@@ -150,11 +150,13 @@ export default {
                 bottom:'.2rem',
                 backgroundPositionX:'50%'
             },
-            styletwo:false
+            styletwo:false,
+            isAndroid:true
         }
     },
     mounted(){
         this.yzn();
+        // this.isXT();
         // this.getCommid()
     },
     created(){
@@ -178,26 +180,63 @@ export default {
         else{
             this.openId=openid;
         }
+        var u = navigator.userAgent;
+        var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+        var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+        this.isAndroid=isAndroid;
     },
     methods:{
-        
+        // isXT() {
+        //     var u = navigator.userAgent;
+        //     var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+        //     var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+        //     if (isAndroid) { //判断系统安装系统
+            
+        //         var winHeight = document.body.offsetHeight;
+        //         // alert(winHeight)
+        //         window.onresize = function() {
+        //             // alert("窗口发生改变了哟！");
+        //             var thisHeight = document.body.clientHeight;
+        //             if (winHeight - thisHeight > 50) {
+        //                 //当软键盘弹出，在这里面操作  
+        //                 // alert('aaa');  
+        //                 document.body.style.height=this.clientHeight+1000+'px';
+        //             } else {
+        //                 //alert('bbb');  
+        //                 //当软键盘收起，在此处操作  
+        //                 document.getElementsByTagName('body')[0].style.height = '100%';
+        //             }
+        //         }
+        //         document.activeElement.scrollIntoViewIfNeeded();
+        //     }
+        // },
         focus_input(e){
-            if(this.clientHeight==0){
-                this.clientHeight=document.body.clientHeight;
-            }
-            // Toast(document.body.clientHeight.toString());
-            document.body.style.height=this.clientHeight+'px';
-            let viewheight=window.innerHeight;//可视区域高度
-            let winheight=document.body.clientHeight;//页面高度 
-            // let _height=winheight - viewheight;
-            if(winheight - viewheight > 50){
-                document.body.style.height=this.clientHeight+100+'px';
-            }
-            console.log(e.target);
-            e.target.scrollIntoViewIfNeeded();
+            // if(this.isAndroid){
+            //     if(this.clientHeight==0){
+            //         this.clientHeight=document.body.clientHeight;
+            //     }
+            //     document.body.style.height=this.clientHeight+'px';
+            //     let viewheight=window.innerHeight;//可视区域高度
+            //     let winheight=document.body.clientHeight;//页面高度 
+            //     if(winheight - viewheight > 50){
+            //         document.body.style.height=this.clientHeight+100+'px';
+            //     }
+            //     console.log(e.target);
+            //     e.target.scrollIntoViewIfNeeded();
+            // }
+            let that=this;
+            setTimeout(() => {
+                let pannel=e.target;
+                pannel.scrollIntoView(true);
+                pannel.scrollIntoView(true);
+                pannel.scrollIntoViewIfNeeded();
+            }, 200);
         },
         blur_input(e){
-            document.body.style.height=this.clientHeight+'px';
+            if(this.isAndroid){
+                document.body.style.height=this.clientHeight+'px';
+            }
+            
         },
         // 登录
         login(){
@@ -257,7 +296,7 @@ export default {
                                 else{
                                     this.$router.push('/index');
                                 }
-                                // location.href='http://daojia.jingrunjia.com.cn';
+                                // location.href='http://sss.itchun.com';
                                 // t
                             }
                             else{
@@ -330,7 +369,7 @@ export default {
                                     else{
                                         that.$router.push('/index');
                                     }
-                                    // location.href='http://daojia.jingrunjia.com.cn';
+                                    // location.href='http://sss.itchun.com';
                                     // that.$router.push('/index');
                                 }
                                 else{

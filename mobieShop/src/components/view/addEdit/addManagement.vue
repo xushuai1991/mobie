@@ -166,7 +166,7 @@
             getAddInfo() {
                 let data = operatelocalstorage('userinfo', null, 'get', null);
                 data = JSON.parse(data);
-                // console.log(data);
+                console.log(data);
                 let url = '/api/customer/address/query';
                 this.$http({
                     url: url,
@@ -175,6 +175,7 @@
                         'customerId': data.id
                     }
                 }).then(res => {
+                    console.log(res)
                     let companyId = sessionStorage.getItem('companyId');
                     if (companyId - 0 == 92) {
                         this.list = res.data.info.list
@@ -213,7 +214,9 @@
                                 }
                             })
                         }
+                        
                         this.list=(newList)
+                        console.log(this.list)
                         this.listpages = res.data.info.pages;
                     } else {
                         let isTrue = true;

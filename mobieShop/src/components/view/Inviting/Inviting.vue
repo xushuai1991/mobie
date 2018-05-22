@@ -70,7 +70,7 @@
             // 获取用户的邀请信息
             getMsgabout(){
                 let that=this;
-                this.$http.post('/api/customer/consumption/points/find?pageSize=1',{channel: 5, remarks: "邀请注册赠送积分"})
+                this.$http.post('/api/customer/consumption/points/find',{channel: 5, remarks: "邀请注册赠送积分"})
                 .then(res => { 
                     if(res.data.status == 200){
                         console.log(res)

@@ -270,6 +270,11 @@ export default new Router({
             },
         },
         {
+            path: '/calendars', // 邀请规则
+            name: 'calendars',
+            component: resolve => require(['../components/view/order/calendars.vue'], resolve),
+        },
+        {
             path: '/InvitingResult', // 邀请结果
             name: 'InvitingResult',
             component: resolve => require(['../components/view/Inviting/InvitingResult.vue'], resolve),
