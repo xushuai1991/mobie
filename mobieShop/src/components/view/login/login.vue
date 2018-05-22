@@ -159,13 +159,83 @@
              this.isXT();
             // this.getCommid()
         },
-        created() {
-            let companyid = this.$route.query.company == null ? this.$route.query.companyId : this.$route.query.company;
-            if (companyid != null) {
-                sessionStorage.setItem('companyId', companyid);
-                this.companyid = companyid;
-            } else {
-                this.companyid = sessionStorage.getItem('companyId');;
+        // 登录
+        login(){
+            if(this.phonejson.status&&this.pswjson.status&&this.codejson.status){
+                if(this.in_resolve){
+                    return;
+                }
+                Indicator.open('Loading...');
+                let that=this;
+                let data='';
+                // let openId=sessionStorage.getItem('openId');
+                if(this.openId==''){
+                    data='mobile='+this.phone+'&password='+this.psw;
+                }
+                else{
+                    data='mobile='+this.phone+'&password='+this.psw+'&openId='+this.openId;
+                }
+                this.in_resolve=true;
+                this.$http({
+                    url: '/api/customer/account/login?'+data,
+                    method: 'POST',
+                    // 设置请求头
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                })
+                .then(res => {
+                    Indicator.close();
+                    console.log(res);
+                    var msg = res.data.msg
+                    if (msg !== '登录成功') {
+                        Toast(res.data.info);
+                        that.in_resolve=false;
+                    } else {
+                        let data=res.data.info;
+                        let json={
+
+                        };
+                        operatelocalstorage('userinfo',JSON.stringify(data),'set',300);
+                        // sessionStorage.setItem('userinfo', JSON.stringify(data));
+                        // this.$store.commit('login',res.data.info)
+                        // let userinfo = res.data
+                        // sessionStorage.setItem('userinfo', JSON.stringify(data));
+                        setTimeout(() => {
+                            Toast({
+                                message: '登录成功正在为你跳转请稍后...',
+                                iconClass: 'icon icon-success',
+                                duration: 500
+                            });
+                            let fromgo=sessionStorage.getItem('fromgo');
+                            // let fromgo='/order'
+                            
+                            if(fromgo==null){
+                                if(that.companyid!=null){
+                                    this.$router.push('/index?company='+that.companyid);
+                                }
+                                else{
+                                    this.$router.push('/index');
+                                }
+                                // location.href='http://sss.itchun.com';
+                                // t
+                            }
+                            else{
+                                that.$router.push(fromgo);
+                                sessionStorage.removeItem('fromgo');
+                            }
+                            // this.$router.push('/index');
+                            that.in_resolve=false;
+                        }, 1000);
+                    }
+                    
+                })
+                .catch(err => {
+                    Indicator.close();
+                    console.log("错误");
+                    console.log(err);
+                    that.in_resolve=false;
+                })
             }
             if (sessionStorage.getItem('companyId') == 92) {
                 this.styletwo = true;
@@ -201,26 +271,84 @@
                     //     }
                     // }
                 }
-                if (isiOS) { //判断是ios系统
+                else{
+                    let that=this;
+                    let data='';
+                    // let openId=sessionStorage.getItem('openId');
+                    if(this.openId==''){
+                        data='mobile='+this.phone+'&code='+this.code;
+                    }
+                    else{
+                        data='mobile='+this.phone+'&code='+this.code+'&openId='+this.openId;
+                    }
+                    this.in_resolve=true;
+                    Indicator.open('Loading...');
+                    this.$http.post('/api/customer/account/quickLogin?'+data)
+                    .then(function(response){
+                        // Toast(response.data.msg);
+                        
+                        if(response.data.status == 200){
+                            let data=response.data.info;
+                            operatelocalstorage('userinfo',JSON.stringify(data),'set',300);
+                            // sessionStorage.setItem('userinfo', JSON.stringify(data));
+                            // that.$store.commit('login',response.data.info)
+                            // this.cleardata();
+                            // this.$store.commit('login',res.data)
+                            setTimeout(() => {
+                                Toast({
+                                    message: '登录成功正在为你跳转请稍后...',
+                                    iconClass: 'icon icon-success',
+                                    duration: 500
+                                });
+                                let fromgo=sessionStorage.getItem('fromgo');
+                                if(fromgo==null){
+                                    if(that.companyid!=null){
+                                        that.$router.push('/index?company='+that.companyid);
+                                    }
+                                    else{
+                                        that.$router.push('/index');
+                                    }
+                                    // location.href='http://sss.itchun.com';
+                                    // that.$router.push('/index');
+                                }
+                                else{
+                                    that.$router.push(fromgo);
+                                    sessionStorage.removeItem('fromgo');
+                                }
+                                // that.$router.push('/index');
+                                that.in_resolve=false;
+                            }, 1000);
+                        }
+                        else{
+                            Toast(response.data.msg);
+                            that.in_resolve=false;
+                        }
+                        Indicator.close();
+                    })
+                    .catch(function(response){
+                        Indicator.close();
+                         Toast('登录失败');
+                         that.in_resolve=false;
+                    });
                 }
             },
             focus_input(e) {
-                if(this.clientHeight==0){
-                    this.clientHeight=document.body.clientHeight;
-                }
-                // Toast(document.body.clientHeight.toString());
-                document.body.style.height=this.clientHeight+'px';
-                let viewheight=window.innerHeight;//可视区域高度
-                let winheight=document.body.clientHeight;//页面高度 
-                // let _height=winheight - viewheight;
-                if(winheight - viewheight > 50){
-                    document.body.style.height=this.clientHeight+100+'px';
-                }
-                console.log(e.target);
-                e.target.scrollIntoViewIfNeeded();
+                // if(this.clientHeight==0){
+                //     this.clientHeight=document.body.clientHeight;
+                // }
+                // // Toast(document.body.clientHeight.toString());
+                // document.body.style.height=this.clientHeight+'px';
+                // let viewheight=window.innerHeight;//可视区域高度
+                // let winheight=document.body.clientHeight;//页面高度 
+                // // let _height=winheight - viewheight;
+                // if(winheight - viewheight > 50){
+                //     document.body.style.height=this.clientHeight+100+'px';
+                // }
+                // console.log(e.target);
+                // e.target.scrollIntoViewIfNeeded();
             },
             blur_input(e) {
-                document.body.style.height=this.clientHeight+'px';
+                // document.body.style.height=this.clientHeight+'px';
             },
             // 登录
             login() {
