@@ -77,18 +77,32 @@
                 </p>
                 <p v-show='dataover[4]' class="page-over">数据已加载完</p>
             </mt-tab-container-item>
+            
         </mt-tab-container>
+        <!-- <Calendar
+            class='calendar'
+            ref='Calendar'
+            v-on:choseDay="clickDay"
+            :agoDayHide='today'
+            :futureDayHide='lastdat'
+        ></Calendar> -->
+        <mt-popup v-model="popupVisible" position="bottom" class="popup">
+            <mt-picker :slots="dates" @change='onValuesChange'  :showToolbar='true' >
+                <p class='btn-group'>
+                    <button class='cancle font' @click.stop='cancledate'>取消</button>
+                    <button class='certain font' @click.stop="getdate">确定</button>
+                </p>
+            </mt-picker>
+        </mt-popup>
     </div>
 </template>
 <script>
-// import pendpay from './pendpay.vue'
-// import inservice from './inservice.vue'
 import willevaluate from './willevaluate.vue'
-// import willservice from './willservice.vue'
-// import other from './other.vue'
 import ordercell from './ordercell.vue'
 import { Indicator } from 'mint-ui';
 import { Toast } from 'mint-ui'; 
+// import Calendar from 'vue-calendar-component';
+import {formatdate} from '../../../assets/javascript/formatdate.js'
 export default {
     components:{willevaluate,ordercell},
     data() {
@@ -104,7 +118,16 @@ export default {
             loading:false,
             dataover:[false,false,false,false,false],//数据是否加载完
             pagenumlist:[1,1,1,1,1],
-            type_service:['unservice','inservice']
+            type_service:['unservice','inservice'],
+            popupVisible:false,
+            dates:[
+                {
+                    values: ['上午', '下午'],  
+                    className: 'slot1',  
+                    textAlign: 'center'  
+                },
+            ],
+            datechange:''
         };
     },
     created(){
@@ -154,6 +177,10 @@ export default {
             }
             
         });
+        // 监听日历插件唤醒
+        this.$root.$on('calendar',_=>{
+            document.querySelector('.calendar').style.display='block';
+        })
     },
     watch:{
         selected(value){
@@ -241,7 +268,36 @@ export default {
             }
         }
     },
+    computed:{
+        today:function(){
+            let date=new Date();
+            let today=date.setDate(date.getDate()-1).toString().substring(0,10)-0;
+            return today;
+        },
+        lastdat(){
+            let date=new Date();
+            let lastday=date.setDate(date.getDate()+9).toString().substring(0,10)-0;
+            return lastday;
+        }
+    },
     methods:{
+        onValuesChange(picker,values){
+            this.datechange=values[0];
+            console.log(values);
+        },
+        clickDay(value){
+            console.log(value);
+            this.popupVisible=true;
+        },
+        getdate(){
+            console.log(this.datechange);
+            this.popupVisible=false;
+            document.querySelector('.calendar').style.display='none';
+        },
+        cancledate(){
+            this.popupVisible=false;
+            document.querySelector('.calendar').style.display='none';
+        },
         getOrderList(pagenum,data){
             let index=this.selected=='all'?0:this.selected=='willpay'?1:this.selected=='willservice'?2:this.selected=='inservice'?3:4;
             if(pagenum==1){
@@ -456,6 +512,22 @@ export default {
 </style>
 <style  lang="less" >
 .order-xs{
+    .wh_container{
+        background-color:#26a2ff;
+        display: none;
+        position: absolute;
+        top:0;
+        left: 0;
+        width:100%;
+        height:100%;
+        z-index: 999;
+        .wh_content_all{
+            background-color:#26a2ff;
+        }
+        .wh_content_item div .wh_isToday{
+            color:#26a2ff;
+        }
+    }
     // margin-top: 2rem;
     .mint-navbar{
         // margin-top: .8rem;

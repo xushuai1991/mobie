@@ -86,6 +86,16 @@ export default {
   .mint-tabbar > .mint-tab-item.is-selected {
       color:#edc278 !important;
   }
+  // 日历
+  .wh_container{
+    background: #f1c885 !important;
+    .wh_content_all{
+      background: #f1c885 !important;
+    }
+    .wh_content_item div .wh_isToday{
+        color:#f1c885;
+    }
+  }
   // 个人中心
   .userinfo{
     .infoBottom{

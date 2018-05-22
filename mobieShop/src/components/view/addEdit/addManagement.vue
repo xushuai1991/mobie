@@ -195,13 +195,13 @@
                             }
                         })
                         this.list.unshift({
-                            customerId: "ddb42a00-4784-11e8-aa2a-fa163edc8ab6",
+                            customerId:data.id,
                             id: 'ziti',
                             area: '',
                             province: '',
                             city: '',
                             region: '',
-                            address: '',
+                            address: '自提',
                             cityId: 101,
                             isDefaultAddress: isTrue
                         })
@@ -236,13 +236,13 @@
                             }
                         })
                         this.list.unshift({
-                            customerId: "ddb42a00-4784-11e8-aa2a-fa163edc8ab6",
-                            id: '',
+                            customerId:data.id,
+                            id: 'ziti',
                             area: '',
                             province: '',
                             city: '',
                             region: '',
-                            address: '',
+                            address: '自提',
                             isDefaultAddress: isTrue
                         })
                         this.listpages = res.data.info.pages;
