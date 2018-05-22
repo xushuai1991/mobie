@@ -25,7 +25,7 @@
             </div>
             <div class="verificationcode">
                 <i class='icon iconfont icon-key font'></i>
-                <input type="text" class='codeinput' placeholder="验证码" v-model="code" @change='checkcode()' @focus="focus_input" @blur="blur_input">
+                <input type="text" class='codeinput' id='codelogin' placeholder="验证码" v-model="code" @change='checkcode()' @focus="focus_input" @blur="blur_input">
                 <p class='error'>{{codejson.msg}}</p>
                 <div id='codeimg' class='codeimg font border' @click='yzn'>{{codehas}}</div>
             </div>
@@ -151,7 +151,8 @@ export default {
                 backgroundPositionX:'50%'
             },
             styletwo:false,
-            isAndroid:true
+            isAndroid:true,
+            wHeight:0
         }
     },
     mounted(){
@@ -160,6 +161,7 @@ export default {
         // this.getCommid()
     },
     created(){
+        this.wHeight = window.innerHeight;
         let companyid=this.$route.query.company==null?this.$route.query.companyId:this.$route.query.company;
         
         
@@ -186,57 +188,22 @@ export default {
         this.isAndroid=isAndroid;
     },
     methods:{
-        // isXT() {
-        //     var u = navigator.userAgent;
-        //     var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
-        //     var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
-        //     if (isAndroid) { //判断系统安装系统
-            
-        //         var winHeight = document.body.offsetHeight;
-        //         // alert(winHeight)
-        //         window.onresize = function() {
-        //             // alert("窗口发生改变了哟！");
-        //             var thisHeight = document.body.clientHeight;
-        //             if (winHeight - thisHeight > 50) {
-        //                 //当软键盘弹出，在这里面操作  
-        //                 // alert('aaa');  
-        //                 document.body.style.height=this.clientHeight+1000+'px';
-        //             } else {
-        //                 //alert('bbb');  
-        //                 //当软键盘收起，在此处操作  
-        //                 document.getElementsByTagName('body')[0].style.height = '100%';
-        //             }
-        //         }
-        //         document.activeElement.scrollIntoViewIfNeeded();
-        //     }
-        // },
         focus_input(e){
-            // if(this.isAndroid){
-            //     if(this.clientHeight==0){
-            //         this.clientHeight=document.body.clientHeight;
-            //     }
-            //     document.body.style.height=this.clientHeight+'px';
-            //     let viewheight=window.innerHeight;//可视区域高度
-            //     let winheight=document.body.clientHeight;//页面高度 
-            //     if(winheight - viewheight > 50){
-            //         document.body.style.height=this.clientHeight+100+'px';
-            //     }
-            //     console.log(e.target);
-            //     e.target.scrollIntoViewIfNeeded();
-            // }
-            let that=this;
-            setTimeout(() => {
-                let pannel=e.target;
-                pannel.scrollIntoView(true);
-                pannel.scrollIntoView(true);
-                pannel.scrollIntoViewIfNeeded();
-            }, 200);
+            if(this.isAndroid){
+                if(this.clientHeight==0){
+                    this.clientHeight=document.body.clientHeight;
+                }
+                document.body.style.height=this.clientHeight+100+'px';
+                if(e.target.getAttribute('id')=='codelogin'){
+                    document.body.style.height=this.clientHeight+180+'px';
+                    e.target.scrollIntoView(true);
+                }
+            }
         },
         blur_input(e){
             if(this.isAndroid){
                 document.body.style.height=this.clientHeight+'px';
             }
-            
         },
         // 登录
         login(){
@@ -516,15 +483,12 @@ export default {
     background-size: cover;
 }
 .contain{
-    /* height:fit-content; */
-    /* height:13.4rem; */
     height:100vh;
-    /* overflow:scroll; */
 }
 .form{
     background-color: rgba(255,255,255,.9);
-    padding:.2rem 1rem; 
-    position: relative;
+    padding:.2rem 1rem 0 1rem; 
+    /* position: relative; */
 }
 .form .icon{
     color:rgb(39, 162, 242);
@@ -605,13 +569,15 @@ export default {
     top:0;
 }
 .btn-resign{
-    width:100%;
+    width:136%;
     height: 1.5rem;
     background-color: #fff;
-    left: 0;
+    /* left: 0; */
     font-size: 0.3rem;
-    position: absolute;
-    top: 7rem;
+    /* position: absolute; */
+    /* top: 7rem; */
+    margin-top: 1rem;
+    margin-left: -1rem;
     display: block;
 }
 .error{
