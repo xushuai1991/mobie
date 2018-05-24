@@ -19,7 +19,7 @@
                     <p>￥{{item.price}}</p>
                     <p>x{{item.saleNumber}}</p>
                 </div>
-                <!-- <button class='button'  @click.stop="test()">预约时间</button> -->
+                <button class='button'  @click.stop="openByDrop($event)">预约时间</button>
                 <!-- 服务类商品，添加预约时间功能 -->
                 <div class='appointment' v-if='item.isService==true&item.payState==1'>
                     <button class='button'  @click.stop="appointment(item.id,index)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>
@@ -104,6 +104,10 @@ export default {
         this.countDown();
     },
     methods:{
+        openByDrop(e) {
+            this.$root.$emit('calendar',e)
+            
+        },
         // test(){
         //     this.$root.$emit('calendar')
         // },

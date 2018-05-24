@@ -94,6 +94,11 @@
                 </p>
             </mt-picker>
         </mt-popup>
+        <transition name="fade">
+            <div class="calendar-dropdown" v-if="calendar3.show">
+                <calendar :zero="calendar3.zero" :lunar="calendar3.lunar"  :begin="today" :end="lastday" @select="clickDay"></calendar>
+            </div>
+        </transition>
     </div>
 </template>
 <script>
@@ -101,10 +106,11 @@ import willevaluate from './willevaluate.vue'
 import ordercell from './ordercell.vue'
 import { Indicator } from 'mint-ui';
 import { Toast } from 'mint-ui'; 
+import calendar from './calendar.vue'
 // import Calendar from 'vue-calendar-component';
 import {formatdate} from '../../../assets/javascript/formatdate.js'
 export default {
-    components:{willevaluate,ordercell},
+    components:{willevaluate,ordercell,calendar},
     data() {
         return {
             test:true,
@@ -127,11 +133,17 @@ export default {
                     textAlign: 'center'  
                 },
             ],
+            calendar3: {
+                show: false,
+                zero: true,
+                // value:[2018,5,22], //默认日期
+                lunar: true, //显示农历
+                
+            },
             datechange:''
         };
     },
     created(){
-        // this.getOrderList(3,{});
         this.$root.$emit('header','我的订单');
         this.selected=this.$route.params.type==undefined?'all':this.$route.params.type;
         if(this.selected=='all'){
@@ -178,8 +190,16 @@ export default {
             
         });
         // 监听日历插件唤醒
-        this.$root.$on('calendar',_=>{
-            document.querySelector('.calendar').style.display='block';
+        this.$root.$on('calendar',(e)=>{
+            this.calendar3.show = true;
+            e.stopPropagation();
+            window.setTimeout(() => {
+                document.addEventListener("click", (e) => {
+                    // this.calendar3.show = false;
+                    document.removeEventListener("click", () => {}, false);
+                }, false);
+            }, 1000)
+            // document.querySelector('.calendar').style.display='block';
         })
     },
     watch:{
@@ -271,16 +291,28 @@ export default {
     computed:{
         today:function(){
             let date=new Date();
-            let today=date.setDate(date.getDate()-1).toString().substring(0,10)-0;
-            return today;
+            let today=new Date(date.setDate(date.getDate()+1)).format('yyyy-MM-dd');
+            let arry=today.split('-');
+            return arry;
         },
-        lastdat(){
+        lastday(){
             let date=new Date();
-            let lastday=date.setDate(date.getDate()+9).toString().substring(0,10)-0;
-            return lastday;
+            let lastday=new Date(date.setDate(date.getDate()+30)).format('yyyy-MM-dd');
+            let arry=lastday.split('-');
+            return arry;
         }
     },
     methods:{
+        openByDrop(e) {
+            this.calendar3.show = true;
+            e.stopPropagation();
+            window.setTimeout(() => {
+                document.addEventListener("click", (e) => {
+                    this.calendar3.show = false;
+                    document.removeEventListener("click", () => {}, false);
+                }, false);
+            }, 1000)
+        },
         onValuesChange(picker,values){
             this.datechange=values[0];
             console.log(values);
@@ -292,11 +324,13 @@ export default {
         getdate(){
             console.log(this.datechange);
             this.popupVisible=false;
-            document.querySelector('.calendar').style.display='none';
+            this.calendar3.show = false;
+            // document.querySelector('.calendar').style.display='none';
         },
         cancledate(){
             this.popupVisible=false;
-            document.querySelector('.calendar').style.display='none';
+            this.calendar3.show = false;
+            // document.querySelector('.calendar').style.display='none';
         },
         getOrderList(pagenum,data){
             let index=this.selected=='all'?0:this.selected=='willpay'?1:this.selected=='willservice'?2:this.selected=='inservice'?3:4;
@@ -508,6 +542,16 @@ export default {
     .orderlist{
         background: #f5f5f5;
     }
+    .calendar-dropdown{
+        left:0px;
+        right:0;
+        top:0px;
+        position:absolute;
+        height:100vh;
+        z-index:999;
+        background-color:#fff;
+    }
+    
 }
 </style>
 <style  lang="less" >

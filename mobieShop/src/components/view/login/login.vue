@@ -132,7 +132,7 @@ export default {
             in_resolve:false,
             openId:'',
             companyid:null,
-            style2Login1:{
+            style2Login2:{
                 width:'100%',
                 height:'2rem',
                 backgroundImage:"url(" + require("../../../../static/images/style2-login1.png") + ")",
@@ -141,13 +141,17 @@ export default {
                 bottom:'1rem',
                 
             },
-            style2Login2:{
-                width:'100%',
-                height:'3rem',
-                backgroundImage:"url(" + require("../../../../static/images/style2-login2.png") + ")",
+            style2Login1:{
+                width:'1.8rem',
+                height:'1.8rem',
+                backgroundImage:"url(" + require("../../../../static/images/style2-resign.png") + ")",
                 backgroundSize:'cover',
                 position:'absolute',
-                bottom:'.2rem',
+                top:0,
+                bottom:0,
+                left:0,
+                right:0,
+                margin:'auto',
                 backgroundPositionX:'50%'
             },
             styletwo:false,
@@ -176,12 +180,13 @@ export default {
             this.styletwo=true;
         }
         let openid=this.$route.query.openId;
-        if(openid==null){
-            Toast('获取openid失败');
-        }
-        else{
-            this.openId=openid;
-        }
+        this.openId=openid;
+        // if(openid==null){
+        //     Toast('获取openid失败');
+        // }
+        // else{
+        //     this.openId=openid;
+        // }
         var u = navigator.userAgent;
         var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
         var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
@@ -317,10 +322,10 @@ export default {
                     Toast('请确认服务条款');
                 }
                 else{
-                    if(this.openId==''){
-                        Toast('请授权后再注册！');
-                        return;
-                    }
+                    // if(this.openId==''){
+                    //     Toast('请授权后再注册！');
+                    //     return;
+                    // }
                     let that=this;                    
                     let recommendedTeamId=this.$route.query.recommendedTeamId;
                     let recommendedAdminId=this.$route.query.recommendedAdminId;
