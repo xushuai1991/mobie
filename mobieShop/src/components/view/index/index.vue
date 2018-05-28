@@ -297,7 +297,7 @@
                         })
                         .catch(err => {
                             resolve(false);
-                            Toast('appid获取失败');
+                            // Toast('appid获取失败');
                         })
                 })
             },

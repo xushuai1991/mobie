@@ -25,7 +25,7 @@
             </div>
             <div class="verificationcode">
                 <i class='icon iconfont icon-key font'></i>
-                <input type="text" class='codeinput' placeholder="验证码" v-model="code" @change='checkcode()' @focus="focus_input" @blur="blur_input">
+                <input type="text" class='codeinput' id='codelogin' placeholder="验证码" v-model="code" @change='checkcode()' @focus="focus_input" @blur="blur_input">
                 <p class='error'>{{codejson.msg}}</p>
                 <div id='codeimg' class='codeimg font border' @click='yzn'>{{codehas}}</div>
             </div>
@@ -132,7 +132,7 @@ export default {
             in_resolve:false,
             openId:'',
             companyid:null,
-            style2Login1:{
+            style2Login2:{
                 width:'100%',
                 height:'2rem',
                 backgroundImage:"url(" + require("../../../../static/images/style2-login1.png") + ")",
@@ -141,23 +141,31 @@ export default {
                 bottom:'1rem',
                 
             },
-            style2Login2:{
-                width:'100%',
-                height:'3rem',
-                backgroundImage:"url(" + require("../../../../static/images/style2-login2.png") + ")",
+            style2Login1:{
+                width:'1.8rem',
+                height:'1.8rem',
+                backgroundImage:"url(" + require("../../../../static/images/style2-resign.png") + ")",
                 backgroundSize:'cover',
                 position:'absolute',
-                bottom:'.2rem',
+                top:0,
+                bottom:0,
+                left:0,
+                right:0,
+                margin:'auto',
                 backgroundPositionX:'50%'
             },
-            styletwo:false
+            styletwo:false,
+            isAndroid:true,
+            wHeight:0
         }
     },
     mounted(){
         this.yzn();
+        // this.isXT();
         // this.getCommid()
     },
     created(){
+        this.wHeight = window.innerHeight;
         let companyid=this.$route.query.company==null?this.$route.query.companyId:this.$route.query.company;
         
         
@@ -172,32 +180,35 @@ export default {
             this.styletwo=true;
         }
         let openid=this.$route.query.openId;
-        if(openid==null){
-            Toast('获取openid失败');
-        }
-        else{
-            this.openId=openid;
-        }
+        this.openId=openid;
+        // if(openid==null){
+        //     Toast('获取openid失败');
+        // }
+        // else{
+        //     this.openId=openid;
+        // }
+        var u = navigator.userAgent;
+        var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+        var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+        this.isAndroid=isAndroid;
     },
     methods:{
-        
         focus_input(e){
-            if(this.clientHeight==0){
-                this.clientHeight=document.body.clientHeight;
-            }
-            // Toast(document.body.clientHeight.toString());
-            document.body.style.height=this.clientHeight+'px';
-            let viewheight=window.innerHeight;//可视区域高度
-            let winheight=document.body.clientHeight;//页面高度 
-            // let _height=winheight - viewheight;
-            if(winheight - viewheight > 50){
+            if(this.isAndroid){
+                if(this.clientHeight==0){
+                    this.clientHeight=document.body.clientHeight;
+                }
                 document.body.style.height=this.clientHeight+100+'px';
+                if(e.target.getAttribute('id')=='codelogin'){
+                    document.body.style.height=this.clientHeight+180+'px';
+                    e.target.scrollIntoView(true);
+                }
             }
-            console.log(e.target);
-            e.target.scrollIntoViewIfNeeded();
         },
         blur_input(e){
-            document.body.style.height=this.clientHeight+'px';
+            if(this.isAndroid){
+                document.body.style.height=this.clientHeight+'px';
+            }
         },
         // 登录
         login(){
@@ -368,10 +379,10 @@ export default {
                     Toast('请确认服务条款');
                 }
                 else{
-                    if(this.openId==''){
-                        Toast('请授权后再注册！');
-                        return;
-                    }
+                    // if(this.openId==''){
+                    //     Toast('请授权后再注册！');
+                    //     return;
+                    // }
                     let that=this;                    
                     let recommendedTeamId=this.$route.query.recommendedTeamId;
                     let recommendedAdminId=this.$route.query.recommendedAdminId;
@@ -380,6 +391,7 @@ export default {
                         password:that.psw,
                         code:that.code,
                         openId:this.openId,
+                        companyId:this.companyid,
                         recommendedAdminId:recommendedAdminId,
                         recommendedTeamId:recommendedTeamId
                     };
@@ -533,15 +545,12 @@ export default {
     background-size: cover;
 }
 .contain{
-    /* height:fit-content; */
-    /* height:13.4rem; */
     height:100vh;
-    /* overflow:scroll; */
 }
 .form{
     background-color: rgba(255,255,255,.9);
-    padding:.2rem 1rem; 
-    position: relative;
+    padding:.2rem 1rem 0 1rem; 
+    /* position: relative; */
 }
 .form .icon{
     color:rgb(39, 162, 242);
@@ -622,13 +631,15 @@ export default {
     top:0;
 }
 .btn-resign{
-    width:100%;
+    width:136%;
     height: 1.5rem;
     background-color: #fff;
-    left: 0;
+    /* left: 0; */
     font-size: 0.3rem;
-    position: absolute;
-    top: 7rem;
+    /* position: absolute; */
+    /* top: 7rem; */
+    margin-top: 1rem;
+    margin-left: -1rem;
     display: block;
 }
 .error{

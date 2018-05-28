@@ -166,7 +166,7 @@
             getAddInfo() {
                 let data = operatelocalstorage('userinfo', null, 'get', null);
                 data = JSON.parse(data);
-                // console.log(data);
+                console.log(data);
                 let url = '/api/customer/address/query';
                 this.$http({
                     url: url,
@@ -175,6 +175,7 @@
                         'customerId': data.id
                     }
                 }).then(res => {
+                    console.log(res)
                     let companyId = sessionStorage.getItem('companyId');
                     if (companyId - 0 == 92) {
                         this.list = res.data.info.list
@@ -194,13 +195,13 @@
                             }
                         })
                         this.list.unshift({
-                            customerId: "ddb42a00-4784-11e8-aa2a-fa163edc8ab6",
+                            customerId:data.id,
                             id: 'ziti',
                             area: '',
                             province: '',
                             city: '',
                             region: '',
-                            address: '',
+                            address: '自提',
                             cityId: 101,
                             isDefaultAddress: isTrue
                         })
@@ -213,7 +214,9 @@
                                 }
                             })
                         }
+                        
                         this.list=(newList)
+                        console.log(this.list)
                         this.listpages = res.data.info.pages;
                     } else {
                         let isTrue = true;
@@ -233,13 +236,13 @@
                             }
                         })
                         this.list.unshift({
-                            customerId: "ddb42a00-4784-11e8-aa2a-fa163edc8ab6",
-                            id: '',
+                            customerId:data.id,
+                            id: 'ziti',
                             area: '',
                             province: '',
                             city: '',
                             region: '',
-                            address: '',
+                            address: '自提',
                             isDefaultAddress: isTrue
                         })
                         this.listpages = res.data.info.pages;
