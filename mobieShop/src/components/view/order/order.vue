@@ -96,7 +96,7 @@
         </mt-popup>
         <transition name="fade">
             <div class="calendar-dropdown" v-if="calendar3.show">
-                <calendar :zero="calendar3.zero" :lunar="calendar3.lunar"  :begin="today" :end="lastday" @select="clickDay"></calendar>
+                <calendar :events="calendar3.events" :zero="calendar3.zero" :lunar="calendar3.lunar"  :value='minday' :begin="minday" :end="lastday" @select="clickDay"></calendar>
             </div>
         </transition>
     </div>
@@ -130,17 +130,18 @@ export default {
                 {
                     values: ['上午', '下午'],  
                     className: 'slot1',  
-                    textAlign: 'center'  
+                    textAlign: 'center',
                 },
             ],
             calendar3: {
                 show: false,
                 zero: true,
-                // value:[2018,5,22], //默认日期
                 lunar: true, //显示农历
-                
             },
-            datechange:''
+            datechange:'',
+            selectTime:'',
+            starPeriod:'',
+            endPeriod:''
         };
     },
     created(){
@@ -190,16 +191,21 @@ export default {
             
         });
         // 监听日历插件唤醒
-        this.$root.$on('calendar',(e)=>{
-            this.calendar3.show = true;
-            e.stopPropagation();
-            window.setTimeout(() => {
-                document.addEventListener("click", (e) => {
-                    // this.calendar3.show = false;
-                    document.removeEventListener("click", () => {}, false);
-                }, false);
-            }, 1000)
-            // document.querySelector('.calendar').style.display='block';
+        this.$root.$on('calendar',data=>{
+            let commodityid=data.commodityid;
+            let e=data.event;
+            this.getPeriodList(commodityid).then(success=>{
+                if(success){
+                    this.calendar3.show = true;
+                    e.stopPropagation();
+                    window.setTimeout(() => {
+                        document.addEventListener("click", (e) => {
+                            document.removeEventListener("click", () => {}, false);
+                        }, false);
+                    }, 1000)
+                }
+            })
+            
         })
     },
     watch:{
@@ -289,7 +295,7 @@ export default {
         }
     },
     computed:{
-        today:function(){
+        minday:function(){
             let date=new Date();
             let today=new Date(date.setDate(date.getDate()+1)).format('yyyy-MM-dd');
             let arry=today.split('-');
@@ -300,25 +306,29 @@ export default {
             let lastday=new Date(date.setDate(date.getDate()+30)).format('yyyy-MM-dd');
             let arry=lastday.split('-');
             return arry;
-        }
+        },
     },
     methods:{
-        openByDrop(e) {
-            this.calendar3.show = true;
-            e.stopPropagation();
-            window.setTimeout(() => {
-                document.addEventListener("click", (e) => {
-                    this.calendar3.show = false;
-                    document.removeEventListener("click", () => {}, false);
-                }, false);
-            }, 1000)
-        },
+        // openByDrop(e) {
+        //     this.calendar3.show = true;
+        //     e.stopPropagation();
+        //     window.setTimeout(() => {
+        //         document.addEventListener("click", (e) => {
+        //             this.calendar3.show = false;
+        //             document.removeEventListener("click", () => {}, false);
+        //         }, false);
+        //     }, 1000)
+        // },
         onValuesChange(picker,values){
             this.datechange=values[0];
             console.log(values);
         },
         clickDay(value){
-            console.log(value);
+            alert(value);
+            let str=value[0]+'-'+value[1]+'-'+value[2];
+            this.selectTime=str;
+            this.starPeriod='';
+            this.endPeriod='';
             this.popupVisible=true;
         },
         getdate(){
@@ -331,6 +341,45 @@ export default {
             this.popupVisible=false;
             this.calendar3.show = false;
             // document.querySelector('.calendar').style.display='none';
+        },
+        // 获取时间段
+        getPeriodList(commodityid){
+            return new Promise((resolve,reject)=>{
+                let that=this;
+                let companyid=sessionStorage.getItem('companyId');
+                that.$http.post('/api/product/commodity/periodTemplateContent/queryPeriodListByTemplateId?templateId='+commodityid+'&companyId='+companyid,{})
+                .then(res=>{
+                    if(res.data.status==200){
+                        that.dates=[];
+                        let periodlist=[];
+                        res.data.info.forEach(item=>{
+                            periodlist.push(item.startTime.substring(0,5)+' - '+item.endTime.substring(0,5)+'(剩余:'+item.pCount+')');
+                        });
+                        let json={
+                            values:periodlist,
+                            className: 'slot1',  
+                            textAlign: 'center'
+                        };
+                        that.dates.push(json);
+                        console.log(that.dates);
+                        resolve(true);
+                    }
+                    else if(res.data.status==300){
+                        Toast('请联系客服配置该商品的预约时间');
+                        resolve(false);
+                    }
+                    else{
+                        Toast(res.data.msg);
+                        resolve(false);
+                    }
+                    
+                })
+                .catch(err=>{
+                    console.log(err);
+                    resolve(false);
+                    
+                });
+            })
         },
         getOrderList(pagenum,data){
             let index=this.selected=='all'?0:this.selected=='willpay'?1:this.selected=='willservice'?2:this.selected=='inservice'?3:4;

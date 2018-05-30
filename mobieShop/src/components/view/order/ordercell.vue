@@ -19,10 +19,11 @@
                     <p>￥{{item.price}}</p>
                     <p>x{{item.saleNumber}}</p>
                 </div>
-                <button class='button'  @click.stop="openByDrop($event)">预约时间</button>
+                <!-- <button class='button'  @click.stop="openByDrop($event,item.id)">预约时间</button> -->
                 <!-- 服务类商品，添加预约时间功能 -->
-                <div class='appointment' v-if='item.isService==true&item.payState==1'>
-                    <button class='button'  @click.stop="appointment(item.id,index)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>
+                <div class='appointment' v-if='item.isService==true&data.payState==1'>
+                    <!-- <button class='button'  @click.stop="appointment(item.id,index)">{{item.appointTime==null?'预约时间':'修改时间'}}</button> -->
+                    <button class='button'  @click.stop="openByDrop($event,item.commodityId)">预约时间</button>                    
                     <span>服务时间：{{item.updateAppointTime==null?(item.appointment==null?'空':item.appointment.substring(0,16)):item.updateAppointTimeIsActive?(item.appointment==null?'空':item.appointment.substring(0,16)):(item.updateAppointTime==null?'空':item.updateAppointTime.substring(0,16))}}{{(item.updateAppointTimeIsActive==false&&item.updateAppointTime!=null)?'(待确认)':''}}</span>
                            <!-- {{item.appointTime==null?'空':item.appointTime.substring(0,16)}}{{((item.updateAppointTimeIsActive&&item.updateAppointTime!=null)||item.updateAppointTime==null)?'':'('+'已申请'+')'}} -->
                     <!-- <span>服务时间：{{date_service[index]}}</span> -->
@@ -41,14 +42,14 @@
                 
             </div>
         </div>
-        <mt-popup v-model="popupVisible" position="bottom" class="popup">
+        <!-- <mt-popup v-model="popupVisible" position="bottom" class="popup">
             <mt-picker :slots="dates" @change='onValuesChange'  :showToolbar='true' >
                 <p class='btn-group'>
                     <button class='cancle font' @click.stop='cancledate'>取消</button>
                     <button class='certain font' @click.stop="getdate">确定</button>
                 </p>
             </mt-picker>
-        </mt-popup>
+        </mt-popup> -->
     </div>
 </template>
 <script>
@@ -104,8 +105,8 @@ export default {
         this.countDown();
     },
     methods:{
-        openByDrop(e) {
-            this.$root.$emit('calendar',e)
+        openByDrop(e,commodityid) {
+            this.$root.$emit('calendar',{event:e,commodityid:commodityid})
             
         },
         // test(){
