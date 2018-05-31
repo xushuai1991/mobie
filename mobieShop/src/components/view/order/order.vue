@@ -95,7 +95,7 @@
             </mt-picker>
         </mt-popup>
         <transition name="fade">
-            <div class="calendar-dropdown" v-if="calendar3.show">
+            <div class="calendar-dropdown" v-if="calendar3.show" @click='clickcalendar($event)'>
                 <calendar :events="calendar3.events" :zero="calendar3.zero" :lunar="calendar3.lunar"  :value='minday' :begin="minday" :end="lastday" @select="clickDay"></calendar>
             </div>
         </transition>
@@ -341,6 +341,9 @@ export default {
         },
     },
     methods:{
+        clickcalendar(e){
+            this.calendar3.show = false;
+        },
         onValuesChange(picker,values){
             this.datechange=values[0];
             console.log(values);
