@@ -95,7 +95,7 @@
             </mt-picker>
         </mt-popup>
         <transition name="fade">
-            <div class="calendar-dropdown" v-if="calendar3.show">
+            <div class="calendar-dropdown" v-if="calendar3.show" @click='clickcalendar($event)'>
                 <calendar :events="calendar3.events" :zero="calendar3.zero" :lunar="calendar3.lunar"  :value='minday' :begin="minday" :end="lastday" @select="clickDay"></calendar>
             </div>
         </transition>
@@ -341,6 +341,9 @@ export default {
         },
     },
     methods:{
+        clickcalendar(e){
+            this.calendar3.show = false;
+        },
         onValuesChange(picker,values){
             this.datechange=values[0];
             console.log(values);
@@ -463,9 +466,10 @@ export default {
                     if(res.data.status==200){
                         that.dates=[];
                         let periodlist=[];
-                        that.periodlist=res.data.info;
-                        res.data.info.forEach(item=>{
-                            periodlist.push(item.startTime.substring(0,5)+' - '+item.endTime.substring(0,5)+'(剩余:'+item.pCount+')');
+                        that.periodlist=res.data.info[1];
+                        let lastnumlist=res.data.info[0];
+                        res.data.info[1].forEach((item,index)=>{
+                            periodlist.push(item.startTime.substring(0,5)+' - '+item.endTime.substring(0,5)+'(剩余:'+lastnumlist[index]+')');
                         });
                         let json={
                             values:periodlist,
