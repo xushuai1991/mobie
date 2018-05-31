@@ -84,7 +84,7 @@
                     <label for="" style=''>{{item.name}}</label>
                     <span  style='float:left;color:red;padding-right:.3rem;'>:</span>
                     <input type='number'  v-model="item.scoreuse" @change='changescore(index)' name='deduction'>
-                    <span style='color:red;'>{{'（最多可使用'+item.scorecanuse*item.nums+')'}}</span>
+                    <span style='color:red;'>{{'（最多可使用'+item.scorecanuse*item.nums+'积分)'}}</span>
                 </li>
             </ul>
         </div>
@@ -551,8 +551,8 @@
                                     address = data.defaultAddress.area.regionName +
                                         data.defaultAddress.province.regionName +
                                         data.defaultAddress.city.regionName +
-                                        data.defaultAddress.district.regionName
-                                    data.defaultAddress.region.regionName +
+                                        data.defaultAddress.district.regionName+
+                                        data.defaultAddress.region.regionName +
                                         data.defaultAddress.address;
                                 }
                                 that.userinfo.address = address;
@@ -915,7 +915,7 @@
         }
         ul {
             li {
-                padding: .2rem;
+                padding: .2rem 0;
                 overflow:hidden;
                 line-height:.35rem;
                 label {
