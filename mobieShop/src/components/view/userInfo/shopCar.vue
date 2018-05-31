@@ -687,34 +687,37 @@
     }
 </script>
 
-<style>
-    .noButton{
-        background:gray !important;
+<style lang='less'>
+    .Cmycar{
+        .noButton{
+            background:gray !important;
+        }
+        input[type=button] {
+            -webkit-appearance: none;
+            outline: none
+        }
+        .Cmycar .mint-cell-value {
+            width: 100%;
+        }
+        .Cmycar .mint-cell-wrapper {
+            padding-left: 0;
+        }
+        .Cmycar .mint-cell-swipe-button {
+            font-size: 0.3rem;
+            line-height: 3rem;
+        }
+        .mint-toast-text {
+            position: relative;
+            z-index: 999999 !important;
+        }
+        .mint-popup-bottom {
+            z-index: 16 !important;
+        }
+        .v-modal {
+            z-index: 15 !important;
+        }
     }
-    input[type=button] {
-        -webkit-appearance: none;
-        outline: none
-    }
-    .Cmycar .mint-cell-value {
-        width: 100%;
-    }
-    .Cmycar .mint-cell-wrapper {
-        padding-left: 0;
-    }
-    .Cmycar .mint-cell-swipe-button {
-        font-size: 0.3rem;
-        line-height: 3rem;
-    }
-    .mint-toast-text {
-        position: relative;
-        z-index: 999999 !important;
-    }
-    .mint-popup-bottom {
-        z-index: 16 !important;
-    }
-    .v-modal {
-        z-index: 15 !important;
-    }
+    
 </style>
 <style lang="less" scoped>
     .list-item {

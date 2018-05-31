@@ -13,7 +13,9 @@ module.exports = {
         proxyTable: {
             '/api': {
                 // target: 'http://101.89.175.155:8887/', //设置你调用的接口域名和端口号 别忘了加http
-                target: 'http://10.1.1.102/',        
+                // target: 'http://10.1.1.102/',  
+                target: 'http://10.1.1.179/',        
+                      
                 changeOrigin: true,
                 pathRewrite: {
                     '^/api': '/'

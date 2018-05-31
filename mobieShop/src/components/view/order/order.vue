@@ -226,7 +226,6 @@ export default {
             this.appointid_current=data.appointid;
             this.getPeriodList(commodityid).then(success=>{
                 if(success){
-                    alert(1);
                     this.calendar3.show = true;
                     this.loading1=true;
                     e.stopPropagation();
@@ -347,7 +346,6 @@ export default {
             console.log(values);
         },
         clickDay(value){
-            // alert(value);
             let str=value[0]+'-'+value[1]+'-'+value[2];
             this.selectTime=str;
             this.startPeriod='';
@@ -426,7 +424,7 @@ export default {
         // 修改预约记录
         editAppointment(){
             let that=this;
-            this.$http.post('/api/product/commodity/periodTemplate/update',
+            this.$http.post('/api/product/appointment/update',
             {
                 id:this.appointid_current,
                 startTime:this.selectTime+' '+this.startPeriod,
