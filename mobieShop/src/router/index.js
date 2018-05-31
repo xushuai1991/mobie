@@ -276,7 +276,7 @@ export default new Router({
             name: 'InvitingGift',
             component: resolve => require(['../components/view/Inviting/InvitingGift.vue'], resolve),
             meta: {
-                title: '邀请有礼'
+                title: '邀请有礼-绿城到家服务平台'
             },
         },
         {
