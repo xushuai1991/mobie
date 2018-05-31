@@ -3,13 +3,16 @@
         <h3 class='tipname'>新品热卖活动</h3>
         <mt-loadmore :bottom-method="loadMore"  :bottom-all-loaded="loading" ref="loadmore" :autoFill='false'>
             <div class='ImbBox'>
-                <div v-for='(item,index) in list_activiety' :key='index'>
+                <div v-for='(item,index) in list_activiety' :key='index' class="ImbBoxList" >
                     <div class='imgBox'>
                         <img :src='item.imgurl' alt='图片丢失' />
                     </div>
                     <div class='titleInof'>
                         <p><i class='icon iconfont icon-xiaohuomiao hots'></i><span class='textSpace'>{{item.title}}</span> <a :href='item.activityLink+"&activeId="+item.activeId+"&companyId="+item.companyId'><span class='flortRight'>go <i class="icon iconfont icon-youshuangjiantou ritJtou"></i></span></a> </p>
-                        <p>关注人数 {{item.registeredNumber}} <span class='flortRight'>{{item.startTime}}</span></p> 
+                        <p>
+                            <span class='flortRight lastDataArrow'><i class="icon iconfont icon-daojishi" style="color:#f7f0f0"></i></span>
+                            <span class='flortRight lastDataRed'>最后 {{ lastData(item.endTime) }}天  {{item.endTime}}</span>
+                            <span class='flortRight lastDataBlack'>关注人数 {{item.registeredNumber}}</span></p>
                     </div>
                 </div>
             </div>
@@ -60,7 +63,7 @@ export default {
                         let json={
                             title:item.activityTitle,
                             imgurl:"http://"+that.hostName+":"+that.port+"/api"+item.image,
-                            startTime:item.startTime,
+                            endTime:item.endTime,
                             activityLink:item.activityLink,
                             registeredNumber:item.registeredNumber,
                             activeId:item.id,
@@ -95,6 +98,22 @@ export default {
             
             
             // console.log(value);
+        },
+        lastData(datas){
+            var d1 = new Date().getTime();
+            var d2 = new Date(datas);
+           // console.log(parseInt(d2 - d1));//两个时间相差的毫秒数
+           // console.log(parseInt(d2 - d1) / 1000);//两个时间相差的秒数
+           // console.log(parseInt(d2 - d1) / 6000 );//两个时间相差的分钟数
+           // console.log(parseInt(d2 - d1) / 3600000 );//两个时间相差的小时数
+            let time = parseInt(d2 - d1) / 3600000 / 24
+            let times;
+            if(time.split(".")[1] <= 9){
+               times = tiem.split(".")[0]+1
+            }else{
+                times = tiem.split(".")[0]
+            }
+            return times
         }
     }
 }
@@ -108,7 +127,7 @@ export default {
         // margin-top: 0.9rem;
         background: #ebebeb6e;
         .tipname{
-            line-height: 1rem;
+            line-height: 0.9rem;
             text-align: left;
             font-size: 0.3rem;
             background-color: #fff;
@@ -122,11 +141,13 @@ export default {
         min-height:75vh;
         >div {
             background: #fff;
-            padding: 2% 4% 0 4%;
+           
+            margin: 2% 2% 0;
             margin-bottom: .2rem;
             // width: 92%;
             height: 5rem;
-            .imgBox{
+            .imgBox{ 
+                padding: 2% 4% 0 4%;
                 height:4rem;
             }
             
@@ -136,6 +157,9 @@ export default {
                 display:block;
             }
         }
+    }
+    .ImbBoxList{
+        box-shadow: 0 0 0.1rem #ccc;
     }
     .hots {
         color: #2aa3f2;
@@ -154,6 +178,7 @@ export default {
         color: #ccc;
     }
     .titleInof {
+         padding: 2% 4% 0 4%;
         text-align: left;
         p {
             line-height: 0.4rem;
@@ -164,5 +189,28 @@ export default {
                 padding-left:0.3rem;
             }
         }
+    }
+    .lastDataArrow{
+        display: inline-block;
+        background: #ff0000;
+        color: #f7f0f0;
+        position: relative;
+        height: 0px;
+        width: 0px;
+        border-top: 0.22rem solid #f92e2e;
+        border-right: 0.18rem solid #ffffff;
+        border-bottom: 0.22rem solid #f92e2e;
+    }
+    .lastDataRed{
+        display: inline-block;
+        padding: 0.02rem 0.2rem 0.02rem 0.14rem;
+        background: #ff0000;
+        color: #f7f0f0;
+    }
+    .lastDataBlack{
+        display: inline-block;
+        padding: 0.02rem 0.18rem 0.02rem 0.18rem;
+        background: #484848;
+        color: #f7f0f0;
     }
 </style>
