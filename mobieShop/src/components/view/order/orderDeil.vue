@@ -71,7 +71,7 @@
                                             <p v-else>{{item.appointTime==null?'预约时间':item.appointTime}}(待确认)</p>
                                         </div>
                                         <div class='appointment' v-if='item.isService'>
-                                            <button class='button' @click.stop="appointment(index,item.id,item.appointTime)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>
+                                            <button class='button' @click.stop="appointment(index,item.id,item,item.appointTime)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>
                                         </div>
                                     </div>
                                     <div class="goodsBox" v-for="(items,indexs) in item.orderDetailList" :key="indexs">
@@ -126,7 +126,12 @@
             <input type='button' class='button' v-show=showBtn8 @click='opInt(datas.data.info.list[0].id,actualMoney)' value='申请开票'>
             <input type='button' class='button' v-show=showBtn7 @click='comment(datas.data.info.list[0])' value='评价订单'>
         </div>
-        <mt-popup v-model="popupVisible" position="bottom" class="popup">
+        <transition name="fade">
+            <div class="calendar-dropdown" :style="{'left':calendar3.left+'px','top':calendar3.top+'px'}" v-if="calendar3.show">
+                <calendar :zero="calendar3.zero" :lunar="calendar3.lunar" :value="calendar3.value" :begin="calendar3.begin" :end="calendar3.end" @select="calendar3.select"></calendar>
+            </div>
+        </transition>
+       <mt-popup v-model="popupVisible" position="bottom" class="popup">
             <mt-picker :slots="dates" @change='onValuesChange' :showToolbar='true'>
                 <p class='btn-group'>
                     <button class='cancle' @click.stop='cancledate'>取消</button>
@@ -134,6 +139,7 @@
                 </p>
             </mt-picker>
         </mt-popup>
+        
     </div>
 </template>
 <script>
@@ -144,12 +150,47 @@
     import {
         MessageBox
     } from 'mint-ui';
+     import calendar from './calendar.vue'
     import {
         formatdate
     } from '../../../assets/javascript/formatdate.js'
     export default {
         data() {
             return {
+                Willday:'',
+                newDay:'',
+                calendar3: {
+                     display: this.getNowFormatDate(),
+                    show: false,
+                    begin: [], //可选开始日期
+                    end: [], //可选结束日期
+                    zero: true,
+                    // value:[2018,5,22], //默认日期
+                    lunar: true, //显示农历
+                    select: (value) => {
+                        this.calendar3.show = true;
+                        this.calendar3.value = value;
+                        this.calendar3.display = value.join("/");
+                        // console.log(this.calendar3.display)
+                        
+                        let url = '/api/product/commodity/periodTemplateContent/queryPeriodListByTemplateId?companyId='+this.compunetid.companyId+"&templateId="+this.compunetid.commodityId;
+                        this.$http({
+                            url: url,
+                            method: "POST",
+                            data: {}
+                        }).then((res) => {
+                            console.log(res)
+                            this.popupVisible = true;
+                            // this.getDate(this.urlArgs().ordernumber)
+                            // Toast(res.data.msg)
+                        }).catch((err) => {})
+
+
+
+
+
+                    }
+                },
                 // pIndex:'',
                 // pIndex2:'',
                 // value: null,
@@ -158,6 +199,7 @@
                 // endDate: this.addDay(2),
                 commodityName: '',
                 popupVisible: false,
+                compunetid:'',
                 currentindex: '',
                 briefReason: '',
                 id: '',
@@ -170,22 +212,22 @@
                         className: 'slot1',
                         textAlign: 'left'
                     },
-                    {
-                        flex: 1,
-                        values: ['00点', '01点', '02点', '03点', '04点', '05点',
-                            '06点', '07点', '08点', '09点', '10点', '11点',
-                            '12点', '13点', '14点', '15点', '16点', '17点',
-                            '18点', '19点', '20点', '21点', '22点', '23点'
-                        ],
-                        className: 'slot2',
-                        textAlign: 'center',
-                        defaultIndex: 0
-                    },
-                    {
-                        values: ['00分', '10分', '20分', '30分', '40分', '50分', ],
-                        className: 'slot3',
-                        textAlign: 'right'
-                    }
+                    // {
+                    //     flex: 1,
+                    //     values: ['00点', '01点', '02点', '03点', '04点', '05点',
+                    //         '06点', '07点', '08点', '09点', '10点', '11点',
+                    //         '12点', '13点', '14点', '15点', '16点', '17点',
+                    //         '18点', '19点', '20点', '21点', '22点', '23点'
+                    //     ],
+                    //     className: 'slot2',
+                    //     textAlign: 'center',
+                    //     defaultIndex: 0
+                    // },
+                    // {
+                    //     values: ['00分', '10分', '20分', '30分', '40分', '50分', ],
+                    //     className: 'slot3',
+                    //     textAlign: 'right'
+                    // }
                 ],
                 content: '',
                 orderStaty: '',
@@ -232,7 +274,38 @@
                 default: ''
             }
         },
+        components: {
+            calendar, 
+        },
         methods: {
+            getNowFormatDate() {
+                var curDate = new Date();
+                var date = new Date((curDate/1000+86400)*1000);
+                var seperator1 = "-";
+                var seperator2 = ":";
+                var month = date.getMonth() + 1;
+                var strDate = date.getDate();
+                if (month >= 1 && month <= 9) {
+                    month = "0" + month;
+                }
+                if (strDate >= 0 && strDate <= 9) {
+                    strDate = "0" + strDate;
+                }
+                var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate;
+                return currentdate;
+            },
+            openByDrop(e) {
+                this.calendar3.show = true;
+                this.calendar3.left = e.target.offsetLeft + 19;
+                this.calendar3.top = e.target.offsetTop + 70;
+                e.stopPropagation();
+                window.setTimeout(() => {
+                    document.addEventListener("click", (e) => {
+                        // this.calendar3.show = false;
+                        document.removeEventListener("click", () => {}, false);
+                    }, false);
+                }, 1000)
+            },
             getdate() {
                 let day = new Date();
                 if (this.datechange[0] == '今天') {
@@ -299,7 +372,9 @@
                     }
                 })
             },
-            appointment(index, id, orstate) {
+            appointment(index, id, orstate,time) {
+                this.compunetid = orstate;
+                console.log(this.compunetid)
                 // var d = new Date();
                 // var hour = d.getHours();
                 // let arrTime = [];
@@ -309,18 +384,19 @@
                 //     }
                 // }
                 // this.dates[1].values = arrTime
-                this.popupVisible = true;
+                this.calendar3.show = true;
+                // this.popupVisible = true;
                 this.currentindex = index;
                 this.id = id;
                 this.orstate = orstate;
             },
             onValuesChange(picker, values) {
-                var d = new Date();
-                var hour = d.getHours();
-                if (values[0] == '今天' && this.dates[1].values.indexOf(values[1]) < hour + 1) {
-                    picker.setSlotValue(1, this.dates[1].values[hour + 1]);
-                }
-                this.datechange = values;
+                // var d = new Date();
+                // var hour = d.getHours();
+                // if (values[0] == '今天' && this.dates[1].values.indexOf(values[1]) < hour + 1) {
+                //     picker.setSlotValue(1, this.dates[1].values[hour + 1]);
+                // }
+                // this.datechange = values;
             },
             refundButton($event, indexs) {
                 if ($event.currentTarget.nextElementSibling.classList.value == 'hiddles') {
@@ -725,7 +801,12 @@
             console.log(this.serverState)
             var d = new Date();
             var hour = d.getHours();
-            this.dates[1].defaultIndex = hour + 1;
+            // this.dates[1].defaultIndex = hour + 1;
+            let day = new Date();
+            this.Willday = new Date(day.setDate(day.getDate() + 30)).format('yyyy-M-d');
+            this.calendar3.value = [(this.newDay = this.getNowFormatDate(day).split("-")[0]),(this.newDay = this.getNowFormatDate(day).split("-")[1]),(this.newDay = this.getNowFormatDate(day).split("-")[2])];
+            this.calendar3.begin = [(this.newDay = this.getNowFormatDate(day).split("-")[0]),(this.newDay = this.getNowFormatDate(day).split("-")[1]),(this.newDay = this.getNowFormatDate(day).split("-")[2])];
+            this.calendar3.end = [this.Willday.split("-")[0],this.Willday.split("-")[1],this.Willday.split("-")[2]]
         },
         // beforeUpdate(){
         //     this.getDate(this.urlArgs().ordernumber)
@@ -776,6 +857,12 @@
     }
 </style>
 <style scoped lang='less'>
+    .calendar{
+        position: fixed;
+        z-index: 100;
+        top: 0;
+        height: 100%;
+    }
     .appointment {
         text-align: right;
         position: relative;

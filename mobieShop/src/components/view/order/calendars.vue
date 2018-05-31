@@ -1,11 +1,5 @@
 <template>
     <div id="app">
-        <div class="flex">
-            <div>
-                <span>弹出框</span>
-                <input type="text" @click="openByDrop($event)" v-model="calendar3.display" readonly>
-            </div>
-        </div>
         <transition name="fade">
             <div class="calendar-dropdown" :style="{'left':calendar3.left+'px','top':calendar3.top+'px'}" v-if="calendar3.show">
                 <calendar :zero="calendar3.zero" :lunar="calendar3.lunar" :value="calendar3.value" :begin="calendar3.begin" :end="calendar3.end" @select="calendar3.select"></calendar>
@@ -29,15 +23,15 @@
                 Willday:'',
                 newDay:'',
                 calendar3: {
-                    display: this.getNowFormatDate(),
-                    show: false,
+                     display: this.getNowFormatDate(),
+                    show: true,
                     begin: [], //可选开始日期
                     end: [], //可选结束日期
                     zero: true,
                     // value:[2018,5,22], //默认日期
                     lunar: true, //显示农历
                     select: (value) => {
-                        this.calendar3.show = false;
+                        this.calendar3.show = true;
                         this.calendar3.value = value;
                         this.calendar3.display = value.join("/");
                         console.log(this.calendar3.display)
@@ -45,15 +39,17 @@
                 },
             }
         },
-        mounted() {
+        created() {
             let day = new Date();
-            this.Willday = new Date(day.setDate(day.getDate() + 10)).format('yyyy-M-d');
+            this.Willday = new Date(day.setDate(day.getDate() + 30)).format('yyyy-M-d');
+            this.calendar3.value = [(this.newDay = this.getNowFormatDate(day).split("-")[0]),(this.newDay = this.getNowFormatDate(day).split("-")[1]),(this.newDay = this.getNowFormatDate(day).split("-")[2])];
             this.calendar3.begin = [(this.newDay = this.getNowFormatDate(day).split("-")[0]),(this.newDay = this.getNowFormatDate(day).split("-")[1]),(this.newDay = this.getNowFormatDate(day).split("-")[2])];
             this.calendar3.end = [this.Willday.split("-")[0],this.Willday.split("-")[1],this.Willday.split("-")[2]]
         },
         methods: {
             getNowFormatDate() {
-                var date = new Date();
+                var curDate = new Date();
+                var date = new Date((curDate/1000+86400)*1000);
                 var seperator1 = "-";
                 var seperator2 = ":";
                 var month = date.getMonth() + 1;
@@ -145,8 +141,7 @@
         position: absolute;
         left: 0;
         top: 0;
-        padding: 20px;
-        border: 1px solid #eee;
+        width:100%;
         border-radius: 2px;
     }
     .calendar-dropdown:before {

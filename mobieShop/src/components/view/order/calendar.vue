@@ -202,6 +202,7 @@
     border-radius: 20px;
     text-align:center;
     border:1px solid #fbfbfb;
+    font-size:0.2rem;
     color:#999;
 }
 .calendar-years>span.active{
