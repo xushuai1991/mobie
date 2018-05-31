@@ -6,7 +6,7 @@
                     <img :src="headimg" alt="">
                 </div>
             </li>
-            <li class='font-extra'>接受绿城小伙伴的邀请</li>
+            <li class='font-extra'>接受小伙伴的邀请</li>
             <li style='font-size:.4rem'>可以获得20个积分</li>
         </ul>
         <div class="gift-bottom">

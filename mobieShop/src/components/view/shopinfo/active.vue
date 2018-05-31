@@ -11,7 +11,8 @@
                         <p><i class='icon iconfont icon-xiaohuomiao hots'></i><span class='textSpace'>{{item.title}}</span> <a :href='item.activityLink+"&activeId="+item.activeId+"&companyId="+item.companyId'><span class='flortRight'>go <i class="icon iconfont icon-youshuangjiantou ritJtou"></i></span></a> </p>
                         <p>
                             <span class='flortRight lastDataArrow'><i class="icon iconfont icon-daojishi" style="color:#f7f0f0"></i></span>
-                            <span class='flortRight lastDataRed'>最后 {{ lastData(item.endTime) }}天  {{item.endTime}}</span>
+                            <span class='flortRight lastDataRed'>最后 {{ lastData(item.endTime) }}天 </span>
+                            <!-- {{item.endTime}} -->
                             <span class='flortRight lastDataBlack'>关注人数 {{item.registeredNumber}}</span></p>
                     </div>
                 </div>
