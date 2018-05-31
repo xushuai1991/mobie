@@ -9,7 +9,7 @@
         </mt-navbar>
         <mt-tab-container v-model="selected">
             <!-- 全部 -->
-            <mt-tab-container-item id="all">
+            <mt-tab-container-item id="all" class='order_type'>
                 <ul  v-infinite-scroll="loadMore"  infinite-scroll-disabled="loading1" :infinite-scroll-immediate-check='false'  class='orderlist'>
                     <li v-for="(item,index) in orderlist[0]" :key="index">
                         <ordercell :data='item' index='0' :indexorder='index'></ordercell>
@@ -26,7 +26,7 @@
                 <p v-show='dataover[0]' class="page-over">—————————————— 我是有底线的 ——————————————</p>
             </mt-tab-container-item>
             <!-- 待付款 -->
-            <mt-tab-container-item id="willpay">
+            <mt-tab-container-item id="willpay" class='order_type'>
                 <ul v-infinite-scroll="loadMore1" infinite-scroll-disabled="loading2" :infinite-scroll-immediate-check='false' class='orderlist'>
                     <li v-for="(item,index) in orderlist[1]" :key="index" :indexorder='index'>
                         <ordercell :data='item' index='1'></ordercell>
@@ -39,7 +39,7 @@
                 <p v-show='dataover[1]' class="page-over">—————————————— 我是有底线的 ——————————————</p>
             </mt-tab-container-item>
             <!-- 待服务 -->
-            <mt-tab-container-item id="willservice">
+            <mt-tab-container-item id="willservice" class='order_type'>
                 <ul v-infinite-scroll="loadMore2" infinite-scroll-disabled="loading3" infinite-scroll-immediate-check='false'  class='orderlist'>
                     <li v-for="(item,index) in orderlist[2]" :key="item">
                         <ordercell :data='item' index='2' :type='type_service[0]' :indexorder='index'></ordercell>
@@ -52,7 +52,7 @@
                 <p v-show='dataover[2]' class="page-over">—————————————— 我是有底线的 ——————————————</p>
             </mt-tab-container-item>
             <!-- 服务中 -->
-            <mt-tab-container-item id="inservice">
+            <mt-tab-container-item id="inservice" class='order_type'>
                 <ul v-infinite-scroll="loadMore3" infinite-scroll-disabled="loading4" infinite-scroll-immediate-check='false'  class='orderlist'>
                     <li v-for="(item,index) in orderlist[3]" :key="item">
                         <ordercell :data='item' index='3' :type='type_service[1]' :indexorder='index'></ordercell>
@@ -65,7 +65,7 @@
                 <p v-show='dataover[3]' class="page-over">—————————————— 我是有底线的 ——————————————</p>
             </mt-tab-container-item>
             <!-- 待评价 -->
-            <mt-tab-container-item id="willevaluate">
+            <mt-tab-container-item id="willevaluate" class='order_type'>
                 <ul v-infinite-scroll="loadMore4" infinite-scroll-disabled="loading5" infinite-scroll-immediate-check='false'  class='orderlist'>
                     <li v-for="item in orderlist[4]" :key="item">
                         <willevaluate :data='item' index='4'></willevaluate>
@@ -96,7 +96,7 @@
         </mt-popup>
         <transition name="fade">
             <div class="calendar-dropdown" v-if="calendar3.show">
-                <calendar :zero="calendar3.zero" :lunar="calendar3.lunar"  :begin="today" :end="lastday" @select="clickDay"></calendar>
+                <calendar :events="calendar3.events" :zero="calendar3.zero" :lunar="calendar3.lunar"  :value='minday' :begin="minday" :end="lastday" @select="clickDay"></calendar>
             </div>
         </transition>
     </div>
@@ -109,6 +109,8 @@ import { Toast } from 'mint-ui';
 import calendar from './calendar.vue'
 // import Calendar from 'vue-calendar-component';
 import {formatdate} from '../../../assets/javascript/formatdate.js'
+import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasdata.js'
+import {mycommon} from '../../../assets/javascript/mycommon_xs.js'
 export default {
     components:{willevaluate,ordercell,calendar},
     data() {
@@ -130,24 +132,43 @@ export default {
                 {
                     values: ['上午', '下午'],  
                     className: 'slot1',  
-                    textAlign: 'center'  
+                    textAlign: 'center',
                 },
             ],
+            periodlist:[],
             calendar3: {
                 show: false,
                 zero: true,
-                // value:[2018,5,22], //默认日期
                 lunar: true, //显示农历
-                
             },
-            datechange:''
+            datechange:'',
+            selectTime:'',
+            startPeriod:'',
+            endPeriod:'',
+            // 当前订单服务类商品的信息
+            templateid_current:null,
+            orderdetailid_current:null,
+            commodityrid_current:null,
+            commodityindex_current:null,
+            typeindex_current:null,
+            indexorder_current:null,
+            appointid_current:null,
+            type_opera:null,
+            userinfo:null
         };
     },
     created(){
         this.$root.$emit('header','我的订单');
+        let user_str = operatelocalstorage('userinfo', null, 'get', null);
+        if (user_str == null) {
+            Toast('请先登录');
+        } else {
+            let userinfo = JSON.parse(user_str);
+            this.userinfo = userinfo;
+        }
         this.selected=this.$route.params.type==undefined?'all':this.$route.params.type;
         if(this.selected=='all'){
-            this.getOrderList(1,{});
+            this.getOrderList(1,{companyId:sessionStorage.getItem('companyId')});
         }
         // 对订单操作后，重新刷新对应tab下的数据
         this.$root.$on('loaddata',index=>{
@@ -190,16 +211,33 @@ export default {
             
         });
         // 监听日历插件唤醒
-        this.$root.$on('calendar',(e)=>{
-            this.calendar3.show = true;
-            e.stopPropagation();
-            window.setTimeout(() => {
-                document.addEventListener("click", (e) => {
-                    // this.calendar3.show = false;
-                    document.removeEventListener("click", () => {}, false);
-                }, false);
-            }, 1000)
-            // document.querySelector('.calendar').style.display='block';
+        this.$root.$on('calendar',data=>{
+            let commodityid=data.commodityid;
+            let orderdetailid=data.orderdetailid;
+            let templateid=data.templateId;
+            let e=data.e;
+            this.templateid_current=templateid;
+            this.orderdetailid_current=orderdetailid;
+            this.commodityrid_current=commodityid;
+            this.type_opera=data.type;
+            this.commodityindex_current=data.index;
+            this.typeindex_current=data.type_index;
+            this.indexorder_current=data.indexorder;
+            this.appointid_current=data.appointid;
+            this.getPeriodList(commodityid).then(success=>{
+                if(success){
+                    this.calendar3.show = true;
+                    this.loading1=true;
+                    e.stopPropagation();
+                    window.setTimeout(() => {
+                        document.addEventListener("click", (e) => {
+                            document.removeEventListener("click", () => {}, false);
+                        }, false);
+                    }, 1000)
+                }
+            })
+
+            
         })
     },
     watch:{
@@ -208,7 +246,7 @@ export default {
                 //全部
                 case 'all':{
                     if(this.orderlist[0].length==0){
-                        let data={};
+                        let data={companyId:sessionStorage.getItem('companyId')};
                         this.getOrderList(1,data);
                     }
                     else{
@@ -223,7 +261,7 @@ export default {
                 // 待付款
                 case 'willpay':{
                     if(this.orderlist[1].length==0){
-                       let data={payState:2,orderState:1};
+                       let data={payState:2,orderState:1,companyId:sessionStorage.getItem('companyId')};
                         this.getOrderList(1,data);
                     }
                     else{
@@ -289,7 +327,7 @@ export default {
         }
     },
     computed:{
-        today:function(){
+        minday:function(){
             let date=new Date();
             let today=new Date(date.setDate(date.getDate()+1)).format('yyyy-MM-dd');
             let arry=today.split('-');
@@ -300,37 +338,160 @@ export default {
             let lastday=new Date(date.setDate(date.getDate()+30)).format('yyyy-MM-dd');
             let arry=lastday.split('-');
             return arry;
-        }
+        },
     },
     methods:{
-        openByDrop(e) {
-            this.calendar3.show = true;
-            e.stopPropagation();
-            window.setTimeout(() => {
-                document.addEventListener("click", (e) => {
-                    this.calendar3.show = false;
-                    document.removeEventListener("click", () => {}, false);
-                }, false);
-            }, 1000)
-        },
         onValuesChange(picker,values){
             this.datechange=values[0];
             console.log(values);
         },
         clickDay(value){
-            console.log(value);
+            let str=value[0]+'-'+value[1]+'-'+value[2];
+            this.selectTime=str;
+            this.startPeriod='';
+            this.endPeriod='';
             this.popupVisible=true;
         },
         getdate(){
-            console.log(this.datechange);
-            this.popupVisible=false;
-            this.calendar3.show = false;
-            // document.querySelector('.calendar').style.display='none';
+            let currentstr=this.datechange;
+            let result=this.dates[0].values.has(currentstr);
+            if(result.result){
+                let index=result.index;
+                let canselect=currentstr.indexOf('剩余:0')<0;
+                if(canselect){
+                    let list=this.datechange.substring(0,13).split('-');
+                    this.startPeriod=list[0].trim('');
+                    this.endPeriod=list[1].trim('');
+                    // 添加预约记录
+                    if(this.type_opera=='add'){
+                        let periodid=this.periodlist[index].id;
+                        this.insertAppointment(periodid);
+                    }
+                    // 修改预约记录
+                    else if(this.type_opera=='edit'){
+                        this.editAppointment();
+                    }           
+                }
+                else{
+                    Toast('该时间段不可选');
+                }
+            }
+            else{
+                Toast('发生错误');
+            }
+            // console.log(currentstr);
+            
         },
         cancledate(){
             this.popupVisible=false;
             this.calendar3.show = false;
             // document.querySelector('.calendar').style.display='none';
+        },
+        // 添加预约记录
+        insertAppointment(periodId){
+            let that=this;
+            this.$http.post('/api/product/appointment/insertone?weekDay='+that.selectTime,{
+                startTime:that.selectTime+' '+that.startPeriod,
+                endTime:that.selectTime+' '+that.endPeriod,
+                accountId:that.userinfo.id,
+                commodityId:that.commodityrid_current,
+                periodId:periodId,
+                orderDetailId:that.orderdetailid_current,
+                templateId:that.templateid_current,
+                companyId:sessionStorage.getItem('companyId'),
+                isService:0
+            })
+            .then(res=>{
+                if(res.data.status==200){
+                    let str=that.selectTime+' '+that.startPeriod+'-'+that.endPeriod;
+                    let starttime=that.selectTime+' '+that.startPeriod;
+                    let endtime=that.selectTime+' '+that.endPeriod;
+                    let dom=document.querySelectorAll('.order_type')[that.typeindex_current].querySelectorAll('li')[that.indexorder_current].querySelectorAll('.detail')[that.commodityindex_current];
+                    dom.querySelector('.appointment').querySelector('button').innerHTML='修改时间';
+                    dom.querySelector('.appointment').querySelector('span').innerHTML='服务时间：'+that.selectTime+' '+that.startPeriod+'-'+that.endPeriod;
+                    that.popupVisible=false;
+                    that.calendar3.show = false;
+                    Toast('预约时间申请成功');
+                }
+                else{
+                    Toast(res.data.msg);
+                }
+                console.log(res);
+            })
+            .catch(err=>{
+                console.log(err);
+            })
+        },
+        // 修改预约记录
+        editAppointment(){
+            let that=this;
+            this.$http.post('/api/product/appointment/update',
+            {
+                id:this.appointid_current,
+                startTime:this.selectTime+' '+this.startPeriod,
+                endTime:this.selectTime+' '+this.endPeriod,
+                isService:0
+            })
+            .then(res=>{
+                if(res.data.status==200){
+                    let str=that.selectTime+' '+that.startPeriod+'-'+that.endPeriod;
+                    let starttime=that.selectTime+' '+that.startPeriod;
+                    let endtime=that.selectTime+' '+that.endPeriod;
+                    let dom=document.querySelectorAll('.order_type')[that.typeindex_current].querySelectorAll('li')[that.indexorder_current].querySelectorAll('.detail')[that.commodityindex_current];
+                    dom.querySelector('.appointment').querySelector('button').innerHTML='修改时间';
+                    dom.querySelector('.appointment').querySelector('span').innerHTML='服务时间：'+that.selectTime+' '+that.startPeriod+'-'+that.endPeriod;
+                    that.popupVisible=false;
+                    that.calendar3.show = false;
+                    Toast('预约时间修改成功');
+                }
+                else{
+                    Toast(res.data.msg);
+                }
+                console.log(res);
+            })
+            .catch(err=>{
+                console.log(err)
+            })
+        },
+        // 获取时间段
+        getPeriodList(commodityid){
+            return new Promise((resolve,reject)=>{
+                let that=this;
+                let companyid=sessionStorage.getItem('companyId');
+                that.$http.post('/api/product/commodity/periodTemplateContent/queryPeriodListByTemplateId?templateId='+commodityid+'&companyId='+companyid,{})
+                .then(res=>{
+                    if(res.data.status==200){
+                        that.dates=[];
+                        let periodlist=[];
+                        that.periodlist=res.data.info;
+                        res.data.info.forEach(item=>{
+                            periodlist.push(item.startTime.substring(0,5)+' - '+item.endTime.substring(0,5)+'(剩余:'+item.pCount+')');
+                        });
+                        let json={
+                            values:periodlist,
+                            className: 'slot1',  
+                            textAlign: 'center'
+                        };
+                        that.dates.push(json);
+                        console.log(that.dates);
+                        resolve(true);
+                    }
+                    else if(res.data.status==300){
+                        Toast('请联系客服配置该商品的预约时间');
+                        resolve(false);
+                    }
+                    else{
+                        Toast(res.data.msg);
+                        resolve(false);
+                    }
+                    
+                })
+                .catch(err=>{
+                    console.log(err);
+                    resolve(false);
+                    
+                });
+            })
         },
         getOrderList(pagenum,data){
             let index=this.selected=='all'?0:this.selected=='willpay'?1:this.selected=='willservice'?2:this.selected=='inservice'?3:4;
@@ -385,7 +546,7 @@ export default {
                 this.orderlist[4]=[];
             }
             this.changeStatus(4,true);
-            this.$http.post('/api/product/order/mall/find/withoutEvaluate?pageSize=5&&page='+pagenum,{})
+            this.$http.post('/api/product/order/mall/find/withoutEvaluate?pageSize=5&&page='+pagenum+'&companyId='+sessionStorage.getItem('companyId'),{})
             .then(res=>{
                 console.log(that.orderlist[4]);
                 if(res.data.status==200){
@@ -430,7 +591,7 @@ export default {
                 this.orderlist[index]=[];
             }
             this.changeStatus(index,true);
-            this.$http.post('/api/product/order/mall/find/status?pageSize=5&pageNo='+pagenum+'&orderStatus='+status)
+            this.$http.post('/api/product/order/mall/find/status?pageSize=5&pageNo='+pagenum+'&orderStatus='+status+'&companyId='+sessionStorage.getItem('companyId'))
             .then(res=>{
                 console.log(that.orderlist[index]);
                 if(res.data.status==200){
@@ -534,6 +695,7 @@ export default {
     },
     beforeDestroy(){
         this.$root.$off('loaddata');
+        this.$root.$off('calendar');
     }
 }
 </script>
@@ -546,7 +708,7 @@ export default {
         left:0px;
         right:0;
         top:0px;
-        position:absolute;
+        position:fixed;
         height:100vh;
         z-index:999;
         background-color:#fff;

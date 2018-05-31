@@ -22,18 +22,20 @@
                             <p class='name'>{{item.name}}</p>
                             <p class='brand' v-if='item.conditionname1!=""'>{{item.conditionname1}}：{{item.conditionvalue1}}</p>
                             <p class='area' v-if='item.conditionname2!=""'>{{item.conditionname2}}：{{item.conditionvalue2}}</p>
+                            <p class='servicetime' v-if='item.isservice'>{{'服务时间：'+(item.startPeriod==''?'空':item.commondate+' '+item.startPeriod+'-'+item.endPeriod)}}</p>
                         </div>
                         <div class='tips'>
                             <p class='price'>￥{{item.price_unit}}</p>
-                            <p class='oper'>
+                            <p class='oper' v-if='!item.isservice'>
                                 <input type="button" @click="reduce(index)" value='－'>
                                 <input type="number" v-model="item.nums" v-on:blur="changeCount()" />
                                 <input type="button" @click="add(index)" value='＋'>
-                                <!-- <span>X{{item.nums}}</span> -->
-                                <!-- <span>{{item.num}}</span> -->
-                                <!-- <i class='icon iconfont icon-edit_icon' @click="changenums(index)"></i> -->
+                            </p>
+                            <p class='oper' v-if='item.isservice'>
+                                <span>{{'X'+item.nums}}</span>
                             </p>
                         </div>
+                         <button v-if='item.isservice' class='prime button appointtime' @click='changeappointtime(index)'>预约时间</button>
                     </div>
                     <div v-if='item.childlist.length>0' class='package'>
                         <p class='name'>{{item.name}}</p>
@@ -78,9 +80,11 @@
                 <span>积分抵扣（可用积分：{{point}}）</span>
             </p>
             <ul>
-                <li v-for='(item,index) in deductionlist' :key='index'>
-                    <label for="">{{item.score+'积分抵扣'+item.moneycanduct+'元（'+item.commodityname+')'}}</label>
-                    <input type="checkbox" v-model="deductionindex" style="float:right;" :value='index' name='deduction'>
+                <li v-for='(item,index) in goodslist' :key='index'>
+                    <label for="" style=''>{{item.name}}</label>
+                    <span  style='float:left;color:red;padding-right:.3rem;'>:</span>
+                    <input type='number'  v-model="item.scoreuse" @change='changescore(index)' name='deduction'>
+                    <span style='color:red;'>{{'（最多可使用'+item.scorecanuse*item.nums+')'}}</span>
                 </li>
             </ul>
         </div>
@@ -115,12 +119,25 @@
                             <p>共1件产品</p>
                             <p>合计：
                                 <span class='price'>￥{{finalprice}}</span>
-            <span class='tip'>{{'积分抵扣：'+deductionmoney+'元'}}</span>
+            <span class='tip'>{{'积分抵扣：'+score_user_all+'元'}}</span>
             <span class='tip'>{{'优惠券抵扣：'+coupmoney+'元'}}</span>
             </p>
             </span>
             <button class='submit button' @click='submitorder'>提交订单</button>
         </div>
+        <transition name="fade">
+            <div class="calendar-dropdown" v-if="calendar3.show">
+                <calendar :events="calendar3.events" :zero="calendar3.zero" :lunar="calendar3.lunar"  :value='minday' :begin="minday" :end="lastday" @select="clickDay"></calendar>
+            </div>
+        </transition>
+        <mt-popup v-model="popupVisible" position="bottom" class="popup" style='width:100%;'>
+            <mt-picker :slots="dates" @change='onValuesChange'  :showToolbar='true' >
+                <p class='btn-group'>
+                    <button class='cancle font' @click.stop='cancledate'>取消</button>
+                    <button class='certain font' @click.stop="getdate">确定</button>
+                </p>
+            </mt-picker>
+        </mt-popup>
     </div>
 </template>
 <script>
@@ -136,10 +153,21 @@
     import {
         operatelocalstorage
     } from '../../../assets/javascript/localstorage_hasdata.js'
+    import calendar from './calendar.vue'
+    import {mycommon} from '../../../assets/javascript/mycommon_xs.js'
     // import {weixinPay} from '../../../assets/javascript/weixinpay.js'
     export default {
+        components:{calendar},
         data() {
             return {
+                popupVisible:false,
+                dates:[
+                    {
+                        values: ['上午', '下午'],  
+                        className: 'slot1',  
+                        textAlign: 'center',
+                    },
+                ],
                 timestamp_start: '',
                 checked: 'checked',
                 userinfo: {
@@ -153,16 +181,6 @@
                 },
                 goodslist: [],
                 deductionlist: [
-                    // {
-                    //     commodityname:'商品一',
-                    //     score:20,
-                    //     moneycanduct:1
-                    // },
-                    // {
-                    //     commodityname:'商品一',
-                    //     score:20,
-                    //     moneycanduct:1
-                    // }
                 ],
                 scorecandeduct: 0,
                 moneycanduct: 0,
@@ -196,10 +214,38 @@
                 ],
                 deductionmoney: 0,
                 coupmoney: 0,
-                point: 0
+                point: 0,
+                calendar3: {
+                    show: false,
+                    zero: true,
+                    lunar: true, //显示农历
+                },
+                selectTime:'',
+                startPeriod:'',
+                endPeriod:'',
+                currentindex:''
             }
         },
         computed: {
+            minday:function(){
+                let date=new Date();
+                let today=new Date(date.setDate(date.getDate()+1)).format('yyyy-MM-dd');
+                let arry=today.split('-');
+                return arry;
+            },
+            lastday(){
+                let date=new Date();
+                let lastday=new Date(date.setDate(date.getDate()+30)).format('yyyy-MM-dd');
+                let arry=lastday.split('-');
+                return arry;
+            },
+            score_user_all(){
+                let total=0;
+                this.goodslist.forEach(item=>{
+                    total+=Number(item.scoreuse);
+                });
+                return Number(total);
+            },
             totalprice() {
                 let total = 0;
                 this.goodslist.forEach(item => {
@@ -209,13 +255,13 @@
             },
             finalprice() {
                 let price = this.totalprice;
-                let deductionmoney = 0;
-                if (this.deductionindex.length != 0) {
-                    this.deductionindex.forEach(item => {
-                        deductionmoney += Number(this.deductionlist[item].moneycanduct);
-                    });
-                }
-                this.deductionmoney = deductionmoney;
+                // let deductionmoney = 0;
+                // if (this.deductionindex.length != 0) {
+                //     this.deductionindex.forEach(item => {
+                //         deductionmoney += Number(this.deductionlist[item].moneycanduct);
+                //     });
+                // }
+                // this.deductionmoney = deductionmoney;
                 let coupmoney = this.couponindex === '' ? 0 : this.couponlist[this.couponindex].money;
                 // let index_coupon=this.couponindex;
                 // console.log(this.couponlist[index_coupon].money);
@@ -223,7 +269,7 @@
                 //     coupmoney +=Number(this.couponlist[item].money);
                 // });
                 this.coupmoney = coupmoney;
-                price = price - deductionmoney - coupmoney;
+                price = price - this.score_user_all - coupmoney;
                 return price < 0 ? 0 : price.toFixed(2);
             }
         },
@@ -261,29 +307,61 @@
             let data = JSON.parse(localStorage.getItem('commodityInfo'));
             console.log(data);
             data.forEach(item => {
-                console.log(item)
-                let json = {
-                    id: item.id,
-                    name: item.name,
-                    imgurl: item.commodityImageList.length > 0 ? item.commodityImageList[0].url : '',
-                    conditionname1: item.options[0] == null ? '' : item.options[0].name,
-                    conditionvalue1: item.options[0] == null ? '' : item.options[0].value,
-                    conditionname2: item.options[1] == null ? '' : item.options[1].name,
-                    conditionvalue2: item.options[1] == null ? '' : item.options[1].value,
-                    price_unit: item.originalPrice,
-                    nums: item.nums,
-                    childlist: []
-                };
-                this.goodslist.push(json);
-                if (item.originalPricePoint != null) {
-                    let json1 = {
-                        commodityid: item.id,
-                        commodityname: item.name,
-                        score: item.originalPricePoint,
-                        moneycanduct: item.originalPrice - item.originalPriceMoney
-                    };
-                    this.deductionlist.push(json1);
+                let isservice=item.isService;
+                if(isservice){
+                    for(let i=0;i<item.nums;i++){
+                        let json = {
+                            id: item.id,
+                            name: item.name,
+                            periodTemplateId:item.periodTemplateId,
+                            imgurl: item.commodityImageList.length > 0 ? item.commodityImageList[0].url : '',
+                            conditionname1: item.options[0] == null ? '' : item.options[0].name,
+                            conditionvalue1: item.options[0] == null ? '' : item.options[0].value,
+                            conditionname2: item.options[1] == null ? '' : item.options[1].name,
+                            conditionvalue2: item.options[1] == null ? '' : item.options[1].value,
+                            price_unit: item.priceRule==1?item.originalPrice:item.priceRule==2?item.discountPrice:item.currentPrice,
+                            nums: 1,
+                            childlist: [],
+                            scorecanuse:item.originalPricePoint==null?0:item.originalPricePoint,
+                            scoreuse:0,
+                            isservice:item.isService,
+                            commondate:'',
+                            startPeriod:'',
+                            endPeriod:''
+                        };
+                        this.goodslist.push(json);
+                    }
                 }
+                else{
+                    let json = {
+                        id: item.id,
+                        name: item.name,
+                        imgurl: item.commodityImageList.length > 0 ? item.commodityImageList[0].url : '',
+                        conditionname1: item.options[0] == null ? '' : item.options[0].name,
+                        conditionvalue1: item.options[0] == null ? '' : item.options[0].value,
+                        conditionname2: item.options[1] == null ? '' : item.options[1].name,
+                        conditionvalue2: item.options[1] == null ? '' : item.options[1].value,
+                        price_unit: item.priceRule==1?item.originalPrice:item.priceRule==2?item.discountPrice:item.currentPrice,
+                        nums: item.nums,
+                        childlist: [],
+                        scorecanuse:item.originalPricePoint==null?0:item.originalPricePoint,
+                        scoreuse:0,
+                        isservice:item.isService
+                    };
+                    this.goodslist.push(json);
+                }
+                
+
+                // if (item.originalPricePoint != null) {
+                //     let json1 = {
+                //         commodityid: item.id,
+                //         commodityname: item.name,
+                //         scorecanuse:item.originalPricePoint,
+                //         score: item.originalPricePoint,
+                //         moneycanduct: item.originalPrice - item.originalPriceMoney
+                //     };
+                //     this.deductionlist.push(json1);
+                // }
             });
             let user_str = operatelocalstorage('userinfo', null, 'get', null);
             if (user_str == null) {
@@ -302,6 +380,39 @@
             }
         },
         methods: {
+            changeappointtime(index){
+                this.currentindex=index;
+                let commodityid=this.goodslist[index].id;
+                this.getTimetemplatelist(commodityid).then(success=>{
+                    if(success){
+                        this.calendar3.show = true;
+                        window.setTimeout(() => {
+                            document.addEventListener("click", (e) => {
+                                // this.calendar3.show = false;
+                                document.removeEventListener("click", () => {}, false);
+                            }, false);
+                        }, 1000)
+                    }
+                });
+            },
+            clickDay(value){
+                let str=value[0]+'-'+value[1]+'-'+value[2];
+                this.selectTime=str;
+                this.starPeriod='';
+                this.endPeriod='';
+                this.popupVisible=true;
+            },
+            changescore(index){
+                let item=this.goodslist[index];
+                let maxscore_canuse=item.scorecanuse*item.nums;
+                if(item.scoreuse>maxscore_canuse){
+                    this.goodslist[index].scoreuse=maxscore_canuse;
+                }
+                if(this.score_user_all>this.point){
+                    Toast('可用积分不足,请重新设置');
+                    this.goodslist[index].scoreuse=0;
+                }
+            },
             // 获取用户可用总积分
             integral() {
                 let that = this
@@ -337,23 +448,67 @@
             },
             onValuesChange(picker, values) {
                 this.datechange = values;
-                // console.log(values);
             },
             getdate() {
-                let day = new Date();
-                if (this.datechange[0] == '今天') {
-                    day = day.format('yyyy-MM-dd');
-                } else if (this.datechange[0] == '明天') {
-                    day = new Date(day.setDate(day.getDate() + 1)).format('yyyy-MM-dd');
-                } else if (this.datechange[0] == '后天') {
-                    day = new Date(day.setDate(day.getDate() + 2)).format('yyyy-MM-dd');
+                let currentstr=this.datechange[0];
+                let canselect=currentstr.indexOf('剩余:0')<0;
+                if(canselect){
+                    let list=this.datechange[0].substring(0,13).split('-');
+                    this.startPeriod=list[0].trim('');
+                    this.endPeriod=list[1].trim('');
+                    this.goodslist[this.currentindex].commondate=this.selectTime;
+                    this.goodslist[this.currentindex].startPeriod=this.startPeriod;
+                    this.goodslist[this.currentindex].endPeriod=this.endPeriod;      
+                    this.popupVisible = false;
+                    this.calendar3.show = false;              
                 }
-                let date = day + ' ' + this.datechange[1].substring(0, 2) + ':' + this.datechange[2].substring(0, 2);
-                this.servicedate = date;
-                this.popupVisible = false;
+                else{
+                    Toast('该时间段不可选');
+                }
             },
             cancledate() {
                 this.popupVisible = false;
+                this.calendar3.show = false;
+            },
+            // 获取时间断列表
+            getTimetemplatelist(commodityid){
+                return new Promise((resolve,reject)=>{
+                    let that=this;
+                    let companyid=sessionStorage.getItem('companyId');
+                    that.$http.post('/api/product/commodity/periodTemplateContent/queryPeriodListByTemplateId?templateId='+commodityid+'&companyId='+companyid,{})
+                    .then(res=>{
+                        if(res.data.status==200){
+                            that.dates=[];
+                            let periodlist=[];
+                            res.data.info.forEach(item=>{
+                                periodlist.push(item.startTime.substring(0,5)+' - '+item.endTime.substring(0,5)+'(剩余:'+item.pCount+')');
+                            });
+                            let json={
+                                values:periodlist,
+                                className: 'slot1',  
+                                textAlign: 'center'
+                            };
+                            that.dates.push(json);
+                            console.log(that.dates);
+                            resolve(true);
+                        }
+                        else if(res.data.status==300){
+                            Toast('请联系客服配置该商品的预约时间');
+                            resolve(false);
+                        }
+                        else{
+                            Toast(res.data.msg);
+                            resolve(false);
+                        }
+                        
+                    })
+                    .catch(err=>{
+                        console.log(err);
+                        resolve(false);
+                        
+                    });
+                })
+                
             },
             makeinvoice() {
                 this.$router.push('/invoice');
@@ -509,27 +664,24 @@
                     let json = {
                         commodityId: item.id,
                         amount: item.nums,
-                        usePoint: false,
-                        pointSum: 0,
+                        usePoint: true,
+                        pointSum:Number(item.scoreuse),
                         condition1Name: item.conditionname1 ==''?'':(item.conditionname1 + '：' + item.conditionvalue1),
                         condition2Name: item.conditionname2 == '' ? '' : (item.conditionname2 + '：' + item.conditionvalue2)
                     };
-                    for (let item1 in this.deductionindex) {
-                        if (this.deductionlist[item1].commodityid == item.id) {
-                            json.usePoint = true;
-                            json.pointSum = this.deductionlist[item1].score;
-                        }
+                    if(item.isservice&&item.startPeriod!=''){
+                        json.appointment={
+                            startTime:   item.commondate+' '+item.startPeriod,
+                            endTime:item.commondate+' '+item.endPeriod,
+                            accountId:this.userinfo.id,
+                            templateId:item.periodTemplateId,
+                            companyId:sessionStorage.getItem('companyId'),
+                            isService:0
+                        };
                     }
                     mallOrderList.push(json);
                 });
-                // this.deductionindex.forEach(item => {
-                //     mallOrderList[item].usePoint = true;
-                //     mallOrderList[item].pointSum = this.deductionlist[item].score;
-                // })
                 data.mallOrderList = mallOrderList;
-                // console.log(this.couponlist)
-                // console.log(this.couponindex)
-                // console.log(this.couponlist[this.couponindex])
                 if (this.couponindex!=='') {
                     let json = {
                         id: this.couponlist[this.couponindex].id,
@@ -537,22 +689,23 @@
                     };
                     data.couponInfoList.push(json);
                 }
-                console.log( data.couponInfoList)
-                // this.couponindex.forEach(item => {
-                //     let json = {
-                //         id: this.couponlist[item].id,
-                //         couponAmount: 1
-                //     };
-                //     data.couponInfoList.push(json);
-                // });
-                // console.log(data);
                 this.createOrder(data);
+                // console.log(data);
             }
         }
     }
 </script>
 
 <style scoped lang='less'>
+    .calendar-dropdown{
+        left:0px;
+        right:0;
+        top:0px;
+        position:fixed;
+        height:100vh;
+        z-index:999;
+        background-color:#fff;
+    }
     .contain {
         // margin-top: 0.8rem;
         font-size: .28rem;
@@ -560,6 +713,7 @@
         background-color: #e9e9e9; // margin-top: 40px;
     }
     .msg-customer {
+        position: relative;
         padding: .4rem .2rem;
         background-color: #fff;
         overflow: hidden;
@@ -584,14 +738,24 @@
     }
     .msg-customer .msgs .area {
         color: #787878;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
+        line-height: .4rem;
+        padding-left:.3rem;
+        i{
+            margin-left:-.3rem;
+        }
+        // text-overflow: ellipsis;
+        // overflow: hidden;
+        // white-space: nowrap;
     }
     .msg-customer .more {
+        width:.5rem;
         padding-left: .2rem;
         border-left: 1px solid #cdcdcd;
-        float: right;
+        // float: right;
+        position: absolute;
+        right:0;
+        top:.3rem;
+        bottom:.3rem;
     }
     .msg-customer .more p {
         height: 1rem;
@@ -599,6 +763,11 @@
         font-size: .6rem;
         color: #787878;
         display: block;
+        position: absolute;
+        top:0;
+        bottom:0;
+        right:0;
+        margin:auto;
     }
     .msg-goods {
         margin-top: .2rem;
@@ -617,6 +786,16 @@
         position: relative;
         overflow: hidden;
         padding: .3rem 0;
+        .appointtime{
+            width: 1.5rem;
+            position: absolute;
+            right:.2rem;
+            top:1.2rem;
+            padding: 0.1rem;
+            border:1px solid #26a2ff;
+            border-radius: .1rem;
+            background-color: #fff;
+        }
     }
     .msg-goods .img-goods {
         width: 2.2rem;
@@ -641,9 +820,12 @@
         white-space: nowrap;
     }
     .msg-goods .msg .brand,
-    .msg-goods .msg .area {
+    .msg-goods .msg .area{
         font-size: .25rem;
         padding-bottom: .3rem;
+    }
+    .msg-goods .msg .servicetime {
+        font-size: .25rem;
     }
     .tips {
         position: absolute;
@@ -657,9 +839,9 @@
         padding-top: .4rem;
     }
     .msg-goods .tips p.oper {
-        margin-top: .5rem;
+        // margin-top: .5rem;
         position: absolute;
-        bottom: .3rem;
+        bottom: .5rem;
         right: 0;
         input[type='number'] {
             // width:auto;
@@ -734,8 +916,22 @@
         ul {
             li {
                 padding: .2rem;
+                overflow:hidden;
+                line-height:.35rem;
                 label {
                     color: red;
+                    width:2.5rem;
+                    display:inline-block;
+                    overflow:hidden; 
+                    text-overflow:ellipsis;
+                    white-space:nowrap;
+                    float:left;
+                }
+                input{
+                    float:left;
+                    width:1.5rem;
+                    text-align:center;
+                    border:1px solid #cdcdcd;
                 }
                 input[type='radio'] {
                     float: right;
@@ -908,6 +1104,9 @@
     }
 </style>
 <style lang='less'>
+    .mint-toast{
+        z-index: 99999;
+    }
     .certainorder_xs {
         .popup {
             width: 100%;

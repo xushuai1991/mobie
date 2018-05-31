@@ -232,7 +232,7 @@
             // 查询数量相关（收藏、购物车、待付款、待服务、服务中、待评价）
             getNumbersAbout(){
                 let that=this;
-                this.$http.post('/api/product/mall/panel/countsOnMallPanel',{})
+                this.$http.post('/api/product/mall/panel/countsOnMallPanel?companyId='+sessionStorage.getItem('companyId'),{})
                 .then(res=>{
                     if(res.data.status==200){
                         let nums=res.data.info;

@@ -3,7 +3,7 @@
         <div class="searchTop clear">
             <!-- <div class='code'><i data-v-13ee4bcf="" class="icon iconfont icon-erweima "></i></div> -->
             <div class="page-search">
-                <mt-search  v-model="value"></mt-search>
+                <mt-search type="text"  v-model="value" @keyup.enter.native='changeCount(value)' ></mt-search>
             </div>
             <!-- <div class='notice'><i data-v-13ee4bcf="" class="icon iconfont icon-tongzhi "></i></div> -->
         </div>
@@ -35,6 +35,16 @@
         },
         created(){
             console.log(this.comlist)
+        },
+        methods:{
+            changeCount(val){
+                if(val){
+                    console.log(val)
+                    this.$root.$emit("searchVal",val);
+                    this.$root.$emit('switchindex','commodity');
+                }
+                 
+            }
         },
         computed:mapState({
             comlist:state => state.templateData.templateDATA

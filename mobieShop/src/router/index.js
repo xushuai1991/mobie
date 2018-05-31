@@ -79,6 +79,24 @@ export default new Router({
                 requireAuth:true
             }
         },
+        {//日期详情
+            path: '/calerdateDile',
+            name: 'calerdateDile',
+            component: resolve => require(['../components/view/order/calerdateDile.vue'], resolve),
+            meta: {
+                title: '订单详情',
+                requireAuth:true
+            }
+        },
+        {//预定日期
+            path: '/appointment',
+            name: 'appointment',
+            component: resolve => require(['../components/view/order/appointment.vue'], resolve),
+            meta: {
+                title: '订单详情',
+                requireAuth:true
+            }
+        },
         //支付
         {
             path:'/paying',

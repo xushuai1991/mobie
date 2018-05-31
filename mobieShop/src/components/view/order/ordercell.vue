@@ -6,7 +6,7 @@
             <!-- <div class='time-remain'></div> -->
         </div>
         <div class='content' @click.stop='toOrderDetail(data.number,index)'>
-            <div :class='{"detail":true,"grey":(type=="unservice"&item.serviceState!=1)||(type=="inservice"&item.serviceState!=2)}' v-for='(item,index) in data.orderDetails' :key='index' >
+            <div :class='{"detail":true,"grey":(type=="unservice"&item.serviceState!=1)||(type=="inservice"&item.serviceState!=2)}' v-for='(item,index1) in data.orderDetails' :key='index1' >
                 <div class='img-goods'>
                     <img :src='"http://"+hostName+":"+port+"/api"+item.image' alt="图片丢失" style="width:100%;height:100%;">
                 </div>
@@ -19,14 +19,9 @@
                     <p>￥{{item.price}}</p>
                     <p>x{{item.saleNumber}}</p>
                 </div>
-                <button class='button'  @click.stop="openByDrop($event)">预约时间</button>
-                <!-- 服务类商品，添加预约时间功能 -->
-                <div class='appointment' v-if='item.isService==true&item.payState==1'>
-                    <button class='button'  @click.stop="appointment(item.id,index)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>
-                    <span>服务时间：{{item.updateAppointTime==null?(item.appointment==null?'空':item.appointment.substring(0,16)):item.updateAppointTimeIsActive?(item.appointment==null?'空':item.appointment.substring(0,16)):(item.updateAppointTime==null?'空':item.updateAppointTime.substring(0,16))}}{{(item.updateAppointTimeIsActive==false&&item.updateAppointTime!=null)?'(待确认)':''}}</span>
-                           <!-- {{item.appointTime==null?'空':item.appointTime.substring(0,16)}}{{((item.updateAppointTimeIsActive&&item.updateAppointTime!=null)||item.updateAppointTime==null)?'':'('+'已申请'+')'}} -->
-                    <!-- <span>服务时间：{{date_service[index]}}</span> -->
-                    <!-- <p>{{date_service[index]}}</p> -->
+                <div class='appointment' v-if='item.isService==true'>
+                    <button class='button'  @click.stop="openByDrop({index:index1,e:$event,commodityid:item.commodityId,orderdetailid:item.id,templateId:item.commodityInfo.periodTemplateId,type:item.appointments==null?'add':'edit',appointid:item.appointments==null?null:item.appointments.id})">{{item.appointments==null?'预约时间':'修改预约'}}</button>                    
+                    <span>服务时间：{{item.appointments==null?'无':(item.appointments.startTime.substring(0,10)+' '+item.appointments.startTime.substring(11,16)+'-'+ item.appointments.endTime.substring(11,16)+(item.appointments.isService==0?'(待确认)':''))}}</span>
                 </div>
             </div>
             <div class='price-total'>
@@ -41,14 +36,14 @@
                 
             </div>
         </div>
-        <mt-popup v-model="popupVisible" position="bottom" class="popup">
+        <!-- <mt-popup v-model="popupVisible" position="bottom" class="popup">
             <mt-picker :slots="dates" @change='onValuesChange'  :showToolbar='true' >
                 <p class='btn-group'>
                     <button class='cancle font' @click.stop='cancledate'>取消</button>
                     <button class='certain font' @click.stop="getdate">确定</button>
                 </p>
             </mt-picker>
-        </mt-popup>
+        </mt-popup> -->
     </div>
 </template>
 <script>
@@ -104,9 +99,10 @@ export default {
         this.countDown();
     },
     methods:{
-        openByDrop(e) {
-            this.$root.$emit('calendar',e)
-            
+        openByDrop(data) {
+            data.indexorder=this.indexorder;
+            data.type_index=this.index;
+            this.$root.$emit('calendar',data)
         },
         // test(){
         //     this.$root.$emit('calendar')
@@ -350,7 +346,7 @@ export default {
 .appointment span{
     width: 5rem;
     text-align: left;
-    font-size: .3rem;
+    font-size: .25rem;
     float: left;
     margin-top: .2rem;
     margin-left: .3rem;

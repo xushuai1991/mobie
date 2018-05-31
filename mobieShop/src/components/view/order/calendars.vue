@@ -74,7 +74,7 @@
                 e.stopPropagation();
                 window.setTimeout(() => {
                     document.addEventListener("click", (e) => {
-                        this.calendar3.show = false;
+                        // this.calendar3.show = false;
                         document.removeEventListener("click", () => {}, false);
                     }, false);
                 }, 1000)
