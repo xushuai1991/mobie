@@ -411,6 +411,7 @@ export default {
                     dom.querySelector('.appointment').querySelector('span').innerHTML='服务时间：'+that.selectTime+' '+that.startPeriod+'-'+that.endPeriod;
                     that.popupVisible=false;
                     that.calendar3.show = false;
+                    Toast('预约时间申请成功');
                 }
                 else{
                     Toast(res.data.msg);
@@ -441,6 +442,7 @@ export default {
                     dom.querySelector('.appointment').querySelector('span').innerHTML='服务时间：'+that.selectTime+' '+that.startPeriod+'-'+that.endPeriod;
                     that.popupVisible=false;
                     that.calendar3.show = false;
+                    Toast('预约时间修改成功');
                 }
                 else{
                     Toast(res.data.msg);
