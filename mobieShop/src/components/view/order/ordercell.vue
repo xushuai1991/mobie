@@ -20,7 +20,7 @@
                     <p>x{{item.saleNumber}}</p>
                 </div>
                 <div class='appointment' v-if='item.isService==true'>
-                    <button class='button'  @click.stop="openByDrop({index:index1,e:$event,commodityid:item.commodityId,orderid:data.id,templateId:item.commodityInfo.periodTemplateId,type:item.appointments==null?'add':'edit',appointid:item.appointments==null?null:item.appointments.id})">{{item.appointments==null?'预约时间':'修改预约'}}</button>                    
+                    <button class='button'  @click.stop="openByDrop({index:index1,e:$event,commodityid:item.commodityId,orderdetailid:item.id,templateId:item.commodityInfo.periodTemplateId,type:item.appointments==null?'add':'edit',appointid:item.appointments==null?null:item.appointments.id})">{{item.appointments==null?'预约时间':'修改预约'}}</button>                    
                     <span>服务时间：{{item.appointments==null?'无':(item.appointments.startTime.substring(0,10)+' '+item.appointments.startTime.substring(11,16)+'-'+ item.appointments.endTime.substring(11,16)+(item.appointments.isService==0?'(待确认)':''))}}</span>
                 </div>
             </div>

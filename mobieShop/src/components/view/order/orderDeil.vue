@@ -702,7 +702,7 @@
             },
             unbind(url, number, actualMoney, stateText) {
                 let that = this;
-                const htmls = `是否确认信息`;
+                const htmls = `是否取消订单`;
                 MessageBox.confirm('', {
                     message: htmls,
                     title: '',

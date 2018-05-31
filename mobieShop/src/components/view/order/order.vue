@@ -23,7 +23,7 @@
                     <mt-spinner type="fading-circle"></mt-spinner>
                     加载中...
                 </p>
-                <p v-show='dataover[0]' class="page-over">数据已加载完</p>
+                <p v-show='dataover[0]' class="page-over">—————————————— 我是有底线的 ——————————————</p>
             </mt-tab-container-item>
             <!-- 待付款 -->
             <mt-tab-container-item id="willpay" class='order_type'>
@@ -36,7 +36,7 @@
                     <mt-spinner type="fading-circle"></mt-spinner>
                     加载中...
                 </p>
-                <p v-show='dataover[1]' class="page-over">数据已加载完</p>
+                <p v-show='dataover[1]' class="page-over">—————————————— 我是有底线的 ——————————————</p>
             </mt-tab-container-item>
             <!-- 待服务 -->
             <mt-tab-container-item id="willservice" class='order_type'>
@@ -49,7 +49,7 @@
                     <mt-spinner type="fading-circle"></mt-spinner>
                     加载中...
                 </p>
-                <p v-show='dataover[2]' class="page-over">数据已加载完</p>
+                <p v-show='dataover[2]' class="page-over">—————————————— 我是有底线的 ——————————————</p>
             </mt-tab-container-item>
             <!-- 服务中 -->
             <mt-tab-container-item id="inservice" class='order_type'>
@@ -62,7 +62,7 @@
                     <mt-spinner type="fading-circle"></mt-spinner>
                     加载中...
                 </p>
-                <p v-show='dataover[3]' class="page-over">数据已加载完</p>
+                <p v-show='dataover[3]' class="page-over">—————————————— 我是有底线的 ——————————————</p>
             </mt-tab-container-item>
             <!-- 待评价 -->
             <mt-tab-container-item id="willevaluate" class='order_type'>
@@ -75,7 +75,7 @@
                     <mt-spinner type="fading-circle"></mt-spinner>
                     加载中...
                 </p>
-                <p v-show='dataover[4]' class="page-over">数据已加载完</p>
+                <p v-show='dataover[4]' class="page-over">—————————————— 我是有底线的 ——————————————</p>
             </mt-tab-container-item>
             
         </mt-tab-container>
@@ -95,7 +95,7 @@
             </mt-picker>
         </mt-popup>
         <transition name="fade">
-            <div class="calendar-dropdown" v-if="calendar3.show">
+            <div class="calendar-dropdown" v-if="calendar3.show" @click='clickcalendar($event)'>
                 <calendar :events="calendar3.events" :zero="calendar3.zero" :lunar="calendar3.lunar"  :value='minday' :begin="minday" :end="lastday" @select="clickDay"></calendar>
             </div>
         </transition>
@@ -147,7 +147,7 @@ export default {
             endPeriod:'',
             // 当前订单服务类商品的信息
             templateid_current:null,
-            orderid_current:null,
+            orderdetailid_current:null,
             commodityrid_current:null,
             commodityindex_current:null,
             typeindex_current:null,
@@ -212,13 +212,12 @@ export default {
         });
         // 监听日历插件唤醒
         this.$root.$on('calendar',data=>{
-            console.log(data);
             let commodityid=data.commodityid;
-            let orderid=data.orderid;
+            let orderdetailid=data.orderdetailid;
             let templateid=data.templateId;
             let e=data.e;
             this.templateid_current=templateid;
-            this.orderid_current=orderid;
+            this.orderdetailid_current=orderdetailid;
             this.commodityrid_current=commodityid;
             this.type_opera=data.type;
             this.commodityindex_current=data.index;
@@ -342,12 +341,14 @@ export default {
         },
     },
     methods:{
+        clickcalendar(e){
+            this.calendar3.show = false;
+        },
         onValuesChange(picker,values){
             this.datechange=values[0];
             console.log(values);
         },
         clickDay(value){
-            // alert(value);
             let str=value[0]+'-'+value[1]+'-'+value[2];
             this.selectTime=str;
             this.startPeriod='';
@@ -398,7 +399,7 @@ export default {
                 accountId:that.userinfo.id,
                 commodityId:that.commodityrid_current,
                 periodId:periodId,
-                orderDetailId:that.orderid_current,
+                orderDetailId:that.orderdetailid_current,
                 templateId:that.templateid_current,
                 companyId:sessionStorage.getItem('companyId'),
                 isService:0
@@ -413,6 +414,7 @@ export default {
                     dom.querySelector('.appointment').querySelector('span').innerHTML='服务时间：'+that.selectTime+' '+that.startPeriod+'-'+that.endPeriod;
                     that.popupVisible=false;
                     that.calendar3.show = false;
+                    Toast('预约时间申请成功');
                 }
                 else{
                     Toast(res.data.msg);
@@ -426,7 +428,7 @@ export default {
         // 修改预约记录
         editAppointment(){
             let that=this;
-            this.$http.post('/api/product/commodity/periodTemplate/update',
+            this.$http.post('/api/product/appointment/update',
             {
                 id:this.appointid_current,
                 startTime:this.selectTime+' '+this.startPeriod,
@@ -443,6 +445,7 @@ export default {
                     dom.querySelector('.appointment').querySelector('span').innerHTML='服务时间：'+that.selectTime+' '+that.startPeriod+'-'+that.endPeriod;
                     that.popupVisible=false;
                     that.calendar3.show = false;
+                    Toast('预约时间修改成功');
                 }
                 else{
                     Toast(res.data.msg);

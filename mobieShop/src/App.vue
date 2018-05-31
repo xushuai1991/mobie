@@ -86,6 +86,13 @@ export default {
   .mint-tabbar > .mint-tab-item.is-selected {
       color:#edc278 !important;
   }
+  // 邀请注册
+  #invite-register{
+    .background-tip{
+      background-image:url("/static/images/back_tip.png") !important;
+    }
+  }
+  
   // 日历
   .wh_container{
     background: #f1c885 !important;
