@@ -28,6 +28,7 @@ export default {
         },
         props:['templateData'],
         created() {
+            alert("..")
             //console.log(this.templateData)
             this.imgArr = this.templateData.ImgArr;
             let hostName = location.hostname;
@@ -35,6 +36,9 @@ export default {
             this.imageUrl = 'http://'+hostName+'/api';
             this.imageUrls = 'http://' + hostName + ':' + port;
            // console.log(this.imageUrl)
+            this.$root.$on("searchVal",(val)=>{
+                console.log(val)
+            })
         },
         methods:{
             imageLoaded(){

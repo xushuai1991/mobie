@@ -559,7 +559,7 @@
                     }
                 });
                 if (OrderArry.length < 1) {
-                    Toast('请选择点东西吧');
+                    Toast('亲,请勾选商品');
                 } else if (OrderArry.length == 1) {
                     OrderArry.forEach((item, index) => {
                         let num = 0;

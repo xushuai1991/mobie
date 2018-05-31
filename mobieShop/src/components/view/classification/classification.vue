@@ -92,6 +92,10 @@ import { Indicator } from 'mint-ui';
                     this.getClassify();
                 }
             });
+            this.$root.$on("searchVal",(val)=>{
+                this.value_search = val;
+                this.getCommoditylist(1,false)
+            })
             
         },
         methods:{
