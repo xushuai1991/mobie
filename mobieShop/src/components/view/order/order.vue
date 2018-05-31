@@ -23,7 +23,7 @@
                     <mt-spinner type="fading-circle"></mt-spinner>
                     加载中...
                 </p>
-                <p v-show='dataover[0]' class="page-over">—————————————— 我是有底线的 ——————————————</p>
+                <p v-show='dataover[0]' class="page-over">———— 我是有底线的 ————</p>
             </mt-tab-container-item>
             <!-- 待付款 -->
             <mt-tab-container-item id="willpay" class='order_type'>
@@ -36,7 +36,7 @@
                     <mt-spinner type="fading-circle"></mt-spinner>
                     加载中...
                 </p>
-                <p v-show='dataover[1]' class="page-over">—————————————— 我是有底线的 ——————————————</p>
+                <p v-show='dataover[1]' class="page-over">———— 我是有底线的 ————</p>
             </mt-tab-container-item>
             <!-- 待服务 -->
             <mt-tab-container-item id="willservice" class='order_type'>
@@ -49,7 +49,7 @@
                     <mt-spinner type="fading-circle"></mt-spinner>
                     加载中...
                 </p>
-                <p v-show='dataover[2]' class="page-over">—————————————— 我是有底线的 ——————————————</p>
+                <p v-show='dataover[2]' class="page-over">———— 我是有底线的 ————</p>
             </mt-tab-container-item>
             <!-- 服务中 -->
             <mt-tab-container-item id="inservice" class='order_type'>
@@ -62,7 +62,7 @@
                     <mt-spinner type="fading-circle"></mt-spinner>
                     加载中...
                 </p>
-                <p v-show='dataover[3]' class="page-over">—————————————— 我是有底线的 ——————————————</p>
+                <p v-show='dataover[3]' class="page-over">———— 我是有底线的 ————</p>
             </mt-tab-container-item>
             <!-- 待评价 -->
             <mt-tab-container-item id="willevaluate" class='order_type'>
@@ -75,7 +75,7 @@
                     <mt-spinner type="fading-circle"></mt-spinner>
                     加载中...
                 </p>
-                <p v-show='dataover[4]' class="page-over">—————————————— 我是有底线的 ——————————————</p>
+                <p v-show='dataover[4]' class="page-over">———— 我是有底线的 ————</p>
             </mt-tab-container-item>
             
         </mt-tab-container>
@@ -772,6 +772,7 @@ export default {
     .page-over{
         font-size:.3rem;
         padding:.2rem 0;
+        color:#dcdcdc;
     }
     .popup{
         width: 100%;
