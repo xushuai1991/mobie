@@ -13,7 +13,7 @@ export default {
     data () {
         return {
             bgSrc:require('./invite-result.png'),
-            wxSrc:'http://www.itchun.com/api/static/weixin/78.jpg',
+            wxSrc:'http://www.itchun.com/api/static/weixin/79.jpg',
             msg:''
         }
     },
