@@ -281,7 +281,7 @@
         top: 0;
         left:0;
         // background-image: url("/static/images/back_tip.png");
-        background-image: url("/static/images/back_tip.png");
+        background-image: url("/static/images/back_tip2.png");
         background-position-y: -1rem;
         background-size: cover;
     }

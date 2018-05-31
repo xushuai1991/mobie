@@ -147,7 +147,7 @@ export default {
             endPeriod:'',
             // 当前订单服务类商品的信息
             templateid_current:null,
-            orderid_current:null,
+            orderdetailid_current:null,
             commodityrid_current:null,
             commodityindex_current:null,
             typeindex_current:null,
@@ -212,13 +212,12 @@ export default {
         });
         // 监听日历插件唤醒
         this.$root.$on('calendar',data=>{
-            console.log(data);
             let commodityid=data.commodityid;
-            let orderid=data.orderid;
+            let orderdetailid=data.orderdetailid;
             let templateid=data.templateId;
             let e=data.e;
             this.templateid_current=templateid;
-            this.orderid_current=orderid;
+            this.orderdetailid_current=orderdetailid;
             this.commodityrid_current=commodityid;
             this.type_opera=data.type;
             this.commodityindex_current=data.index;
@@ -227,6 +226,7 @@ export default {
             this.appointid_current=data.appointid;
             this.getPeriodList(commodityid).then(success=>{
                 if(success){
+                    alert(1);
                     this.calendar3.show = true;
                     this.loading1=true;
                     e.stopPropagation();
@@ -398,7 +398,7 @@ export default {
                 accountId:that.userinfo.id,
                 commodityId:that.commodityrid_current,
                 periodId:periodId,
-                orderDetailId:that.orderid_current,
+                orderDetailId:that.orderdetailid_current,
                 templateId:that.templateid_current,
                 companyId:sessionStorage.getItem('companyId'),
                 isService:0
