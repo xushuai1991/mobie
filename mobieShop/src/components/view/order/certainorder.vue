@@ -223,7 +223,8 @@
                 selectTime:'',
                 startPeriod:'',
                 endPeriod:'',
-                currentindex:''
+                currentindex:'',
+                periodlist:[]
             }
         },
         computed: {
@@ -453,12 +454,22 @@
                 let currentstr=this.datechange[0];
                 let canselect=currentstr.indexOf('剩余:0')<0;
                 if(canselect){
+                    
                     let list=this.datechange[0].substring(0,13).split('-');
-                    this.startPeriod=list[0].trim('');
-                    this.endPeriod=list[1].trim('');
-                    this.goodslist[this.currentindex].commondate=this.selectTime;
-                    this.goodslist[this.currentindex].startPeriod=this.startPeriod;
-                    this.goodslist[this.currentindex].endPeriod=this.endPeriod;      
+                    let result=this.dates[0].values.has(currentstr);
+                    if(result.result){
+                        let index=result.index;
+                        this.startPeriod=list[0].trim('');
+                        this.endPeriod=list[1].trim('');
+                        this.goodslist[this.currentindex].commondate=this.selectTime;
+                        this.goodslist[this.currentindex].startPeriod=this.startPeriod;
+                        this.goodslist[this.currentindex].endPeriod=this.endPeriod;      
+                        this.goodslist[this.currentindex].periodid=this.periodlist[index].id;      
+                    }
+                    // console.log(result);
+                    
+                    // 
+                    
                     this.popupVisible = false;
                     this.calendar3.show = false;              
                 }
@@ -480,6 +491,8 @@
                         if(res.data.status==200){
                             that.dates=[];
                             let periodlist=[];
+                            that.periodlist=res.data.info;
+                            // console.log(res.data.info);
                             res.data.info.forEach(item=>{
                                 periodlist.push(item.startTime.substring(0,5)+' - '+item.endTime.substring(0,5)+'(剩余:'+item.pCount+')');
                             });
@@ -676,7 +689,8 @@
                             accountId:this.userinfo.id,
                             templateId:item.periodTemplateId,
                             companyId:sessionStorage.getItem('companyId'),
-                            isService:0
+                            isService:0,
+                            periodId:item.periodid
                         };
                     }
                     mallOrderList.push(json);
