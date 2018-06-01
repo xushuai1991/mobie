@@ -1,18 +1,18 @@
 <template>
     <div class='CmyOveroderDeil'>
         <!--<ul v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="10">
-                                                                                                                                    <li v-for="item in list">{{ item }}</li>
-                                                                                                                                </ul>!-->
+                                                                                                                                                    <li v-for="item in list">{{ item }}</li>
+                                                                                                                                                </ul>!-->
         <section>
             <div class="wrap2">
                 <div class='tiemBox background'>
                     <p>{{ orderState}}</p>
                     <p v-if='orderState=="等待买家支付"'>
                         <span :endTime="endTime" :callback="callback" :endText="endText">
-                            <slot>
-                                {{content}}
-                            </slot>
-                        </span></p>
+                                            <slot>
+                                                {{content}}
+                                            </slot>
+                                        </span></p>
                     <p v-else>
                         {{orderText}}
                     </p>
@@ -51,8 +51,8 @@
                                                     数量:<input type="number" disabled :value="item.saleNumber" style='background:#fff;margint-top:0.2rem;' />
                                                 </div>
                                                 <!--<span class="mui_shopcar_del" @click="remove(index,indexs)">
-                                                                                                                                                                        <i class='icon iconfont icon-lajitong'></i>
-                                                                                                                                                                    </span>!-->
+                                                                                                                                                                                        <i class='icon iconfont icon-lajitong'></i>
+                                                                                                                                                                                    </span>!-->
                                             </li>
                                         </ul>
                                         <div class='refundDetail' v-show='refundOrder'>
@@ -65,13 +65,12 @@
                                         </div>
                                         <!--</mt-cell-swipe>!-->
                                     </div>
-                                    <div v-show='item.isService&&(orderState!="订单已取消"||orderState!="等待买家支付")' >
+                                    <div v-show='item.isService&&(orderState!="订单已取消"||orderState!="等待买家支付")'>
                                         <div class='edmitTime' v-if='item.isService'>
-                                            <p v-if='item.updateAppointTime'>{{item.updateAppointTime}}<span v-if='item.updateAppointTimeIsActive ==false'>(待确认)</span></p>
-                                            <p v-else>{{item.appointTime==null?'预约时间':item.appointTime}}(待确认)</p>
+                                            <span style="font-size:0.2rem;">服务时间：{{item.appointments==null?'无':(item.appointments.startTime.substring(0,10)+' '+item.appointments.startTime.substring(11,16)+'-'+ item.appointments.endTime.substring(11,16)+(item.appointments.isService==0?'(待确认)':''))}}</span>
                                         </div>
                                         <div class='appointment' v-if='item.isService'>
-                                            <button class='button' @click.stop="appointment(index,item.id,item,item.appointTime)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>
+                                            <button class='button' @click.stop="appointment(index,item.id,item,item.appointments)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>
                                         </div>
                                     </div>
                                     <div class="goodsBox" v-for="(items,indexs) in item.orderDetailList" :key="indexs">
@@ -91,8 +90,8 @@
                                                     数量:<input type="number" disabled :value="items.saleNumber" style='background:#fff;margint-top:0.2rem;' />
                                                 </div>
                                                 <!--<span class="mui_shopcar_del" @click="remove(index,indexs)">
-                                                                                                                                                                        <i class='icon iconfont icon-lajitong'></i>
-                                                                                                                                                                    </span>!-->
+                                                                                                                                                                                        <i class='icon iconfont icon-lajitong'></i>
+                                                                                                                                                                                    </span>!-->
                                             </li>
                                         </ul>
                                         <!--</mt-cell-swipe>!-->
@@ -115,7 +114,7 @@
             </div>
         </section>
         <div class='markOrder'>
-            <div class='nums'>合计:<span class="moneyColor">￥{{actualMoney}}<span v-if='userPoint'>抵扣金额：{{conversionAmount}}</span></span>
+            <div class='nums'>合计:<span class="moneyColor">￥{{actualMoney}}<span v-if='userPoint'>抵扣金额：{{conversionAmount-0}}</span></span>
             </div>
             <input type='button' class='delBtn' v-show=showBtn1 @click='clearOrder(number,actualMoney)' value='取消订单'>
             <input type='button' class='button' v-show=showBtn2 value='立即付款' @click='playOrder(number,actualMoney,companyId)'>
@@ -131,7 +130,7 @@
                 <calendar :zero="calendar3.zero" :lunar="calendar3.lunar" :value="calendar3.value" :begin="calendar3.begin" :end="calendar3.end" @select="calendar3.select"></calendar>
             </div>
         </transition>
-       <mt-popup v-model="popupVisible" position="bottom" class="popup">
+        <mt-popup v-model="popupVisible" position="bottom" class="popup">
             <mt-picker :slots="dates" @change='onValuesChange' :showToolbar='true'>
                 <p class='btn-group'>
                     <button class='cancle' @click.stop='cancledate'>取消</button>
@@ -139,7 +138,6 @@
                 </p>
             </mt-picker>
         </mt-popup>
-        
     </div>
 </template>
 <script>
@@ -150,17 +148,20 @@
     import {
         MessageBox
     } from 'mint-ui';
-     import calendar from './calendar.vue'
+    import calendar from './calendar.vue'
     import {
         formatdate
     } from '../../../assets/javascript/formatdate.js'
+    import {
+        mycommon
+    } from '../../../assets/javascript/mycommon_xs.js'
     export default {
         data() {
             return {
-                Willday:'',
-                newDay:'',
+                Willday: '',
+                newDay: '',
                 calendar3: {
-                     display: this.getNowFormatDate(),
+                    display: this.getNowFormatDate(),
                     show: false,
                     begin: [], //可选开始日期
                     end: [], //可选结束日期
@@ -168,27 +169,37 @@
                     // value:[2018,5,22], //默认日期
                     lunar: true, //显示农历
                     select: (value) => {
+                        let that = this;
                         this.calendar3.show = true;
                         this.calendar3.value = value;
-                        this.calendar3.display = value.join("/");
+                        this.calendar3.display = value.join("-");
                         // console.log(this.calendar3.display)
-                        
-                        let url = '/api/product/commodity/periodTemplateContent/queryPeriodListByTemplateId?companyId='+this.compunetid.companyId+"&templateId="+this.compunetid.commodityId;
+                        let url = '/api/product/commodity/periodTemplateContent/queryPeriodListByTemplateId?companyId=' + this.compunetid.companyId + "&templateId=" + this.compunetid.commodityId;
                         this.$http({
                             url: url,
                             method: "POST",
                             data: {}
                         }).then((res) => {
                             console.log(res)
-                            this.popupVisible = true;
+                            if (res.data.status == 200) {
+                                this.popupVisible = true;
+                                let periodlist = [];
+                                that.periodlist = res.data.info[1];
+                                let lastnumlist = res.data.info[0];
+                                res.data.info[1].forEach((item, index) => {
+                                    periodlist.push(item.startTime.substring(0, 5) + ' - ' + item.endTime.substring(0, 5) + '(剩余:' + lastnumlist[index] + ')');
+                                });
+                                that.dates[0].values = periodlist
+                            } else if (res.data.status == 300) {
+                                Toast('请联系客服配置该商品的预约时间');
+                                resolve(false);
+                            } else {
+                                Toast(res.data.msg);
+                                resolve(false);
+                            }
                             // this.getDate(this.urlArgs().ordernumber)
                             // Toast(res.data.msg)
                         }).catch((err) => {})
-
-
-
-
-
                     }
                 },
                 // pIndex:'',
@@ -198,17 +209,18 @@
                 // startDate: new Date(),
                 // endDate: this.addDay(2),
                 commodityName: '',
+                periodlist: [],
                 popupVisible: false,
-                compunetid:'',
+                compunetid: '',
                 currentindex: '',
                 briefReason: '',
                 id: '',
                 orstate: '',
                 datechange: '',
                 userImg: '',
-                orderStates:'',
+                orderStates: '',
                 dates: [{
-                        values: ['今天', '明天', '后天'],
+                        values: ['暂无时间'],
                         className: 'slot1',
                         textAlign: 'left'
                     },
@@ -257,7 +269,21 @@
                 showBtn7: false, //关闭按钮，
                 showBtn8: false, //申请开票，
                 // refundShow:false,//退款显示，
-                refundOrder: false
+                refundOrder: false,
+                datechange: '',
+                selectTime: '',
+                startPeriod: '',
+                endPeriod: '',
+                // 当前订单服务类商品的信息
+                templateid_current: null,
+                orderdetailid_current: null,
+                commodityrid_current: null,
+                commodityindex_current: null,
+                typeindex_current: null,
+                indexorder_current: null,
+                appointid_current: null,
+                type_opera: null,
+                userinfo: null
             }
         },
         props: {
@@ -275,12 +301,12 @@
             }
         },
         components: {
-            calendar, 
+            calendar,
         },
         methods: {
             getNowFormatDate() {
                 var curDate = new Date();
-                var date = new Date((curDate/1000+86400)*1000);
+                var date = new Date((curDate / 1000 + 86400) * 1000);
                 var seperator1 = "-";
                 var seperator2 = ":";
                 var month = date.getMonth() + 1;
@@ -307,43 +333,75 @@
                 }, 1000)
             },
             getdate() {
-                let day = new Date();
-                if (this.datechange[0] == '今天') {
-                    // day = day.format('yyyy-MM-dd');
-                    day = day.format('yyyy-MM-dd hh:mm');
-                } else if (this.datechange[0] == '明天') {
-                    day = new Date(day.setDate(day.getDate() + 1)).format('yyyy-MM-dd hh:mm');
-                } else if (this.datechange[0] == '后天') {
-                    day = new Date(day.setDate(day.getDate() + 2)).format('yyyy-MM-dd hh:mm');
+                let currentstr = this.datechange;
+                let result = this.dates[0].values.has(currentstr);
+                if (result.result) {
+                    let index = result.index;
+                    let canselect = currentstr.indexOf('剩余:0') < 0;
+                    if (canselect) {
+                        let list = this.datechange.substring(0, 13).split('-');
+                        this.startPeriod = list[0].trim('');
+                        this.endPeriod = list[1].trim('');
+                        // 添加预约记录
+                        let datainfo = JSON.parse(JSON.parse(localStorage.getItem("userinfo")).data);
+                        let accpid = datainfo.id
+                        if (this.orstate == null) {
+                            console.log("新增时间")
+                            let that = this;
+                            this.$http.post('/api/product/appointment/insertone?weekDay=' + that.calendar3.display, {
+                                    startTime: that.calendar3.display + ' ' + that.startPeriod,
+                                    endTime: that.calendar3.display + ' ' + that.endPeriod,
+                                    accountId: accpid,
+                                    commodityId: that.compunetid.commodityId,
+                                    periodId: that.periodlist[index].id,
+                                    orderDetailId: that.compunetid.id,
+                                    templateId: that.compunetid.commodityInfo.periodTemplateId,
+                                    companyId: sessionStorage.getItem('companyId'),
+                                    isService: 0
+                                })
+                                .then(res => {
+                                    if (res.data.status == 200) {
+                                        Toast('预约时间申请成功');
+                                        that.calendar3.show = false
+                                    } else {
+                                        Toast(res.data.msg);
+                                    }
+                                    console.log(res);
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                })
+                        }
+                        // 修改预约记录
+                        else {
+                            let that = this;
+                            console.log()
+                            this.$http.post('/api/product/appointment/update', {
+                                    id:that.compunetid.appointments.id,
+                                    startTime: this.calendar3.display + ' ' + this.startPeriod,
+                                    endTime: this.calendar3.display + ' ' + this.endPeriod,
+                                    isService: 0
+                                })
+                                .then(res => {
+                                    if (res.data.status == 200) {
+                                        Toast('预约时间修改成功');
+                                         that.calendar3.show = false
+                                    } else {
+                                        Toast(res.data.msg);
+                                    }
+                                    console.log(res);
+                                })
+                                .catch(err => {
+                                    console.log(err)
+                                })
+                        }
+                    } else {
+                        Toast('该时间段不可选');
+                    }
                 }
-                let date = day + ' ' + this.datechange[1].substring(0, 2) + ':' + this.datechange[2].substring(0, 2);
-                var dates = new Date(day.replace(/-/g, '/'));
-                let time3 = Date.parse(dates);
-                if (this.orstate == null) {
-                    let url = '/api/product/order/mall/update/orderDetail';
-                    this.$http({
-                        url: url,
-                        method: "POST",
-                        data: [{
-                            appointTime: time3,
-                            id: this.id
-                        }]
-                    }).then((res) => {
-                        this.getDate(this.urlArgs().ordernumber)
-                    }).catch((err) => {})
-                } else {
-                    let url = '/api/product/order/mall/update/orderDetail';
-                    this.$http({
-                        url: url,
-                        method: "POST",
-                        data: [{
-                            updateAppointTime: time3,
-                            id: this.id
-                        }]
-                    }).then((res) => {
-                        this.getDate(this.urlArgs().ordernumber)
-                    }).catch((err) => {})
-                }
+                // if (this.orstate == null) {
+                // } else {
+                // }
                 this.popupVisible = false;
             },
             cancledate() {
@@ -372,7 +430,7 @@
                     }
                 })
             },
-            appointment(index, id, orstate,time) {
+            appointment(index, id, orstate, time) {
                 this.compunetid = orstate;
                 console.log(this.compunetid)
                 // var d = new Date();
@@ -388,9 +446,11 @@
                 // this.popupVisible = true;
                 this.currentindex = index;
                 this.id = id;
-                this.orstate = orstate;
+                this.orstate = time;
             },
             onValuesChange(picker, values) {
+                this.datechange = values[0];
+                console.log(this.datechange)
                 // var d = new Date();
                 // var hour = d.getHours();
                 // if (values[0] == '今天' && this.dates[1].values.indexOf(values[1]) < hour + 1) {
@@ -486,31 +546,31 @@
                         this.orderText = '亲,请耐心能等待';
                         this.showBtn4 = true; //退款
                         this.showBtn5 = true; //立即付款按钮
-                    if (orderStaty.orderState == 2) {
-                        this.showBtn4 = true, //退款
-                        this.showBtn5 = false; //确认收货
-                        this.showBtn8 = true;
-                        this.showBtn7 = true; //评价
-                        this.orderState = '已经完成'
-                        this.orderText = '亲，请确认';
-                    }
-                    if (orderStaty.orderState == 4) {
-                        this.showBtn4 = false, //取消退款
-                        this.showBtn6 = true, //取消退款
-                        this.showBtn5 = true; //立即付款按钮
-                        this.orderState = '退款中...'
-                        this.orderText = '亲,请耐心能等待';
-                        this.refundOrder = true
-                    }
-                    if (orderStaty.orderState == 7) {
-                        this.briefReason = orderStaty.briefReason
-                        this.showBtn4 = true, //取消退款
-                        this.showBtn6 = false, //取消退款
-                        this.showBtn5 = true; //立即付款按钮
-                        this.orderState = '驳回'
-                        this.orderText = '亲,请和客服联系重新退款';
-                        this.refundOrder = true
-                    }
+                        if (orderStaty.orderState == 2) {
+                            this.showBtn4 = true, //退款
+                                this.showBtn5 = false; //确认收货
+                            this.showBtn8 = true;
+                            this.showBtn7 = true; //评价
+                            this.orderState = '已经完成'
+                            this.orderText = '亲，请确认';
+                        }
+                        if (orderStaty.orderState == 4) {
+                            this.showBtn4 = false, //取消退款
+                                this.showBtn6 = true, //取消退款
+                                this.showBtn5 = true; //立即付款按钮
+                            this.orderState = '退款中...'
+                            this.orderText = '亲,请耐心能等待';
+                            this.refundOrder = true
+                        }
+                        if (orderStaty.orderState == 7) {
+                            this.briefReason = orderStaty.briefReason
+                            this.showBtn4 = true, //取消退款
+                                this.showBtn6 = false, //取消退款
+                                this.showBtn5 = true; //立即付款按钮
+                            this.orderState = '驳回'
+                            this.orderText = '亲,请和客服联系重新退款';
+                            this.refundOrder = true
+                        }
                         // if (orderStaty.serviceState == 1) {
                         //     this.orderState = '等待服务'
                         // }
@@ -702,7 +762,7 @@
             },
             unbind(url, number, actualMoney, stateText) {
                 let that = this;
-                const htmls = `是否取消订单`;
+                const htmls = `是否确认信息`;
                 MessageBox.confirm('', {
                     message: htmls,
                     title: '',
@@ -804,9 +864,9 @@
             // this.dates[1].defaultIndex = hour + 1;
             let day = new Date();
             this.Willday = new Date(day.setDate(day.getDate() + 30)).format('yyyy-M-d');
-            this.calendar3.value = [(this.newDay = this.getNowFormatDate(day).split("-")[0]),(this.newDay = this.getNowFormatDate(day).split("-")[1]),(this.newDay = this.getNowFormatDate(day).split("-")[2])];
-            this.calendar3.begin = [(this.newDay = this.getNowFormatDate(day).split("-")[0]),(this.newDay = this.getNowFormatDate(day).split("-")[1]),(this.newDay = this.getNowFormatDate(day).split("-")[2])];
-            this.calendar3.end = [this.Willday.split("-")[0],this.Willday.split("-")[1],this.Willday.split("-")[2]]
+            this.calendar3.value = [(this.newDay = this.getNowFormatDate(day).split("-")[0]), (this.newDay = this.getNowFormatDate(day).split("-")[1]), (this.newDay = this.getNowFormatDate(day).split("-")[2])];
+            this.calendar3.begin = [(this.newDay = this.getNowFormatDate(day).split("-")[0]), (this.newDay = this.getNowFormatDate(day).split("-")[1]), (this.newDay = this.getNowFormatDate(day).split("-")[2])];
+            this.calendar3.end = [this.Willday.split("-")[0], this.Willday.split("-")[1], this.Willday.split("-")[2]]
         },
         // beforeUpdate(){
         //     this.getDate(this.urlArgs().ordernumber)
@@ -857,7 +917,7 @@
     }
 </style>
 <style scoped lang='less'>
-    .calendar{
+    .calendar {
         position: fixed;
         z-index: 100;
         top: 0;
@@ -878,7 +938,7 @@
         position: absolute;
         right: -3.2rem;
         /*   bottom:.2rem;
-                                                            right:.2rem; */
+                                                                            right:.2rem; */
         background-color: #26a2ff;
         outline: none;
         border: 0;
