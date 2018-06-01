@@ -362,6 +362,7 @@
                                 .then(res => {
                                     if (res.data.status == 200) {
                                         Toast('预约时间申请成功');
+                                        this.getDate(this.urlArgs().ordernumber)
                                         that.calendar3.show = false
                                     } else {
                                         Toast(res.data.msg);
@@ -385,6 +386,7 @@
                                 .then(res => {
                                     if (res.data.status == 200) {
                                         Toast('预约时间修改成功');
+                                         this.getDate(this.urlArgs().ordernumber)
                                          that.calendar3.show = false
                                     } else {
                                         Toast(res.data.msg);
