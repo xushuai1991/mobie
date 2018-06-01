@@ -20,8 +20,8 @@
                         </div>
                         <div class='msg'>
                             <p class='name'>{{item.name}}</p>
-                            <p class='brand' v-if='item.conditionname1!=""'>{{item.conditionname1}}：{{item.conditionvalue1}}</p>
-                            <p class='area' v-if='item.conditionname2!=""'>{{item.conditionname2}}：{{item.conditionvalue2}}</p>
+                            <p class='brand'>{{item.conditionname1}}：{{item.conditionvalue1}}</p>
+                            <p class='area' >{{item.conditionname2}}：{{item.conditionvalue2}}</p>
                             <p class='servicetime' v-if='item.isservice'>{{'服务时间：'+(item.startPeriod==''?'空':item.commondate+' '+item.startPeriod+'-'+item.endPeriod)}}</p>
                         </div>
                         <div class='tips'>
@@ -826,6 +826,9 @@
     }
     .msg-goods .msg .servicetime {
         font-size: .25rem;
+        position: absolute;
+        top:2.3rem;
+        left:2.75rem;
     }
     .tips {
         position: absolute;
@@ -1039,9 +1042,7 @@
         background-color: #fff;
         padding: .4rem .2rem;
     }
-    .service-time .tip {
-        /* color:#46c5d9; */
-    }
+
     .service-time .data {
         padding-left: .5rem;
     }
@@ -1050,9 +1051,7 @@
         background-color: #fff;
         padding: .4rem .2rem;
     }
-    .invoice .tip {
-        /* color:#46c5d9; */
-    }
+
     .submitorder {
         padding: .2rem;
         background-color: #f1f1f1;
