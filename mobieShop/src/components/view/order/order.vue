@@ -224,18 +224,26 @@ export default {
             this.typeindex_current=data.type_index;
             this.indexorder_current=data.indexorder;
             this.appointid_current=data.appointid;
-            this.getPeriodList(commodityid).then(success=>{
-                if(success){
-                    this.calendar3.show = true;
-                    this.loading1=true;
-                    e.stopPropagation();
-                    window.setTimeout(() => {
-                        document.addEventListener("click", (e) => {
-                            document.removeEventListener("click", () => {}, false);
-                        }, false);
-                    }, 1000)
-                }
-            })
+            this.calendar3.show = true;
+            this.loading1=true;
+            e.stopPropagation();
+            window.setTimeout(() => {
+                document.addEventListener("click", (e) => {
+                    document.removeEventListener("click", () => {}, false);
+                }, false);
+            }, 1000)
+            // this.getPeriodList(commodityid).then(success=>{
+            //     if(success){
+            //         this.calendar3.show = true;
+            //         this.loading1=true;
+            //         e.stopPropagation();
+            //         window.setTimeout(() => {
+            //             document.addEventListener("click", (e) => {
+            //                 document.removeEventListener("click", () => {}, false);
+            //             }, false);
+            //         }, 1000)
+            //     }
+            // })
 
             
         })
@@ -350,10 +358,19 @@ export default {
         },
         clickDay(value){
             let str=value[0]+'-'+value[1]+'-'+value[2];
-            this.selectTime=str;
-            this.startPeriod='';
-            this.endPeriod='';
-            this.popupVisible=true;
+            if(this.templateid_current==null){
+                Toast('请联系客服配置该商品的预约时间');
+                return;
+            }
+            this.getPeriodList(str).then(success=>{
+                if(success){
+                    this.selectTime=str;
+                    this.startPeriod='';
+                    this.endPeriod='';
+                    this.popupVisible=true;
+                }
+            });
+            
         },
         getdate(){
             let currentstr=this.datechange;
@@ -368,11 +385,11 @@ export default {
                     // 添加预约记录
                     if(this.type_opera=='add'){
                         let periodid=this.periodlist[index].id;
-                        this.insertAppointment(periodid);
+                        this.insertAppointment(periodid,index);
                     }
                     // 修改预约记录
                     else if(this.type_opera=='edit'){
-                        this.editAppointment();
+                        this.editAppointment(index);
                     }           
                 }
                 else{
@@ -391,11 +408,11 @@ export default {
             // document.querySelector('.calendar').style.display='none';
         },
         // 添加预约记录
-        insertAppointment(periodId){
+        insertAppointment(periodId,index){
             let that=this;
             this.$http.post('/api/product/appointment/insertone?weekDay='+that.selectTime,{
-                startTime:that.selectTime+' '+that.startPeriod,
-                endTime:that.selectTime+' '+that.endPeriod,
+                startTime:that.selectTime+' '+that.periodlist[index].startTime,
+                endTime:that.selectTime+' '+that.periodlist[index].endTime,
                 accountId:that.userinfo.id,
                 commodityId:that.commodityrid_current,
                 periodId:periodId,
@@ -426,13 +443,13 @@ export default {
             })
         },
         // 修改预约记录
-        editAppointment(){
+        editAppointment(index){
             let that=this;
             this.$http.post('/api/product/appointment/update',
             {
                 id:this.appointid_current,
-                startTime:this.selectTime+' '+this.startPeriod,
-                endTime:this.selectTime+' '+this.endPeriod,
+                startTime:this.selectTime+' '+this.periodlist[index].startTime,
+                endTime:this.selectTime+' '+this.periodlist[index].endTime,
                 isService:0
             })
             .then(res=>{
@@ -457,19 +474,22 @@ export default {
             })
         },
         // 获取时间段
-        getPeriodList(commodityid){
+        getPeriodList(date){
             return new Promise((resolve,reject)=>{
                 let that=this;
                 let companyid=sessionStorage.getItem('companyId');
-                that.$http.post('/api/product/commodity/periodTemplateContent/queryPeriodListByTemplateId?templateId='+commodityid+'&companyId='+companyid,{})
+                that.$http.post('/api/product/period/query',{
+                    date:date,
+                    templateId:that.templateid_current
+                })
                 .then(res=>{
                     if(res.data.status==200){
                         that.dates=[];
                         let periodlist=[];
-                        that.periodlist=res.data.info[1];
-                        let lastnumlist=res.data.info[0];
-                        console.log(res);
-                        res.data.info[1].forEach((item,index)=>{
+                        that.periodlist=res.data.info.list[1];
+                        let lastnumlist=res.data.info.list[0];
+                        // console.log(res);
+                        res.data.info.list[1].forEach((item,index)=>{
                             periodlist.push(item.startTime.substring(0,5)+' - '+item.endTime.substring(0,5)+'(剩余:'+lastnumlist[index]+')');
                         });
                         let json={

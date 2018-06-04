@@ -224,7 +224,8 @@
                 startPeriod:'',
                 endPeriod:'',
                 currentindex:'',
-                periodlist:[]
+                periodlist:[],
+                periodTemplateid:null
             }
         },
         computed: {
@@ -351,18 +352,6 @@
                     };
                     this.goodslist.push(json);
                 }
-                
-
-                // if (item.originalPricePoint != null) {
-                //     let json1 = {
-                //         commodityid: item.id,
-                //         commodityname: item.name,
-                //         scorecanuse:item.originalPricePoint,
-                //         score: item.originalPricePoint,
-                //         moneycanduct: item.originalPrice - item.originalPriceMoney
-                //     };
-                //     this.deductionlist.push(json1);
-                // }
             });
             let user_str = operatelocalstorage('userinfo', null, 'get', null);
             if (user_str == null) {
@@ -384,24 +373,44 @@
             changeappointtime(index){
                 this.currentindex=index;
                 let commodityid=this.goodslist[index].id;
-                this.getTimetemplatelist(commodityid).then(success=>{
-                    if(success){
-                        this.calendar3.show = true;
-                        window.setTimeout(() => {
-                            document.addEventListener("click", (e) => {
-                                // this.calendar3.show = false;
-                                document.removeEventListener("click", () => {}, false);
-                            }, false);
-                        }, 1000)
-                    }
-                });
+                this.periodTemplateid=this.goodslist[index].periodTemplateId;
+                if(this.periodTemplateid==null){
+                    Toast('请联系客服配置该商品的预约时间');
+                    return;
+                }
+                this.calendar3.show = true;
+                window.setTimeout(() => {
+                    document.addEventListener("click", (e) => {
+                        // this.calendar3.show = false;
+                        document.removeEventListener("click", () => {}, false);
+                    }, false);
+                }, 1000)
+                // this.getTimetemplatelist(commodityid).then(success=>{
+                //     if(success){
+                //         this.calendar3.show = true;
+                //         window.setTimeout(() => {
+                //             document.addEventListener("click", (e) => {
+                //                 // this.calendar3.show = false;
+                //                 document.removeEventListener("click", () => {}, false);
+                //             }, false);
+                //         }, 1000)
+                //     }
+                // });
             },
             clickDay(value){
                 let str=value[0]+'-'+value[1]+'-'+value[2];
-                this.selectTime=str;
-                this.starPeriod='';
-                this.endPeriod='';
-                this.popupVisible=true;
+                
+                this.getTimetemplatelist(this.periodTemplateid,str).then(success=>{
+                    if(success){
+                        this.selectTime=str;
+                        this.starPeriod='';
+                        this.endPeriod='';
+                        this.popupVisible=true;
+                    }
+                    
+                });
+                
+                console.log(str);
             },
             changescore(index){
                 let item=this.goodslist[index];
@@ -459,17 +468,15 @@
                     let result=this.dates[0].values.has(currentstr);
                     if(result.result){
                         let index=result.index;
-                        this.startPeriod=list[0].trim('');
-                        this.endPeriod=list[1].trim('');
+                        this.startPeriod=this.periodlist[index].startTime;
+                        this.endPeriod=this.periodlist[index].endTime;
                         this.goodslist[this.currentindex].commondate=this.selectTime;
-                        this.goodslist[this.currentindex].startPeriod=this.startPeriod;
-                        this.goodslist[this.currentindex].endPeriod=this.endPeriod;      
+                        this.goodslist[this.currentindex].startPeriod=list[0].trim('');
+                        this.goodslist[this.currentindex].endPeriod=list[1].trim(''); 
+                        this.goodslist[this.currentindex].startPeriod_all=this.periodlist[index].startTime;
+                        this.goodslist[this.currentindex].endPeriod_all=this.periodlist[index].endTime; 
                         this.goodslist[this.currentindex].periodid=this.periodlist[index].id;      
                     }
-                    // console.log(result);
-                    
-                    // 
-                    
                     this.popupVisible = false;
                     this.calendar3.show = false;              
                 }
@@ -482,19 +489,23 @@
                 this.calendar3.show = false;
             },
             // 获取时间断列表
-            getTimetemplatelist(commodityid){
+            getTimetemplatelist(templateid,date){
                 return new Promise((resolve,reject)=>{
                     let that=this;
-                    let companyid=sessionStorage.getItem('companyId');
-                    that.$http.post('/api/product/commodity/periodTemplateContent/queryPeriodListByTemplateId?templateId='+commodityid+'&companyId='+companyid,{})
+                    // let companyid=sessionStorage.getItem('companyId');
+                    that.$http.post('/api/product/period/query',{
+                        date:date,
+                        templateId:templateid
+                    })
                     .then(res=>{
                         if(res.data.status==200){
                             that.dates=[];
                             let periodlist=[];
-                            that.periodlist=res.data.info;
+                            that.periodlist=res.data.info.list[1];
+                            let periodlist_nums=res.data.info.list[0];                            
                             // console.log(res.data.info);
-                            res.data.info.forEach(item=>{
-                                periodlist.push(item.startTime.substring(0,5)+' - '+item.endTime.substring(0,5)+'(剩余:'+item.pCount+')');
+                            res.data.info.list[1].forEach((item,index)=>{
+                                periodlist.push(item.startTime.substring(0,5)+' - '+item.endTime.substring(0,5)+'(剩余:'+periodlist_nums[index]+')');
                             });
                             let json={
                                 values:periodlist,
@@ -684,13 +695,14 @@
                     };
                     if(item.isservice&&item.startPeriod!=''){
                         json.appointment={
-                            startTime:   item.commondate+' '+item.startPeriod,
-                            endTime:item.commondate+' '+item.endPeriod,
+                            startTime:item.commondate+' '+item.startPeriod_all,
+                            endTime:item.commondate+' '+item.endPeriod_all,
                             accountId:this.userinfo.id,
                             templateId:item.periodTemplateId,
                             companyId:sessionStorage.getItem('companyId'),
                             isService:0,
-                            periodId:item.periodid
+                            periodId:item.periodid,
+                            date:item.commondate
                         };
                     }
                     mallOrderList.push(json);
