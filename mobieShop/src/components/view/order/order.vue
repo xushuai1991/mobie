@@ -240,7 +240,7 @@ export default {
             
         })
     },
-    watch:{
+    watch:{ 
         selected(value){
             switch(value){
                 //全部
@@ -346,7 +346,7 @@ export default {
         },
         onValuesChange(picker,values){
             this.datechange=values[0];
-            console.log(values);
+            // console.log(values);
         },
         clickDay(value){
             let str=value[0]+'-'+value[1]+'-'+value[2];
@@ -468,6 +468,7 @@ export default {
                         let periodlist=[];
                         that.periodlist=res.data.info[1];
                         let lastnumlist=res.data.info[0];
+                        console.log(res);
                         res.data.info[1].forEach((item,index)=>{
                             periodlist.push(item.startTime.substring(0,5)+' - '+item.endTime.substring(0,5)+'(剩余:'+lastnumlist[index]+')');
                         });

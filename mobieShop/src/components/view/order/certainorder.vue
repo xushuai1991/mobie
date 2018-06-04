@@ -20,8 +20,8 @@
                         </div>
                         <div class='msg'>
                             <p class='name'>{{item.name}}</p>
-                            <p class='brand'>{{item.conditionname1}}：{{item.conditionvalue1}}</p>
-                            <p class='area' >{{item.conditionname2}}：{{item.conditionvalue2}}</p>
+                            <p class='brand' v-if='item.conditionname1!==""'>{{item.conditionname1}}：{{item.conditionvalue1}}</p>
+                            <p class='area' v-if='item.conditionvalue2!==""'>{{item.conditionname2}}：{{item.conditionvalue2}}</p>
                             <p class='servicetime' v-if='item.isservice'>{{'服务时间：'+(item.startPeriod==''?'空':item.commondate+' '+item.startPeriod+'-'+item.endPeriod)}}</p>
                         </div>
                         <div class='tips'>
