@@ -158,6 +158,7 @@
     export default {
         data() {
             return {
+                templateIds:'',
                 Willday: '',
                 newDay: '',
                 calendar3: {
@@ -174,22 +175,27 @@
                         this.calendar3.value = value;
                         this.calendar3.display = value.join("-");
                         // console.log(this.calendar3.display)
-                        let url = '/api/product/commodity/periodTemplateContent/queryPeriodListByTemplateId?companyId=' + this.compunetid.companyId + "&templateId=" + this.compunetid.commodityId;
+                        let url = '/api/product/period/query';
                         this.$http({
                             url: url,
                             method: "POST",
-                            data: {}
+                            data: {
+                                date:this.calendar3.display,
+                                templateId: this.templateIds,
+                            }
                         }).then((res) => {
-                            console.log(res)
                             if (res.data.status == 200) {
                                 this.popupVisible = true;
                                 let periodlist = [];
-                                that.periodlist = res.data.info[1];
-                                let lastnumlist = res.data.info[0];
-                                res.data.info[1].forEach((item, index) => {
+                                that.periodlist = res.data.info.list[1];
+                                let lastnumlist = res.data.info.list[0];
+                                console.log(res.data.info.list[1])
+                                res.data.info.list[1].forEach((item, index) => {
+                                    console.log(item[0])
                                     periodlist.push(item.startTime.substring(0, 5) + ' - ' + item.endTime.substring(0, 5) + '(剩余:' + lastnumlist[index] + ')');
                                 });
                                 that.dates[0].values = periodlist
+                                console.log(that.dates[0].values)
                             } else if (res.data.status == 300) {
                                 Toast('请联系客服配置该商品的预约时间');
                                 resolve(false);
@@ -345,12 +351,14 @@
                         // 添加预约记录
                         let datainfo = JSON.parse(JSON.parse(localStorage.getItem("userinfo")).data);
                         let accpid = datainfo.id
+                        console.log(this.orstate)
                         if (this.orstate == null) {
                             console.log("新增时间")
                             let that = this;
+                            
                             this.$http.post('/api/product/appointment/insertone?weekDay=' + that.calendar3.display, {
-                                    startTime: that.calendar3.display + ' ' + that.startPeriod,
-                                    endTime: that.calendar3.display + ' ' + that.endPeriod,
+                                    startTime: that.calendar3.display + ' ' + this.periodlist[0].startTime,
+                                    endTime: that.calendar3.display + ' ' + this.periodlist[0].endTime,
                                     accountId: accpid,
                                     commodityId: that.compunetid.commodityId,
                                     periodId: that.periodlist[index].id,
@@ -376,11 +384,10 @@
                         // 修改预约记录
                         else {
                             let that = this;
-                            console.log()
                             this.$http.post('/api/product/appointment/update', {
                                     id:that.compunetid.appointments.id,
-                                    startTime: this.calendar3.display + ' ' + this.startPeriod,
-                                    endTime: this.calendar3.display + ' ' + this.endPeriod,
+                                    startTime: this.calendar3.display + ' ' + this.periodlist[0].startTime,
+                                    endTime: this.calendar3.display + ' ' + this.periodlist[0].endTime,
                                     isService: 0
                                 })
                                 .then(res => {
@@ -534,6 +541,8 @@
                             this.conversionAmount += (item.conversionAmount - 0)
                         })
                     }
+                    console.log()
+                    this.templateIds = orderStaty.orderDetails[0].appointments.templateId
                     this.uerName = orderStaty.name;
                     this.userPhone = orderStaty.phone
                     this.userAdd = orderStaty.detailAddress
