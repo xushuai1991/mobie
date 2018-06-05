@@ -28,8 +28,8 @@
             <!-- 待付款 -->
             <mt-tab-container-item id="willpay" class='order_type'>
                 <ul v-infinite-scroll="loadMore1" infinite-scroll-disabled="loading2" :infinite-scroll-immediate-check='false' class='orderlist'>
-                    <li v-for="(item,index) in orderlist[1]" :key="index" :indexorder='index'>
-                        <ordercell :data='item' index='1'></ordercell>
+                    <li v-for="(item,index) in orderlist[1]" :key="index" >
+                        <ordercell :data='item' index='1' :indexorder='index'></ordercell>
                     </li>
                 </ul>
                 <p v-show="!loading2" class="page-infinite-loading">
@@ -428,7 +428,7 @@ export default {
                     let endtime=that.selectTime+' '+that.endPeriod;
                     let dom=document.querySelectorAll('.order_type')[that.typeindex_current].querySelectorAll('li')[that.indexorder_current].querySelectorAll('.detail')[that.commodityindex_current];
                     dom.querySelector('.appointment').querySelector('button').innerHTML='修改时间';
-                    dom.querySelector('.appointment').querySelector('span').innerHTML='服务时间：'+that.selectTime+' '+that.startPeriod+'-'+that.endPeriod;
+                    dom.querySelector('.appointment').querySelector('span').innerHTML='服务时间：'+that.selectTime+' '+that.startPeriod+'-'+that.endPeriod+'(待确认)';
                     that.popupVisible=false;
                     that.calendar3.show = false;
                     Toast('预约时间申请成功');
@@ -457,9 +457,10 @@ export default {
                     let str=that.selectTime+' '+that.startPeriod+'-'+that.endPeriod;
                     let starttime=that.selectTime+' '+that.startPeriod;
                     let endtime=that.selectTime+' '+that.endPeriod;
+                    
                     let dom=document.querySelectorAll('.order_type')[that.typeindex_current].querySelectorAll('li')[that.indexorder_current].querySelectorAll('.detail')[that.commodityindex_current];
                     dom.querySelector('.appointment').querySelector('button').innerHTML='修改时间';
-                    dom.querySelector('.appointment').querySelector('span').innerHTML='服务时间：'+that.selectTime+' '+that.startPeriod+'-'+that.endPeriod;
+                    dom.querySelector('.appointment').querySelector('span').innerHTML='服务时间：'+that.selectTime+' '+that.startPeriod+'-'+that.endPeriod+'(待确认)';
                     that.popupVisible=false;
                     that.calendar3.show = false;
                     Toast('预约时间修改成功');
