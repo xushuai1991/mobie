@@ -54,8 +54,9 @@
             
             <p class='opera_quick'>
                 <mt-button type="default" class='btn-login button' @click="loginquick">快速登录</mt-button>
-                <router-link to='' class='pswlogin' @click.native='switch_login'>密码登录</router-link>
+                <!-- <router-link to='' class='pswlogin' @click.native='switch_login'>密码登录</router-link> -->
             </p>
+            <mt-button type="default" class='btn-resign'  @click.native='switch_resign'>没有账号，立即注册</mt-button>
         </div>
         <!-- 注册 -->
         <div class='form login' v-show='resignflag'>
@@ -70,19 +71,19 @@
                 <p class='error'></p>
                 <router-link to='' style='position:absolute;font-size:.3rem;top:.6rem;right:.2rem;'  @click.native='getcode(1)'>{{second}}</router-link>
             </div>
-            <div class="psw">
+            <div class="psw" v-if='false'>
                 <i class='icon iconfont icon-16suo font'></i>
                 <input type="password" placeholder="密码" v-model="psw" @change='checkpsw()' @focus="focus_input" @blur="blur_input">
                 <p class='error'>{{pswjson.msg}}</p>
             </div>
-            <div class="psw">
+            <div class="psw" v-if='false'>
                 <i class='icon iconfont icon-16suo font'></i>
                 <input type="password" placeholder="确认密码" v-model="pswtwice" @change='pswcertain()' @focus="focus_input" @blur="blur_input">
                 <p class='error'>{{pswcertainjson.msg}}</p>
             </div>
             
             <div class='agreement' >
-                <mt-button type="default" class='btn-login button' @click.native="resign" style='z-index:99;'>注册<i class='icon iconfont icon-xiangyoujiantou'></i></mt-button>
+                <mt-button type="default" class='btn-login button' @click.native="resign" style='z-index:99;'>注册</mt-button>
                 <mt-checklist
                 v-if='false'
                     v-model="agreement"
@@ -123,8 +124,8 @@ export default {
                 status:false,
                 msg:''
             },
-            loginflag:true,
-            loginquickflag:false,
+            loginflag:false,
+            loginquickflag:true,
             resignflag:false,
             second:'获取验证码',
             to:'',
@@ -371,7 +372,7 @@ export default {
         },
         // 注册
         resign(){
-            if(this.phonejson.status&&this.pswjson.status&&this.pswcertainjson.status){
+            if(this.phonejson.status){
                 if(this.code==''){
                     Toast('请输入验证码');
                 }
@@ -388,7 +389,7 @@ export default {
                     let recommendedAdminId=this.$route.query.recommendedAdminId;
                     let data={
                         mobile:that.phone,
-                        password:that.psw,
+                        // password:that.psw,
                         code:that.code,
                         openId:this.openId,
                         companyId:this.companyid,
@@ -409,8 +410,8 @@ export default {
             }
             else{
                 this.checkphone();
-                this.checkpsw();
-                this.pswcertain();
+                // this.checkpsw();
+                // this.pswcertain();
             }
         },
         // 获取验证码
@@ -454,8 +455,8 @@ export default {
             this.cleardata();
         },
         switch_login(){
-            this.loginflag=true;
-            this.loginquickflag=false;
+            // this.loginflag=true;
+            this.loginquickflag=true;
             this.resignflag=false;
             this.cleardata();            
         },
@@ -613,17 +614,17 @@ export default {
     line-height: .8rem;
 }
 .btn-login{
-    width: 40%;
+    width: 60%;
     border-radius: 1rem !important;
     margin: 0rem  auto;
-    height: .8rem;
+    height: .9rem;
     line-height: .8rem;
     text-align: center;
-    font-size: .3rem;
+    font-size: .35rem;
     color: #fff;
     border-radius: 5px;
     background:rgb(39, 162, 242);
-    float: right;
+    /* float: right; */
 }
 .btn-login .icon{
     color:#fff;
@@ -631,15 +632,16 @@ export default {
     top:0;
 }
 .btn-resign{
-    width:136%;
+    width:100%;
     height: 1.5rem;
     background-color: #fff;
-    /* left: 0; */
+    left: 0;
+    right:0;
     font-size: 0.3rem;
-    /* position: absolute; */
-    /* top: 7rem; */
-    margin-top: 1rem;
-    margin-left: -1rem;
+    position: absolute;
+    bottom: 0rem;
+    /* margin-top: 1rem; */
+    /* margin-left: -1rem; */
     display: block;
 }
 .error{
@@ -650,13 +652,13 @@ export default {
     color: red;
 }
 .agreement{
-    text-align: right;
+    margin-top:.2rem;
     font-size: .3rem;
     line-height: .35rem;
 }
-.agreement label{
+/* .agreement label{
     float: right;
-}
+} */
 .agreement input[type='checkbox']{
     width:.35rem;
     height:.35rem;

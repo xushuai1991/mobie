@@ -99,7 +99,6 @@ export default {
                     let list=res.data.info.list;
                     //  this.$set(that.couplist.list_using,0,{'text':1})
                     list.forEach(item=>{
-                        
                         if(item.couponInfo!=null){
                             let json={
                                 'couponMoney':item.couponInfo.couponMoney,

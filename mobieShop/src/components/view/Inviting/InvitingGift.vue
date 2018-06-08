@@ -21,14 +21,14 @@
                         <input type="text" v-model="formData.checkCode" name="checkCode" placeholder="请输入验证码">
                         <p :disabled="isClcik" id="resend" ref="message" @click="resendMessage">{{message}}</p>
                     </li>
-                    <li>
+                    <!-- <li>
                         <span>注册密码</span>
                         <input type="password" v-model="formData.password" @blur="checkpsw" name="password" placeholder="字母开头,且只能输入6-12位">
                     </li>
                     <li>
                         <span>确认密码</span>
                         <input type="password" v-model="formData.surePassword" @blur="pswcertain" name="surePassword" placeholder="请确认密码">
-                    </li>
+                    </li> -->
                     <li>
                         <mt-button type="primary" class='button' style='padding:0 1rem;' @click="registerOk">确认</mt-button>
                     </li>
@@ -204,7 +204,7 @@
                 let data = {
                     code: that.formData.checkCode,
                     mobile: that.formData.phone,
-                    password: that.formData.password,
+                    // password: that.formData.password,
                     companyId:companyId
                 }
                 data[this.type] = this.paramData
@@ -406,7 +406,7 @@
             z-index: 5; // overflow: hidden;
             .invite-register {
                 width: 80%;
-                top: .5rem;
+                top: 2rem;
                 left: 0;
                 right: 0;
                 margin: auto;
@@ -421,7 +421,7 @@
                     li:nth-child(3) {
                         border-bottom: 1px solid #eee;
                         padding: 0.3rem 0 0.3rem 0.2rem;
-                        text-align: left;
+                        // text-align: left;
                         margin-bottom: 0.5rem;
                         letter-spacing: 0.02rem;
                         span {

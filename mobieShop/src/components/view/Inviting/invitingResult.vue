@@ -6,15 +6,29 @@
             <img class='ImgBox' :src='wxSrc' />
             <p>扫描二维码,前往商城</p>
         </div>
+        <div class='backcover' @click.self="closebackcover" v-if='showbackcover'>
+            <div class='coupon_cover'>
+                <p class='money'><span style='font-size:1.4rem;'>{{coupon.money}}</span>元</p>
+                <p class='condition'>单笔订单满{{coupon.condition}}元使用</p>
+                <div class='btn' @click="getcoupin"></div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
+import {Toast} from 'mint-ui';
 export default {
     data () {
         return {
             bgSrc:require('./invite-result.png'),
             wxSrc:'http://daojia.jingrunjia.com.cn/api/static/weixin/78.jpg',
-            msg:''
+            msg:'',
+            coupon:{
+                id:'347d7ca0-6b04-11e8-b6ac-00163e02c66a',
+                money:50,
+                condition:300
+            },
+            showbackcover:true
         }
     },
     created(){
@@ -44,6 +58,28 @@ export default {
     methods:{
         changeText(){
             this.msg = this.$router.history.current.query.text
+        },
+        // 领取优惠券
+        getcoupin(){
+            let that=this;
+            this.$http.post('/api/product/coupon/customer/insert?couponId='+this.coupon.id,{})
+            .then(res=>{
+                if(res.data.status==200){
+                    Toast('领取成功！');
+                    that.closebackcover();
+                }
+                else{
+                    Toast(res.data.msg);
+                }
+            })
+            .catch(err=>{
+                Toast('领取失败');
+                console.log(err);
+            })
+        },
+        // 关闭覆盖层
+        closebackcover(){
+            this.showbackcover=false;
         }
     }
 }
@@ -54,6 +90,48 @@ html,body{
 }
 </style>
 <style lang="less" scoped>
+.backcover{
+    width:100%;
+    height:100%;
+    display: flex;
+    // justify-content:center;
+    // flex-direction:column ;
+    position:absolute;
+    top:0;
+    right:0;
+    background: rgba(0, 0, 0, 0.5);
+    .coupon_cover{
+        width:82%;
+        height:4rem;
+        background-image:url('/static/images/coup.png');
+        background-size:cover;
+        position: absolute;
+        left:0;
+        right:0;
+        top:4.5rem;
+        margin:auto;
+        color:white;
+        .money{
+            font-size:1rem;
+            position: absolute;
+            top:.5rem;;
+            left: .6rem;;
+        }
+        .condition{
+            font-size:.3rem;
+            position: absolute;
+            top:2.1rem;;
+            left: .6rem;;
+        }
+        .btn{
+            width:1.3rem;
+            height:1.3rem;
+            position: absolute;
+            left:3.6rem;
+            top:.9rem;
+        }
+    }
+}
 .ImgBox{
         width: 3rem;
     height: 3rem;
