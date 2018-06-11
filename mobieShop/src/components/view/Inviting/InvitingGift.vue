@@ -216,7 +216,8 @@
                         that.$router.push({
                             path: '/InvitingResult?companyId=' + that.companyId,
                             query: {
-                                text: '恭喜你 ! 已成功领取积分'
+                                text: '恭喜你 ! 已成功领取积分',
+                                phone:that.formData.phone
                             }
                         })
                     } else if (response.data.status == 300) {
@@ -224,7 +225,8 @@
                             that.$router.push({
                                 path: '/InvitingResult?companyId=' + that.companyId,
                                 query: {
-                                    text: '老朋友,您已是会员,领取失败'
+                                    text: '老朋友,您已是会员,领取失败',
+                                    phone:that.formData.phone
                                 }
                             })
                         }
