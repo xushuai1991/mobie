@@ -322,7 +322,8 @@
                         //     'Content-Type': 'application/x-www-form-urlencoded'
                         // },
                         data: {
-                            companyId: id
+                            companyId: id,
+                            couponStatus:1
                         }
                     }).then(response => {
                         rel(response)

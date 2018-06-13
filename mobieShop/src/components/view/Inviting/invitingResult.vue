@@ -28,11 +28,14 @@ export default {
                 money:50,
                 condition:300
             },
-            showbackcover:true
+            showbackcover:true,
+            phone:null
         }
     },
     created(){
         let companyId=this.$route.query.companyId;
+        let phone=this.$route.query.phone;
+        this.phone=phone;
         switch(companyId){
             case '78':{
                 this.wxSrc='http://daojia.jingrunjia.com.cn/api/static/weixin/78.jpg';
@@ -62,7 +65,7 @@ export default {
         // 领取优惠券
         getcoupin(){
             let that=this;
-            this.$http.post('/api/product/coupon/customer/insert?couponId='+this.coupon.id,{})
+            this.$http.post('/api/product/coupon/customer/mall/insert?couponId='+this.coupon.id+'&mobile='+this.phone,{})
             .then(res=>{
                 if(res.data.status==200){
                     Toast('领取成功！');
