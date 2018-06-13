@@ -6,7 +6,7 @@
             <!-- <div class='time-remain'></div> -->
         </div>
         <div class='content' @click.stop='toOrderDetail(data.number,index)'>
-            <div :class='{"detail":true,"grey":(type=="unservice"&item.serviceState!=1)||(type=="inservice"&item.serviceState!=2)}' v-for='(item,index1) in data.orderDetails' :key='index1' >
+            <div :class='{"detail":true,"grey":(type=="unservice"&item.serviceState!=1)||(type=="inservice"&item.serviceState!=2)}' v-for='(item,index1) in orderdetails' :key='index1' >
                 <div class='img-goods'>
                     <img :src='"http://"+hostName+":"+port+"/api"+item.image' alt="图片丢失" style="width:100%;height:100%;">
                 </div>
@@ -20,8 +20,46 @@
                     <p>x{{item.saleNumber}}</p>
                 </div>
                 <div class='appointment' v-if='item.isService==true'>
-                    <button class='button'  @click.stop="openByDrop({index:index1,e:$event,commodityid:item.commodityId,orderdetailid:item.id,templateId:item.commodityInfo.periodTemplateId,type:item.appointments==null?'add':'edit',appointid:item.appointments==null?null:item.appointments.id})">{{item.appointments==null?'预约时间':'修改预约'}}</button>                    
-                    <span>服务时间：{{item.appointments==null?'无':(item.appointments.startTime.substring(0,10)+' '+item.appointments.startTime.substring(11,16)+'-'+ item.appointments.endTime.substring(11,16)+(item.appointments.isService==0?'(待确认)':''))}}</span>
+                    <button class='button'  @click.stop="openByDrop({index:index1,e:$event,commodityid:item.commodityId,orderdetailid:item.id,templateId:item.commodityInfo.periodTemplateId,type:'add'})">预约时间</button>                    
+                    
+                    <!-- <button class='button'  @click.stop="openByDrop({index:index1,e:$event,commodityid:item.commodityId,orderdetailid:item.id,templateId:item.commodityInfo.periodTemplateId,type:item.appointments==null?'add':'edit',appointid:item.appointments==null?null:item.appointments.id})">{{item.appointments==null?'预约时间':'修改预约'}}</button>                     -->
+                    <!-- <span>服务时间：{{item.appointments==null?'无':(item.appointments.startTime.substring(0,10)+' '+item.appointments.startTime.substring(11,16)+'-'+ item.appointments.endTime.substring(11,16)+(item.appointments.isService==0?'(待确认)':''))}}</span> -->
+                </div>
+                <div class='servicetime' v-if='item.isService' >
+                    <div class='appoint' v-if='item.appointments!=null'>
+                        <div>
+                            <p>Date</p>
+                        </div>
+                        <div>
+                            <p>Time</p>
+                        </div>
+                        <div>
+                            <p>Num</p>
+                        </div>  
+                        <div>
+                            <p>State</p>
+                        </div>  
+                        <div style='text-align:left;text-indent:.3rem;'>
+                            <p>Oper</p>
+                        </div>                        
+                    </div>
+                    <div class='appoint' v-for='(appoint,index2) in item.appointments' :key='index2'>
+                        <div>
+                            <p>{{appoint.startTime.substring(0,10)}}</p>
+                        </div>
+                        <div>
+                            <p>{{appoint.startTime.substring(11,16)+'-'+appoint.endTime.substring(11,16)}}</p>
+                        </div>
+                        <div>
+                            <p>X{{appoint.number}}</p>
+                        </div>
+                        <div>
+                            <p>{{appoint.isService==1?'确认':'待确认'}}</p>
+                        </div>
+                        <div>
+                            <button  class='prime editttime' @click.stop="openByDrop({index:index1,index_appoint:index2,appointid:appoint.id,e:$event,commodityid:item.commodityId,orderdetailid:item.id,templateId:item.commodityInfo.periodTemplateId,type:'edit'})">修改</button>
+                        </div>                                
+                    </div>
                 </div>
             </div>
             <div class='price-total'>
@@ -83,7 +121,8 @@ export default {
             currentid:'',
             datechange:'',
             type_appoint:'',
-            index_appoint:''
+            index_appoint:'',
+            orderdetails:this.data.orderDetails
             // status:''
         }  
     },
@@ -100,8 +139,10 @@ export default {
     },
     methods:{
         openByDrop(data) {
+            // console.log(data);
             data.indexorder=this.indexorder;
             data.type_index=this.index;
+
             this.$root.$emit('calendar',data)
         },
         // test(){
@@ -304,10 +345,15 @@ export default {
         //     }
         //     return total;
         // }
+    },
+    watch:{
+        data(){
+            console.log(1111);
+        }
     }
 }
 </script>
-<style scoped>
+<style scoped lang='less'>
 .ordercell{
     margin-bottom: 0.2rem;
     background-color: #fff;
@@ -338,8 +384,9 @@ export default {
 }
 .appointment{
     /* text-align: right; */
-    margin-top:1.8rem;
-    /* position: absolute; */
+    /* margin-top:1.8rem; */
+    position: absolute;
+    top:1.5rem;
     width:100%;
     overflow: hidden;
 }
@@ -389,6 +436,9 @@ export default {
     font-size: .35rem;
     padding-top: .1rem;
     padding-bottom: .1rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 .detail-goods p{
     color:#787878;
@@ -451,5 +501,60 @@ export default {
     width: 1rem;
     float: left;
 } */
+.detail .servicetime {
+    font-size: .25rem;
+    padding: .1rem 0;
+    clear: both;
+    .appoint{
+        padding:.1rem .2rem;
+        overflow: hidden;
+        text-align: left;
+        div{
+            width:25%;
+            float: left;
+            line-height: .4rem;
+            p{
+                padding:.1rem 0;
+            }
+        }
+        div:nth-child(3){
+            width:17%;
+            // padding-left: .3rem;
+        }
+        div:nth-child(4){
+            width:13%;
+            font-size: .2rem;
+        }
+        div:nth-child(5){
+            width: 20%;
+            text-align: center;
+        }
+        button.editttime{
+            font-size: .25rem;
+            width:60%;
+            padding:.07rem 0;
+            margin-top: .03rem;
+            outline: none;
+            border-radius: .1rem;
+            border:1px solid grey;
+            background-color: transparent;
+        }
+    }
+    .appoint:nth-child(odd){
+        background-color: #eaeaea;
+        
+    }
+    .appoint:nth-child(even){
+        background-color: #f6f6f6;
+    }
+    .appoint:nth-child(1){
+        background-color: #f6f6f6;
+        padding: 0 .2rem;
+        background-color: white;
+        div:nth-child(4){
+            font-size: .25rem;
+        }
+    }
+}
 </style>
 

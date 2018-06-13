@@ -22,19 +22,43 @@
                             <p class='name'>{{item.name}}</p>
                             <p class='brand' v-if='item.conditionname1!==""'>{{item.conditionname1}}：{{item.conditionvalue1}}</p>
                             <p class='area' v-if='item.conditionvalue2!==""'>{{item.conditionname2}}：{{item.conditionvalue2}}</p>
-                            <p class='servicetime' v-if='item.isservice'>{{'服务时间：'+(item.startPeriod==''?'空':item.commondate+' '+item.startPeriod+'-'+item.endPeriod)}}</p>
+                            
+                        </div>
+                        
+                        <div class='servicetime' v-if='item.isservice&item.peridlist.length!=0' >
+                            <div class='appoint' v-for='(appoint,index1) in item.peridlist' :key='index1'>
+                                <div>
+                                    <p>Date</p>
+                                    <p>{{appoint.commondate}}</p>
+                                </div>
+                                <div>
+                                    <p>Time</p>
+                                    <p>{{appoint.startPeriod+'-'+appoint.endPeriod}}</p>
+                                </div>
+                                <div>
+                                    <p>&nbsp;</p>
+                                    <p>X{{appoint.nums}}</p>
+                                </div>
+                                <div>
+                                    <button  class='prime editttime' @click='changeappointtime(index,index1)'>修改</button>
+                                    <button  class='prime deletetime' @click='deleteappointtime(index,index1)'>删除</button>                                    
+                                </div>                                
+                            </div>
+                       
+                            <!-- {{'服务时间：'+(item.startPeriod==''?'空':item.commondate+' '+item.startPeriod+'-'+item.endPeriod)}} -->
                         </div>
                         <div class='tips'>
                             <p class='price'>￥{{item.price_unit}}</p>
-                            <p class='oper' v-if='!item.isservice'>
+                            <p class='oper' >
                                 <input type="button" @click="reduce(index)" value='－'>
-                                <input type="number" v-model="item.nums" v-on:blur="changeCount()" />
+                                <input type="number" v-model="item.nums" v-on:blur="changeCount(index)" />
                                 <input type="button" @click="add(index)" value='＋'>
                             </p>
-                            <p class='oper' v-if='item.isservice'>
+                            <!-- <p class='oper' v-if='item.isservice'>
                                 <span>{{'X'+item.nums}}</span>
-                            </p>
+                            </p> -->
                         </div>
+                        
                          <button v-if='item.isservice' class='prime button appointtime' @click='changeappointtime(index)'>预约时间</button>
                     </div>
                     <div v-if='item.childlist.length>0' class='package'>
@@ -224,8 +248,13 @@
                 startPeriod:'',
                 endPeriod:'',
                 currentindex:'',
+                currentindex_appoint:'',
                 periodlist:[],
-                periodTemplateid:null
+                periodTemplateid:null,
+                // create:添加预约时间，edit:修改预约时间
+                appointtype:'create',
+                // 预约的商品数量
+                appointnum:0
             }
         },
         computed: {
@@ -311,28 +340,27 @@
             data.forEach(item => {
                 let isservice=item.isService;
                 if(isservice){
-                    for(let i=0;i<item.nums;i++){
-                        let json = {
-                            id: item.id,
-                            name: item.name,
-                            periodTemplateId:item.periodTemplateId,
-                            imgurl: item.commodityImageList.length > 0 ? item.commodityImageList[0].url : '',
-                            conditionname1: item.options[0] == null ? '' : item.options[0].name,
-                            conditionvalue1: item.options[0] == null ? '' : item.options[0].value,
-                            conditionname2: item.options[1] == null ? '' : item.options[1].name,
-                            conditionvalue2: item.options[1] == null ? '' : item.options[1].value,
-                            price_unit: item.priceRule==1?item.originalPrice:item.priceRule==2?item.discountPrice:item.currentPrice,
-                            nums: 1,
-                            childlist: [],
-                            scorecanuse:item.originalPricePoint==null?0:item.originalPricePoint,
-                            scoreuse:0,
-                            isservice:item.isService,
-                            commondate:'',
-                            startPeriod:'',
-                            endPeriod:''
-                        };
-                        this.goodslist.push(json);
-                    }
+                    let json = {
+                        id: item.id,
+                        name: item.name,
+                        periodTemplateId:item.periodTemplateId,
+                        imgurl: item.commodityImageList.length > 0 ? item.commodityImageList[0].url : '',
+                        conditionname1: item.options[0] == null ? '' : item.options[0].name,
+                        conditionvalue1: item.options[0] == null ? '' : item.options[0].value,
+                        conditionname2: item.options[1] == null ? '' : item.options[1].name,
+                        conditionvalue2: item.options[1] == null ? '' : item.options[1].value,
+                        price_unit: item.priceRule==1?item.originalPrice:item.priceRule==2?item.discountPrice:item.currentPrice,
+                        nums: item.nums,
+                        childlist: [],
+                        scorecanuse:item.originalPricePoint==null?0:item.originalPricePoint,
+                        scoreuse:0,
+                        isservice:item.isService,
+                        commondate:'',
+                        peridlist:[],
+                        // startPeriod:'',
+                        // endPeriod:''
+                    };
+                    this.goodslist.push(json);
                 }
                 else{
                     let json = {
@@ -370,36 +398,56 @@
             }
         },
         methods: {
-            changeappointtime(index){
+            changeappointtime(index,index1){
+                this.appointtype=index1==undefined?'create':'edit';
                 this.currentindex=index;
-                let commodityid=this.goodslist[index].id;
+                this.currentindex_appoint=index1;
+                // let commodityid=this.goodslist[index].id;
                 this.periodTemplateid=this.goodslist[index].periodTemplateId;
                 if(this.periodTemplateid==null){
                     Toast('请联系客服配置该商品的预约时间');
                     return;
                 }
-                this.calendar3.show = true;
-                window.setTimeout(() => {
-                    document.addEventListener("click", (e) => {
-                        // this.calendar3.show = false;
-                        document.removeEventListener("click", () => {}, false);
-                    }, false);
-                }, 1000)
-                // this.getTimetemplatelist(commodityid).then(success=>{
-                //     if(success){
-                //         this.calendar3.show = true;
-                //         window.setTimeout(() => {
-                //             document.addEventListener("click", (e) => {
-                //                 // this.calendar3.show = false;
-                //                 document.removeEventListener("click", () => {}, false);
-                //             }, false);
-                //         }, 1000)
-                //     }
-                // });
+                MessageBox.prompt('预约数量','').then(data=>{
+                    let value=data.value;
+                    let isnum=value!=null&&!isNaN(value-0)&&value>0;
+                    // console.log(value,isnum);
+                    if(isnum){
+                        let num_hasappoint=0;
+                        this.goodslist[index].peridlist.forEach((item,key)=>{
+                            num_hasappoint+=(key!=index1?item.nums:0);
+                        });
+                        // 可预约的数目
+                        let  num_canappoint=this.goodslist[index].nums-num_hasappoint;
+                        if(Number(value)>num_canappoint){
+                            Toast('超过最多可预约数目');
+                            return;
+                        }
+                        this.appointnum=Number(value);
+                        this.calendar3.show = true;
+                        window.setTimeout(() => {
+                            document.addEventListener("click", (e) => {
+                                document.removeEventListener("click", () => {}, false);
+                            }, false);
+                        }, 1000)
+                    }
+                    else{
+                        Toast('请输入正确的数目');
+                        return;
+                    }
+                    console.log(isnum);
+                }).catch(_=>{
+                    console.log('取消');
+                    return;
+                });
+                
+            },
+            deleteappointtime(index,index1){
+                console.log(this.goodslist[index].peridlist);
+                this.goodslist[index].peridlist.splice(index1,1);
             },
             clickDay(value){
                 let str=value[0]+'-'+value[1]+'-'+value[2];
-                
                 this.getTimetemplatelist(this.periodTemplateid,str).then(success=>{
                     if(success){
                         this.selectTime=str;
@@ -407,10 +455,7 @@
                         this.endPeriod='';
                         this.popupVisible=true;
                     }
-                    
                 });
-                
-                console.log(str);
             },
             changescore(index){
                 let item=this.goodslist[index];
@@ -463,19 +508,38 @@
                 let currentstr=this.datechange[0];
                 let canselect=currentstr.indexOf('剩余:0')<0;
                 if(canselect){
-                    
                     let list=this.datechange[0].substring(0,13).split('-');
                     let result=this.dates[0].values.has(currentstr);
                     if(result.result){
                         let index=result.index;
                         this.startPeriod=this.periodlist[index].startTime;
                         this.endPeriod=this.periodlist[index].endTime;
-                        this.goodslist[this.currentindex].commondate=this.selectTime;
-                        this.goodslist[this.currentindex].startPeriod=list[0].trim('');
-                        this.goodslist[this.currentindex].endPeriod=list[1].trim(''); 
-                        this.goodslist[this.currentindex].startPeriod_all=this.periodlist[index].startTime;
-                        this.goodslist[this.currentindex].endPeriod_all=this.periodlist[index].endTime; 
-                        this.goodslist[this.currentindex].periodid=this.periodlist[index].id;      
+                        let periodjson={
+                            commondate:this.selectTime,
+                            startPeriod:list[0].trim(''),
+                            endPeriod:list[1].trim(''),
+                            startPeriod_all:this.periodlist[index].startTime,
+                            endPeriod_all:this.periodlist[index].endTime,
+                            periodid:this.periodlist[index].id,
+                            nums:this.appointnum
+                        };
+                        //添加预约时间
+                        if(this.appointtype=='create'){
+                            this.goodslist[this.currentindex].peridlist.push(periodjson);
+                        }
+                        //修改预约时间
+                        else if(this.appointtype=='edit'){
+                            this.goodslist[this.currentindex].peridlist[this.currentindex_appoint]=periodjson;
+                        }
+                        
+
+                        // this.goodslist[this.currentindex].commondate=this.selectTime;
+
+                        // this.goodslist[this.currentindex].startPeriod=list[0].trim('');
+                        // this.goodslist[this.currentindex].endPeriod=list[1].trim(''); 
+                        // this.goodslist[this.currentindex].startPeriod_all=this.periodlist[index].startTime;
+                        // this.goodslist[this.currentindex].endPeriod_all=this.periodlist[index].endTime; 
+                        // this.goodslist[this.currentindex].periodid=this.periodlist[index].id;      
                     }
                     this.popupVisible = false;
                     this.calendar3.show = false;              
@@ -537,14 +601,17 @@
             makeinvoice() {
                 this.$router.push('/invoice');
             },
-            changeCount() {
+            changeCount(index) {
                 this.getCouponcanuse();
+                console.log(index);
+                this.goodslist[index].peridlist=[];
             },
             //改变商品数量+
             add(index) {
                 this.timestamp_start = new Date();
                 this.changeCouponable = false;
                 this.goodslist[index].nums++;
+                this.goodslist[index].peridlist=[];
                 // this.getCouponcanuse();
             },
             // 改变商品数量-
@@ -552,6 +619,7 @@
                 this.timestamp_start = new Date();
                 this.changeCouponable = false;
                 this.goodslist[index].nums = this.goodslist[index].nums == 1 ? 1 : --this.goodslist[index].nums;
+                this.goodslist[index].peridlist=[];
                 // this.getCouponcanuse();
             },
             // 获取默认地址
@@ -690,20 +758,36 @@
                         amount: item.nums,
                         usePoint: true,
                         pointSum:Number(item.scoreuse),
+                        appointment:[],
                         condition1Name: item.conditionname1 ==''?'':(item.conditionname1 + '：' + item.conditionvalue1),
                         condition2Name: item.conditionname2 == '' ? '' : (item.conditionname2 + '：' + item.conditionvalue2)
                     };
-                    if(item.isservice&&item.startPeriod!=''){
-                        json.appointment={
-                            startTime:item.commondate+' '+item.startPeriod_all,
-                            endTime:item.commondate+' '+item.endPeriod_all,
-                            accountId:this.userinfo.id,
-                            templateId:item.periodTemplateId,
-                            companyId:sessionStorage.getItem('companyId'),
-                            isService:0,
-                            periodId:item.periodid,
-                            date:item.commondate
-                        };
+                    if(item.isservice&&item.peridlist.length!=0){
+                        item.peridlist.forEach(period=>{
+                            let json1={
+                                startTime:period.commondate+' '+period.startPeriod_all,
+                                endTime:period.commondate+' '+period.endPeriod_all,
+                                accountId:this.userinfo.id,
+                                templateId:item.periodTemplateId,
+                                companyId:sessionStorage.getItem('companyId'),
+                                isService:0,
+                                periodId:period.periodid,
+                                date:period.commondate,
+                                number:period.nums
+                            }
+                            json.appointment.push(json1)
+                        });
+                        // json.appointment={
+                        //     startTime:item.commondate+' '+item.startPeriod_all,
+                        //     endTime:item.commondate+' '+item.endPeriod_all,
+                        //     accountId:this.userinfo.id,
+                        //     templateId:item.periodTemplateId,
+                        //     companyId:sessionStorage.getItem('companyId'),
+                        //     isService:0,
+                        //     periodId:item.periodid,
+                        //     date:item.commondate,
+                        //     nums:
+                        // };
                     }
                     mallOrderList.push(json);
                 });
@@ -816,7 +900,7 @@
             width: 1.5rem;
             position: absolute;
             right:.2rem;
-            top:1.2rem;
+            top:1rem;
             padding: 0.1rem;
             border:1px solid #26a2ff;
             border-radius: .1rem;
@@ -850,16 +934,61 @@
         font-size: .25rem;
         padding-bottom: .3rem;
     }
-    .msg-goods .msg .servicetime {
+    .msg-goods .servicetime {
         font-size: .25rem;
-        position: absolute;
-        top:2.3rem;
-        left:2.75rem;
+        padding: .1rem 0;
+        clear: both;
+        .appoint{
+            padding:.1rem .2rem;
+            overflow: hidden;
+            div{
+                width:25%;
+                float: left;
+                p{
+                    padding:.1rem 0;
+                }
+            }
+            div:nth-child(3){
+                width:10%;
+                padding-left: .3rem;
+            }
+            div:nth-child(4){
+                text-align: right;
+                width:35%;
+            }
+            button.editttime{
+                width:40%;
+                padding:.05rem .15rem;
+                outline: none;
+                border-radius: .1rem;
+                border:1px solid grey;
+                margin-top:.25rem;
+                background-color: transparent;
+            }
+            button.deletetime{
+                width:40%;
+                padding:.05rem .15rem;
+                outline: none;
+                border-radius: .1rem;
+                border:1px solid grey;
+                margin-top:.25rem;
+                background-color: transparent;
+            }
+        }
+        .appoint:nth-child(odd){
+            background-color: #eaeaea;
+        }
+        .appoint:nth-child(even){
+            background-color: #f6f6f6;
+        }
+        // position: absolute;
+        // top:2.3rem;
+        // left:2.75rem;
     }
     .tips {
         position: absolute;
         width: 100%;
-        height: 100%;
+        // height: 100%;
         top: 0;
     }
     .msg-goods .tips p {
@@ -870,11 +999,11 @@
     .msg-goods .tips p.oper {
         // margin-top: .5rem;
         position: absolute;
-        bottom: .5rem;
+        top: 1.4rem;
         right: 0;
         input[type='number'] {
             // width:auto;
-            width: .8rem;
+            width: .6rem;
             height: .4rem;
             line-height: .5rem;
             text-align: center;

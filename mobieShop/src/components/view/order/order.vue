@@ -12,7 +12,7 @@
             <mt-tab-container-item id="all" class='order_type'>
                 <ul  v-infinite-scroll="loadMore"  infinite-scroll-disabled="loading1" :infinite-scroll-immediate-check='false'  class='orderlist'>
                     <li v-for="(item,index) in orderlist[0]" :key="index">
-                        <ordercell :data='item' index='0' :indexorder='index'></ordercell>
+                        <ordercell :data='item' index='0' :indexorder='index' :test='test'></ordercell>
                         <!-- <pendpay :data='item' index='0' v-if="item.payState!=1&&item.orderState==1"></pendpay>
                         <inservice :data='item' index='0' v-if='item.payState==1&&item.orderState==1&&item.serviceState==2'></inservice>
                         <willservice :data='item' index='0' v-if='item.payState==1&&item.orderState==1&&item.serviceState==1'></willservice>
@@ -111,6 +111,7 @@ import calendar from './calendar.vue'
 import {formatdate} from '../../../assets/javascript/formatdate.js'
 import {operatelocalstorage} from '../../../assets/javascript/localstorage_hasdata.js'
 import {mycommon} from '../../../assets/javascript/mycommon_xs.js'
+import {MessageBox} from 'mint-ui'
 export default {
     components:{willevaluate,ordercell,calendar},
     data() {
@@ -154,7 +155,10 @@ export default {
             indexorder_current:null,
             appointid_current:null,
             type_opera:null,
-            userinfo:null
+            userinfo:null,
+            // 预约的商品数量
+            appointnum:0,
+            index_currentappoint:null
         };
     },
     created(){
@@ -223,29 +227,42 @@ export default {
             this.commodityindex_current=data.index;
             this.typeindex_current=data.type_index;
             this.indexorder_current=data.indexorder;
-            this.appointid_current=data.appointid;
-            this.calendar3.show = true;
-            this.loading1=true;
-            e.stopPropagation();
-            window.setTimeout(() => {
-                document.addEventListener("click", (e) => {
-                    document.removeEventListener("click", () => {}, false);
-                }, false);
-            }, 1000)
-            // this.getPeriodList(commodityid).then(success=>{
-            //     if(success){
-            //         this.calendar3.show = true;
-            //         this.loading1=true;
-            //         e.stopPropagation();
-            //         window.setTimeout(() => {
-            //             document.addEventListener("click", (e) => {
-            //                 document.removeEventListener("click", () => {}, false);
-            //             }, false);
-            //         }, 1000)
-            //     }
-            // })
 
-            
+            this.appointid_current=data.appointid;
+            this.index_currentappoint=data.index_appoint;
+            MessageBox.prompt('预约数量','').then(datas=>{
+                let value=datas.value;
+                let isnum=value!=null&&!isNaN(value-0);
+                if(isnum){
+                    let num_hasappoint=0;
+                    let list=this.orderlist[this.typeindex_current][this.indexorder_current].orderDetails;
+                    let list_foreach=list[this.commodityindex_current].appointments==null?[]:list[this.commodityindex_current].appointments;
+                    list_foreach.forEach((item,key)=>{
+                        num_hasappoint+=(key!=data.index_appoint?item.number:0);
+                    })
+                    // 已经预约的数目
+                    let  num_canappoint=list[this.commodityindex_current].saleNumber-num_hasappoint;
+                    if(Number(value)>num_canappoint){
+                        Toast('超过最多可预约数目');
+                        return;
+                    }
+                    this.appointnum=Number(value);
+                    this.calendar3.show = true;
+                    window.setTimeout(() => {
+                        document.addEventListener("click", (e) => {
+                            document.removeEventListener("click", () => {}, false);
+                        }, false);
+                    }, 1000)
+                }
+                else{
+                    Toast('请输入正确的数目');
+                    return;
+                }
+                console.log(isnum);
+            }).catch(_=>{
+                console.log('取消');
+                return;
+            });
         })
     },
     watch:{ 
@@ -390,7 +407,7 @@ export default {
                     // 修改预约记录
                     else if(this.type_opera=='edit'){
                         this.editAppointment(index);
-                    }           
+                    }
                 }
                 else{
                     Toast('该时间段不可选');
@@ -405,7 +422,6 @@ export default {
         cancledate(){
             this.popupVisible=false;
             this.calendar3.show = false;
-            // document.querySelector('.calendar').style.display='none';
         },
         // 添加预约记录
         insertAppointment(periodId,index){
@@ -419,16 +435,28 @@ export default {
                 orderDetailId:that.orderdetailid_current,
                 templateId:that.templateid_current,
                 companyId:sessionStorage.getItem('companyId'),
-                isService:0
+                isService:0,
+                number:that.appointnum
             })
             .then(res=>{
                 if(res.data.status==200){
-                    let str=that.selectTime+' '+that.startPeriod+'-'+that.endPeriod;
-                    let starttime=that.selectTime+' '+that.startPeriod;
-                    let endtime=that.selectTime+' '+that.endPeriod;
-                    let dom=document.querySelectorAll('.order_type')[that.typeindex_current].querySelectorAll('li')[that.indexorder_current].querySelectorAll('.detail')[that.commodityindex_current];
-                    dom.querySelector('.appointment').querySelector('button').innerHTML='修改时间';
-                    dom.querySelector('.appointment').querySelector('span').innerHTML='服务时间：'+that.selectTime+' '+that.startPeriod+'-'+that.endPeriod+'(待确认)';
+                    let json={
+                        accountId:res.data.info.accountId,
+                        commodityId:res.data.info.commodityId,
+                        companyId:res.data.info.companyId,
+                        id:res.data.info.id,
+                        number:res.data.info.number,
+                        orderDetailId:res.data.info.orderDetailId,
+                        periodId:res.data.info.periodId,
+                        endTime:res.data.info.endTime,
+                        startTime:res.data.info.startTime,
+                        isService:res.data.info.isService
+                    }
+                    let list=that.orderlist[that.typeindex_current][that.indexorder_current].orderDetails[that.commodityindex_current].appointments;
+                    if(list==null){
+                        that.orderlist[that.typeindex_current][that.indexorder_current].orderDetails[that.commodityindex_current].appointments=[];
+                    }
+                    that.orderlist[that.typeindex_current][that.indexorder_current].orderDetails[that.commodityindex_current].appointments.push(json);
                     that.popupVisible=false;
                     that.calendar3.show = false;
                     Toast('预约时间申请成功');
@@ -450,7 +478,8 @@ export default {
                 id:this.appointid_current,
                 startTime:this.selectTime+' '+this.periodlist[index].startTime,
                 endTime:this.selectTime+' '+this.periodlist[index].endTime,
-                isService:0
+                isService:0,
+                number:this.appointnum
             })
             .then(res=>{
                 if(res.data.status==200){
@@ -458,9 +487,14 @@ export default {
                     let starttime=that.selectTime+' '+that.startPeriod;
                     let endtime=that.selectTime+' '+that.endPeriod;
                     
-                    let dom=document.querySelectorAll('.order_type')[that.typeindex_current].querySelectorAll('li')[that.indexorder_current].querySelectorAll('.detail')[that.commodityindex_current];
-                    dom.querySelector('.appointment').querySelector('button').innerHTML='修改时间';
-                    dom.querySelector('.appointment').querySelector('span').innerHTML='服务时间：'+that.selectTime+' '+that.startPeriod+'-'+that.endPeriod+'(待确认)';
+                    let list=that.orderlist[that.typeindex_current][that.indexorder_current].orderDetails[that.commodityindex_current].appointments[that.index_currentappoint]
+                    list.startTime=that.selectTime+' '+that.periodlist[index].startTime;
+                    list.endTime=that.selectTime+' '+that.periodlist[index].endTime;
+                    list.number=that.appointnum;
+
+                    // let dom=document.querySelectorAll('.order_type')[that.typeindex_current].querySelectorAll('li')[that.indexorder_current].querySelectorAll('.detail')[that.commodityindex_current];
+                    // dom.querySelector('.appointment').querySelector('button').innerHTML='修改时间';
+                    // dom.querySelector('.appointment').querySelector('span').innerHTML='服务时间：'+that.selectTime+' '+that.startPeriod+'-'+that.endPeriod+'(待确认)';
                     that.popupVisible=false;
                     that.calendar3.show = false;
                     Toast('预约时间修改成功');
