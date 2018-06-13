@@ -66,11 +66,45 @@
                                         <!--</mt-cell-swipe>!-->
                                     </div>
                                     <div v-show='item.isService&&(orderState!="订单已取消"||orderState!="等待买家支付")'>
-                                        <div class='edmitTime' v-if='item.isService'>
-                                            <span style="font-size:0.2rem;">服务时间：{{item.appointments==null?'无':(item.appointments.startTime.substring(0,10)+' '+item.appointments.startTime.substring(11,16)+'-'+ item.appointments.endTime.substring(11,16)+(item.appointments.isService==0?'(待确认)':''))}}</span>
-                                        </div>
+                                        
                                         <div class='appointment' v-if='item.isService'>
-                                            <button class='button' @click.stop="appointment(index,item.id,item,item.appointments)">{{item.appointTime==null?'预约时间':'修改时间'}}</button>
+                                            <button class='button' @click.stop="openByDrop({index:index,e:$event,commodityid:item.commodityId,orderdetailid:item.id,templateId:item.commodityInfo.periodTemplateId,appointments:item.appointments,saleNumber:item.saleNumber,type:'add'})">预约时间</button>
+                                        </div>
+                                        <div class='edmitTime' v-if='item.isService'>
+                                            <div class='appoint' v-if='item.appointments!=null'>
+                                                <div>
+                                                    <p>Date</p>
+                                                </div>
+                                                <div>
+                                                    <p>Time</p>
+                                                </div>
+                                                <div>
+                                                    <p>Num</p>
+                                                </div>  
+                                                <div>
+                                                    <p>State</p>
+                                                </div>  
+                                                <div style='text-align:left;text-indent:.3rem;'>
+                                                    <p>Oper</p>
+                                                </div>                        
+                                            </div>
+                                            <div class='appoint' v-for='(appoint,index2) in item.appointments' :key='index2'>
+                                                <div>
+                                                    <p>{{appoint.startTime.substring(0,10)}}</p>
+                                                </div>
+                                                <div>
+                                                    <p>{{appoint.startTime.substring(11,16)+'-'+appoint.endTime.substring(11,16)}}</p>
+                                                </div>
+                                                <div>
+                                                    <p>X{{appoint.number}}</p>
+                                                </div>
+                                                <div>
+                                                    <p>{{appoint.isService==1?'确认':'待确认'}}</p>
+                                                </div>
+                                                <div>
+                                                    <button  class='prime editttime' @click.stop="openByDrop({index:index,index_appoint:index2,appointid:appoint.id,e:$event,commodityid:item.commodityId,orderdetailid:item.id,templateId:item.commodityInfo.periodTemplateId,saleNumber:item.saleNumber,appointments:item.appointments,type:'edit'})">修改</button>
+                                                </div>                                
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="goodsBox" v-for="(items,indexs) in item.orderDetailList" :key="indexs">
@@ -326,17 +360,67 @@
                 var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate;
                 return currentdate;
             },
-            openByDrop(e) {
-                this.calendar3.show = true;
-                this.calendar3.left = e.target.offsetLeft + 19;
-                this.calendar3.top = e.target.offsetTop + 70;
-                e.stopPropagation();
-                window.setTimeout(() => {
-                    document.addEventListener("click", (e) => {
-                        // this.calendar3.show = false;
-                        document.removeEventListener("click", () => {}, false);
-                    }, false);
-                }, 1000)
+            openByDrop(data) {
+                // this.calendar3.show = true;
+                // this.calendar3.left = e.target.offsetLeft + 19;
+                // this.calendar3.top = e.target.offsetTop + 70;
+                // e.stopPropagation();
+                // window.setTimeout(() => {
+                //     document.addEventListener("click", (e) => {
+                //         // this.calendar3.show = false;
+                //         document.removeEventListener("click", () => {}, false);
+                //     }, false);
+                // }, 1000)
+                let commodityid=data.commodityid;
+                let orderdetailid=data.orderdetailid;
+                let templateid=data.templateId;
+                let e = data.e;
+                this.templateid_current=templateid;
+                this.orderdetailid_current=orderdetailid;
+                this.commodityrid_current=commodityid;
+                this.type_opera=data.type;
+                this.commodityindex_current=data.index;
+                this.appointid_current=data.appointid;
+            MessageBox.prompt('预约数量','').then(datas=>{
+                console.log(data)
+                let value=datas.value;
+                let isnum=value!=null&&!isNaN(value-0);
+                console.log(isnum)
+                if(isnum){
+                    let num_hasappoint=0;
+                    console.log(data.appointments)
+                    // let list=this.orderlist[this.typeindex_current][this.indexorder_current].orderDetails;
+                    let list_foreach=data.appointments;
+                    list_foreach.forEach((item,key)=>{
+                        console.log(item)
+                        num_hasappoint+=(key!=data.index_appoint?item.number:0);
+                    })
+        //             // 已经预约的数目
+                    let  num_canappoint=data.saleNumber-num_hasappoint;
+                    if(Math.abs(value)==0){
+                        Toast('预约时间不能为0');
+                        return;
+                    }
+                    if(Math.abs(value)>num_canappoint){
+                        Toast('超过最多可预约数目');
+                        return;
+                    }
+                    this.appointnum=Number(value);
+                    this.calendar3.show = true;
+                    window.setTimeout(() => {
+                        document.addEventListener("click", (e) => {
+                            document.removeEventListener("click", () => {}, false);
+                        }, false);
+                    }, 1000)
+                }
+                else{
+                    Toast('请输入正确的数目');
+                    return;
+                }
+            }).catch(_=>{
+                console.log('取消');
+                return;
+            });
             },
             getdate() {
                 let currentstr = this.datechange;
@@ -352,20 +436,19 @@
                         let datainfo = JSON.parse(JSON.parse(localStorage.getItem("userinfo")).data);
                         let accpid = datainfo.id
                         console.log(this.orstate)
-                        if (this.orstate == null) {
-                            console.log("新增时间")
+                        if (this.type_opera == 'add') {
                             let that = this;
-                            
                             this.$http.post('/api/product/appointment/insertone?weekDay=' + that.calendar3.display, {
                                     startTime: that.calendar3.display + ' ' + this.periodlist[0].startTime,
                                     endTime: that.calendar3.display + ' ' + this.periodlist[0].endTime,
                                     accountId: accpid,
-                                    commodityId: that.compunetid.commodityId,
+                                    commodityId: that.commodityrid_current,
                                     periodId: that.periodlist[index].id,
-                                    orderDetailId: that.compunetid.id,
-                                    templateId: that.compunetid.commodityInfo.periodTemplateId,
+                                    orderDetailId: that.orderdetailid_current,
+                                    templateId:that.templateid_current,
                                     companyId: sessionStorage.getItem('companyId'),
-                                    isService: 0
+                                    isService: 0,
+                                    number:that.appointnum
                                 })
                                 .then(res => {
                                     if (res.data.status == 200) {
@@ -383,12 +466,15 @@
                         }
                         // 修改预约记录
                         else {
+                            
                             let that = this;
+                            console.log(that.compunetid.appointments)
                             this.$http.post('/api/product/appointment/update', {
-                                    id:that.compunetid.appointments.id,
                                     startTime: this.calendar3.display + ' ' + this.periodlist[0].startTime,
                                     endTime: this.calendar3.display + ' ' + this.periodlist[0].endTime,
-                                    isService: 0
+                                    isService: 0,
+                                    id:this.appointid_current,
+                                    number:this.appointnum    
                                 })
                                 .then(res => {
                                     if (res.data.status == 200) {
@@ -439,23 +525,24 @@
                     }
                 })
             },
-            appointment(index, id, orstate, time) {
-                this.compunetid = orstate;
-                console.log(this.compunetid)
-                // var d = new Date();
-                // var hour = d.getHours();
-                // let arrTime = [];
-                // for (let i = 0; i <= 24; i++) {
-                //     if (i > hour) {
-                //         arrTime.push(i + "点")
-                //     }
-                // }
-                // this.dates[1].values = arrTime
-                this.calendar3.show = true;
-                // this.popupVisible = true;
-                this.currentindex = index;
-                this.id = id;
-                this.orstate = time;
+            appointment(val) {
+                console.log(val)
+                // this.compunetid = orstate;
+                // console.log(this.compunetid)
+                // // var d = new Date();
+                // // var hour = d.getHours();
+                // // let arrTime = [];
+                // // for (let i = 0; i <= 24; i++) {
+                // //     if (i > hour) {
+                // //         arrTime.push(i + "点")
+                // //     }
+                // // }
+                // // this.dates[1].values = arrTime
+                // this.calendar3.show = true;
+                // // this.popupVisible = true;
+                // this.currentindex = index;
+                // this.id = id;
+                // this.orstate = time;
             },
             onValuesChange(picker, values) {
                 this.datechange = values[0];
@@ -891,7 +978,6 @@
     .edmitTime {
         font-size: 0.3rem;
         text-align: left;
-        padding-left: 0.4rem;
         line-height: 0.6rem;
         margin-top: 0.2rem;
     }
@@ -928,6 +1014,56 @@
     }
 </style>
 <style scoped lang='less'>
+.appoint:nth-child(odd){
+        background-color: #eaeaea;
+        
+    }
+    .appoint:nth-child(even){
+        background-color: #f6f6f6;
+    }
+    .appoint:nth-child(1){
+        background-color: #f6f6f6;
+        padding: 0 .2rem;
+        background-color: white;
+        div:nth-child(4){
+            font-size: .25rem;
+        }
+    }
+.appoint{
+        padding:.1rem .2rem;
+        overflow: hidden;
+        text-align: left;
+        div{
+            width:25%;
+            float: left;
+            line-height: .4rem;
+            p{
+                padding:.1rem 0;
+            }
+        }
+        div:nth-child(3){
+            width:17%;
+            // padding-left: .3rem;
+        }
+        div:nth-child(4){
+            width:13%;
+            font-size: .2rem;
+        }
+        div:nth-child(5){
+            width: 20%;
+            text-align: center;
+        }
+        button.editttime{
+            font-size: .25rem;
+            width:60%;
+            padding:.07rem 0;
+            margin-top: .03rem;
+            outline: none;
+            border-radius: .1rem;
+            border:1px solid grey;
+            background-color: transparent;
+        }
+    }
     .calendar {
         position: fixed;
         z-index: 100;
