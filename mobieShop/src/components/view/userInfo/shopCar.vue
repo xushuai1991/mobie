@@ -72,7 +72,7 @@
         <mt-popup v-model="popupVisible" position="bottom" style='width:100%; margin-bottom: 0.96rem;'>
             <div class='shopBoxS'>{{ShopName}}</div>
             <p class='shopBxo'>领取优惠劵</p>
-            <ul class='shopBox' >
+            <ul class='shopBox'v-if='coupon.length!=0'>
                 <li v-for='(item,index) in coupon' :key='index' v-if='item'>
                     <div class='shopFont'>
                         <p class='font'>{{item?item.couponMoney:''}}元</p>
@@ -80,6 +80,9 @@
                         <p>使用期限 {{item?item.starTime.split(" ")[0]:""}}—{{item?item.endTime.split(" ")[0]:''}}</p>
                     </div><button @click='okcoupon(item.id)' :disabled='item.couponAmount==0' :class='item.couponAmount==0?"noButton":""'   class='button'>领取</button>
                 </li>
+            </ul>
+            <ul class='shopBox' v-else >
+                <li>暂无可用的优惠劵</li>
             </ul>
             <div class='closeBtn button' @click="btnClose">关闭</div>
         </mt-popup>
@@ -329,8 +332,15 @@
                     })
                 })
                 getdata.then(function(result) {
-                    that.coupon = result.data.info.list
-                    console.log(result.data.info.list)
+                    let couponArr = [];
+                    result.data.info.list.forEach(item=>{
+                        console.log(item)
+                        if(item.couponStatus=='1'){
+                            couponArr.push(item)
+                        }
+                    })
+                    that.coupon = couponArr
+                    
                 }).catch(function(errmsg) {})
             },
             getCarData() {
