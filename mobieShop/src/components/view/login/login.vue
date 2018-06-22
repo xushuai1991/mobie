@@ -269,7 +269,7 @@ export default {
                                 else{
                                     this.$router.push('/index');
                                 }
-                                // location.href='http://daojia.jingrunjia.com.cn';
+                                // location.href='http://www.itchun.com';
                                 // t
                             }
                             else{
@@ -342,7 +342,7 @@ export default {
                                     else{
                                         that.$router.push('/index');
                                     }
-                                    // location.href='http://daojia.jingrunjia.com.cn';
+                                    // location.href='http://www.itchun.com';
                                     // that.$router.push('/index');
                                 }
                                 else{
