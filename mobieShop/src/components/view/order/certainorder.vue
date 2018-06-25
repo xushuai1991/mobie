@@ -204,6 +204,11 @@
                     consumptionpoints: 0
                 },
                 goodslist: [],
+                regionid:0,
+                provinceId:0,
+                cityId:0,
+                areaId:0,
+                streetId:0,
                 deductionlist: [
                 ],
                 scorecandeduct: 0,
@@ -640,6 +645,11 @@
                                 } else if (data.defaultAddressId == '') {
                                     address = '';
                                 } else {
+                                    this.regionid=data.defaultAddress.regionid;
+                                    this.provinceId=data.defaultAddress.provinceId;
+                                    this.cityId=data.defaultAddress.cityId;
+                                    this.areaId=data.defaultAddress.areaId;
+                                    this.streetId=data.defaultAddress.streetId;
                                     address = data.defaultAddress.area.regionName +
                                         data.defaultAddress.province.regionName +
                                         data.defaultAddress.city.regionName +
@@ -749,7 +759,14 @@
                 let data = {
                     mallOrderList: [],
                     regionTemplateId: this.userinfo.addressid,
-                    couponInfoList: []
+                    couponInfoList: [],
+                    orderDetails:[{
+                        regionid:this.regionid,
+                        provinceId:this.provinceId,
+                        cityId:this.cityId,
+                        areaId:this.areaId,
+                        streetId:this.streetId
+                    }]
                 };
                 let mallOrderList = [];
                 this.goodslist.forEach(item => {

@@ -232,7 +232,7 @@ export default {
             this.index_currentappoint=data.index_appoint;
             MessageBox.prompt('预约数量','').then(datas=>{
                 let value=datas.value;
-                let isnum=value!=null&&!isNaN(value-0)&&value>0;
+                let isnum=value!=null&&!isNaN(value-0);
                 if(isnum){
                     let num_hasappoint=0;
                     let list=this.orderlist[this.typeindex_current][this.indexorder_current].orderDetails;
