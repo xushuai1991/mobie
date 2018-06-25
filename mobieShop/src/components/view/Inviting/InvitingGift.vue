@@ -105,13 +105,19 @@
                 isClcik: true,
                 isShow: false,
                 companyId: null,
-                headimg: '/static/images/default-headimg.png'
+                headimg: '/static/images/default-headimg.png',
+                recommendedAdminId:null,
+                recommendedTeamId:null
             }
         },
         created() {
             this.shareUrlFn()
             this.$root.$emit('header', '邀请有礼');
             let companyId = sessionStorage.getItem('companyId');
+            let recommendedAdminId=this.$route.query.recommendedAdminId;
+            let recommendedTeamId=this.$route.query.recommendedTeamId;
+            this.recommendedAdminId=recommendedAdminId;
+            this.recommendedTeamId=recommendedTeamId;
             if (companyId == null) {
                 companyId = this.$route.query.companyId;
                 sessionStorage.setItem('companyId', companyId);
@@ -121,6 +127,7 @@
                 // window.location.href = window.location.href +'companyId='+companyId+ '&' + timestamp
             }
             this.companyId = companyId;
+
             // let userinfo_location=operatelocalstorage('userinfo',null,'get',null);
             // if(userinfo_location!=null){
             //     let data = JSON.parse(userinfo_location);
@@ -205,7 +212,10 @@
                     code: that.formData.checkCode,
                     mobile: that.formData.phone,
                     // password: that.formData.password,
-                    companyId:companyId
+                    companyId:companyId,
+                    recommendedAdminId:that.recommendedAdminId,
+                    recommendedTeamId:that.recommendedTeamId
+
                 }
                 data[this.type] = this.paramData
                 this.$http.post('/api/customer/account/register',
