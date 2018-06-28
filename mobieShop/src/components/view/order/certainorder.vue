@@ -760,19 +760,16 @@
                 let data = {
                     mallOrderList: [],
                     regionTemplateId: this.userinfo.addressid,
-                    couponInfoList: [],
-                    orderDetails:[{
-                        regionid:this.regionid,
-                        provinceId:this.provinceId,
-                        cityId:this.cityId,
-                        areaId:this.areaId,
-                        streetId:this.streetId,
-                        
-                    }]
+                    couponInfoList: []
                 };
                 let mallOrderList = [];
                 this.goodslist.forEach(item => {
                     let json = {
+                        regionId:this.regionid,
+                        provinceId:this.provinceId,
+                        cityId:this.cityId,
+                        areaId:this.areaId,
+                        streetId:this.streetId,
                         commodityId: item.id,
                         amount: item.nums,
                         usePoint: true,
