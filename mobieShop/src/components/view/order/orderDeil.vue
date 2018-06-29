@@ -385,10 +385,12 @@
                 console.log(data)
                 let value=datas.value;
                 let isnum=value!=null&&!isNaN(value-0);
-                console.log(isnum)
+               
                 if(isnum){
                     let num_hasappoint=0;
-                    console.log(data.appointments)
+                    if(data.appointments ==null){
+                         Toast('请联系客服无预约');   
+                    }
                     // let list=this.orderlist[this.typeindex_current][this.indexorder_current].orderDetails;
                     let list_foreach=data.appointments;
                     list_foreach.forEach((item,key)=>{
@@ -628,8 +630,8 @@
                             this.conversionAmount += (item.conversionAmount - 0)
                         })
                     }
-                    console.log()
-                    this.templateIds = orderStaty.orderDetails[0].appointments.templateId
+                 
+                    this.templateIds = orderStaty.orderDetails[0].appointments?orderStaty.orderDetails[0].appointments.templateId:1;
                     this.uerName = orderStaty.name;
                     this.userPhone = orderStaty.phone
                     this.userAdd = orderStaty.detailAddress
