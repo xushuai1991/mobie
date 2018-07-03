@@ -399,7 +399,7 @@
                                 })
                             })
                             console.log()
-                            b[0].listgoods = newArr
+                            // b[0].listgoods = newArr
                             console.log(b)
                             // b = newArr
                             that.list = (b)

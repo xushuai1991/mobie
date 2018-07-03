@@ -25,7 +25,7 @@
                             
                         </div>
                         
-                        <div class='servicetime' v-if='item.isservice&item.peridlist.length!=0' >
+                        <div class='servicetime' v-if='item.isservice&(item.peridlist?item.peridlist.length:"")!=0' >
                             <div class='appoint' v-for='(appoint,index1) in item.peridlist' :key='index1'>
                                 <div>
                                     <p>Date</p>
@@ -480,8 +480,8 @@
                     '/api/customer/consumption/points/find?pageSize=1',
                 ).then(res => {
                     if (res.data.status == 200) {
-                        that.point = res.data.info.list[0].effectivePoints
-                        that.expiredPoints = res.data.info.list[0].expiredPoints
+                        that.point = res.data.info.list[0]?res.data.info.list[0].effectivePoints:""
+                        that.expiredPoints = res.data.info.list[0]?res.data.info.list[0].expiredPoints:""
                     } else {
                         Toast(res.data.msg);
                     }
