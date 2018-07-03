@@ -122,6 +122,10 @@
                 this.$router.push({
                     path: '/addEdit',
                     name: 'addEdit',
+                    params: {
+                        name: 'addManagement',
+                        flag:'addaddress'
+                    }
                 });
                 sessionStorage.setItem("addManagement", JSON.stringify({
                     val: val,
