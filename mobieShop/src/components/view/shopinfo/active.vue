@@ -101,20 +101,22 @@ export default {
             // console.log(value);
         },
         lastData(datas){
-            var d1 = new Date().getTime();
-            var d2 = new Date(datas);
-           // console.log(parseInt(d2 - d1));//两个时间相差的毫秒数
-           // console.log(parseInt(d2 - d1) / 1000);//两个时间相差的秒数
-           // console.log(parseInt(d2 - d1) / 6000 );//两个时间相差的分钟数
-           // console.log(parseInt(d2 - d1) / 3600000 );//两个时间相差的小时数
-            let time = parseInt(d2 - d1) / 3600000 / 24
-            let times;
-            if(time.split(".")[1] <= 9){
-               times = tiem.split(".")[0]+1
-            }else{
-                times = tiem.split(".")[0]
+            if(datas){
+                 var d1 = new Date().getTime();
+                var d2 = new Date(datas).getTime();
+            // console.log(parseInt(d2 - d1));//两个时间相差的毫秒数
+            // console.log(parseInt(d2 - d1) / 1000);//两个时间相差的秒数
+            // console.log(parseInt(d2 - d1) / 6000 );//两个时间相差的分钟数
+            // console.log(parseInt(d2 - d1) / 3600000 );//两个时间相差的小时数
+                let time = parseInt(d2 - d1) / 3600000 / 24
+                let times;
+                if(time.split(".")[1] <= 9){
+                times = tiem.split(".")[0]+1
+                }else{
+                    times = tiem.split(".")[0]
+                }
+                return times
             }
-            return times
         }
     }
 }
