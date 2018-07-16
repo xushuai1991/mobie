@@ -867,7 +867,7 @@
                                 'customerId': customerId,
                                 'commodityCount': commodityCount,
                                 'options':options,
-                                'commodityDetailId':optionsId
+                                'commodityDetail':optionsId
                             })
                             .then(function(response) {
                               //  console.log(response)
