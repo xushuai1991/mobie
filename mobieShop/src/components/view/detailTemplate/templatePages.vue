@@ -1107,7 +1107,7 @@
                                        commodityInfos["commodityPrice"] = datas.commodityPrice;
                                        commodityInfos["displayQuantity"] = datas.displayQuantity;
                                        console.log(commodityInfos)
-                                       this.areadyId = commodityInfos
+                                       that.areadyId = commodityInfos
                                    }
                                 }
                             })
