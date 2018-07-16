@@ -20,9 +20,10 @@
                         </div>
                         <div class='msg'>
                             <p class='name'>{{item.name}}</p>
-                            <p class='brand' v-if='item.conditionname1!==""'>{{item.conditionname1}}：{{item.conditionvalue1}}</p>
-                            <p class='area' v-if='item.conditionvalue2!==""'>{{item.conditionname2}}：{{item.conditionvalue2}}</p>
-                            
+                            <!-- <p class='brand' v-for='cars in item.options'>{{cars.name}}：{{cars.value}}</p> -->
+                             <p class="brand" v-for="cars in item.options">{{cars.name}}：<span>{{cars.value}}</span></p>
+                             <!-- <p class='brand' v-if='item.conditionvalue2!==""'>{{item.conditionname2}}：{{item.conditionvalue2}}</p>
+                            <p class='brand' v-if='item.conditionvalue3!==""'>{{item.conditionname3}}：{{item.conditionvalue3}}</p>  -->
                         </div>
                         
                         <div class='servicetime' v-if='item.isservice&(item.peridlist?item.peridlist.length:"")!=0' >
@@ -70,8 +71,9 @@
                                 </div>
                                 <div class='msg'>
                                     <p class='name'>{{item1.name}}</p>
-                                    <p class='brand' v-if='item1.conditionname1!=""'>{{item1.conditionname1}}：{{item1.conditionvalue1}}</p>
-                                    <p class='area' v-if='item1.conditionname2!=""'>{{item1.conditionname2}}：{{item1.conditionvalue2}}</p>
+                                    <p class="brand" v-for="cars in item1.options">{{cars.name}}：<span>{{cars.value}}</span></p>
+                                    <!-- <p class='brand' v-if='item1.conditionname1!=""'>{{item1.conditionname1}}：{{item1.conditionvalue1}}</p>
+                                    <p class='area' v-if='item1.conditionname2!=""'>{{item1.conditionname2}}：{{item1.conditionvalue2}}</p> -->
                                 </div>
                                 <div class='tips'>
                                     <p class='price'>￥{{item1.price_unit}}</p>
@@ -345,16 +347,20 @@
             data.forEach(item => {
                 let isservice=item.isService;
                 if(isservice){
+                    console.log(item)
                     let json = {
                         id: item.id,
                         name: item.name,
                         periodTemplateId:item.periodTemplateId,
                         imgurl: item.commodityImageList.length > 0 ? item.commodityImageList[0].url : '',
+                        options:item.options,
                         conditionname1: item.options[0] == null ? '' : item.options[0].name,
                         conditionvalue1: item.options[0] == null ? '' : item.options[0].value,
                         conditionname2: item.options[1] == null ? '' : item.options[1].name,
                         conditionvalue2: item.options[1] == null ? '' : item.options[1].value,
-                        price_unit: item.priceRule==1?item.originalPrice:item.priceRule==2?item.discountPrice:item.currentPrice,
+                        conditionname3: item.options[2] == null ? '' : item.options[1].name,
+                        conditionvalue3: item.options[2] == null ? '' : item.options[2].value,
+                        price_unit: item.priceRule==1?JSON.parse(item.commodityDetail).commodityPrice:item.priceRule==2?item.discountPrice:item.currentPrice,
                         nums: item.nums,
                         childlist: [],
                         scorecanuse:item.originalPricePoint==null?0:item.originalPricePoint,
@@ -686,6 +692,7 @@
                                 that.couponindex='';
                             }
                             res.data.info.forEach(item => {
+                                console.log(item)
                                 let json = {
                                     id: item.id,
                                     money: item.couponMoney,
@@ -775,8 +782,9 @@
                         usePoint: true,
                         pointSum:Number(item.scoreuse),
                         appointment:[],
-                        condition1Name: item.conditionname1 ==''?'':(item.conditionname1 + '：' + item.conditionvalue1),
-                        condition2Name: item.conditionname2 == '' ? '' : (item.conditionname2 + '：' + item.conditionvalue2)
+                        commodityDetailld:item.commodityDetail
+                        // condition1Name: item.conditionname1 ==''?'':(item.conditionname1 + '：' + item.conditionvalue1),
+                        // condition2Name: item.conditionname2 == '' ? '' : (item.conditionname2 + '：' + item.conditionvalue2)
                     };
                     if(item.isservice&&item.peridlist.length!=0){
                         item.peridlist.forEach(period=>{

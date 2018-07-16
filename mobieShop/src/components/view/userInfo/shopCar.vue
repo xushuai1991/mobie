@@ -29,7 +29,7 @@
                                                     <!--<p @click="open('picker1',index,indexs)" size="large">{{items.otherInfo.commodityInfo.playTime}}</p>!-->
                                                 </li>
                                                 <li class="goods_info_se">
-                                                    <p class="goods_price">￥<span>{{items.otherInfo.commodityPrice}}</span></p>
+                                                    <p class="goods_price">￥<span>{{JSON.parse(items.commodityDetail).commodityPrice}}</span></p>
                                                     <div class='cgqNumBox'>
                                                         <input type="button" @click="reduce(index,indexs,items.commodityCount,items.id)" value='－'>
                                                         <input type="number"  v-model="items.commodityCount" v-on:blur="changeCount(index,indexs,items.commodityCount,items.id,items.otherInfo.commodityInfo.displayQuantity)"/>
@@ -187,7 +187,7 @@
                         return a.selected
                     }).map(function(a) {
                         as += a.commodityCount-0
-                        return (a.commodityCount-0) * a.otherInfo.commodityPrice
+                        return (a.commodityCount-0) * JSON.parse(a.commodityDetail).commodityPrice
                     }).forEach(function(a) {
                         total += a;
                     })
@@ -361,9 +361,9 @@
                         // },
                         data: {}
                     }).then(response => {
+                        console.log(response)
                         if (response.data.status == 200) {
                             let data = response.data.info;
-                            
                             var b = data.reduce((v, k) => { //循环
                                  k.options = JSON.parse(k.options)
                                 // k.otherInfo.commodityInfo.optionss = JSON.parse()
@@ -577,7 +577,7 @@
                         let prices = 0;
                         item.listgoods.forEach((item) => {
                             num += (item.commodityCount - 0)
-                            prices += item.commodityCount * item.otherInfo.commodityPrice
+                            prices += item.commodityCount * JSON.parse(item.commodityDetail).commodityPrice
                         })
                         item['num'] = num;
                         item['prices'] = prices;
@@ -592,10 +592,12 @@
                     });
                     let commodityInfo = [];
                     OrderArry[0].listgoods.forEach((item, index) => {
+                        console.log(item)
                         let cartIdList = [];
                         cartIdList.push(item.id);
                         item.otherInfo.commodityInfo.cartIdList = cartIdList;
                         item.otherInfo.commodityInfo.nums = item.commodityCount
+                        item.otherInfo.commodityInfo.commodityDetail = item.commodityDetail
                         commodityInfo.push(item.otherInfo.commodityInfo)
                     })
                     localStorage.setItem("commodityInfo", JSON.stringify(commodityInfo))
@@ -607,7 +609,7 @@
                         let prices = 0;
                         item.listgoods.forEach((item) => {
                             num += (item.commodityCount - 0)
-                            prices += item.commodityCount * item.otherInfo.commodityPrice
+                            prices += item.commodityCount * JSON.parse(items.commodityDetail).commodityPrice
                         })
                         item['num'] = num;
                         item['prices'] = prices;
