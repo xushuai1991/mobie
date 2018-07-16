@@ -91,9 +91,9 @@
                                 <div style="    padding-top: 0.2rem;
                                     padding-bottom: 0.2rem;
                                     text-align: left;
-                                    padding-left: 0.3rem;">{{ item.name }}</div>
+                                    padding-left: 0.3rem;">{{ item.text }}</div>
                                 <ul  class="clear" style="margin-left: 0.3rem;">
-                                    <li v-for="(items,indexs) in item.value" :key="indexs" @click="checkedSpecification(indexs,index,item.name,items)" :class="items.valueClass" class="zbd-checkedSpecification" >{{ items.value }}</li>
+                                    <li v-for="(items,indexs) in item.value" :key="indexs" @click="checkedSpecification(indexs,index,item.text,items,items.value.id)" :class="items.valueClass" class="zbd-checkedSpecification" >{{ items.value.text }}</li>
                                 </ul>
                             </li>
                         </ul>
@@ -292,6 +292,7 @@
                 specificationArr:'',
                 specification:'',
                 areadyValue:'',
+                areadyId:'',
                 appid:''
             };
         },
@@ -318,7 +319,7 @@
                // this.detailTemplateUrl = sessionStorage.getItem("detailTemplateUrl");
                 let companyId = sessionStorage.getItem("companyId");
                 let id = this.getURLparms("id");
-                console.log(id) //详情模板ID
+              //  console.log(id) //详情模板ID
                 let that = this;
                 this.$http.post('/api/product/mall/template/queryMap/mall', {
                         'templateID': id,
@@ -336,7 +337,7 @@
                     })
             } else{ //移动端浏览效果
                 let id = this.getURLparms("id"); //详情模板ID
-                console.log(id)
+                //console.log(id)
                 if (id == null) {
                     let that = this;
                     //模板ID 为空的情况下，先取商品ID 根据商品ID 查询模板ID
@@ -352,7 +353,7 @@
                             "id": commodityId
                         })
                         .then(function(response) {
-                            console.log(response)
+                           // console.log(response)
                             if(response.data.info.length == 0){
                                // console.log(11)
                             }else{
@@ -365,7 +366,7 @@
                                         'companyId': companyId
                                     })
                                     .then(function(response) {
-                                        console.log(response)
+                                      //  console.log(response)
                                         if (response.data.info.length == 0) {
                                             console.log('商品没有绑定详情模板')
                                         } else {
@@ -381,30 +382,64 @@
                             
                             //商品信息的调用及渲染
                             that.commodityInfo = response.data.info[0]
-                            console.log(that.commodityInfo)
+                           // console.log(that.commodityInfo)
                             that.bannerArr2 = that.commodityInfo.commodityImageList
-                             console.log(that.bannerArr2)
+                           //  console.log(that.bannerArr2)
                             if (that.commodityInfo.commodityImageList.length == 0) {
                                 that.commodityImageOne = '/static/images/nodata.png'
                             } else {
                                 that.commodityImageOne = "http://"+that.hostName+":8887" + that.commodityInfo.commodityImageList[0].url
                             }
                             //规格渲染
-                            console.log(that.commodityInfo.options)
-                            if(that.commodityInfo.options == "null" || that.commodityInfo.options == null){
+                            
+                            // console.log(that.commodityInfo.options)
+                            // if(that.commodityInfo.options == "null" || that.commodityInfo.options == null){
+                            //     //console.log(1)
+                            //     that.specificationArr = []
+                            // }else{
+                            //     that.specificationArr = JSON.parse(that.commodityInfo.options)
+                           
+                            //     that.specificationArr.forEach((item,index)=>{
+                            //         let lengths = item.value.length
+                            //         let arrObj = [];
+                                    
+                            //         // 
+                            //         // objs.value=item.value
+                            //         console.log(item)
+                            //         item.value.forEach(item=>{
+                            //             let objs = {
+                            //                 value:'',
+                            //                 valueClass:{
+                            //                     optionsCheckeds:true,
+                            //                     optionsChecked:false
+                            //                 }
+                            //             }
+                            //             console.log(item)
+                            //             objs.value = item
+                            //             arrObj.push(objs)
+                            //         })
+                            //         console.log(arrObj)
+                            //         item.value = arrObj
+                            //         })
+                                    
+                            //         console.log(that.specificationArr)
+                            // }
+
+                            //新规格渲染
+                            console.log(that.commodityInfo.commodityConditionKs )
+                            if(that.commodityInfo.commodityConditionKs == "null" || that.commodityInfo.commodityConditionKs == null){
                                 //console.log(1)
                                 that.specificationArr = []
                             }else{
-                                that.specificationArr = JSON.parse(that.commodityInfo.options)
+                                that.specificationArr = that.commodityInfo.commodityConditionKs
                            
                                 that.specificationArr.forEach((item,index)=>{
-                                    let lengths = item.value.length
+
                                     let arrObj = [];
                                     
-                                    // 
-                                    // objs.value=item.value
+                                    // objs.value=item.commodityConditionVs
                                     console.log(item)
-                                    item.value.forEach(item=>{
+                                    item.commodityConditionVs.forEach(item=>{
                                         let objs = {
                                             value:'',
                                             valueClass:{
@@ -436,7 +471,7 @@
                             'companyId': companyId
                         })
                         .then(function(response) {
-                            console.log(response)
+                            //console.log(response)
                             let comlists = JSON.parse(response.data.info[0].comlist)
                             // console.log(comlists)
                              that.comlists = comlists
@@ -510,7 +545,7 @@
                     "commodityId": that.commodityId
                 })
                 .then(function(response) {
-                    console.log(response)
+                  //  console.log(response)
                     that.evaluationList = response.data.info.list
                     if (that.evaluationList.length == 0) {
                         that.evaluationListShows = false
@@ -518,7 +553,7 @@
                         return false
                     }
                     that.evaluationListOne = that.evaluationList[0]
-                    console.log(that.evaluationListOne)
+                   // console.log(that.evaluationListOne)
                     if (that.evaluationListOne.commodityEvaluationLabels.length == 0) {
                         that.evaluationStarShow = false
                     } else {
@@ -527,7 +562,7 @@
                         that.evaluationListOne.commodityEvaluationLabels.forEach((i, d) => {
                             levels += (i.level - 0)
                         })
-                        console.log(levels)
+                       // console.log(levels)
                         that.starLevel = Math.round(levels / that.evaluationListOne.commodityEvaluationLabels.length)
                     }
                     if (that.evaluationListOne.customerAccount.nickname == null) {
@@ -558,7 +593,7 @@
             getcouponData.then(function(result) {
                 // console.log(result)
                 that.coupon = result.data.info.list
-                  console.log(that.coupon)
+                 // console.log(that.coupon)
                 if (that.coupon.length > 0) {
                     that.couponShow = true
                 } else {
@@ -701,7 +736,7 @@
             },
             //领取优惠劵
             okcoupon(id) {
-                console.log(id)
+               // console.log(id)
                 let that = this
                 let url = '/api/product/coupon/customer/insert?couponId=' + id + '&number=1';
                 this.$http({
@@ -742,7 +777,7 @@
                 let that = this;
                 that.$http.post('/api/product/shoppingCart/myShoppingCart', {})
                     .then(function(response) {
-                        console.log(response)
+                       // console.log(response)
                         if (response.data.status == 401) {
                             Toast({
                                 message: '尚未登录',
@@ -779,10 +814,10 @@
                     this.popupVisible = true
                 } else {
                     let commodityId = this.commodityId
-                    console.log(commodityId)
+                  //  console.log(commodityId)
                     //客户ID 
                     let customer = localStorage.getItem('userinfo')
-                    console.log(customer)
+                   // console.log(customer)
                         if(customer){
                             console.log('已登录')
                         }else{
@@ -803,7 +838,7 @@
                             return false
                         }
                     let customerData = JSON.parse(JSON.parse(customer).data);
-                    console.log(customerData.id)
+                   // console.log(customerData.id)
                     this.customerId = customerData.id
                     if (customerData.id == null) {
                         Toast({
@@ -821,19 +856,21 @@
                         return false
                     } else {
                         let customerId = this.customerId
-                        console.log(customerId)
+                      //  console.log(customerId)
                         let commodityCount = this.specificationNum
-                        console.log(commodityCount)
+                       // console.log(commodityCount)
                         let options = JSON.stringify(this.areadyValue)
+                        let optionsId = this.areadyId
                         let that = this;
                         this.$http.post('/api/product/shoppingCart/insertOne', {
                                 'commodityId': commodityId,
                                 'customerId': customerId,
                                 'commodityCount': commodityCount,
-                                'options':options
+                                'options':options,
+                                'commodityDetailId':optionsId
                             })
                             .then(function(response) {
-                                console.log(response)
+                              //  console.log(response)
                                 if (response.data.status == 401) {
                                     that.shopCarNumShow = false
                                     Toast({
@@ -855,14 +892,14 @@
                                     });
                                     that.$http.post('/api/product/shoppingCart/myShoppingCart', {})
                                         .then(function(response) {
-                                            console.log(response)
+                                            //console.log(response)
                                             if (response.data.info.length == 0) {
                                                 that.shopCarNumShow = false
                                             } else {
                                                 that.shopCarNumShow = true
                                                 let num = null;
                                                 response.data.info.forEach((element, i) => {
-                                                    console.log(element.commodityCount)
+                                                //    console.log(element.commodityCount)
                                                     num += element.commodityCount
                                                 });
                                                 that.shopNum = num
@@ -887,7 +924,7 @@
                             "commodityId": that.commodityId
                         })
                         .then(function(response) {
-                            console.log(response)
+                           // console.log(response)
                             if (response.data.status == 401) {
                                 Toast({
                                     message: '尚未登录',
@@ -927,7 +964,7 @@
                     let that = this;
                     this.$http.post('/api/product/commodity/favorite/remove?id=' + that.starId)
                         .then(function(response) {
-                            console.log(response)
+                         //   console.log(response)
                             if (response.data.status == 201) {
                                 Toast({
                                     message: response.data.msg,
@@ -968,7 +1005,7 @@
                                 "commodityId": that.commodityId
                             })
                             .then(function(response) {
-                                console.log(response)
+                              //  console.log(response)
                                 if (response.data.info.list.length == 0) {
                                     // Toast({
                                     //         message:"没有更多了",
@@ -997,7 +1034,7 @@
                 }, 2000);
             },
             //选择规格
-            checkedSpecification(indexs,index,name,items){
+            checkedSpecification(indexs,index,name,items,id){
                 this.specificationArr[index].value.forEach(item=>{
                     item.valueClass.optionsChecked = false
                     item.valueClass.optionsCheckeds = true
@@ -1005,9 +1042,11 @@
                 this.specificationArr[index].value[indexs].valueClass.optionsChecked = true
                 this.specificationArr[index].value[indexs].valueClass.optionsCheckeds = false
 
+                //规格组合信息
                     var arrs = [] ;
+                    var arrId = [] ;
                     this.specificationArr.forEach(item=>{
-                        let names = item.name
+                        let names = item.text
                         item.value.forEach(item=>{
                             let objs = {
                                 name:'',
@@ -1016,15 +1055,66 @@
                             if(item.valueClass.optionsChecked == false){
                             }else if(item.valueClass.optionsChecked == true){
                                 objs.name = names
-                                objs.value =  item.value
+                                objs.value =  item.value.text
                                 arrs.push(objs)
+                                arrId.push(item.value.id)
                             }
                             
                         })
                        
                     })
-                   //  console.log(arrs)
-                     this.areadyValue = arrs
+                     console.log(arrs)
+                    this.areadyValue = arrs;
+                //规格组ID
+                     console.log(arrId)
+                     if(arrId){
+                          var compare = function (x, y) {//比较函数
+                            if (x < y) {
+                                return -1;
+                            } else if (x > y) {
+                                return 1;
+                            } else {
+                                return 0;
+                            }
+                        }
+                        console.log(arrId.sort(compare));
+                        let arrIds = arrId.sort(compare)
+                        let that = this;
+                        this.$http.post('/api/product/commodity/detail/queryList', {
+                                "conditionVIds": JSON.stringify(arrIds)
+                            })
+                            .then(function(response) {
+                                console.log(response)
+                                if (response.data.status == 401) {
+                                    Toast({
+                                        message: '尚未登录',
+                                        duration: 1000
+                                    });
+                                    
+                                } else if (response.data.status == 203) {
+                                    Toast({
+                                        message: response.data.msg,
+                                        duration: 1000
+                                    });
+                                } else if (response.data.status == 200) {
+                                   if(response.data.info[0]){
+                                       let datas =  response.data.info[0];
+                                       that.commodityInfo.price = datas.commodityPrice;
+                                       that.commodityInfo.displayQuantity = datas.displayQuantity;
+                                       let commodityInfos = new Object;
+                                       commodityInfos["id"] = datas.id;
+                                       commodityInfos["commodityId"] = datas.commodityId;
+                                       commodityInfos["commodityPrice"] = datas.commodityPrice;
+                                       commodityInfos["displayQuantity"] = datas.displayQuantity;
+                                       console.log(commodityInfos)
+                                       this.areadyId = commodityInfos
+                                   }
+                                }
+                            })
+                            .catch(function(response) {
+                                console.log(response)
+                            });
+                     }
             },
             lessClick() {
                 if (this.specificationNum == 1) {
@@ -1139,6 +1229,7 @@
                          let commodityInfos = this.commodityInfo
                          commodityInfos.nums = this.specificationNum
                          commodityInfos.options = this.areadyValue
+                         commodityInfos.optionsId = this.areadyId
                          commodityInfo.push(commodityInfos)
                          localStorage.setItem('commodityInfo',JSON.stringify(commodityInfo))
                          this.$router.push('./ordercertain')
