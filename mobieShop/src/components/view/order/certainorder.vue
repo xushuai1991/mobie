@@ -360,7 +360,7 @@
                         conditionvalue2: item.options[1] == null ? '' : item.options[1].value,
                         conditionname3: item.options[2] == null ? '' : item.options[1].name,
                         conditionvalue3: item.options[2] == null ? '' : item.options[2].value,
-                        price_unit: item.priceRule==1?JSON.parse(item.commodityDetail).commodityPrice:item.priceRule==2?item.discountPrice:item.currentPrice,
+                        price_unit: item.priceRule==1?(JSON.parse(item.commodityDetail).commodityPrice?JSON.parse(item.commodityDetail).commodityPrice:item.price):item.priceRule==2?item.discountPrice:item.currentPrice,
                         nums: item.nums,
                         childlist: [],
                         scorecanuse:item.originalPricePoint==null?0:item.originalPricePoint,

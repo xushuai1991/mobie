@@ -29,7 +29,7 @@
                                                     <!--<p @click="open('picker1',index,indexs)" size="large">{{items.otherInfo.commodityInfo.playTime}}</p>!-->
                                                 </li>
                                                 <li class="goods_info_se">
-                                                    <p class="goods_price">￥<span>{{JSON.parse(items.commodityDetail).commodityPrice}}</span></p>
+                                                    <p class="goods_price">￥<span>{{JSON.parse(items.commodityDetail).commodityPrice?JSON.parse(items.commodityDetail).commodityPrice:items.otherInfo.commodityPrice}}</span></p>
                                                     <div class='cgqNumBox'>
                                                         <input type="button" @click="reduce(index,indexs,items.commodityCount,items.id)" value='－'>
                                                         <input type="number"  v-model="items.commodityCount" v-on:blur="changeCount(index,indexs,items.commodityCount,items.id,items.otherInfo.commodityInfo.displayQuantity)"/>
@@ -187,7 +187,7 @@
                         return a.selected
                     }).map(function(a) {
                         as += a.commodityCount-0
-                        return (a.commodityCount-0) * JSON.parse(a.commodityDetail).commodityPrice
+                        return (a.commodityCount-0) * JSON.parse(a.commodityDetail).commodityPrice?JSON.parse(a.commodityDetail).commodityPrice:a.otherInfo.commodityPrice
                     }).forEach(function(a) {
                         total += a;
                     })
@@ -577,7 +577,7 @@
                         let prices = 0;
                         item.listgoods.forEach((item) => {
                             num += (item.commodityCount - 0)
-                            prices += item.commodityCount * JSON.parse(item.commodityDetail).commodityPrice
+                            prices += item.commodityCount * JSON.parse(item.commodityDetail).commodityPrice?JSON.parse(item.commodityDetail).commodityPrice:item.otherInfo.commodityPrice
                         })
                         item['num'] = num;
                         item['prices'] = prices;
@@ -609,7 +609,7 @@
                         let prices = 0;
                         item.listgoods.forEach((item) => {
                             num += (item.commodityCount - 0)
-                            prices += item.commodityCount * JSON.parse(items.commodityDetail).commodityPrice
+                            prices += item.commodityCount * JSON.parse(items.commodityDetail).commodityPrice?JSON.parse(items.commodityDetail).commodityPrice:JSON.parse(item.commodityDetail).commodityPrice
                         })
                         item['num'] = num;
                         item['prices'] = prices;
