@@ -76,10 +76,10 @@
                     <div id="zbd-commodityInformation" class="clear">
                         <div class="zbd_commodityImg"><img :src="commodityImageOne"></div>
                         <div class="zbd_commodityInfo">
-                            <p>￥{{ commodityInfo.price }}</p>
+                            <p>￥{{ commodityInfo.price == ''?0:commodityInfo.price }}</p>
                             <p>{{ commodityInfo.name }}</p>
                             <p>库存量：{{ commodityInfo.displayQuantity
-                                <1?0:commodityInfo.displayQuantity }}</p>
+                                <1||commodityInfo.displayQuantity==''?0:commodityInfo.displayQuantity }}</p>
                         </div>
                         <div class='commodityInfoCloseBtn' @click="btnClose">&times;</div>
                         <!-- <div class="commodityInfoLine"></div> -->

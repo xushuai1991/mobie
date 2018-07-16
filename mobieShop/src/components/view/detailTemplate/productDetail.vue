@@ -16,10 +16,10 @@
             </div>
         </div>
         <div class="commodityPrice">
-            <p style="">{{ zbdCommodityInfo.price }}</p>
+            <p style="">{{ zbdCommodityInfo.price == ''?0:zbdCommodityInfo.price }}</p>
         </div>
         <div class="commodityStocks">
-            <p style="">已交易：<span>{{ zbdCommodityInfo.totalSales }}</span><span style="color:#292929">（库存量：{{ zbdCommodityInfo.displayQuantity<1?0:zbdCommodityInfo.displayQuantity }}）</span></p>
+            <p style="">已交易：<span>{{ zbdCommodityInfo.totalSales }}</span><span style="color:#292929">（库存量：{{ zbdCommodityInfo.displayQuantity<1||zbdCommodityInfo.displayQuantity==''?0:zbdCommodityInfo.displayQuantity }}）</span></p>
         </div>
     </div>
 </template>
