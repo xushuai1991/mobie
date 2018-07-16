@@ -9,13 +9,15 @@
                     </div>
                     <div class='titleInof'>
                         <p><i class='icon iconfont icon-xiaohuomiao hots'></i><span class='textSpace'>{{item.title}}</span> <a :href='item.activityLink+"&activeId="+item.activeId+"&companyId="+item.companyId'><span class='flortRight'>go <i class="icon iconfont icon-youshuangjiantou ritJtou"></i></span></a> </p>
-                        <p>
-                            <span class='flortRight lastDataArrow'><i class="icon iconfont icon-daojishi" style="color:#f7f0f0"></i></span>
+                        <p style="overflow: hidden;">
+                            <!-- <i class="icon iconfont icon-daojishi"></i> -->
+                            <span class='flortRight lastDataArrow'></span>
                             <span class='flortRight lastDataRed'>最后 {{ lastData(item.endTime) }}天 </span>
                             <!-- {{item.endTime}} -->
                             <span class='flortRight lastDataBlack'>关注人数 {{item.registeredNumber}}</span></p>
                     </div>
                 </div>
+                
             </div>
         </mt-loadmore>
         <div style="background-color:#fff;font-size:.4rem;padding-top:3rem;" v-if='list_activiety.length==0'>
@@ -104,16 +106,19 @@ export default {
             if(datas){
                  var d1 = new Date().getTime();
                 var d2 = new Date(datas).getTime();
+            //     console.log(d1)
+            //     console.log(d2)
             // console.log(parseInt(d2 - d1));//两个时间相差的毫秒数
             // console.log(parseInt(d2 - d1) / 1000);//两个时间相差的秒数
             // console.log(parseInt(d2 - d1) / 6000 );//两个时间相差的分钟数
             // console.log(parseInt(d2 - d1) / 3600000 );//两个时间相差的小时数
-                let time = parseInt(d2 - d1) / 3600000 / 24
+                let time = parseInt((d2 - d1)) / 3600000 / 24
+                console.log(time)
                 let times;
-                if(time.split(".")[1] <= 9){
-                times = tiem.split(".")[0]+1
+                if(time.toString().split(".")[1] <= 9){
+                times = time.toString().split(".")[0]+1
                 }else{
-                    times = tiem.split(".")[0]
+                    times = time.toString().split(".")[0]
                 }
                 return times
             }
@@ -123,6 +128,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.icon-daojishi{color: #0e0e0e;float: right;font-size: 0.35rem;font-weight: 600;margin-left: 0.1rem;}
     .Cactive {
         height:100vh;
         overflow:auto;
@@ -148,7 +154,7 @@ export default {
             margin: 2% 2% 0;
             margin-bottom: .2rem;
             // width: 92%;
-            height: 5rem;
+            height: 5.4rem;
             .imgBox{ 
                 padding: 2% 4% 0 4%;
                 height:4rem;
