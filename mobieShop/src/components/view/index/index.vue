@@ -274,7 +274,7 @@
                     if (flag) {
                         let companyid = sessionStorage.getItem('companyId');
                         let url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + this.appid +
-                            '&redirect_uri=http://pay.jingrunjia.com.cn?company=' + companyid +
+                            '&redirect_uri=http://codes.itchun.com?company=' + companyid +
                             '&response_type=code&scope=snsapi_userinfo&state=STATE';
                         location.href = url;
                     }
@@ -309,7 +309,7 @@
                 return null;
             },
             //获取用户openid
-            getOpenid() {
+            getOpenid() {   
                 return new Promise((resolve, reject) => {
                     let that = this;
                     this.$http.get('/api/product/order/weixin/user?companyId=' + this.companyid + '&code=' + this.code)

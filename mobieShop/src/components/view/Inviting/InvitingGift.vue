@@ -58,6 +58,7 @@
                 message: 60,
                 paramData: '',
                 type: '',
+                openId:"",
                 dataInfo: [{
                         id: 0,
                         data: 'recommendedTeamId',
@@ -202,7 +203,37 @@
                     return unescape(r[2]);
                 return null;
             },
+            getOpenid() {   
+                let companyId = this.getURLparms('companyId');
+                if(companyId){
+                    companyId = sessionStorage.getItem("companyId")
+                }
+                return new Promise((resolve, reject) => {
+                    let that = this;
+                    this.$http.get('/api/product/order/weixin/user?companyId=' + companyId + '&code=' + that.formData.checkCode)
+                        .then(res => {
+                            if (res.data.info.code) {
+                                let openid = res.data.info.openId;
+                                this.openId = res.data.info.openId
+                                alert(openid);
+                                sessionStorage.setItem('openId', openid);
+                                resolve(true);
+                            } else {
+                                resolve(false);
+                                // Toast(res.data.msg);
+                                // Toast('xxx');
+                            }
+                        })
+                        .catch(err => {
+                            Toast('获取openid失败');
+                            console.log(err);
+                            resolve(false);
+                        })
+                })
+            },
             registerOk() {
+                console.log();
+               
                 let companyId = this.getURLparms('companyId');
                 if(companyId){
                     companyId = sessionStorage.getItem("companyId")
@@ -218,10 +249,12 @@
 
                 }
                 data[this.type] = this.paramData
-                this.$http.post('/api/customer/account/register',
+                this.$http.post('/api/customer/account/register?openId='+this.$route.query.openId+"&doLogin="+true,
                     data
                 ).then(function(response) {
                     Toast(response.data.msg);
+                    console.log(response);
+                    let data=response.data.info;
                     if (response.data.status == 200) {
                         that.$router.push({
                             path: '/InvitingResult?companyId=' + that.companyId,
@@ -230,6 +263,7 @@
                                 phone:that.formData.phone
                             }
                         })
+                        operatelocalstorage('userinfo',JSON.stringify(data),'set',300);
                     } else if (response.data.status == 300) {
                         if (response.data.msg == '账号已被注册') {
                             that.$router.push({

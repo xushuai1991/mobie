@@ -91,9 +91,10 @@
             shareUrlFn() {
                 let curHref = window.location.href;
                 let companyid=sessionStorage.getItem('companyId');
+                let openId = (sessionStorage.getItem('openId'));
                 this.paramData = this.getQueryString('recommendedCustomerId') // 获取url中的参数
                 if (curHref.indexOf('&') === -1) {
-                    let url=this.address+'?recommendedCustomerId=' + this.paramData+'&companyId='+companyid;
+                    let url=this.address+'?recommendedCustomerId=' + this.paramData+'&companyId='+companyid+"&openId="+openId;
                     this.totalSrc = this.wxSrc +escape(url);
                     console.log(url)
                 } else {
