@@ -309,7 +309,7 @@
                 return null;
             },
             //获取用户openid
-            getOpenid() {
+            getOpenid() {   
                 return new Promise((resolve, reject) => {
                     let that = this;
                     this.$http.get('/api/product/order/weixin/user?companyId=' + this.companyid + '&code=' + this.code)
