@@ -16,7 +16,8 @@
             </div>
         </div>
         <div class="commodityPrice">
-            <p style="">{{ zbdCommodityInfo.price == ''?0:zbdCommodityInfo.price }}</p>
+            <p v-show='zbdCommodityInfo.options =="null" ||zbdCommodityInfo.options == null ||zbdCommodityInfo.options == ""?true:false'>{{ zbdCommodityInfo.price == ''?0:zbdCommodityInfo.price }}</p>
+            <p v-show='zbdCommodityInfo.options =="null" ||zbdCommodityInfo.options == null ||zbdCommodityInfo.options == ""?false:true'>{{ zbdCommodityInfo.minPrice}}<span>-</span>{{ zbdCommodityInfo.maxPrice }}</p>
         </div>
         <div class="commodityStocks">
             <p style="">已交易：<span>{{ zbdCommodityInfo.totalSales }}</span><span style="color:#292929">（库存量：{{ zbdCommodityInfo.displayQuantity<1||zbdCommodityInfo.displayQuantity==''?0:zbdCommodityInfo.displayQuantity }}）</span></p>
@@ -154,17 +155,18 @@
         font-size: 0.14rem;
     }
     #zbd-productParameters .commodityPrice {
-        width: 29%;
+        width: 34%;
         float: left;
     }
     #zbd-productParameters .commodityPrice p {
         padding-bottom: 0.2rem;
-        font-size: 0.7rem;
+        font-size: 0.6rem;
         color: #f0670b;
         padding-left: 0.1rem;
+        margin-top: 0.1rem;
     }
     #zbd-productParameters .commodityStocks {
-        width: 67%;
+        width: 62%;
         float: left;
         text-align: right;
     }

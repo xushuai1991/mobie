@@ -31,7 +31,7 @@
                         <img :src="item.imgurl" alt="图片丢失">
                         <p class='name'>{{item.name}}</p>
                         <p class='other'>
-                            <span class='price'>￥{{item.price}}</span>
+                            <span class='price'>￥{{ item.minPrice == null?item.price:item.minPrice }}</span>
                             <span class='nums'>已卖出{{item.nums}}件</span>
                         </p>
                     </a>
@@ -255,6 +255,7 @@ import { Indicator } from 'mint-ui';
                                 name:commodity.name,
                                 url:'/detailTemplate?commodityId='+commodity.id,
                                 price:commodity.price,
+                                minPrice:commodity.minPrice,
                                 nums:commodity.totalSales
                             };
                             that.commoditylist.push(json);
