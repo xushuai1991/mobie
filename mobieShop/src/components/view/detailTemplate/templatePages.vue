@@ -1229,7 +1229,7 @@
                          let commodityInfos = this.commodityInfo
                          commodityInfos.nums = this.specificationNum
                          commodityInfos.options = this.areadyValue
-                         commodityInfos.commodityCount = JSON.stringify(this.areadyId)
+                         commodityInfos.commodityDetail = JSON.stringify(this.areadyId)
                          commodityInfo.push(commodityInfos)
                          localStorage.setItem('commodityInfo',JSON.stringify(commodityInfo))
                          this.$router.push('./ordercertain')
