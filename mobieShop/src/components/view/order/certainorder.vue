@@ -366,6 +366,7 @@
                         scorecanuse:item.originalPricePoint==null?0:item.originalPricePoint,
                         scoreuse:0,
                         isservice:item.isService,
+                        commodityDetail:item.commodityDetail,
                         commondate:'',
                         peridlist:[],
                         // startPeriod:'',
@@ -386,6 +387,7 @@
                         price_unit: item.priceRule==1?(JSON.parse(item.commodityDetail)?JSON.parse(item.commodityDetail).commodityPrice:item.price):item.priceRule==2?item.discountPrice:item.currentPrice,
                         // price_unit: item.priceRule==1?item.originalPrice:item.priceRule==2?item.discountPrice:item.currentPrice,
                         nums: item.nums,
+                        commodityDetail:item.commodityDetail,
                         childlist: [],
                         scorecanuse:item.originalPricePoint==null?0:item.originalPricePoint,
                         scoreuse:0,
@@ -784,10 +786,12 @@
                         usePoint: true,
                         pointSum:Number(item.scoreuse),
                         appointment:[],
-                        commodityDetailld:item.commodityDetail
+                        commodityDetailId:item.commodityDetail?JSON.parse(item.commodityDetail).id:""
+                        
                         // condition1Name: item.conditionname1 ==''?'':(item.conditionname1 + '：' + item.conditionvalue1),
                         // condition2Name: item.conditionname2 == '' ? '' : (item.conditionname2 + '：' + item.conditionvalue2)
                     };
+                    console.log(json)
                     if(item.isservice&&item.peridlist.length!=0){
                         item.peridlist.forEach(period=>{
                             let json1={
