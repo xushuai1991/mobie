@@ -1063,10 +1063,10 @@
                         })
                        
                     })
-                     console.log(arrs)
+                    // console.log(arrs)
                     this.areadyValue = arrs;
                 //规格组ID
-                     console.log(arrId)
+                   //  console.log(arrId)
                      if(arrId){
                           var compare = function (x, y) {//比较函数
                             if (x < y) {
@@ -1077,7 +1077,7 @@
                                 return 0;
                             }
                         }
-                        console.log(arrId.sort(compare));
+                      //  console.log(arrId.sort(compare));
                         let arrIds = arrId.sort(compare)
                         let that = this;
                         this.$http.post('/api/product/commodity/detail/queryList', {
@@ -1106,7 +1106,7 @@
                                        commodityInfos["commodityId"] = datas.commodityId;
                                        commodityInfos["commodityPrice"] = datas.commodityPrice;
                                        commodityInfos["displayQuantity"] = datas.displayQuantity;
-                                       console.log(commodityInfos)
+                                      // console.log(commodityInfos)
                                        that.areadyId = commodityInfos
                                    }
                                 }
