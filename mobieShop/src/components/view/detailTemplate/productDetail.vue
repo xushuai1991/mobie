@@ -7,7 +7,11 @@
             <div class="productsDescription">
                 <p>{{ zbdCommodityInfo.description==null?'':zbdCommodityInfo.description }}</p>
             </div>
-            <p class="productDetailRMB">RMB</p>
+            <div class="productDetailRMB">
+                <p>RMB</p>
+                <p v-show='zbdCommodityInfo.options =="null" ||zbdCommodityInfo.options == null ||zbdCommodityInfo.options == ""?true:false'>{{ zbdCommodityInfo.price == ''?0:zbdCommodityInfo.price }}</p>
+                <p v-show='zbdCommodityInfo.options =="null" ||zbdCommodityInfo.options == null ||zbdCommodityInfo.options == ""?false:true'>{{ zbdCommodityInfo.minPrice}}<span>-</span>{{ zbdCommodityInfo.maxPrice }}</p>
+            </div>
         </div>
         <div class="productReview">
             <div class="productsTitleNum">
@@ -15,10 +19,9 @@
                 <p class="commentsNumTitle">用户评价</p>
             </div>
         </div>
-        <div class="commodityPrice">
-            <p v-show='zbdCommodityInfo.options =="null" ||zbdCommodityInfo.options == null ||zbdCommodityInfo.options == ""?true:false'>{{ zbdCommodityInfo.price == ''?0:zbdCommodityInfo.price }}</p>
-            <p v-show='zbdCommodityInfo.options =="null" ||zbdCommodityInfo.options == null ||zbdCommodityInfo.options == ""?false:true'>{{ zbdCommodityInfo.minPrice}}<span>-</span>{{ zbdCommodityInfo.maxPrice }}</p>
-        </div>
+        <!-- <div class="commodityPrice">
+            
+        </div> -->
         <div class="commodityStocks">
             <p style="">已交易：<span>{{ zbdCommodityInfo.totalSales }}</span><span style="color:#292929">（库存量：{{ zbdCommodityInfo.displayQuantity<1||zbdCommodityInfo.displayQuantity==''?0:zbdCommodityInfo.displayQuantity }}）</span></p>
         </div>
@@ -154,19 +157,27 @@
     #zbd-productParameters .commentsNumTitle {
         font-size: 0.14rem;
     }
-    #zbd-productParameters .commodityPrice {
-        width: 34%;
+    #zbd-productParameters .productDetailRMB {
+        width: 95%;
         float: left;
     }
-    #zbd-productParameters .commodityPrice p {
+    #zbd-productParameters .productDetailRMB p:nth-child(1){
+        font-family: Helveticaneueltpro;
+        font-style:normal;
+        width: 14%;
+        display: inline-block;
+    }
+    #zbd-productParameters .productDetailRMB p:nth-child(2),#zbd-productParameters .productDetailRMB p:nth-child(3) {
         padding-bottom: 0.2rem;
-        font-size: 0.6rem;
+        font-size: 0.45rem;
         color: #f0670b;
         padding-left: 0.1rem;
         margin-top: 0.1rem;
+        width: 81%;
+        display: inline-block;
     }
     #zbd-productParameters .commodityStocks {
-        width: 62%;
+        width: 100%;
         float: left;
         text-align: right;
     }
