@@ -645,7 +645,7 @@
                         // alert(recommendedAdminId);
                         // alert(recommendedTeamId);
                         // let url='https://open.weixin.qq.com/connect/oauth2/authorize?appid='+this.appid+
-                        //     '&redirect_uri=http://codes.itchun.com?company='+companyid
+                        //     '&redirect_uri=http://pay.jingrunjia.com.cn?company='+companyid
                         //     +'&recommendedTeamId='+recommendedTeamId
                         //     +'&recommendedAdminId='+recommendedAdminId
                         //     +'&response_type=code&scope=snsapi_userinfo&state=STATE';
@@ -655,7 +655,7 @@
                             recommendedAdminId:recommendedAdminId
                         };
                             let url='https://open.weixin.qq.com/connect/oauth2/authorize?appid='+this.appid+
-                            '&redirect_uri=http://codes.itchun.com?json='+JSON.stringify(json)
+                            '&redirect_uri=http://pay.jingrunjia.com.cn?json='+JSON.stringify(json)
                             +'&response_type=code&scope=snsapi_userinfo&state=STATE';
                         // let url=
                         //     'http://localhost:8082?company='+companyid
