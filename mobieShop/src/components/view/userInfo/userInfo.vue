@@ -237,7 +237,6 @@
                     if(res.data.status==200){
                         let nums=res.data.info;
                         that.num_collection=nums.favoriteCount;
-                        that.num_shopcar=nums.shoppingCartCount;
                         that.num_orderlist=[nums.pendingPayment,nums.waitingForService,nums.inService,nums.withoutEvaluate]
                     }
                     else{
@@ -249,6 +248,20 @@
                     console.log(err);
                     Toast('相关数量查询失败');
                 })
+                //购物车数量
+                this.$http.post('/api/product/shoppingCart/myShoppingCart', {})
+                    .then(function(response) {
+                            //console.log(response.data.info)
+                        let num = null;
+                        response.data.info.forEach((element, i) => {
+                            //  console.log(element.commodityCount)
+                            num += element.commodityCount
+                        });
+                        that.num_shopcar = num
+                    })
+                    .catch(function(response) {
+                        console.log(response)
+                    })
             },
             // 登录
             tologin(){

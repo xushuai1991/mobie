@@ -335,6 +335,7 @@ export default {
                                     duration: 500
                                 });
                                 let fromgo=sessionStorage.getItem('fromgo');
+                              //  console.log(fromgo)
                                 if(fromgo==null){
                                     if(that.companyid!=null){
                                         that.$router.push('/index?company='+that.companyid);
@@ -342,8 +343,6 @@ export default {
                                     else{
                                         that.$router.push('/index');
                                     }
-                                    // location.href='http://daojia.jingrunjia.com.cn';
-                                    // that.$router.push('/index');
                                 }
                                 else{
                                     that.$router.push(fromgo);
@@ -387,6 +386,7 @@ export default {
                     let that=this;                    
                     let recommendedTeamId=this.$route.query.recommendedTeamId;
                     let recommendedAdminId=this.$route.query.recommendedAdminId;
+                    let openId = this.openId
                     let data={
                         mobile:that.phone,
                         // password:that.psw,
@@ -396,11 +396,41 @@ export default {
                         recommendedAdminId:recommendedAdminId,
                         recommendedTeamId:recommendedTeamId
                     };
-                    this.$http.post('/api/customer/account/register',data)
-                    .then(function(response){
-                        Toast(response.data.msg);
-                        if(response.data.status==200){
-                            that.switch_login();
+                    Indicator.open('Loading...');
+                    this.$http.post('/api/customer/account/register?doLogin=true&openId='+openId,data)
+                    .then(function(res){
+                         Indicator.close();
+                        console.log(res);
+                        var msg = res.data.msg
+                        if(res.data.status==200){
+                            let data=res.data.info;
+                            operatelocalstorage('userinfo',JSON.stringify(data),'set',300);
+
+                            setTimeout(() => {
+                                Toast({
+                                    message: '登录成功正在为你跳转请稍后...',
+                                    iconClass: 'icon icon-success',
+                                    duration: 500
+                                });
+                                let fromgo=sessionStorage.getItem('fromgo');
+                                
+                                if(fromgo==null){
+                                    if(that.companyid!=null){
+                                        that.$router.push('/index?company='+that.companyid);
+                                    }
+                                    else{
+                                        that.$router.push('/index');
+                                    }
+                                }
+                                else{
+                                    that.$router.push(fromgo);
+                                    sessionStorage.removeItem('fromgo');
+                                }
+                                that.in_resolve=false;
+                            }, 1000);
+                        }else{
+                            Toast(res.data.msg);
+                            that.in_resolve=false;
                         }
                     })
                     .catch(function(response){

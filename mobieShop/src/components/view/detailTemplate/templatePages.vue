@@ -594,11 +594,18 @@
                 // console.log(result)
                 that.coupon = result.data.info.list
                  // console.log(that.coupon)
-                if (that.coupon.length > 0) {
-                    that.couponShow = true
-                } else {
-                    that.couponShow = false
-                }
+                that.coupon.forEach((item, index) =>{
+                    if(item.couponInfo == null || item.couponInfo == "null"){
+                        that.couponShow = false
+                    }else{
+                        that.couponShow = true
+                    }
+                })
+                // if (that.coupon.length > 0) {
+                //     that.couponShow = true
+                // } else {
+                //     that.couponShow = false
+                // }
             }).catch(function(errmsg) {
                 console.log(errmsg)
             })

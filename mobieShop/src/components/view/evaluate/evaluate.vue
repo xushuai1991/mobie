@@ -75,7 +75,8 @@
                 isActive: '',
                 dataArr: [],
                 shopList: {},
-                imageUrlss:''
+                imageUrlss:'',
+                orderId:''
             }　　　　
         },
         methods: {　　
@@ -115,6 +116,7 @@
                         this.dataArr.push(item)
                     }
                 })
+                this.orderId = orderdetail.id
                 
             },
             　　
@@ -354,6 +356,7 @@
                                 imgArr.push(item.imgurl)
                             })
                             let objInfo = {
+                                "orderId":this.orderId,
                                 "score": item.shopList.list[0].classs.zh[0].lastD,
                                 "comment": item.shopList.MarkInfo,
                                 "commodityId": item.commodityId,

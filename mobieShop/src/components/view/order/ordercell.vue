@@ -20,7 +20,7 @@
                     <p>x{{item.saleNumber}}</p>
                 </div>
                 <div class='appointment' v-if='item.isService==true'>
-                    <button class='button'  @click.stop="openByDrop({index:index1,e:$event,commodityid:item.commodityId,orderdetailid:item.id,templateId:item.commodityInfo.periodTemplateId,type:'add'})">预约时间</button>                    
+                    <button class='button' v-show='data.canBeRefund==true?true:false'  @click.stop="openByDrop({index:index1,e:$event,commodityid:item.commodityId,orderdetailid:item.id,templateId:item.commodityInfo.periodTemplateId,type:'add'})">预约时间</button>                    
                     
                     <!-- <button class='button'  @click.stop="openByDrop({index:index1,e:$event,commodityid:item.commodityId,orderdetailid:item.id,templateId:item.commodityInfo.periodTemplateId,type:item.appointments==null?'add':'edit',appointid:item.appointments==null?null:item.appointments.id})">{{item.appointments==null?'预约时间':'修改预约'}}</button>                     -->
                     <!-- <span>服务时间：{{item.appointments==null?'无':(item.appointments.startTime.substring(0,10)+' '+item.appointments.startTime.substring(11,16)+'-'+ item.appointments.endTime.substring(11,16)+(item.appointments.isService==0?'(待确认)':''))}}</span> -->
@@ -69,8 +69,8 @@
                 <button class='prime pay button' style='padding:.16rem .2rem' @click.stop="pay" v-if='data.payState==2&data.orderState==1'>付款</button>
                 <button class='cancle border' @click.stop="cancleOrder" v-if='(data.payState==2||data.payState==3)&data.orderState==1'>取消订单</button>
                 <button class='prime follow button' style='padding:.16rem .2rem' v-if='type=="inservice"'>追单</button>
-                <button class='apply border' @click.stop='application' v-if='data.payState==1&&data.orderState!=4&data.orderState!=5&data.actualMoney!=0'>申请退款</button>
-                <button class='invoice border' @click.stop='invoice(data.id,data.actualMoney)' v-if='data.orderState==2&data.actualMoney!=0'>申请发票</button>
+                <button class='apply border' @click.stop='application' v-show='data.canBeRefund' v-if='data.payState==1&&data.orderState!=4&data.orderState!=5&data.actualMoney!=0'>申请退款</button>
+                <button class='invoice border' @click.stop='invoice(data.id,data.actualMoney)' v-show='data.canApplyInvoice' v-if='data.orderState==2&data.actualMoney!=0'>申请发票</button>
                 
             </div>
         </div>

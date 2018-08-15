@@ -29,7 +29,7 @@
                                                     <!--<p @click="open('picker1',index,indexs)" size="large">{{items.otherInfo.commodityInfo.playTime}}</p>!-->
                                                 </li>
                                                 <li class="goods_info_se">
-                                                    <p class="goods_price">￥<span>{{JSON.parse(items.commodityDetail).commodityPrice?JSON.parse(items.commodityDetail).commodityPrice:items.otherInfo.commodityPrice}}</span></p>
+                                                    <p class="goods_price">￥<span>{{items.commodityDetail==""?items.otherInfo.commodityPrice:JSON.parse(items.commodityDetail).commodityPrice?JSON.parse(items.commodityDetail).commodityPrice:items.otherInfo.commodityPrice}}</span></p>
                                                     <div class='cgqNumBox'>
                                                         <input type="button" @click="reduce(index,indexs,items.commodityCount,items.id)" value='－'>
                                                         <input type="number"  v-model="items.commodityCount" v-on:blur="changeCount(index,indexs,items.commodityCount,items.id,items.otherInfo.commodityInfo.displayQuantity)"/>
@@ -72,7 +72,7 @@
         <mt-popup v-model="popupVisible" position="bottom" style='width:100%; margin-bottom: 0.96rem;'>
             <div class='shopBoxS'>{{ShopName}}</div>
             <p class='shopBxo'>领取优惠劵</p>
-            <ul class='shopBox'v-if='coupon.length!=0'>
+            <ul class='shopBox' v-if='coupon.length!=0'>
                 <li v-for='(item,index) in coupon' :key='index' v-if='item'>
                     <div class='shopFont'>
                         <p class='font'>{{item?item.couponMoney:''}}元</p>
@@ -187,7 +187,7 @@
                         return a.selected
                     }).map(function(a) {
                         as += a.commodityCount-0
-                        return (a.commodityCount-0) * JSON.parse(a.commodityDetail).commodityPrice?JSON.parse(a.commodityDetail).commodityPrice:a.otherInfo.commodityPrice
+                        return (a.commodityCount-0) * a.commodityDetail == ""?a.otherInfo.commodityPrice:JSON.parse(a.commodityDetail).commodityPrice?JSON.parse(a.commodityDetail).commodityPrice:a.otherInfo.commodityPrice
                     }).forEach(function(a) {
                         total += a;
                     })
@@ -576,8 +576,13 @@
                         let num = 0;
                         let prices = 0;
                         item.listgoods.forEach((item) => {
-                            num += (item.commodityCount - 0)
-                            prices += item.commodityCount * JSON.parse(item.commodityDetail).commodityPrice?JSON.parse(item.commodityDetail).commodityPrice:item.otherInfo.commodityPrice
+                            if(item.commodityDetail ==""){
+                                num += (item.commodityCount - 0)
+                                prices += item.commodityCount * item.otherInfo.commodityPrice
+                            }else{
+                                num += (item.commodityCount - 0)
+                                prices += item.commodityCount * JSON.parse(item.commodityDetail).commodityPrice?JSON.parse(item.commodityDetail).commodityPrice:item.otherInfo.commodityPrice
+                            }
                         })
                         item['num'] = num;
                         item['prices'] = prices;

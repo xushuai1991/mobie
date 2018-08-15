@@ -67,8 +67,8 @@
                                     </div>
                                     <div v-show='item.isService&&(orderState!="订单已取消"||orderState!="等待买家支付")'>
                                         
-                                        <div class='appointment' v-if='item.isService'>
-                                            <button class='button' @click.stop="openByDrop({index:index,e:$event,commodityid:item.commodityId,orderdetailid:item.id,templateId:item.commodityInfo.periodTemplateId,appointments:item.appointments,saleNumber:item.saleNumber,type:'add'})">预约时间</button>
+                                        <div class='appointment' v-if='item.isService' >
+                                            <button class='button' v-show=appTime @click.stop="openByDrop({index:index,e:$event,commodityid:item.commodityId,orderdetailid:item.id,templateId:item.commodityInfo.periodTemplateId,appointments:item.appointments,saleNumber:item.saleNumber,type:'add'})">预约时间</button>
                                         </div>
                                         <div class='edmitTime' v-if='item.isService'>
                                             <div class='appoint' v-if='item.appointments!=null'>
@@ -308,6 +308,7 @@
                 showBtn6: false, //关闭按钮，
                 showBtn7: false, //关闭按钮，
                 showBtn8: false, //申请开票，
+                appTime:true,//预约时间
                 // refundShow:false,//退款显示，
                 refundOrder: false,
                 datechange: '',
@@ -645,12 +646,40 @@
                         this.orderState = '已支付等待卖家发货'
                         this.orderText = '亲,请耐心能等待';
                         this.showBtn4 = true; //退款
+                        //是否可申请退款
+                            if(orderStaty.canBeRefund){
+                                this.showBtn4 = true;
+                                this.appTime = true;
+                            }else{
+                                this.showBtn4 = false; 
+                                 this.appTime = false;
+                            }
                         this.showBtn5 = true; //立即付款按钮
                         if (orderStaty.orderState == 2) {
-                            this.showBtn4 = true, //退款
-                                this.showBtn5 = false; //确认收货
+                            this.showBtn4 = true; //退款
+                            //是否可申请退款
+                            if(orderStaty.canBeRefund){
+                                this.showBtn4 = true;
+                                 this.appTime = true;
+                            }else{
+                                this.showBtn4 = false; 
+                                 this.appTime = false;
+                            }
+                             this.showBtn5 = false; //确认收货
                             this.showBtn8 = true;
+                            //是否可申请开票
+                            if(orderStaty.canApplyInvoice){
+                                this.showBtn8 = true; 
+                            }else{
+                                this.showBtn8 = false; 
+                            }
                             this.showBtn7 = true; //评价
+                            //是否可评价
+                            if(orderStaty.canBeEvaluate){
+                                this.showBtn7 = true; 
+                            }else{
+                                this.showBtn7 = false; 
+                            }
                             this.orderState = '已经完成'
                             this.orderText = '亲，请确认';
                         }
@@ -658,6 +687,14 @@
                             this.showBtn4 = false, //取消退款
                                 this.showBtn6 = true, //取消退款
                                 this.showBtn5 = true; //立即付款按钮
+                             //是否可申请退款
+                            if(orderStaty.canBeRefund){
+                                this.showBtn4 = true;
+                                 this.appTime = true;
+                            }else{
+                                this.showBtn4 = false; 
+                                 this.appTime = false;
+                            }
                             this.orderState = '退款中...'
                             this.orderText = '亲,请耐心能等待';
                             this.refundOrder = true
@@ -667,6 +704,14 @@
                             this.showBtn4 = true, //取消退款
                                 this.showBtn6 = false, //取消退款
                                 this.showBtn5 = true; //立即付款按钮
+                            //是否可申请退款
+                            if(orderStaty.canBeRefund){
+                                this.showBtn4 = true;
+                                 this.appTime = true;
+                            }else{
+                                this.showBtn4 = false; 
+                                 this.appTime = false;
+                            }
                             this.orderState = '驳回'
                             this.orderText = '亲,请和客服联系重新退款';
                             this.refundOrder = true
@@ -684,6 +729,7 @@
                             this.showBtn3 = true; //删除订单
                             this.showBtn8 = false; //申请开票
                             this.showBtn4 = false; //退款
+                            this.appTime = false; //预约时间
                             this.showBtn5 = false; //立即付款按钮
                             this.orderState = '退款完成'
                             this.orderText = '';
@@ -691,6 +737,7 @@
                         if (orderStaty.orderState == 6) {
                             this.showBtn3 = true; //删除订单
                             this.showBtn4 = false; //退款
+                             this.appTime = false; //预约时间
                             this.showBtn5 = false; //立即付款按钮
                             this.orderState = '订单已取消'
                             this.orderText = '';
@@ -707,6 +754,7 @@
                         if (orderStaty.orderState == 6) {
                             this.showBtn3 = true; //删除订单
                             this.showBtn4 = false; //退款
+                             this.appTime = false; //预约时间
                             this.showBtn5 = false; //立即付款按钮
                             this.orderState = '订单已取消'
                             this.orderText = '';
@@ -886,7 +934,8 @@
                         }
                         if (stateText == '删除订单') {
                             objs.push({
-                                number: number
+                                number: number,
+                                isActive: false
                             })
                         }
                         console.log(stateText)
@@ -1100,10 +1149,11 @@
         display: none;
     }
     .refundDetail {
-        font-size: 0.25rem;
+        font-size: .25rem;
         text-align: right;
-        padding-right: 0.2rem;
-        line-height: 0.6rem;
+        padding-right: .31rem;
+        line-height: .6rem;
+        padding-bottom: .5rem;
         button {
             border: none;
             padding: 0.1rem 0.2rem;
